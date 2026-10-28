@@ -7,7 +7,7 @@
 
 - 用户指定：**DeepSeek 负责本批全部实现与测试**；规划与验收由 GPT-6.1-Sol 负责，
   规划/验收方不写代码、不代替实现。
-- 用户已明确授权本批 P0 实现。不要因为“可能需要确认”而停下来询问代码细节。
+- 用户已明确授权本批 P1 实现（P0 已完成）。不要因为“可能需要确认”而停下来询问代码细节。
 - 只改本项目 `F:\CTFfiles\knowledgeBase`。不得修改其他项目、不得停无关服务。
 - 不读取认证密钥、不提交密钥、不更改全局 Git / npm 配置。
 - 不删除用户资料。`work/`、`temp_newData/`、`models/`、`index/` 即使被 gitignore
@@ -60,6 +60,9 @@
 # Python 回归
 .\.venv\Scripts\python.exe -m pytest -o addopts="" -q
 
+# 检索评测（固定查询集，不启动模型）
+.\.venv\Scripts\python.exe tools\eval_search.py
+
 # 前端
 cd tools\agent\webapp
 npm run check          # 类型检查
@@ -76,5 +79,5 @@ npm run build          # 生产构建
 - 改动有测试或明确说明测试局限。
 - 保留原测试，不通过删功能或忽略失败来变绿。
 - 跑完 Python 回归、前端类型检查、前端测试、前端生产构建。
-- 更新 `docs/PROJECT_MEMORY.md` 与 `docs/DEVELOPMENT_PLAN.md`。
-- 提交一个 P0 修复提交，并在最终报告给出提交 hash 与未完成项。
+- 更新 `docs/PROJECT_MEMORY.md`、`docs/DEVELOPMENT_PLAN.md` 与相关交接/UI 文档。
+- 提交一个 P1 提交，并在最终报告给出提交 hash 与未完成项。

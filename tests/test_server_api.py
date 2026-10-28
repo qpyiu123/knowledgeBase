@@ -32,16 +32,33 @@ class FakeHit:
         self.title = title
         self.category = category
         self.score = 0.75
+        self.section = "三、解题步骤"
+        self.best_text = (
+            "【crypto】RSA\n## 三、解题步骤\n"
+            "标签: rsa｜识别信号: n 相同\n读取 n e c，计算明文。"
+        )
+        self.sources = ["fts", "vec"]
+        self.per_source = {"fts": 0.016, "vec": 0.016}
 
 
 class FakeKB:
     def __init__(self, kb_dir: Path, index_dir: Path):
         self.cfg = FakeCfg(kb_dir, index_dir)
         self.calls: list[dict] = []
+        self.topic = FakeHit("crypto/rsa.md")
+        self.card = FakeHit("_des/cards/crypto/card.md", "RSA 比赛卡片", "crypto")
 
-    def search(self, q, top_k=None, category=None, **_):
-        self.calls.append({"q": q, "top_k": top_k, "category": category})
-        return [FakeHit("crypto/rsa.md")]
+    def search(self, q, top_k=None, category=None, doc_type=None, **_):
+        self.calls.append({"q": q, "top_k": top_k, "category": category,
+                           "doc_type": doc_type})
+        hits = [self.topic, self.card]
+        if doc_type:
+            hits = [h for h in hits
+                    if ("card" if h.doc_path.startswith("_des/cards/") else "topic")
+                    == doc_type]
+        else:
+            hits = hits[:1]
+        return hits
 
 
 class FakeResp:
@@ -72,6 +89,11 @@ def env(tmp_path: Path, monkeypatch):
     (kb_dir / "crypto").mkdir(parents=True)
     (kb_dir / "crypto" / "rsa.md").write_text(
         "---\ntitle: RSA\n---\n## 识别信号\n题目给了同一个 n，两组密文。\n",
+        encoding="utf-8",
+    )
+    (kb_dir / "_des" / "cards" / "crypto").mkdir(parents=True)
+    (kb_dir / "_des" / "cards" / "crypto" / "card.md").write_text(
+        "---\ntitle: RSA 比赛卡片\n---\n## 一句话总结\n共模攻击。\n",
         encoding="utf-8",
     )
     (tmp_path / "secret.txt").write_text("DO-NOT-LEAK", encoding="utf-8")
@@ -163,8 +185,46 @@ def test_search_returns_hits_and_snippet(env):
     assert status == 200
     assert "application/json" in ctype
     assert body["hits"][0]["path"] == "crypto/rsa.md"
-    assert "同一个 n" in body["hits"][0]["snippet"]
+    # P1：摘要改为真正命中的 chunk，而不是再从整篇文档里猜一段。
+    assert "读取 n e c" in body["hits"][0]["snippet"]
     assert env["kb"].calls[-1]["top_k"] == 5
+
+
+def test_search_returns_hit_reason_and_paragraph(env):
+    status, text, _ = call(env, "POST", "/api/search",
+                           {"q": "RSA 共模攻击", "top_k": 5})
+    body = json.loads(text)
+    hit = body["hits"][0]
+
+    assert status == 200
+    assert hit["section"] == "三、解题步骤"
+    assert "读取 n e c" in hit["snippet"]
+    assert "标签:" not in hit["snippet"]
+    assert hit["doc_type"] == "topic"
+    assert hit["doc_type_label"] == "专题文档"
+    assert hit["match"]["sources"] == ["fts", "vec"]
+    assert "词面命中" in hit["match"]["labels"]
+    assert body["counts"]["topic"] == 1
+
+
+def test_search_doc_type_filter(env):
+    status, text, _ = call(env, "POST", "/api/search",
+                           {"q": "RSA", "top_k": 5, "doc_type": "card"})
+    body = json.loads(text)
+
+    assert status == 200
+    assert body["doc_type"] == "card"
+    assert [h["path"] for h in body["hits"]] == ["_des/cards/crypto/card.md"]
+    assert body["hits"][0]["doc_type"] == "card"
+    assert body["counts"] == {"topic": 0, "card": 1}
+    assert env["kb"].calls[-1]["doc_type"] == "card"
+
+
+def test_search_rejects_unknown_doc_type(env):
+    status, text, _ = call(env, "POST", "/api/search",
+                           {"q": "x", "doc_type": "writeup"})
+    assert status == 400
+    assert "error" in json.loads(text)
 
 
 @pytest.mark.parametrize("payload", [
@@ -306,3 +366,58 @@ def test_ask_stream_empty_model_output_is_err(env, monkeypatch):
     assert status == 200
     assert events[-1]["t"] == "err"
     assert "模型没有返回内容" in events[-1]["v"]
+
+
+def test_feedback_appends_local_jsonl(env, monkeypatch):
+    fb = env["tmp"] / "feedback.jsonl"
+    monkeypatch.setenv("AGENT_FEEDBACK_FILE", str(fb))
+
+    status, text, _ = call(env, "POST", "/api/feedback", {
+        "query": "RSA 共模攻击",
+        "path": "crypto/rsa.md",
+        "verdict": "useful",
+        "note": "命中章节正确",
+    })
+    body = json.loads(text)
+
+    assert status == 200
+    assert body["ok"] is True
+    rec = json.loads(fb.read_text(encoding="utf-8").strip())
+    assert rec["query"] == "RSA 共模攻击"
+    assert rec["path"] == "crypto/rsa.md"
+    assert rec["doc_type"] == "topic"
+    assert rec["verdict"] == "useful"
+    assert rec["note"] == "命中章节正确"
+    assert "ts" in rec
+
+
+def test_feedback_allows_query_level_record(env, monkeypatch):
+    fb = env["tmp"] / "feedback-level.jsonl"
+    monkeypatch.setenv("AGENT_FEEDBACK_FILE", str(fb))
+    status, text, _ = call(env, "POST", "/api/feedback", {
+        "query": "没有结果", "verdict": "useless",
+    })
+    assert status == 200
+    rec = json.loads(fb.read_text(encoding="utf-8").strip())
+    assert rec["path"] == ""
+    assert rec["doc_type"] is None
+
+
+@pytest.mark.parametrize("payload", [
+    {"query": "", "verdict": "useful"},
+    {"query": "x", "verdict": "maybe"},
+    {"query": "x", "verdict": ["useful"]},
+    {"query": "x", "path": "../config.toml", "verdict": "useful"},
+    {"query": "x", "path": "crypto/rsa.txt", "verdict": "useful"},
+    {"query": "x", "verdict": "useful", "note": "n" * (server.MAX_NOTE_CHARS + 1)},
+])
+def test_feedback_rejects_bad_input(env, monkeypatch, payload):
+    fb = env["tmp"] / "feedback-bad.jsonl"
+    monkeypatch.setenv("AGENT_FEEDBACK_FILE", str(fb))
+    status, text, _ = call(env, "POST", "/api/feedback", payload)
+    body = json.loads(text)
+
+    assert status == 400
+    assert body["ok"] is False
+    assert "error" in body
+    assert not fb.exists()

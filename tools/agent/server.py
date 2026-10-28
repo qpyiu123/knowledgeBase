@@ -22,6 +22,7 @@ import os
 import re
 import sys
 import threading
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -77,6 +78,9 @@ MAX_DOC_BYTES = 1024 * 1024         # 单篇 Markdown 上限
 MAX_PER_DOC_CHARS = 2600            # 送进模型的单篇字符上限
 MAX_CONTEXT_CHARS = 12000           # 送进模型的总字符上限
 MAX_PATH_CHARS = 500
+MAX_NOTE_CHARS = 500
+FEEDBACK_VERDICTS = {"useful", "useless", "adopted"}
+DOC_TYPES = {"topic", "card"}
 
 # 每类结果的命中上限，避免同方向刷屏
 CATS = ["misc", "crypto", "web", "pwn", "reverse",
@@ -86,6 +90,7 @@ _KB = None
 _KB_LOCK = threading.Lock()
 # /api/ask 串行：4GB 显存下并发生成会互相挤爆。忙碌时直接拒绝，不排队。
 _ASK_LOCK = threading.Lock()
+_FEEDBACK_LOCK = threading.Lock()
 
 
 class BadRequest(ValueError):
@@ -137,6 +142,14 @@ def _check_category(raw):
         return None
     if not isinstance(raw, str) or raw not in CATS:
         raise BadRequest("未知的方向筛选")
+    return raw
+
+
+def _check_doc_type(raw):
+    if raw in (None, "", "all"):
+        return None
+    if not isinstance(raw, str) or raw not in DOC_TYPES:
+        raise BadRequest("doc_type 只能是 topic 或 card")
     return raw
 
 
@@ -211,6 +224,64 @@ def _collect_sources(kb, paths) -> tuple[list[str], str | None]:
     return parts, None
 
 
+def _feedback_file() -> Path:
+    """反馈落本地 JSONL；显式环境变量可覆盖（便于测试）。"""
+    raw = (os.environ.get("AGENT_FEEDBACK_FILE")
+           or str(_cfg("feedback", "file", "work/feedback/feedback.jsonl")))
+    p = Path(raw)
+    return p if p.is_absolute() else (ROOT / p)
+
+
+def api_feedback(req: dict) -> dict:
+    """记录 有用 / 无用 / 采用。只写本地追加文件，不读任意路径。"""
+    if not isinstance(req, dict):
+        raise BadRequest("请求体必须是 JSON 对象")
+    q = _check_query(req.get("query", ""))
+    if not q:
+        raise BadRequest("需要 query")
+    verdict = req.get("verdict")
+    if not isinstance(verdict, str) or verdict not in FEEDBACK_VERDICTS:
+        raise BadRequest("verdict 必须是 useful / useless / adopted")
+
+    rel = req.get("path", "") or ""
+    if not isinstance(rel, str):
+        raise BadRequest("path 必须是字符串")
+    rel = rel.strip()
+    if rel:
+        kb = get_kb()
+        p, err = _resolve_kb_file(kb, rel)
+        if err:
+            raise BadRequest(f"{err}: {rel!r}")
+        rel = p.relative_to(kb.cfg.kb_dir.resolve()).as_posix()
+
+    note = req.get("note", "") or ""
+    if not isinstance(note, str):
+        raise BadRequest("note 必须是字符串")
+    note = note.strip()
+    if len(note) > MAX_NOTE_CHARS:
+        raise BadRequest(f"note 太长（最多 {MAX_NOTE_CHARS} 字）")
+
+    from kb.explain import doc_type
+
+    rec = {
+        "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "query": q,
+        "path": rel,
+        "doc_type": doc_type(rel) if rel else None,
+        "verdict": verdict,
+        "note": note,
+    }
+    f = _feedback_file()
+    try:
+        f.parent.mkdir(parents=True, exist_ok=True)
+        with _FEEDBACK_LOCK:
+            with f.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except OSError as e:
+        return {"ok": False, "saved": 0, "error": f"反馈写入失败: {e}"}
+    return {"ok": True, "saved": 1, "file": str(f)}
+
+
 # ============================================================== 页面
 WEB_DIR = Path(__file__).resolve().parent / "webapp" / "dist"
 
@@ -282,44 +353,73 @@ def _snip(doc_path: str, category: str, title: str) -> str:
     return body[:520]
 
 
+def _hit_snippet(h, q: str) -> str:
+    """命中段落优先用真正命中的 chunk，而不是整篇文档里再猜一段。"""
+    text = getattr(h, "best_text", "") or ""
+    if text:
+        from kb.explain import make_snippet
+        snip = make_snippet(text, q)
+        if snip:
+            return snip
+    return _snip(h.doc_path, h.category, h.title)
+
+
+def _hit_item(h, q: str) -> dict:
+    from kb.explain import doc_type, doc_type_label, match_info
+
+    dtype = doc_type(h.doc_path)
+    gv = getattr(h, "graph_via", None)
+    item = {
+        "title": h.title,
+        "category": h.category,
+        "path": h.doc_path,
+        "score": round(float(h.score or 0), 5),
+        "section": getattr(h, "section", "") or "",
+        "snippet": _hit_snippet(h, q),
+        "doc_type": dtype,
+        "doc_type_label": doc_type_label(h.doc_path),
+        "match": match_info(h, q),
+    }
+    if gv:
+        item["graph_via"] = gv
+    return item
+
+
 def api_search(req: dict) -> dict:
     import time
     if not isinstance(req, dict):
         raise BadRequest("请求体必须是 JSON 对象")
     q = _check_query(req.get("q", ""))
     cat = _check_category(req.get("category"))
+    dtype_filter = _check_doc_type(req.get("doc_type"))
     k = _check_top_k(req.get("top_k"))
+    counts = {"topic": 0, "card": 0}
     if not q:
-        return {"hits": [], "ms": 0, "query": "", "category": cat}
+        return {"hits": [], "graph": [], "ms": 0, "query": "",
+                "category": cat, "doc_type": dtype_filter, "counts": counts}
     kb = get_kb()
     t0 = time.time()
-    hits = kb.search(q, top_k=k, category=cat)
+    hits = kb.search(q, top_k=k, category=cat, doc_type=dtype_filter)
     ms = round((time.time() - t0) * 1000, 1)
 
     out, graph = [], []
     for h in hits:
-        gv = getattr(h, "graph_via", None)
-        item = {
-            "title": h.title, "category": h.category, "path": h.doc_path,
-            "score": round(float(h.score or 0), 5),
-            "snippet": _snip(h.doc_path, h.category, h.title),
-        }
-        if gv:
-            item["graph_via"] = gv
-            graph.append({"title": h.title, "path": h.doc_path, "via": gv})
+        item = _hit_item(h, q)
         # 图谱补进来的条目放到 graph 里，主结果只留词面/向量命中的
-        if gv:
+        if item.get("graph_via"):
+            graph.append(item)
             continue
+        counts[item["doc_type"]] = counts.get(item["doc_type"], 0) + 1
         out.append(item)
 
     # 若全部都是图谱命中（极少见），至少给一条
     if not out and graph:
-        out.append({"title": graph[0]["title"], "category": "",
-                    "path": graph[0]["path"], "score": 0,
-                    "snippet": "", "graph_via": graph[0]["via"]})
+        out.append(dict(graph[0]))
+        counts[out[0]["doc_type"]] = counts.get(out[0]["doc_type"], 0) + 1
 
     return {"hits": out, "graph": graph, "ms": ms,
-            "query": q, "category": cat}
+            "query": q, "category": cat, "doc_type": dtype_filter,
+            "counts": counts}
 
 
 def api_doc(path: str) -> dict:
@@ -594,6 +694,15 @@ class Handler(BaseHTTPRequestHandler):
                 self._json({"hits": [], "error": str(e)}, 400)
             except Exception as e:  # noqa: BLE001
                 self._json({"hits": [], "error": f"{type(e).__name__}: {e}"}, 500)
+            return
+
+        if u.path == "/api/feedback":
+            try:
+                self._json(api_feedback(req))
+            except BadRequest as e:
+                self._json({"ok": False, "error": str(e)}, 400)
+            except Exception as e:  # noqa: BLE001
+                self._json({"ok": False, "error": f"{type(e).__name__}: {e}"}, 500)
             return
 
         if u.path == "/api/ask":

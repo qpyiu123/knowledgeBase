@@ -178,6 +178,21 @@ def split_sections(body: str) -> list[tuple[str, str]]:
     return sections
 
 
+def section_of_chunk(text: str) -> str:
+    """从 chunk 文本里取章节标题。
+
+    chunk 的前几行形如：
+        【web】SSTI（服务器端模板注入）
+        ## 一、SSTI 检测与确认
+        标签: ...｜识别信号: ...
+    只在前 4 行里找，避免把正文里的标题误当成命中章节。
+    """
+    for line in text.splitlines()[:4]:
+        if line.startswith("## "):
+            return line[3:].strip()
+    return ""
+
+
 def chunk_doc(doc: Doc, chunk_chars: int = 900, overlap: int = 120) -> list[dict[str, Any]]:
     """把文档切成块。块文本 = 标题路径 + 元数据 + 正文块，便于向量检索命中。"""
     prefixes: list[str] = []
@@ -260,6 +275,10 @@ def tokenize_query(q: str) -> list[str]:
     for w in WORD_RE.findall(q):
         lw = w.lower().strip(".-/_")
         if not lw or lw in STOP_EN:
+            continue
+        # {{7*7}} / e=3 这类题面里的单个数字只是 payload 噪声，
+        # 会命中全库大量代码块；单字母 n/e/c 仍保留（密码学常用）。
+        if lw.isdigit() and len(lw) < 2:
             continue
         tokens.append(lw)
         # 拆出连续字母数字子串：ret2libc 保持整体，同时 CVE-2021-44228 拆成 cve/2021/44228，

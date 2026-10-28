@@ -42,3 +42,7 @@ ollama_num_gpu = 18
 # 本机实际 manifest 名为 qwen2.5-coder-7b:local，server 会按 /api/tags 自动解析。
 host = "http://127.0.0.1:11434"
 model = "qwen2.5-coder-7b"
+
+[feedback]
+# P1 反馈记录：只追加本地 JSONL，不参与检索排序。
+file = "work/feedback/feedback.jsonl"

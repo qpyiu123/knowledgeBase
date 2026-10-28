@@ -40,10 +40,13 @@ tools/agent/
     ├── src/
     │   ├── main.tsx       # MantineProvider + 主题
     │   ├── App.tsx        # AppShell + 侧栏方向 + 阅读器挂载
-    │   ├── api.ts         # /api/* 封装，含 SSE
+    │   ├── api.ts         # /api/* 封装，含 SSE 与反馈
     │   ├── types.ts
     │   ├── styles.css
+    │   ├── lib/sse.ts     # SSE 解析（tok/err/done）
     │   ├── pages/SearchPage.tsx
+    │   ├── pages/SearchPage.test.tsx
+    │   ├── api.test.ts
     │   └── components/
     │       ├── Md.tsx     # Markdown + 代码块（复制按钮）
     │       └── Reader.tsx # 抽屉阅读器 + 目录
@@ -77,6 +80,12 @@ tools/agent/
 ### 直接搜索
 - 混合检索（词面 + 向量 + RRF），显示方向、分数、摘要
 - 侧栏按方向筛选，带各方向文档数
+- **命中解释**：显示命中章节、命中原因（词面/语义/图谱）与命中词；
+  摘要优先用真正命中的 chunk，而不是整篇文档的泛摘要
+- **类型筛选**：搜索前可选「全部 / 专题 / 比赛卡片」，结果显示类型徽章与计数
+- **关联阅读**：图谱补入的条目单独列出，不参与主排名
+- **反馈**：每条结果可点「有用 / 无用 / 采用」，写入
+  `work/feedback/feedback.jsonl`，界面显示「已记录」
 - 摘要经 `cleanSnippet()` 清洗：去 `#`/`>`、`[文字](链接)` 还原为文字、
   图片转 `[图：alt]`、列表符号统一为 `·`
 
@@ -130,9 +139,10 @@ def do_GET(self):
 |---|---|
 | `GET /api/health` | `model_ok` / `index_ok` 分开返回，`docs` 来自索引统计 |
 | `GET /api/stats` | 文档/分块/方向计数 |
-| `POST /api/search` | `{q, top_k, category}`；`top_k` 限 1..50 |
+| `POST /api/search` | `{q, top_k, category, doc_type}`；`top_k` 限 1..50；`doc_type=topic\|card`；结果带命中段落/章节/原因/类型/计数 |
 | `GET /api/doc?path=` | 单篇正文；只允许 `kb/` 内 `.md` |
 | `POST /api/ask` | `{q, paths}` → SSE；串行，忙碌返回 429 |
+| `POST /api/feedback` | `{query, path?, verdict, note?}`；`verdict=useful\|useless\|adopted`；追加本地 JSONL |
 
 SSE 契约：
 
@@ -154,7 +164,15 @@ npm install --cache ../../../.npm-cache   # 首次；缓存放项目内 F 盘
 npm run dev          # 热更新，:5173，/api 代理到 :8765
 npm run build        # 产出 dist/
 npm run check        # 仅类型检查（tsconfig.app + tsconfig.node）
-npm test             # vitest：SSE 契约 + SearchPage 组件测试
+npm test             # vitest：SSE + SearchPage（解释/筛选/反馈/图谱关联）
+```
+
+检索评测（不启动前端/模型）：
+
+```powershell
+cd F:\CTFfiles\knowledgeBase
+.\.venv\Scripts\python.exe tools\eval_search.py
+.\.venv\Scripts\python.exe tools\eval_search.py --mode fts
 ```
 
 改完 `src/` 后必须 `npm run build`，Python 服务才会看到变化
@@ -179,8 +197,10 @@ Node 全局被误认为合法）；`vite.config.ts` / `vitest.config.ts` 由
 
 ## 已知限制
 
-1. 检索排序仍有噪音：主题文档共享通用词，非目标条目可能进前几名（P1）
+1. P1 已修掉“同一长文档占满结果”的主因，但泛化查询仍可能偏向 signals
+   很多的长文档；固定评测集只有 22 条，不能代表全库
 2. 真实模型单次生成耗时未在本批复测；旧文档的 105 秒/4B 对比不作结论
-3. 首屏 JS 约 791 KB（gzip 245 KB），本地访问无感；要更快可拆包
+3. 首屏 JS 约 801 KB（gzip 248 KB），本地访问无感；要更快可拆包
 4. “停止接收”只关闭本地连接；上游 Ollama 可能短暂收尾
 5. 自动化测试全部离线 Mock，未覆盖真实模型与真实浏览器
+6. 反馈只写本地 JSONL，尚无汇总/导出页面，也尚未参与排序

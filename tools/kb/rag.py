@@ -71,21 +71,34 @@ class KB:
     # ---------- 检索 ----------
     def search(self, query: str, top_k: int | None = None, category: str | None = None,
                mode: str = "or", expand: bool = True,
-               hops: int = 1) -> list[FusedHit]:
+               hops: int = 1, doc_type: str | None = None) -> list[FusedHit]:
+        from .explain import doc_type as type_of
+
         k = int(top_k or self.cfg.get("search", "top_k", 8))
         rrf_k = int(self.cfg.get("search", "rrf_k", 60))
-        fts_hits = self.fts.search(query, top_k=k * 3, category=category, mode=mode)
-        vec_hits = self.vec.search(query, top_k=k * 3, category=category)
+        # 候选池要比最终条数宽：FTS 已按文档返回最好块，但向量路仍是 chunk 级，
+        # 且按类型筛选时可能在融合后才过滤。多取一些，避免相关文档进不了候选。
+        # 设下限是为了让 top_k=5 与 top_k=10 的排序一致：候选池太小会让
+        # 只在单路深名次出现的文档时有时无。
+        fuse_k = k * 4 if doc_type else k
+        fts_fetch = max(k * 4, 60)
+        vec_fetch = max(k * 6, 80)
+        fts_hits = self.fts.search(query, top_k=fts_fetch, category=category, mode=mode)
+        vec_hits = self.vec.search(query, top_k=vec_fetch, category=category)
         if not vec_hits:
-            base = fuse_single_source(fts_hits, k)
+            base = fuse_single_source(fts_hits, fuse_k)
         else:
-            base = rrf_fuse(fts_hits, vec_hits, k=rrf_k, top_k=k)
+            base = rrf_fuse(fts_hits, vec_hits, k=rrf_k, top_k=fuse_k)
+        if doc_type:
+            base = [h for h in base if type_of(h.doc_path) == doc_type][:k]
+        else:
+            base = base[:k]
         if not expand:
             return base
-        return self._expand_hits(base, k, hops=hops)
+        return self._expand_hits(base, k, hops=hops, doc_type=doc_type)
 
     def _expand_hits(self, hits: list[FusedHit], k: int,
-                     hops: int = 1) -> list[FusedHit]:
+                     hops: int = 1, doc_type: str | None = None) -> list[FusedHit]:
         """在图上有界扩展，把关联但没被词面/向量召回的知识点补进来。
 
         严格遵守原设计：
@@ -110,9 +123,14 @@ class KB:
         have = {h.doc_path for h in hits}
         # 图谱补入的条目不提升到前 k，只补在 k 之后作为"关联阅读"，
         # 这样主结果的可信度不受影响。
+        type_of = None
+        if doc_type:
+            from .explain import doc_type as type_of  # noqa: F811
         extra: list[FusedHit] = []
         for n in exp.nodes:
             if n.key in have:
+                continue
+            if type_of is not None and type_of(n.key) != doc_type:
                 continue
             have.add(n.key)
             try:

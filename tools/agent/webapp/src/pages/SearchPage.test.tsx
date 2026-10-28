@@ -12,6 +12,7 @@ vi.mock('../api', () => ({
     health: vi.fn(),
     stats: vi.fn(),
     doc: vi.fn(),
+    feedback: vi.fn(),
   },
   ask: vi.fn(),
 }));
@@ -24,6 +25,15 @@ const HIT: Hit = {
   path: 'crypto/rsa-common-modulus-attack.md',
   score: 1,
   snippet: 'n 相同，e 不同',
+  section: '三、解题步骤',
+  doc_type: 'topic',
+  doc_type_label: '专题文档',
+  match: {
+    sources: ['fts', 'vec'],
+    labels: ['词面命中', '语义相近'],
+    terms: ['RSA', '共模攻击'],
+    rrf: { fts: 0.016, vec: 0.016 },
+  },
 };
 
 function renderPage() {
@@ -36,11 +46,14 @@ function renderPage() {
 
 const searchMock = vi.mocked(api.search);
 const askMock = vi.mocked(ask);
+const feedbackMock = vi.mocked(api.feedback);
 
 beforeEach(() => {
   searchMock.mockReset();
   askMock.mockReset();
+  feedbackMock.mockReset();
   searchMock.mockResolvedValue({ hits: [], ms: 1 });
+  feedbackMock.mockResolvedValue({ ok: true, saved: 1 });
 });
 
 describe('SearchPage 显式参数', () => {
@@ -86,5 +99,62 @@ describe('SearchPage 显式参数', () => {
     fireEvent.click(screen.getByRole('button', { name: '问模型' }));
 
     await screen.findByText('模型不可达');
+  });
+
+  it('passes the doc type filter to search', async () => {
+    renderPage();
+    fireEvent.click(screen.getByText('比赛卡片'));
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+
+    await waitFor(() => expect(searchMock).toHaveBeenCalledTimes(1));
+    expect(searchMock.mock.calls[0][3]).toBe('card');
+  });
+
+  it('shows hit section, reason and matched terms', async () => {
+    searchMock.mockResolvedValue({ hits: [HIT], ms: 2 });
+
+    renderPage();
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+
+    await screen.findByText('命中原因：词面命中 + 语义相近');
+    await screen.findByText('命中章节：三、解题步骤');
+    await screen.findByText('命中词：RSA · 共模攻击');
+  });
+
+  it('records useful feedback for a result', async () => {
+    searchMock.mockResolvedValue({ hits: [HIT], ms: 2 });
+
+    renderPage();
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+    fireEvent.click(await screen.findByRole('button', { name: '有用' }));
+
+    await waitFor(() =>
+      expect(feedbackMock).toHaveBeenCalledWith(STARTER_Q, HIT.path, 'useful'),
+    );
+    await screen.findByText('已记录：有用');
+  });
+
+  it('renders graph related results separately', async () => {
+    searchMock.mockResolvedValue({
+      hits: [HIT],
+      graph: [
+        {
+          title: 'RSA 维纳攻击',
+          category: 'crypto',
+          path: 'crypto/rsa-wiener-attack.md',
+          score: 0,
+          snippet: '',
+          graph_via: 'relates_to',
+        },
+      ],
+      ms: 2,
+    });
+
+    renderPage();
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+
+    await screen.findByText('关联阅读');
+    await screen.findByText('RSA 维纳攻击');
+    await screen.findByText('图谱 · relates_to');
   });
 });

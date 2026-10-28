@@ -7,6 +7,7 @@ import {
   Divider,
   Group,
   Loader,
+  SegmentedControl,
   Select,
   Stack,
   Text,
@@ -14,11 +15,20 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { ArrowUpRight, Copy, Search, Sparkles, Square } from 'lucide-react';
+import {
+  ArrowUpRight,
+  Check,
+  Copy,
+  Search,
+  Sparkles,
+  Square,
+  ThumbsDown,
+  ThumbsUp,
+} from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Md from '../components/Md';
 import { api, ask } from '../api';
-import type { Hit } from '../types';
+import type { DocType, Hit } from '../types';
 
 const MODES = [
   { value: 'direct', label: '直接搜索' },
@@ -28,6 +38,12 @@ const MODES = [
 const MODE_DESC: Record<string, string> = {
   direct: '按关键词和语义查找资料，只看知识库。',
   ask: '先检索相关资料，再让本地模型给出思路和脚本。',
+};
+
+const FEEDBACK_LABEL: Record<string, string> = {
+  useful: '有用',
+  useless: '无用',
+  adopted: '已采用',
 };
 
 const STARTERS = [
@@ -69,10 +85,15 @@ export default function SearchPage({
 }) {
   const [q, setQ] = useState('');
   const [mode, setMode] = useState('direct');
+  const [docType, setDocType] = useState<'all' | DocType>('all');
   const [busy, setBusy] = useState(false);
   const [phase, setPhase] = useState('');
   const [error, setError] = useState('');
   const [hits, setHits] = useState<Hit[]>([]);
+  const [graph, setGraph] = useState<Hit[]>([]);
+  const [counts, setCounts] = useState<{ topic: number; card: number } | null>(null);
+  const [resultQuery, setResultQuery] = useState('');
+  const [feedback, setFeedback] = useState<Record<string, string>>({});
   const [ms, setMs] = useState<number | null>(null);
   const [searched, setSearched] = useState(false);
   const [answer, setAnswer] = useState('');
@@ -107,10 +128,19 @@ export default function SearchPage({
     setAnswerOpen(false);
     setAnswer('');
     setDoneInfo('');
+    setFeedback({});
     try {
-      const r = await api.search(text, 10, category);
+      const r = await api.search(
+        text,
+        10,
+        category,
+        docType === 'all' ? null : docType,
+      );
       if (r.error) setError(r.error);
       setHits(r.hits || []);
+      setGraph(r.graph || []);
+      setCounts(r.counts || null);
+      setResultQuery(text);
       setMs(r.ms ?? null);
     } catch (e) {
       setError(String((e as Error).message || e));
@@ -118,7 +148,7 @@ export default function SearchPage({
       setBusy(false);
       setPhase('');
     }
-  }, [q, category]);
+  }, [q, category, docType]);
 
   const runAsk = useCallback(async (override?: string) => {
     const text = (override ?? q).trim();
@@ -130,13 +160,22 @@ export default function SearchPage({
     setAnswer('');
     setDoneInfo('');
     setPhase('正在检索资料…');
+    setFeedback({});
     t0.current = Date.now();
     ctrl.current?.abort();
     const c = new AbortController();
     ctrl.current = c;
     try {
-      const r = await api.search(text, 3, category);
+      const r = await api.search(
+        text,
+        3,
+        category,
+        docType === 'all' ? null : docType,
+      );
       setHits(r.hits || []);
+      setGraph(r.graph || []);
+      setCounts(r.counts || null);
+      setResultQuery(text);
       setMs(r.ms ?? null);
       setSearched(true);
       const paths = (r.hits || []).map((h) => h.path);
@@ -176,7 +215,7 @@ export default function SearchPage({
       setBusy(false);
       setPhase('');
     }
-  }, [q, category]);
+  }, [q, category, docType]);
 
   const run = useCallback(() => {
     if (mode === 'ask') runAsk();
@@ -189,6 +228,20 @@ export default function SearchPage({
     setPhase('');
     setError('已停止接收本次回答；本地连接已断开，后端模型可能仍在收尾。');
   }, []);
+
+  const sendFeedback = useCallback(
+    async (h: Hit, verdict: 'useful' | 'useless' | 'adopted') => {
+      if (!resultQuery) return;
+      try {
+        const r = await api.feedback(resultQuery, h.path, verdict);
+        if (r.error || r.ok === false) throw new Error(r.error || '反馈保存失败');
+        setFeedback((m) => ({ ...m, [h.path]: verdict }));
+      } catch (e) {
+        setError(`反馈未保存：${String((e as Error).message || e)}`);
+      }
+    },
+    [resultQuery],
+  );
 
   const refs = useMemo(() => hits.slice(0, 3), [hits]);
 
@@ -240,15 +293,33 @@ export default function SearchPage({
             }}
           />
           <Group justify="space-between" align="flex-end" wrap="wrap">
-            <Select
-              label="使用方式"
-              aria-label="使用方式"
-              data={MODES}
-              value={mode}
-              onChange={(v) => setMode(v || 'direct')}
-              w={150}
-              allowDeselect={false}
-            />
+            <Group gap="md" align="flex-end" wrap="wrap">
+              <Select
+                label="使用方式"
+                aria-label="使用方式"
+                data={MODES}
+                value={mode}
+                onChange={(v) => setMode(v || 'direct')}
+                w={150}
+                allowDeselect={false}
+              />
+              <div>
+                <Text size="xs" fw={500} mb={4}>
+                  资料类型
+                </Text>
+                <SegmentedControl
+                  size="xs"
+                  aria-label="资料类型"
+                  value={docType}
+                  onChange={(v) => setDocType((v as 'all' | DocType) || 'all')}
+                  data={[
+                    { label: '全部', value: 'all' },
+                    { label: '专题', value: 'topic' },
+                    { label: '比赛卡片', value: 'card' },
+                  ]}
+                />
+              </div>
+            </Group>
             <Group gap={8}>
               {busy && mode === 'ask' ? (
                 <Button
@@ -371,11 +442,18 @@ export default function SearchPage({
                 {hits.length} 条
               </Text>
             </Title>
-            {ms != null && (
-              <Text size="xs" c="dimmed">
-                用时 {ms} ms
-              </Text>
-            )}
+            <Group gap="sm">
+              {counts && (counts.topic + counts.card > 0) && (
+                <Text size="xs" c="dimmed">
+                  专题 {counts.topic} · 比赛卡片 {counts.card}
+                </Text>
+              )}
+              {ms != null && (
+                <Text size="xs" c="dimmed">
+                  用时 {ms} ms
+                </Text>
+              )}
+            </Group>
           </Group>
           <div className="hit-list">
             {hits.map((h, i) => {
@@ -385,6 +463,13 @@ export default function SearchPage({
                   <Group gap={6} mb={8} wrap="wrap">
                     <Badge size="xs" variant="light" color="brand">
                       {h.category || '资料'}
+                    </Badge>
+                    <Badge
+                      size="xs"
+                      variant="outline"
+                      color={h.doc_type === 'card' ? 'grape' : 'teal'}
+                    >
+                      {h.doc_type_label || (h.doc_type === 'card' ? '比赛卡片' : '专题文档')}
                     </Badge>
                     {h.graph_via && (
                       <Badge size="xs" variant="outline">
@@ -408,6 +493,25 @@ export default function SearchPage({
                     <p className="hit-snippet">
                       {snip.length > 260 ? snip.slice(0, 260) + '…' : snip}
                     </p>
+                  )}
+                  {(h.match?.labels?.length || h.match?.terms?.length || h.section) && (
+                    <div className="hit-why">
+                      {h.match?.labels?.length ? (
+                        <Text size="xs" c="dimmed">
+                          命中原因：{h.match.labels.join(' + ')}
+                        </Text>
+                      ) : null}
+                      {h.section ? (
+                        <Text size="xs" c="dimmed">
+                          命中章节：{h.section}
+                        </Text>
+                      ) : null}
+                      {h.match?.terms?.length ? (
+                        <Text size="xs" c="dimmed">
+                          命中词：{h.match.terms.join(' · ')}
+                        </Text>
+                      ) : null}
+                    </div>
                   )}
                   <Group justify="space-between" mt={10} wrap="wrap" gap={8}>
                     <span className="hit-path">{h.path}</span>
@@ -434,6 +538,39 @@ export default function SearchPage({
                       </Button>
                     </Group>
                   </Group>
+                  <Group justify="space-between" mt={6} wrap="wrap" gap={8}>
+                    <Group gap={4}>
+                      <Button
+                        variant={feedback[h.path] === 'useful' ? 'light' : 'subtle'}
+                        size="compact-sm"
+                        leftSection={<ThumbsUp size={13} />}
+                        onClick={() => void sendFeedback(h, 'useful')}
+                      >
+                        有用
+                      </Button>
+                      <Button
+                        variant={feedback[h.path] === 'useless' ? 'light' : 'subtle'}
+                        size="compact-sm"
+                        leftSection={<ThumbsDown size={13} />}
+                        onClick={() => void sendFeedback(h, 'useless')}
+                      >
+                        无用
+                      </Button>
+                      <Button
+                        variant={feedback[h.path] === 'adopted' ? 'light' : 'subtle'}
+                        size="compact-sm"
+                        leftSection={<Check size={13} />}
+                        onClick={() => void sendFeedback(h, 'adopted')}
+                      >
+                        采用
+                      </Button>
+                    </Group>
+                    {feedback[h.path] && (
+                      <Text size="xs" c="teal">
+                        已记录：{FEEDBACK_LABEL[feedback[h.path]] || feedback[h.path]}
+                      </Text>
+                    )}
+                  </Group>
                 </article>
               );
             })}
@@ -447,6 +584,50 @@ export default function SearchPage({
               </Center>
             )}
           </div>
+          {graph.length > 0 && (
+            <div style={{ marginTop: 28 }}>
+              <Group justify="space-between" mb="xs" align="baseline">
+                <Title order={4}>
+                  关联阅读{' '}
+                  <Text component="span" c="dimmed" size="sm">
+                    {graph.length} 条
+                  </Text>
+                </Title>
+                <Text size="xs" c="dimmed">
+                  来自图谱关系，未参与主排名
+                </Text>
+              </Group>
+              <Stack gap={0}>
+                {graph.map((h, i) => (
+                  <Group
+                    key={h.path + '-related-' + i}
+                    justify="space-between"
+                    wrap="wrap"
+                    gap={8}
+                    py={6}
+                    style={{ borderBottom: '1px solid var(--border)' }}
+                  >
+                    <Button
+                      variant="subtle"
+                      size="compact-sm"
+                      justify="flex-start"
+                      onClick={() => onOpenDoc(h.path, h.title)}
+                    >
+                      {h.title}
+                    </Button>
+                    <Group gap={6}>
+                      <Badge size="xs" variant="outline">
+                        图谱 · {h.graph_via || '关联'}
+                      </Badge>
+                      <Text size="xs" c="dimmed">
+                        {h.path}
+                      </Text>
+                    </Group>
+                  </Group>
+                ))}
+              </Stack>
+            </div>
+          )}
         </div>
       )}
 

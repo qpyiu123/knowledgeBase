@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "description": "P1 固定检索评测集。expected 为人工确认的相关文档路径（可多选）；不要为了跑分随意改动。",
+  "queries": [
+    {
+      "id": "rsa-common-modulus",
+      "query": "RSA 共模攻击 n 相同 e 不同 两组密文",
+      "expected": ["crypto/rsa-common-modulus-attack.md"]
+    },
+    {
+      "id": "rsa-small-e",
+      "query": "RSA 小公钥指数 e=3 小明文 直接开方",
+      "expected": ["crypto/rsa-small-e-attack.md"]
+    },
+    {
+      "id": "rsa-wiener",
+      "query": "Wiener 攻击 e 很大 d 很小 连分数",
+      "expected": ["crypto/rsa-wiener-attack.md"]
+    },
+    {
+      "id": "rsa-fermat",
+      "query": "RSA p q 很接近 Fermat 分解",
+      "expected": ["crypto/rsa-fermat-factorization.md"]
+    },
+    {
+      "id": "mt19937",
+      "query": "MT19937 624 个输出 预测随机数",
+      "expected": ["crypto/random-mt19937.md"]
+    },
+    {
+      "id": "lcg",
+      "query": "LCG 线性同余 连续随机数 预测下一个",
+      "expected": ["crypto/lcg-predict.md"]
+    },
+    {
+      "id": "aes-ecb",
+      "query": "AES ECB 相同明文块产生相同密文块",
+      "expected": ["crypto/aes-ecb-penguin.md"]
+    },
+    {
+      "id": "aes-cbc",
+      "query": "AES CBC 字节翻转 padding oracle 逐字节解密",
+      "expected": ["crypto/aes-cbc-byte-at-a-time.md"]
+    },
+    {
+      "id": "phar",
+      "query": "PHAR 反序列化 phar:// file_exists 文件包含",
+      "expected": ["web/phar-deserialization.md"]
+    },
+    {
+      "id": "jwt",
+      "query": "JWT alg none 伪造 token 弱密钥",
+      "expected": ["web/jwt-forge.md"]
+    },
+    {
+      "id": "log4shell",
+      "query": "Log4Shell JNDI log4j 2.x 日志注入",
+      "expected": ["web/jndi-log4shell.md"]
+    },
+    {
+      "id": "ssrf",
+      "query": "SSRF 访问内网 gopher 打 Redis 云元数据",
+      "expected": ["web/ssrf-internal-access.md"]
+    },
+    {
+      "id": "ret2libc",
+      "query": "ret2libc 泄露 libc 基址调用 system",
+      "expected": ["pwn/ret2libc-offset-leak.md"]
+    },
+    {
+      "id": "stack-pivot",
+      "query": "栈迁移 leave ret 溢出长度不够放 ROP",
+      "expected": ["pwn/stack-pivot.md"]
+    },
+    {
+      "id": "fastbin",
+      "query": "fastbin dup double free __malloc_hook",
+      "expected": ["pwn/heap-fastbin-attack.md"]
+    },
+    {
+      "id": "png-stego",
+      "query": "PNG 图片隐写 zsteg CRC 宽高",
+      "expected": ["misc/png-steganography.md"]
+    },
+    {
+      "id": "zip-tricks",
+      "query": "ZIP 伪加密 明文攻击 CRC32 爆破",
+      "expected": ["misc/zip-archive-tricks.md"]
+    },
+    {
+      "id": "pyjail",
+      "query": "Python pyjail 沙箱逃逸 __class__ 链",
+      "expected": [
+        "misc/pyjail-escape.md",
+        "web/python-pickle-pyjail.md"
+      ]
+    },
+    {
+      "id": "volatility",
+      "query": "内存取证 volatility 内存 dump 进程",
+      "expected": ["forensics/memory-forensics-volatility.md"]
+    },
+    {
+      "id": "ffuf",
+      "query": "ffuf 目录爆破 用法",
+      "expected": ["_des/tools/web/ffuf的使用.md"]
+    },
+    {
+      "id": "n1ctf-2023",
+      "query": "N1CTF 2023 ECDSA nonce 泄漏 LLL 格",
+      "expected": ["_des/cards/crypto/2023_N1CTF.full.md"]
+    },
+    {
+      "id": "ctfshow-ssti",
+      "query": "ctfshow SSTI Flask Jinja2 题解",
+      "expected": ["_des/wp_summary/web/ctfshow-SSTI.md"]
+    }
+  ]
+}

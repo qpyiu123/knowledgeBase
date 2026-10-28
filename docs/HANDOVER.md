@@ -28,6 +28,28 @@
 
 ---
 
+## 〇之二、2026-10-28 P1 更新（本批）
+
+- `/api/search` 现在返回命中 chunk、命中章节、命中词与原因：
+  `match.sources` = `fts` / `vec` / `graph:*`，另带两路 RRF 贡献。
+- FTS 结果按文档去重，只保留每篇文档 BM25 最好的一块；单源融合也按文档去重。
+  候选池设下限（FTS 60 篇 / 向量 80 块），`top_k=5` 与 `top_k=10` 排序更一致。
+- 查询噪声清理：`{{7*7}}` 里的单数字不再进 FTS；单字母 `n/e/c` 精确匹配，
+  不再用 `"e"*` 前缀扫全库。
+- `/api/search` 支持 `doc_type=topic|card`，返回 `doc_type` / `doc_type_label` /
+  `counts`。前端可筛选，结果卡片显示「专题文档 / 比赛卡片」。
+- 图谱补入条目单独显示为「关联阅读」，不混进主排名。
+- 新增 `POST /api/feedback`：`useful|useless|adopted` 追加到
+  `work/feedback/feedback.jsonl`（`[feedback].file` 可改）；本地文件，不入库。
+- 新增可复现评测：`python tools/eval_search.py`，固定
+  `eval/search_queries.json` 22 条，输出 top1 / hit@5 / MRR / recall@5。
+- 测试：Python **132 passed**；前端 **14 passed**；`npm run check` / `build` 通过。
+- 评测基线（同一固定集）：改动前 top1=0.9545 / MRR=0.9697；P1 后均为 1.0000。
+  FTS-only 为 top1=0.9091 / MRR=0.9545，保留 hybrid 有数据依据。
+- **未调 RRF/BM25 权重**；本批改的是候选生成与查询噪声，再由评测验证。
+
+---
+
 ## 一、运行方式
 
 ```powershell
@@ -90,11 +112,12 @@ knowledgeBase/
 
 ```
 GET  /                托管 tools/agent/webapp/dist/（SPA 回退）
-GET  /api/health      模型状态 + 文档数
+GET  /api/health      模型状态 + 索引状态（model_ok / index_ok 分离）
 GET  /api/stats       文档/分块/方向计数
-POST /api/search      {q, top_k, category} → {hits, graph, ms}
+POST /api/search      {q, top_k, category, doc_type} → {hits, graph, counts, ms}
 GET  /api/doc?path=   单篇全文
 POST /api/ask         {q, paths} → SSE
+POST /api/feedback    {query, path, verdict, note} → 追加本地 JSONL
 ```
 
 - 静态文件有 `relative_to(root)` 防穿越
@@ -109,8 +132,12 @@ React 19 + TS + Vite 8 + Mantine 8.3.18。
 src/
 ├── main.tsx             MantineProvider + brand 十档色阶
 ├── App.tsx              AppShell + 侧栏方向筛选 + Reader 挂载
-├── api.ts               fetch 封装 + SSE reader
-├── pages/SearchPage.tsx 搜索 / 问模型 / 起点卡片
+├── api.ts               fetch 封装 + SSE + 反馈
+├── types.ts             Hit / SearchResp / DocType / MatchInfo
+├── lib/sse.ts           SSE 解析（tok/err/done）
+├── pages/SearchPage.tsx 搜索 / 问模型 / 类型筛选 / 解释 / 反馈
+├── pages/SearchPage.test.tsx
+├── api.test.ts
 └── components/
     ├── Md.tsx           react-markdown + rehype-highlight + 复制按钮
     └── Reader.tsx       Drawer + 自建目录（h1-h3）
@@ -211,10 +238,14 @@ P0 修复：
   不再谎称已停止后端运算。
 - **限制**：上游 Ollama 可能在连接关闭后短暂收尾，本机无法保证瞬时停算。
 
-### 5. 🟡 仍存在：检索排序有噪音
+### 5. 🟡 部分改善：检索排序噪音
 
-旧记录称搜「SSTI」时专题文档被比赛卡片压过。本批**未复测**。
-排序与类型加权留到 P1，用可复现评测驱动，不盲改权重。
+P1 修掉了“一篇长文档的所有 chunk 占满 top-N”的主因（FTS 文档级最好块 +
+候选池下限 + 查询噪声清理）。固定 22 条评测集上 top1/MRR 从
+0.9545/0.9697 提升到 1.0/1.0。
+
+仍未解决：泛化查询下 signals 很多的长文档仍可能偏前；22 条集太小，
+不能证明全库无噪音。**未调 RRF/BM25 权重**；下一步应扩评测集再决定。
 
 ### 6. 🟢 临时脚本
 
@@ -249,11 +280,13 @@ P0 修复：
 .\.venv\Scripts\python.exe tools\cli.py lint
 ```
 
-### 测试
-`pytest.ini` 已配好（`pythonpath = tools`）。2026-10-28 P0 后：
-- Python：`107 passed`（含新增 `tests/test_server_api.py` 的 25 个离线端点测试）。
-- 前端：`npm test` → 10 passed（SSE 契约 + SearchPage 显式参数/错误显示）。
+### 测试与评测
+`pytest.ini` 已配好（`pythonpath = tools`）。2026-10-28 P1 后：
+- Python：`132 passed`（P0 的 107 + P1 的命中解释/类型筛选/反馈/评测指标）。
+- 前端：`npm test` → 14 passed（SSE、显式参数、类型筛选、解释、反馈、图谱关联）。
 - 类型/构建：`npm run check`、`npm run build` 通过。
+- 检索评测：`python tools\eval_search.py` → 22 条，hybrid top1/MRR 均为 1.0；
+  `--mode fts` 为 0.9091/0.9545，保留 hybrid 有数据依据。
 - 真实模型、真实浏览器未纳入自动化；测试全部离线 Mock。
 
 ### 前端开发
@@ -272,7 +305,8 @@ npm run check   # 仅类型检查
 2. 跑 `pytest -o addopts="" -q`、`npm run check`、`npm test`，确认基线全绿。
 3. 若要真实验证：`.\start.ps1`，在浏览器点起点卡片/结果卡片“问模型”，
    观察错误提示与“停止接收”语义。注意本机当前 8765/11434 未监听。
-4. P1 从可复现评测与检索解释开始，不要先改排序权重。
+4. P1 已完成；下一步 P2 从附件分析入口开始，评测复用 `eval/search_queries.json`。
+   扩评测集后再考虑排序权重。
 
 ---
 
@@ -284,10 +318,11 @@ npm run check   # 仅类型检查
   想排查请求要改环境变量
 - 索引重建 4 分钟，改知识库后记得重跑 `kb index`
 
-**测试基线（2026-10-27）**：`pytest` 82 passed，9.7 秒；server 与前端零测试覆盖。
-**P0 后（2026-10-28）**：Python 107 passed（29.06 秒，含 25 个 server 离线测试）；
+**测试基线（2026-10-27）**：`pytest` 82 passed；server 与前端零测试覆盖。
+**P0 后（2026-10-28）**：Python 107 passed（含 25 个 server 离线测试）；
 前端 10 passed；`npm run check` / `npm run build` 通过。
-真实模型/真实 Ollama/真实浏览器仍未纳入自动化，这部分覆盖仍是 0。
+**P1 后（2026-10-28）**：Python 132 passed；前端 14 passed；评测 22 条
+hybrid top1/MRR 1.0。真实模型/真实 Ollama/真实浏览器仍未纳入自动化。
 
 ---
 

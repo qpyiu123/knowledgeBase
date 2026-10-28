@@ -30,6 +30,7 @@ class FusedHit:
             "score": round(self.score, 5),
             "sources": self.sources,
             "section": self.section,
+            "per_source": {k: round(v, 6) for k, v in self.per_source.items()},
         }
 
 
@@ -104,12 +105,23 @@ def rrf_fuse(
 
 
 def fuse_single_source(hits: list[Hit], top_k: int = 8) -> list[FusedHit]:
-    """没有向量索引时的降级路径：按 FTS 顺序直接用。"""
-    out = []
-    for h in hits[:top_k]:
+    """没有向量索引时的降级路径：按 FTS 顺序直接用。
+
+    仍按文档去重：FTS 后端已尽量返回每篇文档一块，但调用方也可能
+    直接传入原始 chunk 列表，这里再做一次兜底，避免同一篇文档刷屏。
+    """
+    out: list[FusedHit] = []
+    seen: set[str] = set()
+    for h in hits:
+        if h.doc_path in seen:
+            continue
+        seen.add(h.doc_path)
+        score = 1.0 / (60 + len(out))
         out.append(FusedHit(
             doc_path=h.doc_path, title=h.title, category=h.category,
-            score=1.0 / (60 + len(out)), sources=["fts"],
+            score=score, sources=["fts"], per_source={"fts": score},
             best_text=h.origin, section=getattr(h, "section", ""),
         ))
+        if len(out) >= top_k:
+            break
     return out

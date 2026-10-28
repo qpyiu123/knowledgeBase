@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from kb.fts import FtsIndex, write_cjk  # noqa: E402
 from kb.fusion import fuse_single_source, rrf_fuse  # noqa: E402
 from kb.fts import Hit  # noqa: E402
-from kb.parser import Doc  # noqa: E402
+from kb.parser import Doc, tokenize_query  # noqa: E402
 
 DOCS = [
     Doc(path="crypto/rsa-cm.md", title="弱 RSA 共模攻击", category="crypto",
@@ -99,6 +99,42 @@ def test_rrf_single_source():
 def test_fuse_single_source():
     fts = [Hit("a.md", "A", "misc", 1.0, "t")]
     assert fuse_single_source(fts)[0].doc_path == "a.md"
+
+
+def test_fuse_single_source_dedupes_documents():
+    fts = [
+        Hit("a.md", "A", "misc", 1.0, "t1"),
+        Hit("a.md", "A", "misc", 2.0, "t2"),
+        Hit("b.md", "B", "misc", 3.0, "t3"),
+    ]
+    out = fuse_single_source(fts, top_k=5)
+    assert [h.doc_path for h in out] == ["a.md", "b.md"]
+    assert out[0].per_source == {"fts": out[0].score}
+
+
+def test_fts_returns_one_best_chunk_per_document(tmp_path: Path):
+    body = "## 长章节\n" + ("PHP str_replace 过滤 绕过 " * 400)
+    docs = [
+        Doc(path="web/a.md", title="PHP 过滤绕过", category="web",
+            signals=["PHP", "过滤"], body=body),
+        Doc(path="web/b.md", title="PHP 命令执行", category="web",
+            signals=["PHP", "命令执行"], body="PHP 过滤还有别的思路。"),
+    ]
+    f = FtsIndex(tmp_path / "fts.db")
+    f.rebuild(docs, chunk_chars=200, overlap=20)
+    hits = f.search("PHP 过滤 绕过", top_k=10)
+
+    paths = [h.doc_path for h in hits]
+    assert len(paths) == len(set(paths)), "同一篇文档不应重复占多个名次"
+    assert "web/a.md" in paths and "web/b.md" in paths
+    assert any(h.section == "长章节" for h in hits)
+
+
+def test_tokenize_skips_single_digit_payload():
+    toks = tokenize_query("{{7*7}} e=3 RSA")
+    assert "7" not in toks
+    assert "e" in toks
+    assert "rsa" in toks
 
 
 if __name__ == "__main__":

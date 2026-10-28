@@ -27,11 +27,27 @@ export const api = {
     getJSON<{ path: string; body: string; error?: string }>(
       '/api/doc?path=' + encodeURIComponent(path),
     ),
-  search: (q: string, top_k = 10, category?: string | null) =>
+  search: (q: string, top_k = 10, category?: string | null, doc_type?: string | null) =>
     getJSON<SearchResp>('/api/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ q, top_k, category: category || null }),
+      body: JSON.stringify({
+        q,
+        top_k,
+        category: category || null,
+        doc_type: doc_type || null,
+      }),
+    }),
+  feedback: (
+    query: string,
+    path: string,
+    verdict: 'useful' | 'useless' | 'adopted',
+    note = '',
+  ) =>
+    getJSON<{ ok: boolean; saved: number; error?: string }>('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, path, verdict, note }),
     }),
 };
 

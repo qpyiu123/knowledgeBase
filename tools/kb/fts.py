@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
-from .parser import Doc, chunk_doc, tokenize_query
+from .parser import Doc, chunk_doc, section_of_chunk, tokenize_query
 
 CJK = r"\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff"
 CJK_RUN = re.compile(f"[{CJK}]+")
@@ -158,10 +158,15 @@ class FtsIndex:
             if not words:
                 continue
             if all(re.fullmatch(r"[A-Za-z0-9_]+", w) for w in words):
-                parts.append('"' + " ".join(words) + '"_*'.replace("_*", "*"))
-                # 多词时同时给出纯字面量，避免长串命中不到
-                if len(words) > 1:
-                    parts.append('"' + " ".join(words) + '"')
+                # 单字母不做前缀：`"e"*` 会命中所有以 e 开头的英文词，
+                # 让 RSA 的 e/n 查询被无关代码块淹没。
+                if len(words) == 1 and len(words[0]) == 1:
+                    parts.append('"' + words[0] + '"')
+                else:
+                    parts.append('"' + " ".join(words) + '"*')
+                    # 多词时同时给出纯字面量，避免长串命中不到
+                    if len(words) > 1:
+                        parts.append('"' + " ".join(words) + '"')
             else:
                 parts.append('"' + safe + '"')
         if not parts:
@@ -187,31 +192,30 @@ class FtsIndex:
         match = self.build_match(tokens, mode)
         conn = sqlite3.connect(self.db_path)
         try:
-            rows = self._fts_rows(conn, match, top_k * 4)
+            rows = self._fts_rows(conn, match, top_k, category)
             if not rows and tokens:
                 # 兜底 1：严格 AND
                 match_and = self.build_match(tokens, "and")
                 if match_and and match_and != match:
-                    rows = self._fts_rows(conn, match_and, top_k * 4)
+                    rows = self._fts_rows(conn, match_and, top_k, category)
             if not rows and tokens:
                 # 兜底 2：退化到 LIKE 子串匹配
-                rows = self._like_rows(conn, tokens, top_k * 4)
+                rows = self._like_rows(conn, tokens, top_k, category)
             hits: list[Hit] = []
             for row in rows:
                 path, title, cat, score, origin = row
-                if category and cat != category:
-                    continue
+                origin = origin or ""
                 hits.append(Hit(
                     doc_path=path, title=title, category=cat,
-                    score=float(score), origin=origin or "", source="fts",
+                    score=float(score), origin=origin, source="fts",
+                    section=section_of_chunk(origin),
                 ))
-                if len(hits) >= top_k:
-                    break
             return hits
         finally:
             conn.close()
 
-    def _fts_rows(self, conn: sqlite3.Connection, match: str, limit: int):
+    def _fts_rows(self, conn: sqlite3.Connection, match: str, limit: int,
+                  category: str | None = None):
         if not match:
             return []
         # 注意：bm25() 的参数是**不带 rowid 的列数**，本表 6 列 => 传 6 个权重。
@@ -223,40 +227,77 @@ class FtsIndex:
         w = ", ".join(str(float(x)) for x in WEIGHTS)
         # 再一个坑：FTS5 的 rowid 列是**未声明**的，在子查询里 `AS rid` 会变成 NULL，
         # 必须写成 `rowid AS rid` 或直接 `chunks.rowid`。这里显式取 chunks.rowid。
+        #
+        # 为什么按文档取最好块：每个 chunk 都拼接了 title/signals 元数据，
+        # 所以同一篇文档的所有块都可能命中同一个词。若只按 chunk 排序，
+        # 一篇长文档会独占 top-N，其它相关文档根本进不了候选。
+        # 这里用 row_number() 只保留每篇文档 BM25 最低（最好）的那一块。
+        cat_sql = "AND category = ?" if category else ""
         sql = f"""
-            SELECT d.path, d.title, d.category, s.score, c.origin
-            FROM (
+            WITH scored AS (
                 SELECT chunks.rowid AS rid,
                        bm25(chunks, {w}) AS score
                 FROM chunks
                 WHERE chunks MATCH ?
-                ORDER BY score
-                LIMIT ?
-            ) AS s
-            JOIN chunks c ON c.rowid = s.rid
-            JOIN docs d  ON d.path = c.path
-            ORDER BY s.score
+            ),
+            ranked AS (
+                SELECT d.path AS path, d.title AS title, d.category AS category,
+                       s.score AS score, c.origin AS origin,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY d.path ORDER BY s.score
+                       ) AS rn
+                FROM scored s
+                JOIN chunks c ON c.rowid = s.rid
+                JOIN docs d  ON d.path = c.path
+            )
+            SELECT path, title, category, score, origin
+            FROM ranked
+            WHERE rn = 1 {cat_sql}
+            ORDER BY score
+            LIMIT ?
         """
+        params: list[Any] = [match]
+        if category:
+            params.append(category)
+        params.append(limit)
         try:
-            return conn.execute(sql, (match, limit)).fetchall()
+            return conn.execute(sql, params).fetchall()
         except sqlite3.OperationalError as e:
             _warn(f"MATCH 失败({e}) match={match!r}")
             return []
 
-    def _like_rows(self, conn: sqlite3.Connection, tokens: list[str], limit: int):
+    def _like_rows(self, conn: sqlite3.Connection, tokens: list[str], limit: int,
+                   category: str | None = None):
         if not tokens:
             return []
         tok = tokens[:4]
         conds = " OR ".join(["chunks.origin LIKE ?"] * len(tok))
-        params = [f"%{t}%" for t in tok]
+        params: list[Any] = [f"%{t}%" for t in tok]
+        cat_sql = "AND category = ?" if category else ""
         sql = f"""
-            SELECT d.path, d.title, d.category, -1.0 AS score, chunks.origin
-            FROM chunks JOIN docs d ON d.path = chunks.path
-            WHERE {conds}
+            WITH matched AS (
+                SELECT chunks.rowid AS rid
+                FROM chunks
+                WHERE {conds}
+            ),
+            ranked AS (
+                SELECT d.path AS path, d.title AS title, d.category AS category,
+                       c.origin AS origin,
+                       ROW_NUMBER() OVER (PARTITION BY d.path) AS rn
+                FROM matched m
+                JOIN chunks c ON c.rowid = m.rid
+                JOIN docs d  ON d.path = c.path
+            )
+            SELECT path, title, category, -1.0 AS score, origin
+            FROM ranked
+            WHERE rn = 1 {cat_sql}
             LIMIT ?
         """
+        if category:
+            params.append(category)
+        params.append(limit)
         try:
-            return conn.execute(sql, (*params, limit)).fetchall()
+            return conn.execute(sql, params).fetchall()
         except sqlite3.OperationalError:
             return []
 
