@@ -32,7 +32,12 @@ from urllib.parse import parse_qs, unquote, urlparse
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from agent.buildinfo import BUILD_ID  # noqa: E402
+from agent.buildinfo import BUILD_ID, config_id  # noqa: E402
+
+try:
+    CONFIG_ID = config_id()
+except Exception:  # noqa: BLE001  # 配置/产物不可读时不阻断 health
+    CONFIG_ID = "unknown"
 
 # ---- 配置：config.toml 是唯一事实来源，环境变量只做显式覆盖 ----
 try:
@@ -1025,6 +1030,7 @@ class Handler(BaseHTTPRequestHandler):
                 "model_ok": bool(names),
                 "index_ok": index["ok"],
                 "build": BUILD_ID,
+                "config": CONFIG_ID,
                 "model": model,
                 "models": names,
                 "index": index,
@@ -1038,6 +1044,7 @@ class Handler(BaseHTTPRequestHandler):
                 "model_ok": False,
                 "index_ok": index["ok"],
                 "build": BUILD_ID,
+                "config": CONFIG_ID,
                 "model": MODEL,
                 "models": [],
                 "index": index,

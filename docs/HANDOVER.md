@@ -457,3 +457,30 @@ hybrid top1/MRR 1.0。真实模型/真实 Ollama/真实浏览器仍未纳入自�
 
 本文只讲「现在是什么样」。**往哪走看 `docs/ROADMAP.md`**，
 那里有主线判断、优先级排序，以及明确不做的事。
+
+---
+
+## 十一、启动诊断分层（P6）
+
+`start.ps1` 的 `-Status` 与启动后健康提示固定分三层，任一层失败不影响其他层：
+
+- **[Web]** `:8765` 是否监听 + 真实监听 pid + `/api/health` 的 `build`
+  与当前代码是否一致。旧后端缺 `build`/不一致提示 `-Stop` 后重启；
+  `config` 不一致只提示“配置或前端产物已变，建议重启”，不与 build 混淆。
+- **[索引]** `kb/` Markdown 篇数（跳过 `_` 前缀文件与
+  `_templates/.obsidian/.git/node_modules`）vs FTS `docs` 数，再看 `index/fts.db`
+  修改时间是否早于 kb 最新修改。
+- **[模型]** `/api/tags`：可达且有模型→OK；11434 未起→“Ollama 未启动，
+  Web 检索仍可用但问模型不可用”；已起但无模型→列出 `config.toml`
+  `[ollama].model` 缺失名。
+
+`config` 字段来自 `buildinfo.config_id()`：`config.toml` 内容 +
+`tools/agent/webapp/dist/index.html` 的 mtime/size 的 sha256；
+`python tools\agent\buildinfo.py --config` 可单独查看。
+
+启动失败时看 `logs\ollama.log`（及 `ollama.err.log`）、
+`logs\web.log`（及 `web.err.log`）的最后 15 行；脚本会自动打印并提示
+换端口（`-Port`/`-OllamaPort`）、查完整日志、检查杀毒/防火墙。
+
+P6 后（2026-10-28）：Python 207 passed（server 47，含 health `config` 断言）；
+`start.ps1` 保持 UTF-8 BOM；现有 8765/11434 未重启，备用端口 8799 冒烟通过。

@@ -40,6 +40,25 @@ def fingerprint(root: Path = ROOT) -> str:
     return h.hexdigest()
 
 
+def config_id(root: Path = ROOT) -> str:
+    """配置与前端产物指纹：config.toml 内容 + dist/index.html 的 mtime/size。"""
+    h = hashlib.sha256()
+    cfg = root / "config.toml"
+    try:
+        h.update(cfg.read_bytes())
+    except OSError:
+        h.update(b"<missing-config>")
+    h.update(b"\0")
+    dist = root / "tools" / "agent" / "webapp" / "dist" / "index.html"
+    try:
+        st = dist.stat()
+    except OSError:
+        h.update(b"<missing-dist>")
+    else:
+        h.update(f"{st.st_mtime_ns}:{st.st_size}".encode("ascii"))
+    return h.hexdigest()
+
+
 def git_head(root: Path = ROOT) -> str:
     try:
         out = subprocess.run(
@@ -63,4 +82,9 @@ BUILD_ID = build_id()
 
 
 if __name__ == "__main__":
-    print(BUILD_ID)
+    import sys
+
+    if "--config" in sys.argv[1:]:
+        print(config_id())
+    else:
+        print(BUILD_ID)

@@ -1,8 +1,9 @@
 ﻿# CTF 知识库 一键启动
 #
-#   .\start.ps1              启动 Ollama + Web 搜索界面，并打开浏览器
+#   .\start.ps1              直接运行即启动 Ollama + Web 搜索界面，并打开浏览器
+#   .\start.ps1 -Start       同上（显式启动开关）
 #   .\start.ps1 -Stop        停止全部服务
-#   .\start.ps1 -Status      只看状态（含后端版本与索引新鲜度）
+#   .\start.ps1 -Status      只看状态（[Web] / [索引] / [模型] 三层独立显示）
 #   .\start.ps1 -Reindex     重建索引（FTS + 向量，前台显示进度）
 #   .\start.ps1 -NoBrowser   不自动开浏览器
 #   .\start.ps1 -CpuOnly     强制 CPU 推理（显存被别的程序占了时用）
@@ -12,6 +13,7 @@
 #      -Stop 先按监听端口关闭，再核对 pid 文件，避免关错或留下孤儿监听。
 
 param(
+    [switch]$Start,
     [switch]$Stop,
     [switch]$Status,
     [switch]$Reindex,
@@ -104,25 +106,141 @@ function Get-ExpectedBuild {
     return ''
 }
 
-function Show-BackendHealth([int]$p) {
-    $h = Get-Health $p
-    if (-not $h) {
-        Warn "端口 :$p 被占用，但 /api/health 不可用，无法确认后端版本"
-        return $false
+function Get-ExpectedConfig {
+    if (-not (Test-Path $Venv) -or -not (Test-Path $BuildScript)) { return '' }
+    try {
+        $out = & $Venv $BuildScript --config 2>$null
+        if ($LASTEXITCODE -ne 0) { return '' }
+        $line = @($out) | Where-Object { "$_".Trim() } | Select-Object -Last 1
+        if ($line) { return "$line".Trim() }
+    } catch { }
+    return ''
+}
+
+function Get-ConfiguredModel {
+    $cfg = Join-Path $Root 'config.toml'
+    if (-not (Test-Path $cfg)) { return '' }
+    try {
+        $inOllama = $false
+        foreach ($line in Get-Content -LiteralPath $cfg -Encoding UTF8) {
+            if ($line -match '^\s*\[([^\]]+)\]\s*$') {
+                $inOllama = ($Matches[1].Trim() -eq 'ollama')
+                continue
+            }
+            if ($inOllama -and $line -match '^\s*model\s*=\s*(.+?)\s*$') {
+                $value = $Matches[1].Trim().Trim('"').Trim("'")
+                if ($value) { return $value }
+            }
+        }
+    } catch { }
+    return ''
+}
+
+function Show-LogTail([string]$name, [int]$lines = 15) {
+    $candidates = @(
+        (Join-Path $LogD "$name.log"),
+        (Join-Path $LogD "$name.err.log"),
+        (Join-Path $LogD "$name.out.log")
+    )
+    $shown = $false
+    foreach ($file in $candidates) {
+        if (-not (Test-Path -LiteralPath $file)) { continue }
+        Say "--- $file 最后 $lines 行 ---" 'DarkGray'
+        try {
+            Get-Content -LiteralPath $file -Tail $lines -ErrorAction Stop |
+                ForEach-Object { Say "  $_" 'DarkGray' }
+        } catch {
+            Say "  （读取失败: $($_.Exception.Message)）" 'DarkGray'
+        }
+        $shown = $true
     }
-    $running = ''
-    if ($null -ne $h.build) { $running = "$($h.build)".Trim() }
-    $expected = Get-ExpectedBuild
-    if (-not $running) {
-        Warn '检测到旧版本后端正在运行（health 无 build 字段），建议先 .\start.ps1 -Stop 再 -Start'
-        return $false
+    if (-not $shown) {
+        Say "  （日志不存在：$($candidates -join '、')）" 'DarkGray'
     }
-    if ($expected -and $running -ne $expected) {
-        Warn "检测到旧版本后端正在运行（运行中 build=$running，当前代码=$expected），建议先 .\start.ps1 -Stop 再 -Start"
-        return $false
+}
+
+function Show-StartupAdvice([int]$p) {
+    $tip = ("  建议：确认 :{0} 未被其他程序占用（可用 -Port / -OllamaPort 换端口）；" +
+            "查看上面日志的完整内容；若进程被拦截请检查杀毒软件/防火墙。") -f $p
+    Say $tip 'Yellow'
+}
+
+function Show-ModelStatus {
+    try {
+        $op = Get-PortPid $OllamaPort
+        if (-not $op) {
+            Warn "Ollama 未启动，Web 检索仍可用但“问模型”不可用（:$OllamaPort 未监听）"
+            return
+        }
+        try {
+            $tags = Invoke-RestMethod "http://127.0.0.1:$OllamaPort/api/tags" `
+                    -TimeoutSec 5 -ErrorAction Stop
+        } catch {
+            Warn "Ollama 端口 :$OllamaPort 已监听 (pid=$op)，但 /api/tags 不可达"
+            return
+        }
+        $names = @($tags.models | ForEach-Object { $_.name })
+        if ($names.Count -gt 0) {
+            Ok ("Ollama 运行中 (pid={0})，模型: {1}" -f $op, ($names -join ', '))
+            return
+        }
+        $expected = Get-ConfiguredModel
+        if ($expected) {
+            Warn "Ollama 已启动 (pid=$op)，但没有可用模型；缺少模型: $expected（运行 tools\setup_ollama.ps1 导入）"
+        } else {
+            Warn "Ollama 已启动 (pid=$op)，但没有可用模型（运行 tools\setup_ollama.ps1 导入）"
+        }
+    } catch {
+        Warn "模型状态检查失败: $($_.Exception.Message)"
     }
-    Ok "后端版本一致 (build=$running)"
-    return $true
+}
+
+function Show-WebStatus {
+    try {
+        $sp = Get-PortPid $Port
+        if (-not $sp) {
+            Warn "Web 未运行（:$Port 未监听）"
+            return
+        }
+        Ok "Web 运行中  pid=$sp  :$Port"
+        try {
+            $h = Get-Health $Port
+            if (-not $h) {
+                Warn "端口 :$Port 已监听，但 /api/health 不可用，无法确认后端版本"
+                return
+            }
+            $running = ''
+            if ($null -ne $h.build) { $running = "$($h.build)".Trim() }
+            $expected = Get-ExpectedBuild
+            if (-not $running) {
+                Warn '检测到旧版本后端正在运行（health 无 build 字段），建议先 .\start.ps1 -Stop 再 -Start'
+            } elseif ($expected -and $running -ne $expected) {
+                Warn "检测到旧版本后端正在运行（运行中 build=$running，当前代码=$expected），建议先 .\start.ps1 -Stop 再 -Start"
+            } else {
+                Ok "后端版本一致 (build=$running)"
+            }
+            $runningCfg = ''
+            if ($null -ne $h.config) { $runningCfg = "$($h.config)".Trim() }
+            $expectedCfg = Get-ExpectedConfig
+            if (-not $runningCfg) {
+                Warn '后端 health 无 config 字段（旧版本），无法判断配置/前端产物是否变化'
+            } elseif ($expectedCfg -and $runningCfg -ne $expectedCfg) {
+                Warn "配置或前端产物已变（运行中 config=$runningCfg，当前=$expectedCfg），建议重启后端"
+            }
+        } catch {
+            Warn "后端版本检查失败: $($_.Exception.Message)"
+        }
+    } catch {
+        Warn "Web 状态检查失败: $($_.Exception.Message)"
+    }
+}
+
+function Show-IndexStatus {
+    try {
+        Show-IndexFreshness
+    } catch {
+        Warn "索引状态检查失败: $($_.Exception.Message)"
+    }
 }
 
 function Get-IndexInfo {
@@ -131,8 +249,16 @@ function Get-IndexInfo {
     $kbDir = Join-Path $Root 'kb'
     $files = @()
     if (Test-Path $kbDir) {
+        # 与 tools\kb\parser.py:iter_docs 保持一致：跳过 _templates/.obsidian/.git/
+        # node_modules 目录，以及文件名以 _ 开头的 Markdown（如 kb/_index.md）。
+        $skipDirRe = '(^|[\\/])(_templates|\.obsidian|\.git|node_modules)[\\/]'
+        $kbFull = [string](Get-Item -LiteralPath $kbDir).FullName
         $files = @(Get-ChildItem -LiteralPath $kbDir -Recurse -Filter *.md `
-                   -File -ErrorAction SilentlyContinue)
+                   -File -ErrorAction SilentlyContinue | Where-Object {
+            if ($_.Name.StartsWith('_')) { return $false }
+            $rel = $_.FullName.Substring($kbFull.Length).TrimStart('\')
+            return -not ($rel -match $skipDirRe)
+        })
     }
     $latest = $files | Sort-Object LastWriteTime -Descending |
               Select-Object -First 1
@@ -252,30 +378,14 @@ function Stop-PidFile([string]$file, [string]$what) {
 
 # ---------------------------------------------------------------- 状态
 function Show-Status {
-    $op = Get-PortPid $OllamaPort
-    $sp = Get-PortPid $Port
     Say ''
     Say '=== 当前状态 ===' 'Cyan'
-    if ($op) { Ok "Ollama   运行中  pid=$op  :$OllamaPort" }
-    else     { Warn "Ollama   未运行" }
-    if ($sp) {
-        Ok "Web 界面 运行中  pid=$sp  :$Port"
-        Show-BackendHealth $Port | Out-Null
-    } else {
-        Warn "Web 界面 未运行"
-    }
-
-    if ($op) {
-        try {
-            $tags = Invoke-RestMethod "http://127.0.0.1:$OllamaPort/api/tags" `
-                    -TimeoutSec 5
-            $ms = $tags.models | ForEach-Object { $_.name }
-            Ok ("模型: " + ($ms -join ', '))
-        } catch { Warn '模型列表获取失败' }
-    }
-    Say ''
-    Say '--- 索引新鲜度 ---' 'Cyan'
-    Show-IndexFreshness
+    Say '[Web]' 'Cyan'
+    Show-WebStatus
+    Say '[索引]' 'Cyan'
+    Show-IndexStatus
+    Say '[模型]' 'Cyan'
+    Show-ModelStatus
     Say ''
 }
 
@@ -317,6 +427,10 @@ if ($Reindex) {
 }
 
 if ($Status) { Show-Status; return }
+
+# -Start 是显式别名：与“直接运行 .\start.ps1（无参数）”走完全相同的启动流程，
+# 因此这里不单独分支，继续执行下面的环境检查与服务启动。
+if ($Start) { }
 
 # ---------------------------------------------------------------- 环境检查
 Say ''
@@ -371,43 +485,45 @@ Say '=== 2. Ollama 模型服务 ===' 'Cyan'
 
 $olPid = Get-PortPid $OllamaPort
 if ($olPid) {
-    Ok "已在运行 (pid=$olPid)"
+    Show-ModelStatus
 } else {
     if (-not (Test-Path $OlExe)) {
         Bad "找不到 ollama.exe: $OlExe"
         Say '  模型服务不可用，Web 界面可以检索但无法生成建议。'
     } else {
         $env:OLLAMA_MODELS = $OlMod
-        $args = @('serve')
-        $sp = Start-Process -FilePath $OlExe -ArgumentList $args `
-              -WorkingDirectory $OlLib `
-              -RedirectStandardOutput (Join-Path $LogD 'ollama.out.log') `
-              -RedirectStandardError  (Join-Path $LogD 'ollama.err.log') `
-              -WindowStyle Hidden -PassThru
-        $sp.Id | Set-Content (Join-Path $LogD 'ollama.pid') -Encoding ASCII
+        try {
+            $olArgs = @('serve')
+            $sp = Start-Process -FilePath $OlExe -ArgumentList $olArgs `
+                  -WorkingDirectory $OlLib `
+                  -RedirectStandardOutput (Join-Path $LogD 'ollama.log') `
+                  -RedirectStandardError  (Join-Path $LogD 'ollama.err.log') `
+                  -WindowStyle Hidden -PassThru
+            $sp.Id | Set-Content (Join-Path $LogD 'ollama.pid') -Encoding ASCII
 
-        if (Wait-Http "http://127.0.0.1:$OllamaPort/api/version" 40) {
-            $listenPid = 0
-            for ($i = 0; $i -lt 20; $i++) {
-                $listenPid = Get-PortPid $OllamaPort
-                if ($listenPid) { break }
-                Start-Sleep -Milliseconds 250
-            }
-            if ($listenPid) {
-                $listenPid | Set-Content (Join-Path $LogD 'ollama.pid') -Encoding ASCII
-                Ok "已启动 (pid=$listenPid)"
+            if (Wait-Http "http://127.0.0.1:$OllamaPort/api/version" 40) {
+                $listenPid = 0
+                for ($i = 0; $i -lt 20; $i++) {
+                    $listenPid = Get-PortPid $OllamaPort
+                    if ($listenPid) { break }
+                    Start-Sleep -Milliseconds 250
+                }
+                if ($listenPid) {
+                    $listenPid | Set-Content (Join-Path $LogD 'ollama.pid') -Encoding ASCII
+                    Ok "已启动 (pid=$listenPid)"
+                } else {
+                    Warn "未查到 :$OllamaPort 的监听进程，暂记启动器 pid=$($sp.Id)"
+                }
+                Show-ModelStatus
             } else {
-                Warn "未查到 :$OllamaPort 的监听进程，暂记启动器 pid=$($sp.Id)"
+                Bad "Ollama 启动超时（:$OllamaPort）"
+                Show-LogTail 'ollama'
+                Show-StartupAdvice $OllamaPort
             }
-            try {
-                $tags = Invoke-RestMethod "http://127.0.0.1:$OllamaPort/api/tags" `
-                        -TimeoutSec 10
-                $names = $tags.models | ForEach-Object { $_.name }
-                if ($names) { Ok ("模型: " + ($names -join ', ')) }
-                else { Warn '还没有导入任何模型，运行 tools\setup_ollama.ps1' }
-            } catch { Warn '模型列表获取失败' }
-        } else {
-            Bad "启动超时，看日志: $(Join-Path $LogD 'ollama.err.log')"
+        } catch {
+            Bad "Ollama 启动失败: $($_.Exception.Message)"
+            Show-LogTail 'ollama'
+            Show-StartupAdvice $OllamaPort
         }
     }
 }
@@ -418,8 +534,7 @@ Say '=== 3. Web 搜索界面 ===' 'Cyan'
 
 $webPid = Get-PortPid $Port
 if ($webPid) {
-    Ok "已在运行 (pid=$webPid)"
-    Show-BackendHealth $Port | Out-Null
+    Show-WebStatus
 } else {
     $env:AGENT_PORT = "$Port"
     $env:AGENT_HOST = '127.0.0.1'
@@ -427,35 +542,43 @@ if ($webPid) {
     # AGENT_MODEL / AGENT_OLLAMA 只有在用户显式设置时才覆盖配置。
     if ($CpuOnly) { $env:AGENT_OLLAMA = "http://127.0.0.1:$OllamaPort" }
 
-    Push-Location $Root
-    $sp = Start-Process -FilePath $Venv -ArgumentList @($Srv) `
-          -WorkingDirectory $Root `
-          -RedirectStandardOutput (Join-Path $LogD 'web.out.log') `
-          -RedirectStandardError  (Join-Path $LogD 'web.err.log') `
-          -WindowStyle Hidden -PassThru
-    Pop-Location
-    $sp.Id | Set-Content (Join-Path $LogD 'web.pid') -Encoding ASCII
+    try {
+        Push-Location $Root
+        try {
+            $sp = Start-Process -FilePath $Venv -ArgumentList @($Srv) `
+                  -WorkingDirectory $Root `
+                  -RedirectStandardOutput (Join-Path $LogD 'web.log') `
+                  -RedirectStandardError  (Join-Path $LogD 'web.err.log') `
+                  -WindowStyle Hidden -PassThru
+        } finally {
+            Pop-Location
+        }
+        $sp.Id | Set-Content (Join-Path $LogD 'web.pid') -Encoding ASCII
 
-    if (Wait-Http "http://127.0.0.1:$Port/api/health" 30) {
-        $listenPid = 0
-        for ($i = 0; $i -lt 20; $i++) {
-            $listenPid = Get-PortPid $Port
-            if ($listenPid) { break }
-            Start-Sleep -Milliseconds 250
-        }
-        if ($listenPid) {
-            $listenPid | Set-Content (Join-Path $LogD 'web.pid') -Encoding ASCII
-            Ok "已启动 (pid=$listenPid)"
+        if (Wait-Http "http://127.0.0.1:$Port/api/health" 30) {
+            $listenPid = 0
+            for ($i = 0; $i -lt 20; $i++) {
+                $listenPid = Get-PortPid $Port
+                if ($listenPid) { break }
+                Start-Sleep -Milliseconds 250
+            }
+            if ($listenPid) {
+                $listenPid | Set-Content (Join-Path $LogD 'web.pid') -Encoding ASCII
+                Ok "已启动 (pid=$listenPid)"
+            } else {
+                Warn "未查到 :$Port 的监听进程，暂记启动器 pid=$($sp.Id)"
+            }
+            Show-WebStatus
         } else {
-            Warn "未查到 :$Port 的监听进程，暂记启动器 pid=$($sp.Id)"
+            Bad "Web 启动超时（:$Port）"
+            Show-LogTail 'web'
+            Show-StartupAdvice $Port
+            return
         }
-    } else {
-        Bad "启动超时，看日志: $(Join-Path $LogD 'web.err.log')"
-        if (Test-Path (Join-Path $LogD 'web.err.log')) {
-            Say '--- 错误日志最后 8 行 ---' 'DarkGray'
-            Get-Content (Join-Path $LogD 'web.err.log') -Tail 8 |
-                ForEach-Object { Say "  $_" 'DarkGray' }
-        }
+    } catch {
+        Bad "Web 启动失败: $($_.Exception.Message)"
+        Show-LogTail 'web'
+        Show-StartupAdvice $Port
         return
     }
 }
@@ -474,7 +597,8 @@ if (-not $NoBrowser) {
 
 Say ''
 Say '提示：' 'DarkGray'
-Say '  .\start.ps1 -Status   查看状态' 'DarkGray'
+Say '  .\start.ps1 -Start    启动服务（等同直接运行 .\start.ps1）' 'DarkGray'
+Say '  .\start.ps1 -Status   查看三层状态' 'DarkGray'
 Say '  .\start.ps1 -Reindex  重建索引' 'DarkGray'
 Say '  .\start.ps1 -Stop     停止全部服务' 'DarkGray'
 Say ''

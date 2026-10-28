@@ -534,3 +534,46 @@ P2 评测样例与期望：
 局限：没有 Pester 自动化用例，PowerShell 行为由上述 `-Status` 与备用端口
 手工冒烟验证；未在 pwsh 上实测（本机未安装 pwsh），但语法只用 5.1/pwsh 公共子集。
 本批未重建索引。
+
+---
+
+## 12. 启动诊断分层（P6，2026-10-28）
+
+`start.ps1` 是唯一启动入口，`.\start.ps1` 与 `.\start.ps1 -Start` 等价。
+`-Status` 与启动后的健康提示都按三层独立输出，任意一层失败不阻断其他层：
+
+- **[Web]** 端口 `:8765` 是否监听、真实监听 pid、`/api/health` 的 `build`
+  是否等于当前代码指纹；旧后端缺 `build` 或 build 不一致时提示
+  `-Stop` 后重启。`config` 不一致只提示“配置或前端产物已变，建议重启”，
+  与 build 分开判断。
+- **[索引]** `Get-IndexInfo` 统计 `kb/` 下 Markdown 篇数（跳过 `_` 前缀文件与
+  `_templates/.obsidian/.git/node_modules`），对比 FTS `docs` 数，并比较
+  `index/fts.db` 的修改时间与 kb 最新修改时间。
+- **[模型]** GET `http://127.0.0.1:11434/api/tags`：可达且有模型→OK；
+  11434 未监听→“Ollama 未启动，Web 检索仍可用但问模型不可用”；
+  已监听但无模型→列出 `config.toml` 中 `[ollama].model` 期望模型名并指向
+  `tools\setup_ollama.ps1`。
+
+`buildinfo.py` 的 `build` 指纹仍只覆盖 `tools/agent`、`tools/kb` 的 `.py`
+与 `start.ps1`。新增 `config_id()`：对 `config.toml` 内容 +
+`tools/agent/webapp/dist/index.html` 的 mtime/size 做 sha256，
+`/api/health` 新增 `config` 字段（不可读时为 `"unknown"`）。
+`python tools\agent\buildinfo.py --config` 输出该指纹，供 `start.ps1` 比较。
+
+启动失败（Start-Process 异常或端口等待超时）时，Ollama/Web 分别打印
+`logs\ollama.log`、`logs\web.log`（含对应 `.err.log`）的最后 15 行，
+并提示换端口（`-Port` / `-OllamaPort`）、查看完整日志、检查杀毒/防火墙；
+日志不存在会明说。
+
+**P6 验证（2026-10-28）**：
+
+| 命令 / 操作 | 结果 |
+|---|---|
+| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **207 passed in 38.04s**（本批新增 `config_id` 用例 1 个 + server health 的 `config` 断言） |
+| `.\.venv\Scripts\python.exe -m pytest tests\test_server_api.py -o addopts="" -q` | **47 passed**（含 `config` 字段断言） |
+| `.\start.ps1 -Status`（现有 8765/11434） | 三层均输出；Web 识别旧后端 build=`e423dad-950fc14e` vs 当前 `c918d2d-dc7b7408`，并提示旧后端无 `config`；索引 kb 1567 篇 = FTS 1567 篇；Ollama 列出 7 个模型 |
+| 备用端口 8799 冒烟 | 临时启动 `server.py`（AGENT_PORT=8799），`Get-NetTCPConnection` pid=8632 与 `-Status -Port 8799` 一致；health `build=c918d2d-dc7b7408`、`config=0303b36e...8c8a`，三层全部 OK；仅结束该临时 pid，8765/11434 未动 |
+| `start.ps1` 文件头 | 字节 `239,187,191`（UTF-8 BOM）；`Parser::ParseFile` 语法通过 |
+
+局限：没有 Pester 用例；启动失败日志分支未真实制造超时，只做了代码路径与
+语法检查。未停止或重启现有 8765/11434 服务，未重建索引。

@@ -102,7 +102,7 @@ print('ok')
 
 | # | 文件 | 行 | 类别 | 运行方式 | 引用/证据 | 状态 |
 |---:|---|---:|---|---|---|---|
-| 1 | `start.ps1` | 256 | 服务 | `.\start.ps1` | README、AGENTS 常用命令 | 主入口 |
+| 1 | `start.ps1` | 604 | 服务 | `.\start.ps1`（或 `-Start`） | README、AGENTS 常用命令 | 主入口（三层诊断） |
 | 2 | `tools/agent/start.py` | 66 | 服务 | `python tools/agent/start.py` | `README.md:122,287` | 辅助入口 |
 | 3 | `tools/agent/server.py` | 856 | 服务 | `python tools/agent/server.py` | `tests/test_server_api.py:15` | 主服务（有未提交改动） |
 | 4 | `tools/cli.py` | 496 | CLI | `python tools/cli.py ...` | HANDOVER、README | 主 CLI |

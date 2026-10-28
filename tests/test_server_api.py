@@ -184,6 +184,8 @@ def test_health_reports_build_id(env, monkeypatch):
     assert status == 200
     assert body["build"] == server.BUILD_ID
     assert body["build"]
+    assert body["config"] == server.CONFIG_ID
+    assert body["config"]
 
 
 def test_buildinfo_tracks_source_changes(tmp_path):
@@ -200,6 +202,27 @@ def test_buildinfo_tracks_source_changes(tmp_path):
 
     source.write_text("print(2)\n", encoding="utf-8")
     assert buildinfo.build_id(tmp_path) != first
+
+
+def test_config_id_tracks_config_and_frontend_artifact(tmp_path):
+    from agent import buildinfo
+
+    dist = tmp_path / "tools" / "agent" / "webapp" / "dist"
+    dist.mkdir(parents=True)
+    cfg = tmp_path / "config.toml"
+    cfg.write_text("model = 'a'\n", encoding="utf-8")
+    index = dist / "index.html"
+    index.write_text("<html>one</html>", encoding="utf-8")
+
+    first = buildinfo.config_id(tmp_path)
+    assert first == buildinfo.config_id(tmp_path)
+
+    cfg.write_text("model = 'b'\n", encoding="utf-8")
+    assert buildinfo.config_id(tmp_path) != first
+
+    before = buildinfo.config_id(tmp_path)
+    index.write_text("<html>two</html>", encoding="utf-8")
+    assert buildinfo.config_id(tmp_path) != before
 
 
 def test_health_resolves_actual_model_name(env, monkeypatch):
