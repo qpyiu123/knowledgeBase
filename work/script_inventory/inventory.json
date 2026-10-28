@@ -1,0 +1,1631 @@
+[
+ {
+  "path": "start.ps1",
+  "scope": "tool",
+  "lines": 256,
+  "has_main": true,
+  "purpose": "项目主启动脚本：检查/构建前端、启动 agent 服务",
+  "refs": "README、AGENTS.md 常用命令",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/activate.bat",
+  "scope": "tool",
+  "lines": 7,
+  "has_main": true,
+  "purpose": "Windows 批处理激活 venv 的备用入口",
+  "refs": "未发现引用",
+  "suggestion": "保留并补 README"
+ },
+ {
+  "path": "tools/activate.ps1",
+  "scope": "tool",
+  "lines": 16,
+  "has_main": true,
+  "purpose": "在当前 PowerShell 会话里启用 kb 命令（点号调用：. .\\tools\\activate.ps1）",
+  "refs": "README.md:31",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/attachment.py",
+  "scope": "tool",
+  "lines": 415,
+  "has_main": false,
+  "purpose": "附件侦察：只读、结构化的文件分析。",
+  "refs": "server.py:329、tests/test_attachment.py（P2 WIP）",
+  "suggestion": "P2 WIP，保持原样（本批不改不提交）"
+ },
+ {
+  "path": "tools/agent/carve.py",
+  "scope": "tool",
+  "lines": 326,
+  "has_main": false,
+  "purpose": "纯 Python 实现的取证能力（不依赖外部命令行工具）。",
+  "refs": "recon.py:272、attachment.py:24",
+  "suggestion": "保留（Agent 能力模块）"
+ },
+ {
+  "path": "tools/agent/hint.py",
+  "scope": "tool",
+  "lines": 320,
+  "has_main": false,
+  "purpose": "方向建议：选手没思路时，从附件/题面推出下一步该试什么。",
+  "refs": "cli.py:121、recon.py:736",
+  "suggestion": "保留（Agent 能力模块）"
+ },
+ {
+  "path": "tools/agent/loop.py",
+  "scope": "tool",
+  "lines": 1043,
+  "has_main": false,
+  "purpose": "轻量 CTF Agent —— 核心。",
+  "refs": "tests/test_agent_loop.py:10",
+  "suggestion": "保留（Agent 能力模块）"
+ },
+ {
+  "path": "tools/agent/recon.py",
+  "scope": "tool",
+  "lines": 767,
+  "has_main": false,
+  "purpose": "文件侦察工具：让 agent 在题面没信息时能从附件里找线索。",
+  "refs": "attachment.py、hint.py、loop.py:530（有未提交改动）",
+  "suggestion": "保留（Agent 能力模块）"
+ },
+ {
+  "path": "tools/agent/server.py",
+  "scope": "tool",
+  "lines": 856,
+  "has_main": true,
+  "purpose": "CTF 知识库 Web UI —— 搜索引擎样式（单文件，零前端构建）。",
+  "refs": "tests/test_server_api.py:15（有未提交改动）",
+  "suggestion": "保留（主服务，有未提交改动）"
+ },
+ {
+  "path": "tools/agent/start.py",
+  "scope": "tool",
+  "lines": 66,
+  "has_main": true,
+  "purpose": "一键启动 agent UI（自动重启 + 打开浏览器）。",
+  "refs": "README.md:122,287",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/tools.py",
+  "scope": "tool",
+  "lines": 336,
+  "has_main": false,
+  "purpose": "Agent 的三个工具：查知识库、读文件、写文件。",
+  "refs": "loop.py:12,528、tests/test_agent_tools.py",
+  "suggestion": "保留（Agent 能力模块）"
+ },
+ {
+  "path": "tools/agent/web/index.html",
+  "scope": "tool",
+  "lines": 964,
+  "has_main": false,
+  "purpose": "旧单文件前端回退页（dist 缺失时使用）",
+  "refs": "server.py:663-666 在 dist 缺失时回退",
+  "suggestion": "明确去留（dist 缺失时的回退页）"
+ },
+ {
+  "path": "tools/agent/webapp/index.html",
+  "scope": "tool",
+  "lines": 13,
+  "has_main": false,
+  "purpose": "Vite 前端入口 HTML",
+  "refs": "静态扫描命中：start.ps1、tools/agent/server.py、tools/agent/webapp/package.json、work/ctf_test/qw7_misc_html/front/vite.config.ts",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/package.json",
+  "scope": "tool",
+  "lines": 37,
+  "has_main": false,
+  "purpose": "前端依赖与 dev/build/check/test 脚本定义",
+  "refs": "静态扫描命中：start.ps1、work/patch_start_ps1.py",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/App.tsx",
+  "scope": "tool",
+  "lines": 176,
+  "has_main": false,
+  "purpose": "React 根组件与页面路由",
+  "refs": "静态扫描命中：tools/agent/webapp/src/main.tsx、work/patch_final.py、work/patch_react_ui.py",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/api.test.ts",
+  "scope": "tool",
+  "lines": 148,
+  "has_main": false,
+  "purpose": "前端 API 客户端单元测试",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/api.ts",
+  "scope": "tool",
+  "lines": 78,
+  "has_main": false,
+  "purpose": "前端 API 客户端（fetch/SSE 封装）",
+  "refs": "静态扫描命中：tools/agent/webapp/src/api.test.ts、tools/agent/webapp/src/App.tsx、tools/agent/webapp/src/components/Reader.tsx、tools/agent/webapp/src/pages/SearchPage.test.tsx",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/components/Md.tsx",
+  "scope": "tool",
+  "lines": 89,
+  "has_main": false,
+  "purpose": "Markdown 渲染组件",
+  "refs": "静态扫描命中：tools/agent/webapp/src/components/Reader.tsx、tools/agent/webapp/src/pages/SearchPage.tsx",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/components/Reader.tsx",
+  "scope": "tool",
+  "lines": 115,
+  "has_main": false,
+  "purpose": "文档阅读器组件",
+  "refs": "静态扫描命中：tools/agent/webapp/src/App.tsx、work/patch_final.py",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/lib/sse.ts",
+  "scope": "tool",
+  "lines": 122,
+  "has_main": false,
+  "purpose": "SSE 事件流解析工具",
+  "refs": "静态扫描命中：tools/agent/webapp/src/api.test.ts、tools/agent/webapp/src/api.ts、tools/agent/webapp/src/pages/SearchPage.test.tsx",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/main.tsx",
+  "scope": "tool",
+  "lines": 38,
+  "has_main": false,
+  "purpose": "React 应用入口",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/pages/SearchPage.test.tsx",
+  "scope": "tool",
+  "lines": 160,
+  "has_main": false,
+  "purpose": "搜索/问答主页面组件测试",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/pages/SearchPage.tsx",
+  "scope": "tool",
+  "lines": 662,
+  "has_main": false,
+  "purpose": "搜索与问答主页面",
+  "refs": "静态扫描命中：tools/agent/webapp/src/App.tsx、tools/agent/webapp/src/pages/SearchPage.test.tsx、work/patch_react_ui.py、work/patch_react_ui2.py",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/styles.css",
+  "scope": "tool",
+  "lines": 602,
+  "has_main": false,
+  "purpose": "前端全局样式",
+  "refs": "静态扫描命中：tools/agent/webapp/src/main.tsx",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/test/setup.ts",
+  "scope": "tool",
+  "lines": 32,
+  "has_main": false,
+  "purpose": "Vitest 测试初始化",
+  "refs": "静态扫描命中：tools/agent/webapp/vitest.config.ts",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/src/types.ts",
+  "scope": "tool",
+  "lines": 57,
+  "has_main": false,
+  "purpose": "前端共享 TypeScript 类型",
+  "refs": "静态扫描命中：tools/agent/webapp/src/api.ts、tools/agent/webapp/src/App.tsx、tools/agent/webapp/src/pages/SearchPage.test.tsx、tools/agent/webapp/src/pages/SearchPage.tsx",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/tsconfig.app.json",
+  "scope": "tool",
+  "lines": 23,
+  "has_main": false,
+  "purpose": "浏览器端 TypeScript 配置",
+  "refs": "静态扫描命中：tools/agent/webapp/tsconfig.json",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/tsconfig.json",
+  "scope": "tool",
+  "lines": 7,
+  "has_main": false,
+  "purpose": "TypeScript 项目引用入口",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/tsconfig.node.json",
+  "scope": "tool",
+  "lines": 20,
+  "has_main": false,
+  "purpose": "Node/Vite 端 TypeScript 配置",
+  "refs": "静态扫描命中：tools/agent/webapp/tsconfig.json",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/vite.config.ts",
+  "scope": "tool",
+  "lines": 18,
+  "has_main": false,
+  "purpose": "Vite 构建配置",
+  "refs": "静态扫描命中：tools/agent/webapp/package.json、tools/agent/webapp/tsconfig.node.json",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/agent/webapp/vitest.config.ts",
+  "scope": "tool",
+  "lines": 13,
+  "has_main": false,
+  "purpose": "Vitest 测试配置",
+  "refs": "静态扫描命中：tools/agent/webapp/package.json、tools/agent/webapp/tsconfig.node.json",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/bench_gguf.py",
+  "scope": "tool",
+  "lines": 334,
+  "has_main": true,
+  "purpose": "bench_gguf.py — llama-cpp-python 显存/速度基准 (RTX 3050 Ti Laptop, 4096 MiB)",
+  "refs": "setup_env.ps1:166,229",
+  "suggestion": "归档（历史状态工具，成品库不应再跑）"
+ },
+ {
+  "path": "tools/cli.py",
+  "scope": "tool",
+  "lines": 496,
+  "has_main": true,
+  "purpose": "CTF 知识库命令行入口。",
+  "refs": "HANDOVER、README",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/deepcheck.py",
+  "scope": "tool",
+  "lines": 191,
+  "has_main": true,
+  "purpose": "深度体检：检查被掐断可能留下的半截文件。",
+  "refs": "未发现外部引用",
+  "suggestion": "保留并补 README"
+ },
+ {
+  "path": "tools/dsh-ollama-provider.yml",
+  "scope": "tool",
+  "lines": 69,
+  "has_main": false,
+  "purpose": "把本地 Ollama 作为独立提供商接进 DeepSeek Harness",
+  "refs": "未发现代码引用",
+  "suggestion": "保留并补 README"
+ },
+ {
+  "path": "tools/eval_attachments.py",
+  "scope": "tool",
+  "lines": 243,
+  "has_main": true,
+  "purpose": "P2 附件侦察的可复现评测入口。",
+  "refs": "eval/attachment_cases.json（P2 WIP）",
+  "suggestion": "P2 WIP，保持原样（本批不改不提交）"
+ },
+ {
+  "path": "tools/eval_search.py",
+  "scope": "tool",
+  "lines": 139,
+  "has_main": true,
+  "purpose": "可复现检索评测入口。",
+  "refs": "AGENTS.md、eval/README.md",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/fetch_models.py",
+  "scope": "tool",
+  "lines": 445,
+  "has_main": true,
+  "purpose": "fetch_models.py — 幂等模型下载脚本 (CTF knowledge base)",
+  "refs": "setup_env.ps1:192、cli.py:105",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/fix_fence.py",
+  "scope": "tool",
+  "lines": 75,
+  "has_main": true,
+  "purpose": "彻底修复列表内代码块的缩进不一致。",
+  "refs": "目标路径写死在自身 :22-28",
+  "suggestion": "归档（历史状态工具，成品库不应再跑）"
+ },
+ {
+  "path": "tools/fix_indent.py",
+  "scope": "tool",
+  "lines": 66,
+  "has_main": true,
+  "purpose": "修复 pwn 里 5 个缩进错误的代码块：开头多了 3 个空格的整段需要反缩进。",
+  "refs": "目标路径写死在自身 :13-19",
+  "suggestion": "归档（历史状态工具，成品库不应再跑）"
+ },
+ {
+  "path": "tools/gen_index.py",
+  "scope": "tool",
+  "lines": 92,
+  "has_main": true,
+  "purpose": "为知识库生成 `_index.md` 导航页：按方向分类，附识别信号速查。",
+  "refs": "README.md:101,113,178",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/graphbuild.py",
+  "scope": "tool",
+  "lines": 116,
+  "has_main": true,
+  "purpose": "知识图谱构建工具：从 kb 的 front-matter 建图，或做关系质量检查。",
+  "refs": "未发现外部引用",
+  "suggestion": "保留，文档化与 kb graph / kb doctor 的分工"
+ },
+ {
+  "path": "tools/kb/__init__.py",
+  "scope": "tool",
+  "lines": 13,
+  "has_main": false,
+  "purpose": "CTF 知识库检索引擎。",
+  "refs": "由 tools.kb 包机制导入（无显式 import）",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/_blas.py",
+  "scope": "tool",
+  "lines": 19,
+  "has_main": false,
+  "purpose": "必须最先导入：在 numpy 加载前置好 BLAS 线程数。",
+  "refs": "embedder.py:20、npbert.py:17、vectors.py:14",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/config.py",
+  "scope": "tool",
+  "lines": 138,
+  "has_main": false,
+  "purpose": "配置读取。优先 tomllib（3.11+），失败回退到极简 ini 解析。",
+  "refs": "静态扫描命中：tools/agent/hint.py、tools/agent/server.py、tools/agent/tools.py、tools/cli.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/embedder.py",
+  "scope": "tool",
+  "lines": 286,
+  "has_main": false,
+  "purpose": "嵌入向量后端。",
+  "refs": "静态扫描命中：tools/kb/vectors.py、tools/model_check.py、work/bench_embed.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/evaluation.py",
+  "scope": "tool",
+  "lines": 163,
+  "has_main": false,
+  "purpose": "可复现检索评测：固定查询集 + top1/top5/MRR。",
+  "refs": "静态扫描命中：tools/eval_search.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/explain.py",
+  "scope": "tool",
+  "lines": 138,
+  "has_main": false,
+  "purpose": "检索结果解释：命中段落、命中词、命中来源与文档类型。",
+  "refs": "静态扫描命中：tools/agent/server.py、tools/kb/rag.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/fts.py",
+  "scope": "tool",
+  "lines": 339,
+  "has_main": false,
+  "purpose": "FTS5 关键词检索层。",
+  "refs": "静态扫描命中：tools/agent/server.py、tools/cli.py、tools/kb/fusion.py、tools/kb/rag.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/fusion.py",
+  "scope": "tool",
+  "lines": 127,
+  "has_main": false,
+  "purpose": "RRF（Reciprocal Rank Fusion）融合 + 文档级去重。",
+  "refs": "静态扫描命中：tools/cli.py、tools/eval_search.py、tools/kb/rag.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/graph.py",
+  "scope": "tool",
+  "lines": 291,
+  "has_main": false,
+  "purpose": "知识图谱：跨方向关系存储与有界扩展。",
+  "refs": "静态扫描命中：tools/cli.py、tools/graphbuild.py、tools/kb/rag.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/llm.py",
+  "scope": "tool",
+  "lines": 353,
+  "has_main": false,
+  "purpose": "本地大模型后端。",
+  "refs": "静态扫描命中：tools/agent/hint.py、tools/cli.py、tools/kb/rag.py、tools/model_check.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/npbert.py",
+  "scope": "tool",
+  "lines": 447,
+  "has_main": false,
+  "purpose": "纯 NumPy 的 BERT 前向推理（用于 BGE small 嵌入）。",
+  "refs": "静态扫描命中：tools/kb/embedder.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/parser.py",
+  "scope": "tool",
+  "lines": 312,
+  "has_main": false,
+  "purpose": "Markdown front-matter 解析、分块、中英文关键词抽取。",
+  "refs": "静态扫描命中：tools/cli.py、tools/deepcheck.py、tools/gen_index.py、tools/graphbuild.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/rag.py",
+  "scope": "tool",
+  "lines": 254,
+  "has_main": false,
+  "purpose": "检索增强问答（RAG）。",
+  "refs": "静态扫描命中：tools/agent/server.py、tools/agent/tools.py、tools/cli.py、tools/eval_search.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kb/vectors.py",
+  "scope": "tool",
+  "lines": 203,
+  "has_main": false,
+  "purpose": "向量检索层。",
+  "refs": "静态扫描命中：tools/kb/rag.py",
+  "suggestion": "保留（KB 库模块）"
+ },
+ {
+  "path": "tools/kbcheck.py",
+  "scope": "tool",
+  "lines": 237,
+  "has_main": true,
+  "purpose": "用自己的 md 跑一轮全链路自检：坏文件剔除、跳转落空、循环引用、格式不规范。",
+  "refs": "README.md:112,176,331",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/model_check.py",
+  "scope": "tool",
+  "lines": 137,
+  "has_main": true,
+  "purpose": "模型准备与验收检查（不依赖具体下载过程，只做核对）。",
+  "refs": "README.md:114,261,332",
+  "suggestion": "保留，文档化与 kb graph / kb doctor 的分工"
+ },
+ {
+  "path": "tools/normalize_eol.py",
+  "scope": "tool",
+  "lines": 29,
+  "has_main": false,
+  "purpose": "统一行尾为 LF，并清理修复过程中残留的问题。",
+  "refs": "未发现引用；无 __main__ 保护",
+  "suggestion": "归档，或加 __main__ 保护 + dry-run 后再留"
+ },
+ {
+  "path": "tools/setup_env.ps1",
+  "scope": "tool",
+  "lines": 231,
+  "has_main": true,
+  "purpose": "PowerShell 环境安装入口（venv/依赖/模型）",
+  "refs": "README.md:51,259",
+  "suggestion": "保留"
+ },
+ {
+  "path": "tools/setup_env.py",
+  "scope": "tool",
+  "lines": 262,
+  "has_main": true,
+  "purpose": "setup_env.py — 环境安装器 (Python 版, 与 setup_env.ps1 等价)",
+  "refs": "仅清单登记，未接入 README",
+  "suggestion": "收敛入口（与 setup_env.ps1 重叠）"
+ },
+ {
+  "path": "tools/setup_ollama.ps1",
+  "scope": "tool",
+  "lines": 168,
+  "has_main": true,
+  "purpose": "Ollama 安装与模型拉取脚本",
+  "refs": "README、MOVING、setup_env.ps1:219",
+  "suggestion": "保留"
+ },
+ {
+  "path": "work/add_relations.py",
+  "scope": "work",
+  "lines": 175,
+  "has_main": true,
+  "purpose": "给知识库文档批量补充跨方向关系字段。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "work/analyze_des.py",
+  "scope": "work",
+  "lines": 50,
+  "has_main": false,
+  "purpose": "分析 Des-CTF-Knowledge 的资料结构，为导入做分类映射。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "work/analyze_quality.py",
+  "scope": "work",
+  "lines": 54,
+  "has_main": false,
+  "purpose": "检查 quality / one_liner / lesson 字段，决定导入筛选策略。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "work/audit_des.py",
+  "scope": "work",
+  "lines": 152,
+  "has_main": false,
+  "purpose": "Des-CTF-Knowledge 内容质量审查（导入前）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "work/audit_des2.py",
+  "scope": "work",
+  "lines": 95,
+  "has_main": false,
+  "purpose": "深入审查：利用 frontmatter 自带的质量元数据做全量画像。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "work/audit_des3.py",
+  "scope": "work",
+  "lines": 93,
+  "has_main": false,
+  "purpose": "最终审查汇总：分区质量对比 + 影响面量化。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "work/bench_agent.py",
+  "scope": "work",
+  "lines": 90,
+  "has_main": false,
+  "purpose": "P3：Agent 端到端性能测试（单题）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/bench_ctx.py",
+  "scope": "work",
+  "lines": 66,
+  "has_main": false,
+  "purpose": "对比不同 num_ctx 下的生成速度与显存占用，确认 8192 是否可接受。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/bench_embed.py",
+  "scope": "work",
+  "lines": 21,
+  "has_main": false,
+  "purpose": "实测向量化速度，估算全量导入耗时。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/bench_exclusive.py",
+  "scope": "work",
+  "lines": 75,
+  "has_main": false,
+  "purpose": "独占显存场景下，探索能进一步榨出多少性能。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/bench_tps.py",
+  "scope": "work",
+  "lines": 62,
+  "has_main": false,
+  "purpose": "量化 Agent 每一步的模型调用性能（墙钟 / 生成 token / tok/s）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/checkin.sh",
+  "scope": "work",
+  "lines": 16,
+  "has_main": true,
+  "purpose": "docker 镜像挂载/进入的临时 shell 片段",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（一次性探针）"
+ },
+ {
+  "path": "work/ctf_test/qw7_babyrsa/task.py",
+  "scope": "work",
+  "lines": 60,
+  "has_main": false,
+  "purpose": "强网杯 babyrsa 题目生成脚本（复数 RSA）",
+  "refs": "静态扫描命中：work/ctf_test/writeups_archive/round1_235610/scratch/_v.py、work/judge/gen_discrete_log.py",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/qw7_discrete_log/task.py",
+  "scope": "work",
+  "lines": 21,
+  "has_main": false,
+  "purpose": "强网杯 discrete_log 题目生成脚本",
+  "refs": "静态扫描命中：work/ctf_test/writeups_archive/round1_235610/scratch/_v.py、work/judge/gen_discrete_log.py",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/qw7_misc_html/bot/index.ts",
+  "scope": "work",
+  "lines": 66,
+  "has_main": false,
+  "purpose": "misc-html 题目的 puppeteer bot 服务",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/qw7_misc_html/front/src/editor.ts",
+  "scope": "work",
+  "lines": 34,
+  "has_main": false,
+  "purpose": "题目前端 Monaco 编辑器封装",
+  "refs": "静态扫描命中：work/ctf_test/qw7_misc_html/front/src/index.ts、work/ctf_test/qw7_misc_html/front/vite.config.ts",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/qw7_misc_html/front/src/html.js",
+  "scope": "work",
+  "lines": 343,
+  "has_main": false,
+  "purpose": "misc-html 题目的 html 怪机器解释器",
+  "refs": "静态扫描命中：work/ctf_test/writeups_archive/round1_235610/scratch/harness.js",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/qw7_misc_html/front/src/index.ts",
+  "scope": "work",
+  "lines": 27,
+  "has_main": false,
+  "purpose": "题目前端入口",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/qw7_misc_html/front/vite.config.ts",
+  "scope": "work",
+  "lines": 27,
+  "has_main": false,
+  "purpose": "题目前端 Vite 配置",
+  "refs": "静态扫描命中：tools/agent/webapp/package.json、tools/agent/webapp/tsconfig.node.json",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/qw7_pyjail/main.py",
+  "scope": "work",
+  "lines": 86,
+  "has_main": false,
+  "purpose": "pyjail 题目沙箱入口（黑名单演示）",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/scratch_w1/driver.py",
+  "scope": "work",
+  "lines": 18,
+  "has_main": false,
+  "purpose": "babyrsa 求解驱动，调用 solve1b.check",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/scratch_w1/solve1.py",
+  "scope": "work",
+  "lines": 102,
+  "has_main": true,
+  "purpose": "discrete_log 的 DFS/格思路求解尝试",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/scratch_w1/solve1b.py",
+  "scope": "work",
+  "lines": 100,
+  "has_main": true,
+  "purpose": "discrete_log 的 hex 字符集求解尝试",
+  "refs": "静态扫描命中：work/ctf_test/scratch_w1/driver.py",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/scratch_w2/client.py",
+  "scope": "work",
+  "lines": 38,
+  "has_main": true,
+  "purpose": "pyjail 本地交互客户端（socket 发送 payload）",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/fetch_official_events.py",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/_t1.py",
+  "scope": "work",
+  "lines": 11,
+  "has_main": false,
+  "purpose": "discrete_log 的 p-1 因子试探",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/_t2.py",
+  "scope": "work",
+  "lines": 14,
+  "has_main": false,
+  "purpose": "discrete_log 参数一致性核验",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/contamination/testrun/main.py",
+  "scope": "work",
+  "lines": 86,
+  "has_main": false,
+  "purpose": "pyjail 题目副本（污染对照）",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/contamination/testrun/t.py",
+  "scope": "work",
+  "lines": 13,
+  "has_main": false,
+  "purpose": "pyjail payload 回归测试",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/scratch/_k.py",
+  "scope": "work",
+  "lines": 19,
+  "has_main": false,
+  "purpose": "babyrsa 低位 k 关系假设验证",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/scratch/_v.py",
+  "scope": "work",
+  "lines": 35,
+  "has_main": false,
+  "purpose": "babyrsa/discrete_log 两条假设验证",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/scratch/harness.js",
+  "scope": "work",
+  "lines": 75,
+  "has_main": false,
+  "purpose": "html 解释器的离线 Mini-DOM 测试框架",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/scratch/html.js",
+  "scope": "work",
+  "lines": 343,
+  "has_main": false,
+  "purpose": "html 解释器副本",
+  "refs": "静态扫描命中：work/ctf_test/writeups_archive/round1_235610/scratch/harness.js",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/scratch/main.py",
+  "scope": "work",
+  "lines": 86,
+  "has_main": false,
+  "purpose": "pyjail 题目副本",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/scratch/pty.py",
+  "scope": "work",
+  "lines": 3,
+  "has_main": false,
+  "purpose": "pty.spawn 的空桩实现",
+  "refs": "静态扫描命中：work/ctf_test/qw7_pyjail/main.py、work/ctf_test/writeups_archive/round1_235610/contamination/testrun/main.py、work/ctf_test/writeups_archive/round1_235610/scratch/main.py、work/docker_env/pyjail/main.py",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/scratch/q1_babyrsa.py",
+  "scope": "work",
+  "lines": 167,
+  "has_main": true,
+  "purpose": "强网杯 babyrsa 求解脚本（评测样本）",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/scratch/q2_discrete_log.py",
+  "scope": "work",
+  "lines": 105,
+  "has_main": true,
+  "purpose": "强网杯 discrete_log 求解脚本（评测样本）",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/ctf_test/writeups_archive/round1_235610/scratch/t.py",
+  "scope": "work",
+  "lines": 13,
+  "has_main": false,
+  "purpose": "pyjail payload 回归测试",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（离线测试样本，勿当生产工具）"
+ },
+ {
+  "path": "work/decode_flag.py",
+  "scope": "work",
+  "lines": 5,
+  "has_main": false,
+  "purpose": "硬编码 base64 flag 的解码探针",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（一次性探针）"
+ },
+ {
+  "path": "work/des_import.py",
+  "scope": "work",
+  "lines": 355,
+  "has_main": true,
+  "purpose": "把 Des-CTF-Knowledge 导入本知识库。",
+  "refs": "静态扫描命中：work/patch_titles.py",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "work/diag_rank.py",
+  "scope": "work",
+  "lines": 33,
+  "has_main": false,
+  "purpose": "诊断：为什么 Top-1 命中不到期望条目。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（一次性探针）"
+ },
+ {
+  "path": "work/docker_env/pyjail/main.py",
+  "scope": "work",
+  "lines": 86,
+  "has_main": false,
+  "purpose": "本地 pyjail 靶场入口",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（本地靶场）"
+ },
+ {
+  "path": "work/docker_env/pyjail/tcpserve.py",
+  "scope": "work",
+  "lines": 66,
+  "has_main": true,
+  "purpose": "极简 TCP 服务：把每个连接 dup 成子进程的 stdin/stdout，然后跑 main.py。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（本地靶场）"
+ },
+ {
+  "path": "work/eval_newdata.py",
+  "scope": "work",
+  "lines": 128,
+  "has_main": false,
+  "purpose": "评估 temp_newData 知识库的整合价值。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "work/exp.py",
+  "scope": "work",
+  "lines": 18,
+  "has_main": false,
+  "purpose": "RSA 共模攻击模板（真实参数未填）",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（一次性探针）"
+ },
+ {
+  "path": "work/find_bad_titles.py",
+  "scope": "work",
+  "lines": 27,
+  "has_main": false,
+  "purpose": "找出标题被代码块内 `#` 注释污染的文档。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "work/import_newdata.py",
+  "scope": "work",
+  "lines": 206,
+  "has_main": true,
+  "purpose": "从 temp_newData 精选文档，整理成当前知识库的 md 格式。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "work/judge/gen_babyrsa.py",
+  "scope": "work",
+  "lines": 108,
+  "has_main": false,
+  "purpose": "为 babyrsa 生成固定实例的 n / e / c（裁判用）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（裁判/出题辅助，已完成使命）"
+ },
+ {
+  "path": "work/judge/gen_discrete_log.py",
+  "scope": "work",
+  "lines": 72,
+  "has_main": false,
+  "purpose": "为 discrete_log 生成**可验证**的实例（裁判用）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（裁判/出题辅助，已完成使命）"
+ },
+ {
+  "path": "work/judge/ui.js",
+  "scope": "work",
+  "lines": 141,
+  "has_main": false,
+  "purpose": "评测/演示用前端页面脚本",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（裁判/出题辅助，已完成使命）"
+ },
+ {
+  "path": "work/judge/verify_q1.py",
+  "scope": "work",
+  "lines": 90,
+  "has_main": false,
+  "purpose": "验证 discrete_log 是否可解（裁判用，不进题目目录）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（裁判/出题辅助，已完成使命）"
+ },
+ {
+  "path": "work/judge/verify_q2.py",
+  "scope": "work",
+  "lines": 32,
+  "has_main": false,
+  "purpose": "核验子代理给的 pyjail payload 能否通过黑名单（裁判用）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（裁判/出题辅助，已完成使命）"
+ },
+ {
+  "path": "work/kbdeep1_check.py",
+  "scope": "work",
+  "lines": 53,
+  "has_main": true,
+  "purpose": "抽取 KB 的 Python 代码块并逐块试运行",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（一次性探针）"
+ },
+ {
+  "path": "work/kbdeep1_fm.py",
+  "scope": "work",
+  "lines": 91,
+  "has_main": false,
+  "purpose": "批量检查 KB front-matter（yaml 解析）",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（一次性探针）"
+ },
+ {
+  "path": "work/make_attachments.py",
+  "scope": "work",
+  "lines": 68,
+  "has_main": false,
+  "purpose": "造几个模拟真实 CTF 的附件，测试侦察能力。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/make_bench.py",
+  "scope": "work",
+  "lines": 81,
+  "has_main": true,
+  "purpose": "构造一套「真实题目」测试集。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/make_complex.py",
+  "scope": "work",
+  "lines": 95,
+  "has_main": false,
+  "purpose": "造几个「题面全是套话」的复杂题目，用来测试真实场景。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/measure_context.py",
+  "scope": "work",
+  "lines": 94,
+  "has_main": false,
+  "purpose": "量化上下文占用：用 Ollama 真实的 prompt_eval_count 来测。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/patch_final.py",
+  "scope": "work",
+  "lines": 57,
+  "has_main": false,
+  "purpose": "收尾：标题回退去掉 .md；服务端 dist 缺失时回退旧页面。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_hint_tool.py",
+  "scope": "work",
+  "lines": 66,
+  "has_main": false,
+  "purpose": "把 suggest_directions 工具加进 recon.py。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_react_ui.py",
+  "scope": "work",
+  "lines": 76,
+  "has_main": false,
+  "purpose": "React 版小修：Badge 禁止大写 + 深链接（#q / #ask / #doc）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_react_ui2.py",
+  "scope": "work",
+  "lines": 44,
+  "has_main": false,
+  "purpose": "修正深链接：让 runSearch / runAsk 接受可选文本参数。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_serve_dist.py",
+  "scope": "work",
+  "lines": 92,
+  "has_main": false,
+  "purpose": "改为托管 webapp/dist（React 构建产物）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_server_ui.py",
+  "scope": "work",
+  "lines": 89,
+  "has_main": false,
+  "purpose": "把 server.py 里的内嵌 HTML 换成外部文件，并加 /api/stats。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_start_ps1.py",
+  "scope": "work",
+  "lines": 62,
+  "has_main": false,
+  "purpose": "在 start.ps1 里插入前端构建检查（dist 缺失时自动 npm run build）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_titles.py",
+  "scope": "work",
+  "lines": 61,
+  "has_main": false,
+  "purpose": "修 des_import.py 的标题提取：跳过代码块内的 # 注释。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_ui2.py",
+  "scope": "work",
+  "lines": 55,
+  "has_main": false,
+  "purpose": "修补前端：插入 cleanSnippet 并确认被正确调用。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_ui3.py",
+  "scope": "work",
+  "lines": 32,
+  "has_main": false,
+  "purpose": "阅读器标题：优先用文档里的 H1，而不是文件名。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_ui4.py",
+  "scope": "work",
+  "lines": 33,
+  "has_main": false,
+  "purpose": "加 #ask= 深链接（自动用问模型模式）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/patch_ui5.py",
+  "scope": "work",
+  "lines": 48,
+  "has_main": false,
+  "purpose": "摘要清洗：把 Markdown 链接/图片还原成纯文本。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（补丁已应用，仅留档）"
+ },
+ {
+  "path": "work/run_bench.py",
+  "scope": "work",
+  "lines": 134,
+  "has_main": true,
+  "purpose": "性能测试脚本：检索 + Agent 端到端。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/summary.py",
+  "scope": "work",
+  "lines": 47,
+  "has_main": false,
+  "purpose": "汇总性能报告：把 P1 检索延迟 + P2 准确率 + 各 Agent 单题结果合成一份。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/test_arch_b.py",
+  "scope": "work",
+  "lines": 145,
+  "has_main": true,
+  "purpose": "对比两种架构：模型独立判断 vs 模型只做排序、知识库提供候选。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性验证脚本）"
+ },
+ {
+  "path": "work/test_ask.py",
+  "scope": "work",
+  "lines": 43,
+  "has_main": false,
+  "purpose": "测试 /api/ask 的 SSE 流式输出。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性验证脚本）"
+ },
+ {
+  "path": "work/test_complex.py",
+  "scope": "work",
+  "lines": 97,
+  "has_main": false,
+  "purpose": "用「题面全是套话」的复杂题目测试 agent。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性验证脚本）"
+ },
+ {
+  "path": "work/test_hint.py",
+  "scope": "work",
+  "lines": 122,
+  "has_main": true,
+  "purpose": "测试：完全没思路时，模型能给出多少有效方向。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性验证脚本）"
+ },
+ {
+  "path": "work/test_state_model.py",
+  "scope": "work",
+  "lines": 118,
+  "has_main": true,
+  "purpose": "测试：小模型能否可靠地输出「候选/排除/尝试」结构化状态。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性验证脚本）"
+ },
+ {
+  "path": "work/test_vague.py",
+  "scope": "work",
+  "lines": 47,
+  "has_main": false,
+  "purpose": "验证：当题面几乎没有信息时，当前 agent 会怎样。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性验证脚本）"
+ },
+ {
+  "path": "work/tree_f.py",
+  "scope": "work",
+  "lines": 103,
+  "has_main": false,
+  "purpose": "输出 F 盘文件树（带大小、文件数）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（一次性探针）"
+ },
+ {
+  "path": "work/tree_f2.py",
+  "scope": "work",
+  "lines": 87,
+  "has_main": false,
+  "purpose": "输出 F 盘文件树（过滤噪声目录）。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "删除候选（一次性探针）"
+ },
+ {
+  "path": "work/ui_check.js",
+  "scope": "work",
+  "lines": 517,
+  "has_main": false,
+  "purpose": "旧前端页面的交互/完整性检查脚本",
+  "refs": "静态扫描命中：work/patch_ui2.py、work/patch_ui3.py、work/patch_ui4.py、work/patch_ui5.py",
+  "suggestion": "删除候选（一次性探针）"
+ },
+ {
+  "path": "work/verify_ctx.py",
+  "scope": "work",
+  "lines": 75,
+  "has_main": false,
+  "purpose": "验证改动效果：上下文占用 + 生成速度。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（历史基准/造题脚本）"
+ },
+ {
+  "path": "work/verify_des.py",
+  "scope": "work",
+  "lines": 55,
+  "has_main": false,
+  "purpose": "导入后检索效果对比测试。",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "归档（一次性导入/审计脚本）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/70_检索原型/asset_index.py",
+  "scope": "temp_newData",
+  "lines": 39,
+  "has_main": false,
+  "purpose": "Filename/path metadata search for inert archive objects. No binary decoding.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/70_检索原型/cn_kb.py、temp_newData/CTF知识库/70_检索原型/server.py、temp_newData/CTF知识库/70_检索原型/test_cn.py、temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py",
+  "suggestion": "保留（外部检索原型，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/70_检索原型/cn_kb.py",
+  "scope": "temp_newData",
+  "lines": 48,
+  "has_main": true,
+  "purpose": "Primary Chinese collection entry point, separate from the old Google corpus.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/70_检索原型/test_cn.py、temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py、temp_newData/CTF知识库/99_维护工具/verify_chinese_package.py、temp_newData/CTF知识库/99_维护工具/write_official_overview.py",
+  "suggestion": "保留（外部检索原型，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/70_检索原型/code_index.py",
+  "scope": "temp_newData",
+  "lines": 62,
+  "has_main": false,
+  "purpose": "Original code as inert searchable text. No eval/import/compile/exec of samples.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/70_检索原型/cn_kb.py、temp_newData/CTF知识库/70_检索原型/server.py、temp_newData/CTF知识库/70_检索原型/test_cn.py、temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py",
+  "suggestion": "保留（外部检索原型，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/70_检索原型/collection_merge.py",
+  "scope": "temp_newData",
+  "lines": 32,
+  "has_main": false,
+  "purpose": "Merge only explicitly registered local collections; code is inert JSON text.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/70_检索原型/cn_kb.py、temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py",
+  "suggestion": "保留（外部检索原型，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/70_检索原型/kb.py",
+  "scope": "temp_newData",
+  "lines": 365,
+  "has_main": true,
+  "purpose": "Offline lexical/hybrid retrieval. Reads only the newly curated corpus.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/70_检索原型/asset_index.py、temp_newData/CTF知识库/70_检索原型/cn_kb.py、temp_newData/CTF知识库/70_检索原型/code_index.py、temp_newData/CTF知识库/70_检索原型/collection_merge.py",
+  "suggestion": "保留（外部检索原型，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/70_检索原型/server.py",
+  "scope": "temp_newData",
+  "lines": 70,
+  "has_main": true,
+  "purpose": "Read-only localhost UI, no raw file serving or source code execution.",
+  "refs": "静态扫描命中：tools/agent/server.py、temp_newData/CTF知识库/70_检索原型/cn_kb.py、temp_newData/CTF知识库/70_检索原型/kb.py",
+  "suggestion": "保留（外部检索原型，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/70_检索原型/test_cn.py",
+  "scope": "temp_newData",
+  "lines": 148,
+  "has_main": true,
+  "purpose": "Chinese KB smoke tests; never print, execute or analyze sample code.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py、temp_newData/CTF知识库/99_维护工具/verify_chinese_package.py",
+  "suggestion": "保留（外部检索原型，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/70_检索原型/test_http.py",
+  "scope": "temp_newData",
+  "lines": 64,
+  "has_main": true,
+  "purpose": "Localhost smoke test. Starts only the authored read-only knowledge server.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部检索原型，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/70_检索原型/test_kb.py",
+  "scope": "temp_newData",
+  "lines": 116,
+  "has_main": true,
+  "purpose": "Self-contained tests; fixture vectors are not a real embedding-model benchmark.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部检索原型，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/tools/audit_corpus.py",
+  "scope": "temp_newData",
+  "lines": 105,
+  "has_main": true,
+  "purpose": "Read all indexed text/code as inert data; never import or execute samples.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部打包/校验工具，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/tools/make_knowledge_patch.py",
+  "scope": "temp_newData",
+  "lines": 75,
+  "has_main": true,
+  "purpose": "Cumulative source-only 1.1 patch since v1.0.0; no corpus or private state.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部打包/校验工具，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/tools/make_release.py",
+  "scope": "temp_newData",
+  "lines": 96,
+  "has_main": true,
+  "purpose": "Create a portable ZIP64 package from registered data and verified local models.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部打包/校验工具，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/tools/make_startup_patch.py",
+  "scope": "temp_newData",
+  "lines": 47,
+  "has_main": true,
+  "purpose": "Package only tracked source changes since v1.0.0; no models or private data.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部打包/校验工具，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/tools/prepare_models.py",
+  "scope": "temp_newData",
+  "lines": 150,
+  "has_main": true,
+  "purpose": "Explicit online provisioning only; never imported by the offline service.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部打包/校验工具，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/tools/prepare_python39_test.py",
+  "scope": "temp_newData",
+  "lines": 35,
+  "has_main": true,
+  "purpose": "Download an isolated official Python 3.9 runtime for compatibility testing only.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部打包/校验工具，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/tools/seed_knowledge_guides.py",
+  "scope": "temp_newData",
+  "lines": 234,
+  "has_main": true,
+  "purpose": "Author-maintained Chinese guide seeds. Produces metadata, not solver programs.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部打包/校验工具，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/tools/smoke_models.py",
+  "scope": "temp_newData",
+  "lines": 41,
+  "has_main": true,
+  "purpose": "Explicit local model smoke test. Outputs metadata and owned test questions only.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部打包/校验工具，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/tools/verify_guidance.py",
+  "scope": "temp_newData",
+  "lines": 96,
+  "has_main": true,
+  "purpose": "Live workbench QA. Calls local retrieval/models; never runs sample programs.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部打包/校验工具，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/tools/verify_startup_fix.py",
+  "scope": "temp_newData",
+  "lines": 59,
+  "has_main": true,
+  "purpose": "Explicit live smoke test against the same localhost API used by the GUI.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部打包/校验工具，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/workbench.py",
+  "scope": "temp_newData",
+  "lines": 102,
+  "has_main": true,
+  "purpose": "Offline CTF workbench; JSON CLI and localhost GUI. Python 3.9+.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/80_知识工作台/tools/make_knowledge_patch.py、temp_newData/CTF知识库/80_知识工作台/启动知识库.cmd",
+  "suggestion": "保留（外部原始数据项目，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/80_知识工作台/启动知识库.cmd",
+  "scope": "temp_newData",
+  "lines": 5,
+  "has_main": true,
+  "purpose": "Windows 快捷启动脚本（调用 workbench.py）",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/80_知识工作台/tools/make_knowledge_patch.py、temp_newData/CTF知识库/80_知识工作台/tools/make_release.py、temp_newData/CTF知识库/80_知识工作台/tools/make_startup_patch.py",
+  "suggestion": "保留（外部原始数据项目，仅登记）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/build_catalog.py",
+  "scope": "temp_newData",
+  "lines": 411,
+  "has_main": true,
+  "purpose": "Build a metadata-only CTF catalog. Never open source file contents.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/test_catalog.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/compile_chinese_corpus.py",
+  "scope": "temp_newData",
+  "lines": 172,
+  "has_main": true,
+  "purpose": "Compile licensed prose + honest short blog guides, with opaque original code blocks.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/compile_official_events.py、temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py、temp_newData/CTF知识库/99_维护工具/verify_chinese_package.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/compile_official_events.py",
+  "scope": "temp_newData",
+  "lines": 178,
+  "has_main": true,
+  "purpose": "Prepare prose and opaque code indexes from the downloaded official archives.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py、temp_newData/CTF知识库/99_维护工具/verify_chinese_package.py、temp_newData/CTF知识库/99_维护工具/write_official_overview.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/curate_cards.py",
+  "scope": "temp_newData",
+  "lines": 234,
+  "has_main": true,
+  "purpose": "Author Chinese reading notes from acquired prose. Does not read legacy sources.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/package_new_collection.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/fetch_blog_code.py",
+  "scope": "temp_newData",
+  "lines": 76,
+  "has_main": true,
+  "purpose": "Copy confirmed CC blog pre blocks as inert text; never print or run samples.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/fetch_chinese_collection.py",
+  "scope": "temp_newData",
+  "lines": 144,
+  "has_main": true,
+  "purpose": "Acquire Chinese, explicitly licensed documentation. No legacy reads or execution.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/compile_official_events.py、temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/fetch_official_events.py",
+  "scope": "temp_newData",
+  "lines": 302,
+  "has_main": true,
+  "purpose": "Acquire public official event archives as inert files, no git hooks or execution.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/compile_official_events.py、temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py、temp_newData/CTF知识库/99_维护工具/write_official_overview.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/fetch_public_docs.py",
+  "scope": "temp_newData",
+  "lines": 117,
+  "has_main": true,
+  "purpose": "Explicit opt-in acquisition of licensed Markdown; no archives or scripts.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/fetch_representative_assets.py、temp_newData/CTF知识库/99_维护工具/package_new_collection.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/fetch_representative_assets.py",
+  "scope": "temp_newData",
+  "lines": 110,
+  "has_main": true,
+  "purpose": "Download selected source/attachment bytes without opening or running them.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/package_new_collection.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/inspect_chinese_blogs.py",
+  "scope": "temp_newData",
+  "lines": 130,
+  "has_main": true,
+  "purpose": "Read public article prose, omit code/scripts, preserve license evidence.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py",
+  "scope": "temp_newData",
+  "lines": 90,
+  "has_main": true,
+  "purpose": "Package only the new Chinese KB. Raw samples copied as bytes, never executed.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/package_new_collection.py",
+  "scope": "temp_newData",
+  "lines": 76,
+  "has_main": true,
+  "purpose": "Package only new collection + authored retrieval code; never execute assets.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/prepare_close_reading.py",
+  "scope": "temp_newData",
+  "lines": 259,
+  "has_main": true,
+  "purpose": "Publish eight paragraph-by-paragraph prose translations, not executable solutions.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/package_new_collection.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/test_catalog.py",
+  "scope": "temp_newData",
+  "lines": 158,
+  "has_main": true,
+  "purpose": "Verify generated catalog and run a guarded metadata-only rebuild.",
+  "refs": "未发现引用（静态扫描）",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/verify_chinese_package.py",
+  "scope": "temp_newData",
+  "lines": 53,
+  "has_main": true,
+  "purpose": "Verify a fresh isolated extraction using only authored entry points.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ },
+ {
+  "path": "temp_newData/CTF知识库/99_维护工具/write_official_overview.py",
+  "scope": "temp_newData",
+  "lines": 63,
+  "has_main": true,
+  "purpose": "Generate an honest inventory from acquisition and compilation metadata.",
+  "refs": "静态扫描命中：temp_newData/CTF知识库/99_维护工具/package_chinese_kb.py",
+  "suggestion": "保留（外部导入/维护管线，不纳入本站工具链）"
+ }
+]
