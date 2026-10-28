@@ -112,16 +112,32 @@ def cmd_index(cfg: Config, args) -> int:
         print(f"\n{C.R}失败回滚{C.END}  阶段={label}  reused=0, reencoded=0")
         return 1
 
+    skipped = res.get("skipped") or []
+
+    def skipped_tail() -> str:
+        if not skipped:
+            return ""
+        names = ", ".join(str(it["path"]) for it in skipped[:5])
+        if len(skipped) > 5:
+            names += "…"
+        print(f"{C.Y}警告：跳过 {len(skipped)} 个不可读文件（保持旧哈希）{C.END}",
+              file=sys.stderr)
+        for it in skipped[:20]:
+            print(f"  {it['path']}: {it['error']}", file=sys.stderr)
+        return f"（跳过 {len(skipped)} 个不可读文件: {names}）"
+
     if res["status"] == "fts_only":
+        tail = skipped_tail()
         print(f"\n{C.Y}警告：仅 FTS 更新，向量索引停留在旧时间。{C.END}")
         print(f"{C.DIM}可稍后在嵌入模型可用时重新运行 kb index 补齐向量。{C.END}")
         print(f"\n{C.Y}仅 FTS{C.END}  docs={res['docs']}, chunks={res['chunks']}, "
-              f"reused=0, reencoded=0, {res['seconds']}s")
+              f"reused=0, reencoded=0, {res['seconds']}s{tail}")
         return 0
 
+    tail = skipped_tail()
     print(f"\n{C.G}完整增量更新{C.END}  docs={res['docs']}, chunks={res['chunks']}, "
           f"reused={res['reused']}, reencoded={res['reencoded']}, "
-          f"removed_chunks={res['removed_chunks']}, {res['seconds']}s")
+          f"removed_chunks={res['removed_chunks']}, {res['seconds']}s{tail}")
     print(f"{C.DIM}新增 {res['added_docs']} 篇 / 修改 {res['changed_docs']} 篇 / "
           f"删除 {res['removed_docs']} 篇；manifest: {cfg.index_dir / 'manifest.json'}{C.END}")
     return 0

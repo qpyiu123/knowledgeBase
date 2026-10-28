@@ -21,7 +21,7 @@ import numpy as np
 
 from . import manifest
 from .fts import FtsIndex
-from .parser import Doc, chunk_doc, iter_docs
+from .parser import Doc, chunk_doc, iter_md_paths, load_doc
 from .vectors import VectorIndex
 
 CACHE_NAME = "vectors_cache.db"
@@ -139,6 +139,18 @@ def _build_items(docs: Iterable[Doc], chunk_chars: int, overlap: int
     return items, hashes
 
 
+def _scan_docs(kb_dir: Path) -> tuple[list[Doc], list[tuple[str, str]]]:
+    """逐篇读取 Markdown；不可读文件跳过，不阻断整库重建。"""
+    docs: list[Doc] = []
+    skipped: list[tuple[str, str]] = []
+    for p in iter_md_paths(kb_dir):
+        try:
+            docs.append(load_doc(p, kb_dir))
+        except OSError as e:  # PermissionError / 文件被独占
+            skipped.append((p.relative_to(kb_dir).as_posix(), manifest.describe_error(e)))
+    return docs, skipped
+
+
 def run_reindex(
     cfg,
     *,
@@ -163,14 +175,22 @@ def run_reindex(
     batch_size = int(batch_size if batch_size is not None
                      else cfg.get("embed", "batch_size", 32))
 
-    docs = list(iter_docs(kb_dir))
-    if not docs:
-        raise ReindexError("scan", f"kb 目录为空: {kb_dir}")
+    old_manifest = manifest.load(index_dir / manifest.MANIFEST_NAME)
     try:
-        new_manifest = manifest.scan(kb_dir)
+        docs, skipped_docs = _scan_docs(kb_dir)
+    except OSError as e:
+        raise ReindexError("scan", f"扫描 kb 失败: {e}") from e
+    if not docs:
+        raise ReindexError("scan", f"kb 目录为空或全部不可读: {kb_dir}")
+    try:
+        new_manifest = manifest.scan(kb_dir, old=old_manifest)
     except OSError as e:
         raise ReindexError("manifest", f"扫描 kb 失败: {e}") from e
-    old_manifest = manifest.load(index_dir / manifest.MANIFEST_NAME)
+    skipped: dict[str, str] = {}
+    for rel, err in skipped_docs:
+        skipped.setdefault(rel, err)
+    for rel, err in getattr(new_manifest, "skipped", ()):  # 向后兼容普通 dict
+        skipped.setdefault(rel, err)
     added, removed, changed = manifest.diff(old_manifest, new_manifest)
 
     t0 = time.time()
@@ -201,6 +221,7 @@ def run_reindex(
             "added_docs": len(added),
             "changed_docs": len(changed),
             "removed_docs": len(removed),
+            "skipped": [{"path": k, "error": v} for k, v in skipped.items()],
             "reused": 0,
             "reencoded": 0,
             "removed_chunks": 0,

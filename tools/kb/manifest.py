@@ -18,6 +18,25 @@ MANIFEST_VERSION = 1
 MANIFEST_NAME = "manifest.json"
 
 
+class ScanResult(dict[str, str]):
+    """清单扫描结果：仍可直接当 dict 用，另带不可读文件列表。
+
+    ``skipped`` 为 ``[(kb 相对路径, 错误描述)]``；单文件被占用/拒绝读取
+    不应让整库重建失败。
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.skipped: list[tuple[str, str]] = []
+
+
+def describe_error(err: OSError) -> str:
+    """把 OSError/PermissionError 转成可展示文本（含 errno）。"""
+    errno = getattr(err, "errno", None)
+    text = getattr(err, "strerror", None) or str(err)
+    return f"{errno}: {text}" if errno is not None else text
+
+
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -26,12 +45,23 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-def scan(kb_dir: Path) -> dict[str, str]:
-    """返回 {kb 相对 POSIX 路径: sha256}。"""
+def scan(kb_dir: Path, old: dict[str, str] | None = None) -> ScanResult:
+    """返回 {kb 相对 POSIX 路径: sha256}，不可读文件记入 ``result.skipped``。
+
+    传入上一次清单 ``old`` 时，不可读文件保留旧 sha，避免下次重建被误判为
+    changed 而重复编码；没有旧值的文件只记入 skipped，不进入清单。
+    """
     kb_dir = Path(kb_dir)
-    out: dict[str, str] = {}
+    old = old or {}
+    out = ScanResult()
     for p in iter_md_paths(kb_dir):
-        out[p.relative_to(kb_dir).as_posix()] = sha256_file(p)
+        rel = p.relative_to(kb_dir).as_posix()
+        try:
+            out[rel] = sha256_file(p)
+        except OSError as e:  # PermissionError 是 OSError 子类
+            out.skipped.append((rel, describe_error(e)))
+            if rel in old:
+                out[rel] = old[rel]
     return out
 
 

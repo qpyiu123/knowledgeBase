@@ -376,3 +376,38 @@ P4 的三态实现存在“把未知粉饰成已知”的偏差，本批只改�
   只改内容且不动时间戳的变更可能不提示。
 - 测试全部在 tmp 环境离线完成；本批未在真实 1567 篇库上执行耗时冒烟，
   真实增量耗时与“改一篇只重编码其分块”的规模效应待用户实测。
+
+---
+
+## P8（已授权，已完成 2026-10-28）
+
+### 目标
+
+单文件被防护软件/权限拒绝读取时，重建索引跳过并警告，不阻断全库更新。
+
+### 工作项
+
+1. `manifest.scan(kb_dir, old=None)` 逐文件捕获 `OSError`/`PermissionError`；
+   返回仍为 dict（`ScanResult`），新增 `skipped`；有旧清单时保留旧 sha。
+2. `reindex` 逐篇读取也包进容错，合并 scan/docs 的 skipped，统计写入
+   `stats["skipped"]`；CLI 结果行追加“跳过 N 个不可读文件”，并输出 stderr 警告。
+3. 新增测试：scan 保留旧 sha、CLI 输出“跳过”、icacls deny 后重建成功且恢复后
+   重新入索引。
+4. 文档记录降级语义与恢复行为。
+
+### 验收结果
+
+- ✅ `pytest -o addopts="" -q` → **220 passed in 36.83s**（P7 217 + 新增 3）。
+- ✅ `eval_search.py` → **22/22**，hybrid 指标全部 **1.0000**。
+- ✅ 真实库无改动重建：`reused=14139`，无“跳过”。
+- ✅ 真实库单文件不可读：重建成功，`docs=1566`、结果行“跳过 1 个不可读文件”；
+  恢复后再次重建 `docs=1567`，该文件重新进入索引。
+- ✅ 未改排序/权重/评测/前端/graph.db，未复制或移动 kb 文件。
+
+### 未完成 / 测试局限
+
+- 跳过当次该文件会从 FTS/向量中移除，恢复读取后需重新编码其分块。
+- 真实库 ACL 冒烟受当前非管理员会话限制（文件 owner 为 Administrators，
+  `icacls /deny` 返回 Access denied），改用独占文件句柄制造同样的 PermissionError；
+  icacls 路径由自动化用例在用户自有临时文件上覆盖。
+- `start.ps1` 未展示 skipped 数量；本批未改 manifest JSON 格式。

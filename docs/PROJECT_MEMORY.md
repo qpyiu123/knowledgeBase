@@ -4,7 +4,7 @@
 > 区分三类信息：**已验证事实 / 推断 / 未验证**。旧文档里的数字若未在本重复现，
 > 不得当作结论复用。
 
-**最后更新**：2026-10-28（修复批：start.ps1 pid 记录、旧后端提示、索引新鲜度与 -Reindex；验证见第 11 节）
+**最后更新**：2026-10-28（P8：单文件不可读优雅降级；验证见第 13.5 节）
 
 ---
 
@@ -587,6 +587,9 @@ P2 评测样例与期望：
   该阶段已开始逐个替换，**不保证自动回退已替换的文件**，需重新运行重建恢复一致。
 - `--fts-only` 会更新 manifest，因此 `start.ps1` 的篇数会与最新 kb 一致，
   但 `index/vectors.db` 可能仍是旧内容；这是已知的有意取舍，必须靠输出警告区分。
+- 单文件不可读（权限拒绝、被独占打开）会跳过并警告，不阻断重建；有旧清单时
+  保留旧 sha，避免被误判为 changed。该文件本次不进入 FTS/向量结果，恢复读取后
+  下一次重建会自动补回并重编码其分块。
 - 增量统计按 chunk 文本 sha256 复用：未改块计入 `reused`，新增/变化块计入
   `reencoded`，已删除块计入 `removed_chunks`。
 
@@ -594,17 +597,19 @@ P2 评测样例与期望：
 
 | 命令 | 结果 |
 |---|---|
-| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **217 passed in 48.54s** |
+| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **220 passed in 36.83s**（P7 的 217 + P8 新增 3） |
 | `.\.venv\Scripts\python.exe tools\eval_search.py` | **22/22**，top1=hit@5=MRR=recall@5=1.0000 |
 
 新增 `tests/test_manifest.py`（6 个）与 `tests/test_reindex.py`（4 个），共 10 个测试：
 覆盖 scan/diff 增改删与收录过滤、manifest 读写与坏版本退化、全量后改/加/删一篇的
 增量复用、`--fts-only` 保留旧向量、编码失败回滚旧索引、模型不可用报失败而非就绪。
+P8 在 `tests/test_reindex.py` 再新增 3 个：scan 保留旧 sha 并记录 skipped、CLI 结果行
+含“跳过 N 个不可读文件”、icacls deny 后重建仍成功且恢复后重新入索引。
 
 局限：FTS 仍是整库重建（只是写临时文件），没有做 FTS 块级增量；切换阶段的部分
 替换失败不会自动回滚；`-Status` 的“过期”判断仍用 mtime + 篇数，不逐文件比
-manifest 哈希，因此只改内容且不动时间戳的变更仍可能不提示；本批未在真实库上
-执行耗时冒烟（用户服务可能占用索引），测试全部在 tmp 环境离线完成。
+manifest 哈希，因此只改内容且不动时间戳的变更仍可能不提示；不可读文件在跳过那次
+会被移出 FTS/向量，恢复后需要重新编码其分块（manifest 因保留旧 sha 不会报 changed）。
 
 ---
 
@@ -648,3 +653,23 @@ manifest 哈希，因此只改内容且不动时间戳的变更仍可能不提�
 
 局限：没有 Pester 用例；启动失败日志分支未真实制造超时，只做了代码路径与
 语法检查。未停止或重启现有 8765/11434 服务，未重建索引。
+
+---
+
+## 13.5 P8 验证结果：单文件不可读降级（2026-10-28）
+
+**结论**：单文件不可读会跳过并警告，不阻断重建。
+
+| 命令 / 操作 | 结果 |
+|---|---|
+| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **220 passed in 36.83s**（P7 的 217 + 新增 3） |
+| `.\.venv\Scripts\python.exe tools\eval_search.py` | **22/22**，hybrid top1=hit@5=MRR=recall@5=1.0000 |
+| `tools\cli.py index`（真实库，无改动） | `完整增量更新 docs=1567, chunks=14139, reused=14139, reencoded=0, removed_chunks=0, 7.32s`，无“跳过” |
+| 真实库单文件不可读冒烟 | 跳过 1 个不可读文件后重建成功：`docs=1566, chunks=14007, reused=14007, reencoded=0, removed_chunks=132`，结果行含“（跳过 1 个不可读文件: _des/topics/web/文件上传漏洞.md）”，stderr 警告含 `13: Permission denied` |
+| 恢复读取后再重建 | 无“跳过”，`docs=1567, chunks=14139, reused=14007, reencoded=132, removed_chunks=0`，该文件重新进入索引 |
+
+冒烟说明：本机会话非管理员，`kb/` 文件 owner 为 `BUILTIN\Administrators`，
+`icacls /deny` 返回 Access denied（0 个文件处理），无法直接改真实文件 ACL；
+因此用另起进程以共享模式 0 独占打开该文件，制造同样的磁盘级 `PermissionError`
+（errno 13）。自动化用例 `test_reindex_skips_unreadable_file` 在测试自有的临时
+文件上真实执行 `icacls /deny (RD)` 并 `icacls /remove:d` 恢复。

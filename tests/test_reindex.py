@@ -1,9 +1,14 @@
 """增量重建：向量缓存复用、FTS 同步、原子切换与失败回滚。"""
 from __future__ import annotations
 
+import getpass
 import hashlib
+import os
+import shutil
 import sqlite3
+import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -236,3 +241,101 @@ def test_unavailable_embedder_reports_failure_not_ready(env):
     assert exc.value.stage == "vectors"
     assert "嵌入模型不可用" in exc.value.message
     assert (Path(cfg.index_dir) / "fts.db").read_bytes() == fts_before
+
+
+def test_scan_skips_unreadable_and_keeps_old_sha(env, monkeypatch):
+    cfg, kb = env
+    old = manifest_mod.scan(kb)
+    target = (kb / "web" / "b.md").resolve()
+    real = manifest_mod.sha256_file
+
+    def fake_sha(path):
+        if Path(path).resolve() == target:
+            raise PermissionError(13, "Permission denied", str(path))
+        return real(path)
+
+    monkeypatch.setattr(manifest_mod, "sha256_file", fake_sha)
+
+    new = manifest_mod.scan(kb, old=old)
+    assert new.skipped == [("web/b.md", "13: Permission denied")]
+    assert new["web/b.md"] == old["web/b.md"]
+    assert manifest_mod.diff(old, new) == ([], [], [])
+
+    # 没有旧清单时不保留该文件，但仍记录 skipped。
+    fresh = manifest_mod.scan(kb)
+    assert "web/b.md" not in fresh
+    assert fresh.skipped == [("web/b.md", "13: Permission denied")]
+
+
+def test_cmd_index_reports_skipped(env, monkeypatch, capsys):
+    from cli import C, cmd_index
+
+    C.strip()
+    cfg, _ = env
+    fake = {
+        "status": "ok", "docs": 2, "chunks": 2,
+        "added_docs": 0, "changed_docs": 0, "removed_docs": 0,
+        "reused": 1, "reencoded": 1, "removed_chunks": 0,
+        "seconds": 0.01,
+        "skipped": [{"path": "web/b.md", "error": "13: Permission denied"}],
+    }
+    monkeypatch.setattr("kb.reindex.run_reindex", lambda *a, **k: fake)
+
+    rc = cmd_index(cfg, SimpleNamespace(fts_only=False))
+    out = capsys.readouterr()
+    assert rc == 0
+    assert "完整增量更新" in out.out
+    assert "跳过 1 个不可读文件: web/b.md" in out.out
+    assert "警告" in out.err and "web/b.md" in out.err
+
+
+def _icacls() -> str:
+    exe = shutil.which("icacls")
+    if not exe:
+        candidate = Path(os.environ.get("SystemRoot", r"C:\Windows")) / "System32" / "icacls.exe"
+        exe = str(candidate) if candidate.exists() else ""
+    if not exe:
+        pytest.skip("icacls 不可用，跳过权限测试")
+    return exe
+
+
+@pytest.mark.skipif(os.name != "nt", reason="icacls 仅 Windows")
+def test_reindex_skips_unreadable_file(env):
+    cfg, kb = env
+    icacls = _icacls()
+    user = os.environ.get("USERNAME") or getpass.getuser()
+    target = kb / "web" / "b.md"
+
+    run_reindex(cfg, embedder=FakeEmbedder())
+    old_sha = _manifest(cfg)["web/b.md"]
+    _write(kb / "crypto" / "a.md",
+           A_DOC.replace("alpha_原理 同余关系。", "alpha_原理 updated_ok 同余关系。"))
+
+    deny = subprocess.run([icacls, str(target), "/deny", f"{user}:(RD)"],
+                          capture_output=True, text=True)
+    if deny.returncode != 0:
+        pytest.skip(f"icacls /deny 失败: {deny.stdout}{deny.stderr}")
+    try:
+        try:
+            target.read_bytes()
+        except PermissionError:
+            pass
+        else:
+            pytest.skip("当前用户仍可读取被拒绝的文件（可能以管理员权限运行）")
+
+        res = run_reindex(cfg, embedder=FakeEmbedder())
+        assert res["status"] == "ok"
+        assert [it["path"] for it in res["skipped"]] == ["web/b.md"]
+        assert res["changed_docs"] == 1
+        assert _manifest(cfg)["web/b.md"] == old_sha
+        fts = FtsIndex(Path(cfg.index_dir) / "fts.db")
+        assert fts.search("updated_ok", top_k=3)[0].doc_path == "crypto/a.md"
+        assert fts.get_doc("web/b.md") is None
+    finally:
+        subprocess.run([icacls, str(target), "/remove:d", user],
+                       capture_output=True, text=True)
+
+    again = run_reindex(cfg, embedder=FakeEmbedder())
+    assert again["skipped"] == []
+    assert _manifest(cfg)["web/b.md"] == old_sha
+    assert FtsIndex(Path(cfg.index_dir) / "fts.db").get_doc("web/b.md") is not None

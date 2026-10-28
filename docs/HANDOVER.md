@@ -528,3 +528,12 @@ P6 后（2026-10-28）：Python 207 passed（server 47，含 health `config` 断
 P7 后（2026-10-28）：Python **217 passed**（新增 `tests/test_manifest.py` 6 个 +
 `tests/test_reindex.py` 4 个，共 10 个）；`eval_search.py` **22/22**，
 top1/hit@5/MRR/recall@5 均 1.0000。真实库耗时冒烟未在本批执行。
+
+### 单文件不可读（P8）
+
+`manifest.scan(kb_dir, old=...)` 与 `reindex` 的逐篇读取都会跳过被拒绝/被独占的
+单个 Markdown，并打印 stderr 警告；结果行追加“跳过 N 个不可读文件”。
+有旧清单时保留旧 sha，避免误判 changed；跳过当次该文件会暂时离开 FTS/向量，
+恢复读取后下一次重建自动补回（需重新编码其分块）。P8 后 Python **220 passed**，
+真实库无改动重建 `reused=14139`、无“跳过”；单文件不可读冒烟后恢复为
+`docs=1567`。
