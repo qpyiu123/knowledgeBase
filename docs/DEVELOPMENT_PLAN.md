@@ -324,3 +324,55 @@ P4 的三态实现存在“把未知粉饰成已知”的偏差，本批只改�
 - 本机未安装 pwsh，未实测；仅使用 5.1/pwsh 公共语法。
 - `build` 不含 `config.toml` 与前端 `dist/`；索引新鲜度是时间+数量判断，无内容哈希。
 - 本批未实际重建索引；需要用户执行 `-Stop` → `-Reindex` → `-Start`。
+
+---
+
+## P7（已授权，已完成 2026-10-28）
+
+### 目标
+
+缩短索引重建耗时并保护失败场景：用内容清单判断增删改，向量按块哈希复用，
+正式索引采用临时文件 + 原子替换；向量不可用时不得打印“索引就绪”。
+不改检索权重、评测集、模型、前端与 `graph.db`。
+
+### 工作项
+
+1. **内容清单**：新增 `tools/kb/manifest.py`。`scan(kb_dir)` 复用
+   `parser.iter_md_paths` 的收录规则生成 `{rel_path: sha256}`；
+   `diff(old, new)` 返回 added / removed / changed；清单原子写入
+   `index/manifest.json`（`version: 1`）。`start.ps1` 的 `Get-IndexInfo`
+   改为优先读 manifest 计数，消除脚本与 Python 两套规则漂移。
+2. **向量块缓存**：新增 `index/vectors_cache.db`，键为
+   `(rel_path, chunk_index)`，值为 chunk 文本 sha256 + 向量。重建时未改块复用，
+   新增/变化块重新编码，删除块计入 `removed_chunks`；输出
+   `reused / reencoded / removed_chunks / seconds`。
+3. **原子切换与失败保护**：FTS、向量、缓存、manifest 先写 `.new`，全部成功后
+   一次替换；失败删除临时文件、保留旧库、退出码 1、打印失败阶段。
+   向量失败默认整体回滚；`--fts-only` 只刷新 FTS 与 manifest 并警告向量停留旧时间。
+4. **可信结果**：`cli.py index` 最终行改为三态：
+   `完整增量更新` / `仅 FTS` / `失败回滚`，并报告增量统计。
+5. **测试**：新增 `tests/test_manifest.py`、`tests/test_reindex.py`，
+   覆盖 scan/diff 增改删与过滤规则、manifest 读写/坏版本退化、改/加/删一篇后的
+   向量复用、`--fts-only`、编码失败回滚、模型不可用报失败而非就绪。
+6. **文档**：PROJECT_MEMORY、HANDOVER 追加增量重建节；本文件记录验收结果。
+
+### 验收结果
+
+- ✅ `pytest -o addopts="" -q` → **217 passed in 48.54s**（P4/P5/P6 基线 207 +
+  本批新增 10）。
+- ✅ `eval_search.py` → **22/22**，hybrid top1 / hit@5 / MRR / recall@5 均 **1.0000**。
+- ✅ 新增 `tests/test_manifest.py`（6 个）与 `tests/test_reindex.py`（4 个），共 10 个。
+- ✅ 首次无 manifest/无缓存自动退化为全量；旧索引仍可被旧代码读取。
+- ✅ `start.ps1` 篇数改为 manifest 优先，KB 文件未改；本批只改文档与上述实现，
+  未改检索排序、评测集、模型或前端。
+
+### 未完成 / 测试局限
+
+- FTS 仍是整库重建（只是先写临时文件），没有块级增量。
+- `swap` 阶段逐个 `os.replace`；重试仍失败时不保证回滚已替换的文件，需重跑重建。
+- `--fts-only` 会更新 manifest，导致篇数与最新 kb 一致但向量库可能陈旧；
+  只能靠命令警告识别，`/api/health` 未单独暴露向量陈旧标志。
+- `-Status` 的过期判断仍是 mtime + 篇数，不逐文件比较 manifest 哈希，
+  只改内容且不动时间戳的变更可能不提示。
+- 测试全部在 tmp 环境离线完成；本批未在真实 1567 篇库上执行耗时冒烟，
+  真实增量耗时与“改一篇只重编码其分块”的规模效应待用户实测。

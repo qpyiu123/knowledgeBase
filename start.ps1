@@ -247,6 +247,20 @@ function Get-IndexInfo {
     $db = Join-Path $Root 'index\fts.db'
     if (-not (Test-Path $db)) { return $null }
     $kbDir = Join-Path $Root 'kb'
+    # 篇数以 index\manifest.json 为准（与 tools\kb\manifest.py 同一套收录规则）；
+    # 清单不存在时才退回本地扫描，兼容旧索引。
+    $manifestPath = Join-Path $Root 'index\manifest.json'
+    $manifestCount = $null
+    if (Test-Path $manifestPath) {
+        try {
+            $m = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
+            if ($m -and ($m.version -eq 1) -and ($null -ne $m.files)) {
+                $manifestCount = @($m.files.PSObject.Properties).Count
+            }
+        } catch {
+            $manifestCount = $null
+        }
+    }
     $files = @()
     if (Test-Path $kbDir) {
         # 与 tools\kb\parser.py:iter_docs 保持一致：跳过 _templates/.obsidian/.git/
@@ -271,12 +285,19 @@ function Get-IndexInfo {
     }
     $mtimeStale = $false
     if ($latestTime -and $latestTime -gt $dbTime) { $mtimeStale = $true }
+    $mdCount = $files.Count
+    $fromManifest = $false
+    if ($null -ne $manifestCount) {
+        $mdCount = [int]$manifestCount
+        $fromManifest = $true
+    }
     return [pscustomobject]@{
-        DbTime     = $dbTime
-        MdCount    = $files.Count
-        LatestTime = $latestTime
-        LatestPath = $latestPath
-        MtimeStale = $mtimeStale
+        DbTime       = $dbTime
+        MdCount      = $mdCount
+        FromManifest = $fromManifest
+        LatestTime   = $latestTime
+        LatestPath   = $latestPath
+        MtimeStale   = $mtimeStale
     }
 }
 

@@ -80,39 +80,50 @@ def _fmt_hits(hits: list[FusedHit], cfg: Config, verbose: bool = False) -> str:
 
 # ---------------------------------------------------------------- commands
 def cmd_index(cfg: Config, args) -> int:
-    cfg.ensure_dirs()
-    kb_dir = cfg.kb_dir
-    docs = list(iter_docs(kb_dir))
-    if not docs:
-        print(f"{C.R}kb 目录为空: {kb_dir}{C.END}")
-        return 1
+    from kb.reindex import ReindexError, run_reindex
 
+    cfg.ensure_dirs()
+    stage_labels = {"scan": "扫描", "fts": "FTS", "vectors": "向量",
+                    "manifest": "manifest", "swap": "切换"}
     chunk_chars = int(cfg.get("search", "chunk_chars", 900))
     overlap = int(cfg.get("search", "chunk_overlap", 120))
 
-    print(f"{C.B}== 建 FTS 索引 =={C.END}")
-    fts = FtsIndex(cfg.index_dir / "fts.db")
-    st = fts.rebuild(
-        docs, chunk_chars, overlap,
-        on_progress=lambda i, n: print(f"\r  {i}/{n} 篇...", end="", flush=True),
-    )
-    print(f"\r  {C.G}完成{C.END}: {st['docs']} 篇 / {st['chunks']} 块 / {st['seconds']}s")
+    print(f"{C.B}== 重建索引（FTS + 向量增量）=={C.END}")
+    last = {"stage": ""}
 
-    print(f"{C.B}== 建向量索引 =={C.END}")
-    kb = KB(cfg)
-    if not kb.embedder.available:
-        print(f"  {C.Y}跳过{C.END}: {kb.embedder.last_error}")
-        print(f"  {C.DIM}提示: 运行 python tools/fetch_models.py 下载嵌入模型{C.END}")
-    else:
-        vs = kb.vec.rebuild(
-            docs, chunk_chars, overlap,
-            batch_size=int(cfg.get("embed", "batch_size", 32)),
-            on_progress=lambda i, n: print(f"\r  编码中 {i}/{n}...", end="", flush=True),
+    def progress(stage: str, i: int, n: int) -> None:
+        if stage == "fts":
+            if last["stage"] != "fts":
+                print(f"{C.B}== 建 FTS 索引 =={C.END}")
+                last["stage"] = "fts"
+            if i == n or i % 200 == 0:
+                print(f"\r  {i}/{n} 篇...", end="", flush=True)
+
+    try:
+        res = run_reindex(
+            cfg, chunk_chars=chunk_chars, overlap=overlap,
+            fts_only=bool(getattr(args, "fts_only", False)),
+            on_progress=progress,
         )
-        print(f"\r  {C.G}完成{C.END}: {vs['chunks']} 块, dim={vs.get('dim')}, "
-              f"backend={vs.get('backend')}, {vs.get('seconds')}s")
+    except ReindexError as e:
+        label = stage_labels.get(e.stage, e.stage)
+        print(f"\n{C.R}索引失败（阶段: {label}）{C.END}: {e.message}")
+        print(f"{C.Y}已删除临时文件并回滚，旧索引保持不变。{C.END}")
+        print(f"\n{C.R}失败回滚{C.END}  阶段={label}  reused=0, reencoded=0")
+        return 1
 
-    print(f"\n{C.G}索引就绪{C.END}  -> {cfg.index_dir}")
+    if res["status"] == "fts_only":
+        print(f"\n{C.Y}警告：仅 FTS 更新，向量索引停留在旧时间。{C.END}")
+        print(f"{C.DIM}可稍后在嵌入模型可用时重新运行 kb index 补齐向量。{C.END}")
+        print(f"\n{C.Y}仅 FTS{C.END}  docs={res['docs']}, chunks={res['chunks']}, "
+              f"reused=0, reencoded=0, {res['seconds']}s")
+        return 0
+
+    print(f"\n{C.G}完整增量更新{C.END}  docs={res['docs']}, chunks={res['chunks']}, "
+          f"reused={res['reused']}, reencoded={res['reencoded']}, "
+          f"removed_chunks={res['removed_chunks']}, {res['seconds']}s")
+    print(f"{C.DIM}新增 {res['added_docs']} 篇 / 修改 {res['changed_docs']} 篇 / "
+          f"删除 {res['removed_docs']} 篇；manifest: {cfg.index_dir / 'manifest.json'}{C.END}")
     return 0
 
 
@@ -421,7 +432,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--no-color", action="store_true")
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    s = sub.add_parser("index", help="重建索引")
+    s = sub.add_parser("index", help="重建索引（增量向量编码）")
+    s.add_argument("--fts-only", action="store_true",
+                   help="只刷新 FTS；向量索引保持旧状态，会打印警告")
     s.set_defaults(func=cmd_index)
 
     s = sub.add_parser("search", help="模糊检索")

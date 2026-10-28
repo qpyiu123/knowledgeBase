@@ -537,6 +537,77 @@ P2 评测样例与期望：
 
 ---
 
+## 13. 增量重建（P7，2026-10-28）
+
+索引重建现在走 `tools/kb/reindex.py`：FTS 仍整库重写，向量按分块哈希复用，
+内容清单与向量缓存都落盘，失败时不谎报“索引就绪”。
+
+### 13.1 命令
+
+```powershell
+# 完整增量更新（FTS + 向量）
+.\.venv\Scripts\python.exe tools\cli.py index
+
+# 只刷新 FTS；向量保持旧状态，会醒目警告
+.\.venv\Scripts\python.exe tools\cli.py index --fts-only
+
+# 启动脚本的前台重建入口（等同完整增量更新）
+.\start.ps1 -Reindex
+```
+
+最终行固定为三态之一：`完整增量更新` / `仅 FTS` / `失败回滚`。
+成功时报告 `docs/chunks/reused/reencoded/removed_chunks/seconds`，以及
+新增/修改/删除篇数；失败时打印失败阶段（扫描 / FTS / 向量 / manifest / 切换）。
+
+### 13.2 落盘位置
+
+| 文件 | 内容 |
+|---|---|
+| `index/manifest.json` | `version: 1`；`files` 为 `{kb 相对 POSIX 路径: sha256}`，另含 `built_at`、`count` |
+| `index/vectors_cache.db` | `chunk_cache(rel_path, chunk_index, sha256, dim, embedding)` + `meta(dim/backend/built_at/count)`，按块复用 |
+| `index/fts.db` / `index/vectors.db` | 与旧版相同的正式索引，重建时先写 `.new` 再替换 |
+| `index/graph.db` | 本批不动 |
+
+清单收录规则与 `parser.iter_md_paths` 同源（跳过 `_` 前缀文件与
+`_templates/.obsidian/.git/node_modules`），`tools/kb/manifest.py` 只调用这一处，
+避免 PowerShell 与 Python 各算一套导致篇数漂移。`start.ps1` 的 `Get-IndexInfo`
+在 `index/manifest.json` 存在且 `version=1` 时直接读清单计数，缺失时才退回本地扫描。
+无 manifest / 无缓存（首次运行或旧索引）自动退化为全量，行为与旧版一致。
+
+### 13.3 失败回滚语义
+
+- 先写临时文件：`fts.db.new`、`vectors.db.new`、`vectors_cache.db.new`、
+  `manifest.json.new`。FTS、向量编码、缓存、清单全部成功后才依次 `os.replace`。
+- FTS / 编码 / 写库 / 写清单任一阶段失败：删除全部临时文件，保留旧正式库，
+  退出码 1，并打印失败阶段；不得打印“索引就绪”。
+- 向量模型不可用视为失败（阶段 `vectors`），不再静默跳过；若确实只需要检索，
+  用户可显式 `--fts-only`，此时只替换 FTS 与 manifest，向量索引停留在旧时间，
+  命令输出 `仅 FTS` 并警告“向量索引停留在旧时间”。
+- 切换阶段（`swap`）对 Windows 短暂占用做重试；若重试仍失败会报 `swap`。
+  该阶段已开始逐个替换，**不保证自动回退已替换的文件**，需重新运行重建恢复一致。
+- `--fts-only` 会更新 manifest，因此 `start.ps1` 的篇数会与最新 kb 一致，
+  但 `index/vectors.db` 可能仍是旧内容；这是已知的有意取舍，必须靠输出警告区分。
+- 增量统计按 chunk 文本 sha256 复用：未改块计入 `reused`，新增/变化块计入
+  `reencoded`，已删除块计入 `removed_chunks`。
+
+### 13.4 验证结果（本机实测）
+
+| 命令 | 结果 |
+|---|---|
+| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **217 passed in 48.54s** |
+| `.\.venv\Scripts\python.exe tools\eval_search.py` | **22/22**，top1=hit@5=MRR=recall@5=1.0000 |
+
+新增 `tests/test_manifest.py`（6 个）与 `tests/test_reindex.py`（4 个），共 10 个测试：
+覆盖 scan/diff 增改删与收录过滤、manifest 读写与坏版本退化、全量后改/加/删一篇的
+增量复用、`--fts-only` 保留旧向量、编码失败回滚旧索引、模型不可用报失败而非就绪。
+
+局限：FTS 仍是整库重建（只是写临时文件），没有做 FTS 块级增量；切换阶段的部分
+替换失败不会自动回滚；`-Status` 的“过期”判断仍用 mtime + 篇数，不逐文件比
+manifest 哈希，因此只改内容且不动时间戳的变更仍可能不提示；本批未在真实库上
+执行耗时冒烟（用户服务可能占用索引），测试全部在 tmp 环境离线完成。
+
+---
+
 ## 12. 启动诊断分层（P6，2026-10-28）
 
 `start.ps1` 是唯一启动入口，`.\start.ps1` 与 `.\start.ps1 -Start` 等价。

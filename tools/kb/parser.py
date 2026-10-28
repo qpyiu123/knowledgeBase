@@ -132,15 +132,23 @@ def load_doc(path: Path, kb_dir: Path) -> Doc:
     return doc
 
 
-def iter_docs(kb_dir: Path) -> Iterable[Doc]:
+SKIP_DIRS = {"_templates", ".obsidian", ".git", "node_modules"}
+
+
+def iter_md_paths(kb_dir: Path) -> Iterable[Path]:
+    """按收录规则列出 Markdown 路径；manifest 与 iter_docs 共用这一处规则。"""
     if not kb_dir.exists():
         return
-    skip_dirs = {"_templates", ".obsidian", ".git", "node_modules"}
     for p in sorted(kb_dir.rglob("*.md")):
-        if any(part in skip_dirs for part in p.relative_to(kb_dir).parts[:-1]):
+        if any(part in SKIP_DIRS for part in p.relative_to(kb_dir).parts[:-1]):
             continue
         if p.name.startswith("_"):
             continue
+        yield p
+
+
+def iter_docs(kb_dir: Path) -> Iterable[Doc]:
+    for p in iter_md_paths(kb_dir):
         yield load_doc(p, kb_dir)
 
 

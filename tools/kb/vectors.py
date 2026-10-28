@@ -56,11 +56,22 @@ class VectorIndex:
 
         texts = [it["text"] for it in items]
         vecs = self.embedder.encode(texts, batch_size=batch_size, show_progress=bool(on_progress))
-        dim = vecs.shape[1]
+        info = self.write_store(self.db_path, items, vecs)
+        info["enabled"] = True
+        info["seconds"] = round(time.time() - t0, 2)
+        return info
 
-        if self.db_path.exists():
-            self.db_path.unlink()
-        conn = sqlite3.connect(self.db_path)
+    @staticmethod
+    def write_store(db_path: Path, items: list[dict[str, Any]],
+                    vecs: np.ndarray) -> dict[str, Any]:
+        """把 items + 向量写入一个全新的 sqlite 库（供全量与增量重建共用）。"""
+        db_path = Path(db_path)
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        dim = int(vecs.shape[1]) if len(items) else 0
+
+        if db_path.exists():
+            db_path.unlink()
+        conn = sqlite3.connect(db_path)
         try:
             if HAS_SQLITE_VEC:
                 conn.enable_load_extension(True)
@@ -85,14 +96,9 @@ class VectorIndex:
                 for i, (it, v) in enumerate(zip(items, vecs)):
                     rid = i + 1
                     blob = v.astype(np.float32).tobytes()
-                    if HAS_SQLITE_VEC:
-                        conn.execute(
-                            "INSERT INTO vec_chunks(rowid, embedding) VALUES (?,?)", (rid, blob)
-                        )
-                    else:
-                        conn.execute(
-                            "INSERT INTO vec_chunks(rowid, embedding) VALUES (?,?)", (rid, blob)
-                        )
+                    conn.execute(
+                        "INSERT INTO vec_chunks(rowid, embedding) VALUES (?,?)", (rid, blob)
+                    )
                     conn.execute(
                         "INSERT INTO chunk_meta(rowid,doc_path,title,category,section,text)"
                         " VALUES (?,?,?,?,?,?)",
@@ -108,11 +114,9 @@ class VectorIndex:
             conn.close()
 
         return {
-            "enabled": True,
             "chunks": len(items),
             "dim": dim,
             "backend": "sqlite-vec" if HAS_SQLITE_VEC else "numpy",
-            "seconds": round(time.time() - t0, 2),
         }
 
     # ---------------- 查询 ----------------

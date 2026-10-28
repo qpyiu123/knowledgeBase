@@ -484,3 +484,47 @@ hybrid top1/MRR 1.0。真实模型/真实 Ollama/真实浏览器仍未纳入自�
 
 P6 后（2026-10-28）：Python 207 passed（server 47，含 health `config` 断言）；
 `start.ps1` 保持 UTF-8 BOM；现有 8765/11434 未重启，备用端口 8799 冒烟通过。
+
+---
+
+## 十二、增量重建（P7）
+
+索引重建入口统一为 `tools/kb/reindex.py`，`tools\cli.py index` 与
+`.\start.ps1 -Reindex` 都调用它。FTS 仍整库重写；向量按
+`(rel_path, chunk_index)` + 分块文本 sha256 复用，只编码新增/变化的块。
+
+### 命令
+
+```powershell
+.\.venv\Scripts\python.exe tools\cli.py index
+.\.venv\Scripts\python.exe tools\cli.py index --fts-only
+.\start.ps1 -Reindex
+```
+
+最终行固定三态：`完整增量更新` / `仅 FTS` / `失败回滚`；成功时打印
+`docs`、`chunks`、`reused`、`reencoded`、`removed_chunks`、`seconds`。
+
+### 落盘位置
+
+- `index/manifest.json`：`version: 1`，`files` 为 `{kb 相对 POSIX 路径: sha256}`，
+  另有 `built_at`、`count`。收录规则与 `parser.iter_md_paths` 同源。
+- `index/vectors_cache.db`：`chunk_cache(rel_path, chunk_index, sha256, dim, embedding)`
+  与 `meta`；下次重建按块哈希复用。
+- `index/fts.db`、`index/vectors.db`：正式索引；重建时先写
+  `fts.db.new` / `vectors.db.new` / `vectors_cache.db.new` / `manifest.json.new`。
+- `start.ps1 -Status` 在 manifest 存在且版本为 1 时直接读清单篇数，缺失才本地扫描。
+- 首次运行、manifest 损坏/版本不认识、无缓存时自动退化为全量。
+
+### 失败回滚语义
+
+- FTS、向量编码、缓存、清单全部写成功后才依次 `os.replace` 替换正式文件。
+- 切换前任一步失败：删除临时文件、保留旧索引、退出码 1，并打印失败阶段
+  （`scan`/`fts`/`vectors`/`manifest`/`swap`）；禁止打印“索引就绪”。
+- 嵌入模型不可用属于失败（阶段 `vectors`），不再静默跳过。确实只需检索时用
+  `--fts-only`：只替换 FTS 与 manifest，向量索引停留在旧时间，会醒目警告。
+- `swap` 阶段对 Windows 占用有重试；仍失败时可能有文件已替换，**不保证自动回退**，
+  需重跑重建。`--fts-only` 后 manifest 已是最新 kb，但向量库可能仍是旧的。
+
+P7 后（2026-10-28）：Python **217 passed**（新增 `tests/test_manifest.py` 6 个 +
+`tests/test_reindex.py` 4 个，共 10 个）；`eval_search.py` **22/22**，
+top1/hit@5/MRR/recall@5 均 1.0000。真实库耗时冒烟未在本批执行。
