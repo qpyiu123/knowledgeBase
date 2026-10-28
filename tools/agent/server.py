@@ -13,6 +13,7 @@
   POST /api/ask          {q, paths} -> SSE 流式模型回答
   POST /api/feedback     {query, path, verdict, note} -> 本地 JSONL
   POST /api/analyze?name= 原始字节 -> 附件只读侦察（隔离目录，不执行）
+  GET/POST/DELETE /api/workspaces... -> 本地题目工作区（JSON 文件）
 
 启动：python tools/agent/server.py
 """
@@ -26,7 +27,7 @@ import threading
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -72,6 +73,7 @@ _NUM_GPU = _cfg("llm", "ollama_num_gpu", None)
 
 # ---- 输入/正文边界 ----
 MAX_BODY_BYTES = 64 * 1024          # HTTP 请求体
+MAX_WORKSPACE_BODY_BYTES = 512 * 1024  # 附件报告附到工作区时可能较大
 MAX_QUERY_CHARS = 2000              # 问题/搜索词
 MAX_TOP_K = 50
 MAX_PATHS = 3                       # /api/ask 最多读几篇
@@ -317,8 +319,12 @@ def _check_attachment_name(raw) -> str:
     return name or "attachment.bin"
 
 
-def api_analyze(name, data: bytes) -> dict:
-    """保存到隔离目录并做只读结构化侦察；任何情况下都不执行附件。"""
+def api_analyze(name, data: bytes, workspace_id=None) -> dict:
+    """保存到隔离目录并做只读结构化侦察；任何情况下都不执行附件。
+
+    workspace_id 可选：给出时把附件登记为该工作区的「资料收藏」，
+    并把时间线事件写入工作区。工作区不存在应在调用前拒绝。
+    """
     name = _check_attachment_name(name)
     if not isinstance(data, (bytes, bytearray)) or not data:
         raise BadRequest("附件为空")
@@ -330,7 +336,135 @@ def api_analyze(name, data: bytes) -> dict:
 
     report = analyze_upload(bytes(data), name, _attachment_dir())
     report["ok"] = True
+    if workspace_id:
+        try:
+            kind = report["type"]["kind"]
+            size = report["file"]["size"]
+            summary = f"附件 {report['file']['name']}（{kind}，{size} 字节）"
+            _, entry = _workspace_store().add_entry(
+                workspace_id,
+                kind="reference",
+                title=report["file"]["name"],
+                text=summary,
+                path=report["file"].get("saved", ""),
+                source="analyze",
+                attachment={
+                    "name": report["file"].get("name"),
+                    "saved": report["file"].get("saved"),
+                    "sha256": report["file"].get("sha256"),
+                    "size": size,
+                    "kind": kind,
+                },
+                report=report,
+            )
+            report["workspace"] = {"id": workspace_id, "entry_id": entry["id"]}
+        except Exception as e:  # noqa: BLE001  # 分析成功优先，登记失败给出可见提示
+            report["warnings"].append(f"附件已分析，但写入工作区失败: {e}")
     return report
+
+
+# ---------------------------------------------------------------- 题目工作区
+def _workspace_dir() -> Path:
+    raw = (os.environ.get("AGENT_WORKSPACE_DIR")
+           or str(_cfg("workspace", "dir", "work/workspaces")))
+    p = Path(raw)
+    return p if p.is_absolute() else (ROOT / p)
+
+
+def _workspace_store():
+    from agent.workspace import WorkspaceStore
+
+    return WorkspaceStore(_workspace_dir())
+
+
+def api_workspace_list() -> dict:
+    return {"workspaces": _workspace_store().list()}
+
+
+def api_workspace_get(workspace_id: str) -> dict:
+    return {"workspace": _workspace_store().load(workspace_id)}
+
+
+def api_workspace_create(req: dict) -> dict:
+    if not isinstance(req, dict):
+        raise BadRequest("请求体必须是 JSON 对象")
+    ws = _workspace_store().create(
+        req.get("title", ""),
+        req.get("category"),
+        req.get("id"),
+    )
+    return {"ok": True, "workspace": ws}
+
+
+def api_workspace_update(workspace_id: str, req: dict) -> dict:
+    if not isinstance(req, dict):
+        raise BadRequest("请求体必须是 JSON 对象")
+    ws = _workspace_store().update(
+        workspace_id,
+        title=req.get("title"),
+        status=req.get("status"),
+        category=req.get("category"),
+    )
+    return {"ok": True, "workspace": ws}
+
+
+def api_workspace_add_entry(workspace_id: str, req: dict) -> dict:
+    if not isinstance(req, dict):
+        raise BadRequest("请求体必须是 JSON 对象")
+    ws, entry = _workspace_store().add_entry(
+        workspace_id,
+        kind=req.get("kind", ""),
+        text=req.get("text", ""),
+        result=req.get("result"),
+        title=req.get("title", ""),
+        path=req.get("path", ""),
+        url=req.get("url", ""),
+        source=req.get("source", ""),
+        attachment=req.get("attachment"),
+        report=req.get("report"),
+        direction=req.get("direction", ""),
+        conclusion=req.get("conclusion", ""),
+    )
+    return {"ok": True, "workspace": ws, "entry": entry}
+
+
+def api_workspace_update_entry(workspace_id: str, entry_id: str,
+                               req: dict) -> dict:
+    if not isinstance(req, dict):
+        raise BadRequest("请求体必须是 JSON 对象")
+    ws, entry = _workspace_store().update_entry(
+        workspace_id,
+        entry_id,
+        result=req.get("result"),
+        text=req.get("text"),
+    )
+    return {"ok": True, "workspace": ws, "entry": entry}
+
+
+def api_workspace_timeline(workspace_id: str) -> dict:
+    return {"timeline": _workspace_store().timeline(workspace_id)}
+
+
+def api_workspace_delete(workspace_id: str) -> dict:
+    _workspace_store().delete(workspace_id)
+    return {"ok": True}
+
+
+def api_workspace_delete_entry(workspace_id: str, entry_id: str) -> dict:
+    ws = _workspace_store().delete_entry(workspace_id, entry_id)
+    return {"ok": True, "workspace": ws}
+
+
+def api_workspace_export(workspace_id: str, fmt: str) -> tuple[bytes, str]:
+    store = _workspace_store()
+    if fmt == "json":
+        ws = store.load(workspace_id)
+        return (json.dumps(ws, ensure_ascii=False, indent=2).encode("utf-8"),
+                "application/json; charset=utf-8")
+    if fmt not in ("", "md", "markdown"):
+        raise BadRequest("导出格式只能是 md 或 json")
+    return store.export_markdown(workspace_id).encode("utf-8"), \
+        "text/markdown; charset=utf-8"
 
 
 # ============================================================== 页面
@@ -636,11 +770,13 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):    # 静音
         pass
 
-    def _send(self, code, body: bytes, ctype: str):
+    def _send(self, code, body: bytes, ctype: str, headers=None):
         self.send_response(code)
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
+        for key, value in (headers or {}).items():
+            self.send_header(key, value)
         self.end_headers()
         self.wfile.write(body)
 
@@ -675,6 +811,10 @@ class Handler(BaseHTTPRequestHandler):
         elif u.path == "/api/doc":
             qs = parse_qs(u.query)
             self._json(api_doc((qs.get("path") or [""])[0]))
+        elif u.path == "/api/workspaces":
+            self._workspace_list()
+        elif u.path.startswith("/api/workspaces/"):
+            self._workspace_get(u)
         else:
             self._send(404, b"not found", "text/plain")
 
@@ -687,10 +827,106 @@ class Handler(BaseHTTPRequestHandler):
             self._json({"docs": 0, "chunks": 0, "categories": {},
                         "error": f"{type(e).__name__}: {e}"})
 
+    @staticmethod
+    def _workspace_route(path: str):
+        prefix = "/api/workspaces/"
+        if not path.startswith(prefix):
+            return None
+        parts = [unquote(p) for p in path[len(prefix):].split("/") if p]
+        if not parts:
+            return None
+        if len(parts) == 1:
+            return parts[0], ""
+        if len(parts) == 2:
+            return parts[0], parts[1]
+        if len(parts) == 3 and parts[1] == "entries":
+            return parts[0], "entries/" + parts[2]
+        return None
+
+    def _workspace_error(self, e):
+        from agent.workspace import WorkspaceExists, WorkspaceNotFound
+
+        if isinstance(e, WorkspaceNotFound):
+            code = 404
+        elif isinstance(e, WorkspaceExists):
+            code = 409
+        else:
+            code = 400
+        self._json({"ok": False, "error": str(e)}, code)
+
+    def _workspace_list(self):
+        try:
+            self._json(api_workspace_list())
+        except Exception as e:  # noqa: BLE001
+            self._json({"ok": False, "workspaces": [],
+                        "error": f"{type(e).__name__}: {e}"}, 500)
+
+    def _workspace_get(self, u):
+        from agent.workspace import WorkspaceError
+
+        route = self._workspace_route(u.path)
+        if route is None:
+            self._json({"ok": False, "error": "not found"}, 404)
+            return
+        wid, action = route
+        qs = parse_qs(u.query)
+        try:
+            if action == "export":
+                fmt = (qs.get("format") or ["md"])[0].lower()
+                body, ctype = api_workspace_export(wid, fmt)
+                ext = "json" if ctype.startswith("application/json") else "md"
+                self._send(200, body, ctype, {
+                    "Content-Disposition": f'attachment; filename="{wid}.{ext}"',
+                })
+            elif action == "timeline":
+                self._json(api_workspace_timeline(wid))
+            elif not action:
+                self._json(api_workspace_get(wid))
+            else:
+                self._json({"ok": False, "error": "not found"}, 404)
+        except WorkspaceError as e:
+            self._workspace_error(e)
+        except Exception as e:  # noqa: BLE001
+            self._json({"ok": False,
+                        "error": f"{type(e).__name__}: {e}"}, 500)
+
+    def _workspace_post(self, u, req):
+        from agent.workspace import WorkspaceError
+
+        route = self._workspace_route(u.path)
+        if route is None:
+            self._json({"ok": False, "error": "not found"}, 404)
+            return
+        wid, action = route
+        try:
+            if not action:
+                self._json(api_workspace_update(wid, req))
+            elif action == "entries":
+                self._json(api_workspace_add_entry(wid, req))
+            elif action.startswith("entries/"):
+                self._json(api_workspace_update_entry(
+                    wid, action.split("/", 1)[1], req))
+            else:
+                self._json({"ok": False, "error": "not found"}, 404)
+        except WorkspaceError as e:
+            self._workspace_error(e)
+        except Exception as e:  # noqa: BLE001
+            self._json({"ok": False,
+                        "error": f"{type(e).__name__}: {e}"}, 500)
+
     def _analyze(self, u):
         """/api/analyze：原始字节上传，限大小，保存到隔离目录后只读解析。"""
         qs = parse_qs(u.query)
         name = (qs.get("name") or [""])[0]
+        workspace = (qs.get("workspace") or [""])[0].strip()
+        if workspace:
+            from agent.workspace import WorkspaceError
+
+            try:
+                _workspace_store().load(workspace)
+            except WorkspaceError as e:
+                self._workspace_error(e)
+                return
         try:
             n = int(self.headers.get("Content-Length", "0") or 0)
         except ValueError:
@@ -713,7 +949,7 @@ class Handler(BaseHTTPRequestHandler):
             self._json({"ok": False, "error": "附件读取不完整"}, 400)
             return
         try:
-            self._json(api_analyze(name, raw))
+            self._json(api_analyze(name, raw, workspace or None))
         except BadRequest as e:
             self._json({"ok": False, "error": str(e)}, 400)
         except Exception as e:  # noqa: BLE001
@@ -763,8 +999,12 @@ class Handler(BaseHTTPRequestHandler):
         except ValueError:
             self._json({"error": "Content-Length 不合法"}, 400)
             return
-        if n < 0 or n > MAX_BODY_BYTES:
-            self._json({"error": f"请求体过大（上限 {MAX_BODY_BYTES} 字节）"}, 413)
+        if n < 0 or n > (MAX_WORKSPACE_BODY_BYTES
+                         if u.path.startswith("/api/workspaces")
+                         else MAX_BODY_BYTES):
+            limit = (MAX_WORKSPACE_BODY_BYTES
+                     if u.path.startswith("/api/workspaces") else MAX_BODY_BYTES)
+            self._json({"error": f"请求体过大（上限 {limit} 字节）"}, 413)
             return
         try:
             raw = self.rfile.read(n) if n else b"{}"
@@ -792,6 +1032,22 @@ class Handler(BaseHTTPRequestHandler):
                 self._json({"ok": False, "error": str(e)}, 400)
             except Exception as e:  # noqa: BLE001
                 self._json({"ok": False, "error": f"{type(e).__name__}: {e}"}, 500)
+            return
+
+        if u.path == "/api/workspaces":
+            from agent.workspace import WorkspaceError
+
+            try:
+                self._json(api_workspace_create(req))
+            except WorkspaceError as e:
+                self._workspace_error(e)
+            except Exception as e:  # noqa: BLE001
+                self._json({"ok": False,
+                            "error": f"{type(e).__name__}: {e}"}, 500)
+            return
+
+        if u.path.startswith("/api/workspaces/"):
+            self._workspace_post(u, req)
             return
 
         if u.path == "/api/ask":
@@ -837,6 +1093,29 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         self._json({"error": "not found"}, 404)
+
+    def do_DELETE(self):
+        u = urlparse(self.path)
+        from agent.workspace import WorkspaceError
+
+        route = self._workspace_route(u.path)
+        if route is None:
+            self._json({"ok": False, "error": "not found"}, 404)
+            return
+        wid, action = route
+        try:
+            if not action:
+                self._json(api_workspace_delete(wid))
+            elif action.startswith("entries/"):
+                self._json(api_workspace_delete_entry(
+                    wid, action.split("/", 1)[1]))
+            else:
+                self._json({"ok": False, "error": "not found"}, 404)
+        except WorkspaceError as e:
+            self._workspace_error(e)
+        except Exception as e:  # noqa: BLE001
+            self._json({"ok": False,
+                        "error": f"{type(e).__name__}: {e}"}, 500)
 
 
 def main() -> int:

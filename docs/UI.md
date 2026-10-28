@@ -1,6 +1,6 @@
 # 知识库前端（v2 · React）
 
-**日期**：2026-10-27
+**日期**：2026-10-28（P3：附件上传入口 + 题目工作区）
 **入口**：`http://127.0.0.1:8765/`
 **源码**：`tools/agent/webapp/`（React 19 + TypeScript + Vite）
 **产物**：`tools/agent/webapp/dist/`（由 Python 服务托管）
@@ -45,11 +45,16 @@ tools/agent/
     │   ├── styles.css
     │   ├── lib/sse.ts     # SSE 解析（tok/err/done）
     │   ├── pages/SearchPage.tsx
+    │   ├── pages/WorkspacePage.tsx   # 题目工作区
     │   ├── pages/SearchPage.test.tsx
+    │   ├── pages/WorkspacePage.test.tsx
     │   ├── api.test.ts
     │   └── components/
     │       ├── Md.tsx     # Markdown + 代码块（复制按钮）
-    │       └── Reader.tsx # 抽屉阅读器 + 目录
+    │       ├── Reader.tsx # 抽屉阅读器 + 目录
+    │       ├── AttachmentPanel.tsx   # 上传预检 / 报告 / 附到工作区
+    │       ├── AttachmentReport.tsx  # 分节折叠报告
+    │       └── AttachmentPanel.test.tsx
     └── dist/              # 构建产物
 ```
 
@@ -105,6 +110,25 @@ tools/agent/
 - 代码块：语言标签 + 复制按钮
 - 表格横向滚动、外链新窗口、图片自适应
 
+### 分析附件（P3）
+- 搜索页有「分析附件」卡片：选择或拖入文件后读取**原始字节**，
+  `POST /api/analyze?name=<文件名>`（`application/octet-stream`，不是 multipart）
+- 上传前用 `/api/health` 的 `attachment.max_bytes` 预检；超限直接提示，
+  **不发送请求**，也不做任何预览执行
+- 报告按「文件与落盘 / 类型 / 雕刻 / PNG-WAV-ZIP / 异常 / 解码 /
+  关键字符串 / 警告」分节折叠；明确显示 `executed=false` 与“不会运行”
+- 有当前工作区时可「附到工作区」，把完整报告 JSON 存为该工作区的资料收藏
+- 上传与分析全部离线、只读；字符串与预览只作为文本展示
+
+### 题目工作区（P3）
+- 侧栏「工作区」页：创建（标题 + 可选自定义 ID）、选择、改名、改状态、删除
+- 条目：事实、尝试（方向 / 结论 / `待验证|有效|无效` + 可选备注）、
+  资料收藏（kb 路径或 http(s) URL + 备注）
+- 时间线由创建/改名/增删条目自动生成，界面只读
+- 「导出 Markdown」下载整个工作区；后端另有 `format=json` 完整导出
+- 搜索结果卡片可「收藏到工作区」；当前工作区存 `localStorage`
+- 附件报告在资料收藏条目里可展开查看
+
 ### 其他
 - 明暗主题切换（`localStorage` 记忆，跟随系统默认）
 - 快捷键：`Ctrl+K` 聚焦、`Ctrl+Enter` 提交、`Esc` 关闭抽屉
@@ -143,7 +167,17 @@ def do_GET(self):
 | `GET /api/doc?path=` | 单篇正文；只允许 `kb/` 内 `.md` |
 | `POST /api/ask` | `{q, paths}` → SSE；串行，忙碌返回 429 |
 | `POST /api/feedback` | `{query, path?, verdict, note?}`；`verdict=useful\|useless\|adopted`；追加本地 JSONL |
-| `POST /api/analyze?name=` | 请求体为原始字节；只读附件侦察，复制到隔离目录后返回结构化报告 |
+| `POST /api/analyze?name=` | 请求体为原始字节；只读附件侦察，复制到隔离目录后返回结构化报告；可加 `&workspace=<id>` |
+| `GET /api/workspaces` | 列出工作区摘要（条目数/分类计数） |
+| `POST /api/workspaces` | `{title, id?, category?}`；ID 可自定义，重复 409 |
+| `GET /api/workspaces/<id>` | 读取工作区（含条目、时间线、附件报告） |
+| `POST /api/workspaces/<id>` | `{title?, status?, category?}`；改名/状态 |
+| `DELETE /api/workspaces/<id>` | 删除工作区 JSON |
+| `POST /api/workspaces/<id>/entries` | 加事实/尝试/收藏 |
+| `POST /api/workspaces/<id>/entries/<eid>` | 修改尝试状态/内容 |
+| `DELETE /api/workspaces/<id>/entries/<eid>` | 删除条目 |
+| `GET /api/workspaces/<id>/timeline` | 只读时间线 |
+| `GET /api/workspaces/<id>/export?format=md\|json` | 下载 Markdown / JSON |
 
 ### 附件分析接口（P2）
 
@@ -182,8 +216,57 @@ $r.Content | ConvertFrom-Json
 - 空附件 / 超长名字返回 400，超限返回 413，且超限时不写盘。
 - 上传副本写入 `work/attachments/<uuid>/upload_<安全名>`；`[attachment].dir`
   或 `AGENT_ATTACHMENT_DIR` 可改根目录。`work/` 不入库。
-- `GET /api/health` 返回 `attachment.max_bytes`，调用方可先读上限再上传。
-- 本批只提供接口，React 页面尚未接入上传按钮；后续可在 P3 接。
+- `GET /api/health` 返回 `attachment.max_bytes`，前端上传前先读上限预检。
+- P3 已接入 React：搜索页「分析附件」卡片读取原始字节并展示报告；
+  也可带 `&workspace=<id>` 把报告直接登记进工作区。
+
+### 工作区接口（P3）
+
+存储为 `work/workspaces/<id>.json`（`[workspace].dir` 或
+`AGENT_WORKSPACE_DIR` 可改），不引入数据库；`work/` 不入库。
+
+```powershell
+# 创建工作区（ID 可省略）
+$json = @{title='ctfshow 上传'; id='web-upload'; category='web'} | ConvertTo-Json
+$bytes = [Text.Encoding]::UTF8.GetBytes($json)
+$ws = Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8765/api/workspaces' `
+  -ContentType 'application/json; charset=utf-8' -Body $bytes
+
+# 加事实 / 尝试 / 收藏
+Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8765/api/workspaces/web-upload/entries' `
+  -ContentType 'application/json' -Body (@{kind='fact'; text='过滤只替换一次'} | ConvertTo-Json)
+
+Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8765/api/workspaces/web-upload/entries' `
+  -ContentType 'application/json' -Body (@{kind='attempt'; direction='短标签绕过'; conclusion='被拦截'; result='failed'} | ConvertTo-Json)
+
+Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8765/api/workspaces/web-upload/entries' `
+  -ContentType 'application/json' -Body (@{kind='reference'; title='文件上传绕过'; path='web/upload-bypass.md'; text='重点看后缀'} | ConvertTo-Json)
+
+# 改尝试状态
+Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8765/api/workspaces/web-upload/entries/<eid>' `
+  -ContentType 'application/json' -Body (@{result='success'} | ConvertTo-Json)
+
+# 导出
+Invoke-WebRequest -Uri 'http://127.0.0.1:8765/api/workspaces/web-upload/export?format=md' -OutFile out.md
+```
+
+字段与边界：
+
+| 字段 | 说明 |
+|---|---|
+| `id` | `[A-Za-z0-9_-]{1,64}`；省略自动 uuid；重复 409 |
+| `title` | 必填，最长 120 字符 |
+| `status` | `open` / `solved` / `archived` |
+| `kind` | `fact` / `attempt` / `reference` |
+| `direction` / `conclusion` | 仅尝试；最长 500 / 2000 字符 |
+| `result` | 尝试状态：`pending` / `success` / `failed` |
+| `path` / `url` | 收藏目标；URL 只允许 `http://` / `https://` |
+| `report` | 附件报告 JSON，仅收藏条目，上限 256 KiB |
+| 请求体 | 工作区端点上限 512 KiB；其余 64 KiB |
+
+导出的 Markdown 固定分节：事实 / 尝试 / 资料收藏 / 时间线；附件收藏会额外
+渲染类型、大小、SHA256、落盘路径、雕刻、结构、异常、解码、警告与“未执行”。
+JSON 导出保留完整工作区（含报告原始 JSON）。
 
 SSE 契约：
 
@@ -205,7 +288,7 @@ npm install --cache ../../../.npm-cache   # 首次；缓存放项目内 F 盘
 npm run dev          # 热更新，:5173，/api 代理到 :8765
 npm run build        # 产出 dist/
 npm run check        # 仅类型检查（tsconfig.app + tsconfig.node）
-npm test             # vitest：SSE + SearchPage（解释/筛选/反馈/图谱关联）
+npm test             # vitest：SSE + 搜索 + 附件面板 + 工作区
 ```
 
 检索评测（不启动前端/模型）：
@@ -241,7 +324,10 @@ Node 全局被误认为合法）；`vite.config.ts` / `vitest.config.ts` 由
 1. P1 已修掉“同一长文档占满结果”的主因，但泛化查询仍可能偏向 signals
    很多的长文档；固定评测集只有 22 条，不能代表全库
 2. 真实模型单次生成耗时未在本批复测；旧文档的 105 秒/4B 对比不作结论
-3. 首屏 JS 约 801 KB（gzip 248 KB），本地访问无感；要更快可拆包
+3. 首屏 JS 约 839 KB（gzip 258 KB），CSS 207 KB；本地访问无感，要更快可拆包
 4. “停止接收”只关闭本地连接；上游 Ollama 可能短暂收尾
 5. 自动化测试全部离线 Mock，未覆盖真实模型与真实浏览器
 6. 反馈只写本地 JSONL，尚无汇总/导出页面，也尚未参与排序
+7. 工作区只面向本机单用户，无登录；同进程 RLock 串行写，跨进程并发未加锁
+8. 附件报告在 Markdown 导出中只渲染摘要；完整 strings 保留在 JSON 导出
+9. 前端测试 4 文件 / 23 用例；真实浏览器交互仍未逐路径录制

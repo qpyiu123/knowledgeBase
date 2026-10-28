@@ -17,6 +17,7 @@ import {
 } from '@mantine/core';
 import {
   ArrowUpRight,
+  BookmarkPlus,
   Check,
   Copy,
   Search,
@@ -27,6 +28,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Md from '../components/Md';
+import AttachmentPanel from '../components/AttachmentPanel';
 import { api, ask } from '../api';
 import type { DocType, Hit } from '../types';
 
@@ -78,10 +80,16 @@ export default function SearchPage({
   category,
   onOpenDoc,
   docs,
+  workspaceId,
+  workspaceTitle,
+  attachmentMaxBytes,
 }: {
   category: string;
   onOpenDoc: (path: string, title?: string) => void;
   docs: number;
+  workspaceId?: string;
+  workspaceTitle?: string;
+  attachmentMaxBytes?: number;
 }) {
   const [q, setQ] = useState('');
   const [mode, setMode] = useState('direct');
@@ -94,6 +102,7 @@ export default function SearchPage({
   const [counts, setCounts] = useState<{ topic: number; card: number } | null>(null);
   const [resultQuery, setResultQuery] = useState('');
   const [feedback, setFeedback] = useState<Record<string, string>>({});
+  const [savedToWorkspace, setSavedToWorkspace] = useState<Record<string, boolean>>({});
   const [ms, setMs] = useState<number | null>(null);
   const [searched, setSearched] = useState(false);
   const [answer, setAnswer] = useState('');
@@ -245,6 +254,27 @@ export default function SearchPage({
 
   const refs = useMemo(() => hits.slice(0, 3), [hits]);
 
+  const saveToWorkspace = useCallback(
+    async (h: Hit) => {
+      if (!workspaceId) {
+        setError('先到「工作区」页创建或选择一个工作区，再收藏资料。');
+        return;
+      }
+      try {
+        await api.workspaces.addEntry(workspaceId, {
+          kind: 'reference',
+          title: h.title,
+          path: h.path,
+          text: '从搜索结果收藏',
+        });
+        setSavedToWorkspace((m) => ({ ...m, [h.path]: true }));
+      } catch (e) {
+        setError(`收藏失败：${String((e as Error).message || e)}`);
+      }
+    },
+    [workspaceId],
+  );
+
   // #q=关键词 / #ask=问题 自动执行（方便分享与测试）
   useEffect(() => {
     const h = decodeURIComponent(location.hash.replace(/^#/, ''));
@@ -272,6 +302,11 @@ export default function SearchPage({
           输入题面特征、函数名、报错信息，或描述已经试过的方法。
           {category ? ` 当前只看「${category}」方向。` : ''}
         </p>
+        <Text size="xs" c="dimmed" mt={6}>
+          {workspaceId
+            ? `当前工作区：${workspaceTitle || workspaceId}`
+            : '尚未选择工作区；到「工作区」页创建后可收藏资料、附着附件报告。'}
+        </Text>
       </div>
 
       <Card withBorder radius="lg" className="search-card">
@@ -351,6 +386,12 @@ export default function SearchPage({
           </Group>
         </Stack>
       </Card>
+
+      <AttachmentPanel
+        maxBytes={attachmentMaxBytes}
+        workspaceId={workspaceId}
+        workspaceTitle={workspaceTitle}
+      />
 
       {busy && (
         <Group gap="xs">
@@ -536,6 +577,23 @@ export default function SearchPage({
                       >
                         问模型
                       </Button>
+                      <Tooltip
+                        label={
+                          workspaceId
+                            ? `收藏到「${workspaceTitle || workspaceId}」`
+                            : '先到「工作区」页选择工作区'
+                        }
+                      >
+                        <Button
+                          variant={savedToWorkspace[h.path] ? 'light' : 'subtle'}
+                          size="compact-sm"
+                          leftSection={<BookmarkPlus size={14} />}
+                          disabled={!workspaceId || savedToWorkspace[h.path]}
+                          onClick={() => void saveToWorkspace(h)}
+                        >
+                          {savedToWorkspace[h.path] ? '已收藏' : '收藏到工作区'}
+                        </Button>
+                      </Tooltip>
                     </Group>
                   </Group>
                   <Group justify="space-between" mt={6} wrap="wrap" gap={8}>

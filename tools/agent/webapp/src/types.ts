@@ -53,5 +53,132 @@ export type Health = {
     built_at?: string | null;
     error?: string;
   };
+  attachment?: { max_bytes: number };
   error?: string;
+};
+
+export type AttachmentCarve = {
+  type?: string;
+  offset?: number;
+  offset_hex?: string;
+  size?: number;
+};
+
+export type AttachmentStructures = {
+  png?: {
+    width?: number;
+    height?: number;
+    chunks?: {
+      type?: string;
+      len?: number;
+      offset?: number;
+      crc_ok?: boolean | null;
+    }[];
+    truncated?: boolean;
+  };
+  wav?: {
+    format?: string;
+    channels?: number;
+    sample_rate?: number;
+    chunks?: unknown[];
+    tail_text?: string;
+  };
+  zip?: {
+    count?: number;
+    entries?: {
+      name: string;
+      size?: number;
+      compressed?: number;
+      encrypted?: boolean;
+    }[];
+    truncated?: boolean;
+    encrypted?: boolean;
+  };
+};
+
+export type AttachmentReport = {
+  schema_version?: number;
+  ok?: boolean;
+  executed: boolean;
+  execution_note?: string;
+  file: {
+    name: string;
+    size: number;
+    sha256: string;
+    ext?: string;
+    saved?: string;
+    original_name?: string;
+    dir?: string;
+  };
+  type: {
+    kind: string;
+    detected?: boolean;
+    is_text: boolean;
+    preview?: string;
+    extension?: string;
+    extension_mismatch?: boolean;
+  };
+  carve?: AttachmentCarve[];
+  structures?: AttachmentStructures;
+  anomalies?: string[];
+  decoded?: {
+    method: string;
+    encoded?: string;
+    decoded: string;
+    truncated?: boolean;
+  }[];
+  strings?: string[];
+  warnings?: string[];
+  storage?: { isolated: boolean; dir: string; saved: string };
+  workspace?: { id: string; entry_id: string };
+  error?: string;
+};
+
+export type WorkspaceEntryKind = 'fact' | 'attempt' | 'reference';
+export type AttemptResult = 'pending' | 'success' | 'failed';
+export type WorkspaceStatus = 'open' | 'solved' | 'archived';
+
+export type WorkspaceEntry = {
+  id: string;
+  created: string;
+  kind: WorkspaceEntryKind;
+  text: string;
+  result?: AttemptResult | null;
+  direction?: string;
+  conclusion?: string;
+  title?: string;
+  path?: string;
+  url?: string;
+  source?: string;
+  attachment?: Record<string, unknown> | null;
+  report?: AttachmentReport | null;
+};
+
+export type TimelineEvent = {
+  ts: string;
+  kind: string;
+  summary: string;
+};
+
+export type Workspace = {
+  schema_version: number;
+  id: string;
+  title: string;
+  category: string | null;
+  status: WorkspaceStatus;
+  created: string;
+  updated: string;
+  entries: WorkspaceEntry[];
+  timeline: TimelineEvent[];
+};
+
+export type WorkspaceSummary = {
+  id: string;
+  title: string;
+  category: string | null;
+  status: WorkspaceStatus;
+  created: string;
+  updated: string;
+  entries: number;
+  counts: Record<WorkspaceEntryKind, number>;
 };

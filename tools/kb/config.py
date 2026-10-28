@@ -59,6 +59,9 @@ model = "qwen2.5-coder:7b"
 
 [feedback]
 file = "work/feedback/feedback.jsonl"
+
+[workspace]
+dir = "work/workspaces"
 """
 
 

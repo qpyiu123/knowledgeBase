@@ -113,16 +113,92 @@
 
 ---
 
-## P2（未实现）
+## P2（已授权，已完成 2026-10-28）
 
-- 前端附件分析入口：限大小、复制到隔离目录、默认不执行脚本。
-- 侦察结果结构化展示（类型、雕刻、解码）。
-- 与 P1 评测共用可复现的样例。
+### 目标
 
-## P3（未实现）
+只读附件分析：不执行附件，不调用外部命令，结果结构化、可复现评测；
+前端上传入口按计划留到 P3 一起接。
 
-- 持久化题目工作区：事实、尝试、资料收藏、时间线。
-- 只存本地，可导出；不引入后端数据库框架。
+### 工作项
+
+1. `tools/agent/attachment.py`：类型/扩展名不符、雕刻、PNG/WAV/ZIP 结构、
+   异常、base64/hex/url 解码、关键字符串、脚本警告、`executed=false`。
+2. `POST /api/analyze?name=`：原始字节、大小/名字限制、隔离落盘、
+   文件名清洗防路径穿越；`/api/health` 暴露 `attachment.max_bytes`。
+3. 固定样例评测 `eval/attachment_cases.json` + `tools/eval_attachments.py`，
+   样例现场生成，不提交二进制。
+
+### 验收结果
+
+- ✅ `pytest -o addopts="" -q` → 151 passed。
+- ✅ `tests/test_attachment.py tests/test_server_api.py` → 55 passed。
+- ✅ `python tools/eval_attachments.py` → 5/5 通过（pass_rate=1.0000）。
+- ✅ 超限 413 且不写盘；空附件/超长名字 400；脚本只警告不执行。
+- ✅ 前端未改，沿用 P1 的 14 passed / 构建结果（上批未重跑前端）。
+
+### 未完成 / 测试局限
+
+- 只做静态结构/字符串/编码嗅探，不反编译、不模拟执行、不沙箱运行。
+- ZIP 只列目录不解压；加密 ZIP 只提示需要密码。
+- `work/attachments/` 暂无自动清理策略。
+- P2 时未接入 React 上传入口，P3 已补。
+
+### 明确不做
+
+- 不调用 `binwalk`/`exiftool`/`strings` 等外部命令，不执行上传内容。
+- 不做反编译、动态调试、沙箱运行。
+
+---
+
+## P3（已授权，已完成 2026-10-28）
+
+### 目标
+
+把附件分析接入搜索页，并新增纯本地 JSON 的题目工作区：
+事实 / 尝试 / 资料收藏 / 时间线，可导出 Markdown，不引入数据库框架。
+
+### 工作项
+
+1. **附件上传入口**：搜索页选择/拖拽文件，读取原始字节，
+   `POST /api/analyze?name=`；按 `health.attachment.max_bytes` 预检，超限不发请求；
+   报告按文件/类型/雕刻/结构/异常/解码/字符串/警告分节折叠；不执行、不预执行。
+2. **工作区存储**：`tools/agent/workspace.py`，`work/workspaces/<id>.json`；
+   用户可指定 ID（默认 uuid）与标题；原子落盘；时间线只读自动追加。
+3. **工作区 API**：创建/列出/读取/改名/状态/删除；事实增删；尝试增删改状态；
+   收藏增删；时间线读取；Markdown/JSON 导出下载。
+4. **前端工作区页**：创建/选择/改名/状态/删除、加事实/尝试/收藏、
+   改尝试状态、看时间线、导出 Markdown；当前工作区 `localStorage`。
+5. **与搜索打通**：搜索结果「收藏到工作区」；附件报告「附到工作区」。
+6. **报告入库**：完整报告 JSON 存进 `reference.report`（上限 256 KiB），
+   Markdown 导出渲染摘要；`/api/analyze?workspace=` 可直接登记。
+7. **测试**：新增 `tests/test_workspace.py`、前端附件与工作区测试；
+   原附件/server 测试不回退。
+8. **文档**：更新 PROJECT_MEMORY、HANDOVER、UI、本计划。
+
+### 验收结果
+
+- ✅ `pytest -o addopts="" -q` → **179 passed**（P2 的 151 + 新增 28）。
+- ✅ `pytest tests/test_workspace.py -q` → 28 passed。
+- ✅ 附件/server 回归 → 55 passed；附件评测仍 5/5。
+- ✅ `npm run check`、`npm test`（4 files / 23 tests）、`npm run build` 全绿。
+- ✅ 构建：JS 838.63 kB（gzip 258.46 kB），CSS 207.25 kB（gzip 31.31 kB）。
+- ✅ 冒烟：创建 → 加事实 → 加尝试 → 收藏 kb 文档 → 导出 Markdown，
+  各节与时间线正确（详见 PROJECT_MEMORY 第 9 节）。
+- ✅ 工作区只写本地 JSON；`work/` 与冒烟数据未入库。
+
+### 未完成 / 测试局限
+
+- 单机单用户、无登录/权限；同进程 RLock 串行写，跨进程并发未加文件锁。
+- Markdown 导出只渲染附件报告摘要；完整 strings 在 JSON 导出中。
+- 未做真实浏览器逐路径手测；依据组件测试 + 生产构建。
+- 工作区无版本历史/撤销，删除即删本地 JSON。
+
+### 明确不做
+
+- 不引入数据库/Web 框架；不做多用户、同步、云存储。
+- 不执行附件，不做动态分析。
+- 不做 P4 的三态条件、脚本工具架、Writeup 生成。
 
 ## P4（未实现）
 

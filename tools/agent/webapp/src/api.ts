@@ -1,4 +1,15 @@
-import type { Health, SearchResp, Stats } from './types';
+import type {
+  AttachmentReport,
+  Health,
+  SearchResp,
+  Stats,
+  TimelineEvent,
+  Workspace,
+  WorkspaceEntry,
+  WorkspaceEntryKind,
+  WorkspaceStatus,
+  WorkspaceSummary,
+} from './types';
 import { readAskStream, type AskHandlers } from './lib/sse';
 
 export type { AskHandlers } from './lib/sse';
@@ -19,6 +30,20 @@ async function getJSON<T>(url: string, init?: RequestInit): Promise<T> {
   if (!r.ok) throw new Error(await errorMessage(r));
   return (await r.json()) as T;
 }
+
+function postJSON<T>(url: string, body: unknown): Promise<T> {
+  return getJSON<T>(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
+function delJSON<T>(url: string): Promise<T> {
+  return getJSON<T>(url, { method: 'DELETE' });
+}
+
+const wsPath = (id: string) => '/api/workspaces/' + encodeURIComponent(id);
 
 export const api = {
   health: () => getJSON<Health>('/api/health'),
@@ -49,6 +74,78 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, path, verdict, note }),
     }),
+
+  /** 原始字节上传（不是 multipart），附件由后端隔离落盘后只读解析。 */
+  analyze: async (
+    name: string,
+    data: ArrayBuffer,
+    workspaceId?: string | null,
+  ): Promise<AttachmentReport> => {
+    const qs =
+      '?name=' +
+      encodeURIComponent(name) +
+      (workspaceId ? '&workspace=' + encodeURIComponent(workspaceId) : '');
+    const r = await fetch('/api/analyze' + qs, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/octet-stream' },
+      body: data,
+    });
+    if (!r.ok) throw new Error(await errorMessage(r));
+    return (await r.json()) as AttachmentReport;
+  },
+
+  workspaces: {
+    list: () => getJSON<{ workspaces: WorkspaceSummary[] }>('/api/workspaces'),
+    get: (id: string) => getJSON<{ workspace: Workspace }>(wsPath(id)),
+    create: (title: string, id?: string, category?: string | null) =>
+      postJSON<{ ok: boolean; workspace: Workspace }>('/api/workspaces', {
+        title,
+        id: id || undefined,
+        category: category || undefined,
+      }),
+    update: (
+      id: string,
+      patch: { title?: string; status?: WorkspaceStatus; category?: string | null },
+    ) =>
+      postJSON<{ ok: boolean; workspace: Workspace }>(wsPath(id), patch),
+    remove: (id: string) => delJSON<{ ok: boolean }>(wsPath(id)),
+    addEntry: (
+      id: string,
+      entry: {
+        kind: WorkspaceEntryKind;
+        text?: string;
+        result?: string;
+        direction?: string;
+        conclusion?: string;
+        title?: string;
+        path?: string;
+        url?: string;
+        source?: string;
+        attachment?: Record<string, unknown> | null;
+        report?: AttachmentReport | null;
+      },
+    ) =>
+      postJSON<{ ok: boolean; workspace: Workspace; entry: WorkspaceEntry }>(
+        wsPath(id) + '/entries',
+        entry,
+      ),
+    updateEntry: (
+      id: string,
+      entryId: string,
+      patch: { result?: string; text?: string },
+    ) =>
+      postJSON<{ ok: boolean; workspace: Workspace; entry: WorkspaceEntry }>(
+        wsPath(id) + '/entries/' + encodeURIComponent(entryId),
+        patch,
+      ),
+    removeEntry: (id: string, entryId: string) =>
+      delJSON<{ ok: boolean; workspace: Workspace }>(
+        wsPath(id) + '/entries/' + encodeURIComponent(entryId),
+      ),
+    timeline: (id: string) =>
+      getJSON<{ timeline: TimelineEvent[] }>(wsPath(id) + '/timeline'),
+    exportUrl: (id: string) => wsPath(id) + '/export?format=md',
+  },
 };
 
 /** POST /api/ask，按 SSE 契约逐段回调 tok / err / done。 */

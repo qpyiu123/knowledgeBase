@@ -4,7 +4,7 @@
 > 区分三类信息：**已验证事实 / 推断 / 未验证**。旧文档里的数字若未在本重复现，
 > 不得当作结论复用。
 
-**最后更新**：2026-10-28（P2 附件分析入口已完成，验证结果见第 8 节）
+**最后更新**：2026-10-28（P3 工作区与附件 UI 已完成，验证结果见第 9 节）
 
 ---
 
@@ -19,7 +19,7 @@
 - 不删除用户资料，不读取/提交认证密钥，不更改全局 Git / npm 配置，
   不停止无关服务，不碰其他项目。
 - 后续方向：P1 检索可解释与评测（已完成）；P2 附件分析入口（已完成）；
-  P3 题目工作区；P4 三态适用条件与可追溯 Writeup。
+  P3 持久化题目工作区 + 附件上传 UI（已完成）；P4 三态适用条件与可追溯 Writeup。
   图谱可用性由评测决定，不按边数凑指标。
 
 ---
@@ -42,8 +42,10 @@
   `qwen25c7b-cpu0`、`qwen25c7b-gpu10`、`qwen25c7b-gpu14`。
   **没有** `qwen3-4b-local:latest` 的 manifest（旧 server 硬编码该名称）。
 - `config.toml` 的 `[ollama] model` 为 `qwen2.5-coder-7b`，与实际模型家族一致。
-- 基线 Python 测试：82 个用例通过；P0 后 107；P1 后 132；P2 后 151。
-- 前端 P0 起有 Vitest（SSE + SearchPage），P1 后 2 文件 / 14 用例。
+- 基线 Python 测试：82 个用例通过；P0 后 107；P1 后 132；P2 后 151；
+  P3 后 **179**（新增 28 个工作区/存储/API 用例）。
+- 前端 P0 起有 Vitest（SSE + SearchPage），P1 后 2 文件 / 14 用例；
+  P3 后 **4 文件 / 23 用例**（新增附件面板与工作区页面）。
 
 ### 旧文档中未验证的说法
 
@@ -149,6 +151,43 @@
 
 ---
 
+## 3d. P3 决策（本批，2026-10-28）
+
+1. **纯本地文件存储**：新增 `tools/agent/workspace.py`，每个工作区一个 JSON
+   文件，默认 `work/workspaces/<id>.json`（`[workspace].dir` 或
+   `AGENT_WORKSPACE_DIR` 覆盖）；不引入数据库框架。
+2. **ID 与标题可控**：创建时标题必填，ID 可省略（自动 uuid）或用户指定；
+   ID 只允许 `[A-Za-z0-9_-]{1,64}`，已存在返回 409，路径穿越在校验阶段拒绝。
+3. **条目模型**：`fact`（正文）、`attempt`（方向 + 结论 + `pending/success/failed`
+   状态 + 可选备注）、`reference`（kb 路径或 `http(s)` URL + 备注）。
+   文本、标题、路径、URL、方向、结论都有长度上限，条目数上限 500。
+4. **时间线只读**：创建工作区、改元信息、增删条目、修改尝试状态都会自动追加
+   `{ts, kind, summary}`；只提供读取接口，不提供时间线写入/删除接口。
+5. **原子落盘**：同目录临时文件 + `os.replace`，Windows 上对短暂
+   `PermissionError` 重试，避免杀软/索引服务占用导致半截 JSON。
+6. **HTTP API 对齐现有 server.py**：`GET/POST/DELETE /api/workspaces...`；
+   请求体沿用 JSON + 长度限制；工作区请求体上限 512 KiB（附件报告可能较大），
+   其余端点仍为 64 KiB。错误码：400 输入非法、404 不存在、409 ID 冲突。
+7. **导出**：`GET /api/workspaces/<id>/export?format=md|json`，Markdown 按
+   事实 / 尝试 / 资料收藏 / 时间线模板拼装，带 `Content-Disposition` 可下载；
+   JSON 导出保留完整工作区（含附件报告原始 JSON）。
+8. **附件报告入库**：附件分析报告的完整 JSON 存入 `reference.report`
+   （上限 256 KiB），Markdown 导出渲染类型、大小、SHA256、落盘路径、雕刻、
+   结构、异常、解码、警告与“未执行”；`POST /api/analyze?workspace=<id>`
+   可分析后直接登记为工作区资料。
+9. **前端入口**：搜索页新增「分析附件」卡片，选择/拖拽后读取原始字节，
+   先按 `/api/health` 的 `attachment.max_bytes` 预检，再
+   `POST /api/analyze?name=`；报告按文件/类型/雕刻/PNG-WAV-ZIP/异常/解码/
+   字符串/警告分节折叠展示。结果卡片可「收藏到工作区」。
+10. **工作区页面**：侧栏新增「工作区」，支持创建/选择/改名/状态/删除，
+    添加事实/尝试/收藏、修改尝试状态、删除条目、查看只读时间线、导出 Markdown；
+    当前工作区存 `localStorage`，与搜索页共享。
+11. **测试**：新增 `tests/test_workspace.py`（存储 + HTTP API + 导出 + 报告）
+    与前端 `AttachmentPanel.test.tsx`、`WorkspacePage.test.tsx`；
+    原有附件与 server 测试全部保留。
+
+---
+
 ## 4. 运行命令
 
 > 工具脚本清点见 `docs/TOOLS_INVENTORY.md`（21 个可执行入口 + 6 个仅 import 模块 + 10 个根目录临时探针）。
@@ -159,6 +198,9 @@
 
 # 仅 server / 附件测试
 .\.venv\Scripts\python.exe -m pytest tests\test_server_api.py tests\test_attachment.py -q
+
+# P3 工作区存储 + HTTP API
+.\.venv\Scripts\python.exe -m pytest tests\test_workspace.py -q
 
 # P2 附件侦察评测（固定样例；可加 --json / --json-out / --check）
 .\.venv\Scripts\python.exe tools\eval_attachments.py
@@ -195,6 +237,11 @@ npm run build
   ZIP 只列目录不解压，加密 ZIP 只提示需要密码。
 - 附件分析结果会写入 `work/attachments/`（默认保留），暂未做自动清理策略；
   `work/` 不入库。
+- 工作区只面向本机单用户，无登录/权限；API 绑定默认 `127.0.0.1`。
+  同一进程内用 RLock 串行写入，跨进程并发写同一工作区未做文件锁。
+- 工作区导出 Markdown 渲染附件报告摘要（类型/雕刻/结构/异常/解码/警告/落盘），
+  不倾倒全部 `strings`；完整报告 JSON 仍保存在工作区 JSON 与 `format=json` 导出中。
+- 附件报告上限 256 KiB；超限会在登记工作区时返回 400，附件本身已分析完成。
 - `work/` 与 `temp_newData/` 体积大（后者约 18.9 GB），只在本地保留，不入库。
 - 外部导入脚本只允许静态审查，不在本批执行。
 
@@ -203,9 +250,9 @@ npm run build
 ## 6. 下一步（不在本批实现）
 
 - P1 已完成：命中段落/原因、类型筛选、图谱关联阅读、反馈记录、可复现评测。
-- P2 已完成：附件分析入口、隔离落盘、只读结构/解码嗅探、固定样例评测；
-  前端 React 上传入口留待 P3 一起接（本批只补接口文档）。
-- P3：持久化题目工作区（事实/尝试/资料收藏），可顺带接入附件上传 UI。
+- P2 已完成：附件分析入口、隔离落盘、只读结构/解码嗅探、固定样例评测。
+- P3 已完成：工作区 JSON 持久化、事实/尝试/收藏/时间线、Markdown/JSON 导出、
+  附件分析 React 入口与报告展示、搜索结果收藏、附件报告附到工作区。
 - P4：适用条件三态（已知/未知/不满足）、只读脚本工具架、由真实记录生成
   可追溯 Writeup 草稿。
 - 图谱价值继续由评测决定，不以边数作为目标；P1 固定集没有显示图谱需要提权。
@@ -294,3 +341,61 @@ P2 评测样例与期望：
   路径穿越名字清洗；空附件/超长名字 400；超限 413 且不写盘；
   `health` 暴露附件上限。
 - 本批未改 React 源码；前端类型检查/测试/构建沿用 P1 结果，未重新执行。
+
+---
+
+## 9. P3 验证结果（2026-10-28）
+
+以下均为本机实测，工作目录 `F:\CTFfiles\knowledgeBase`：
+
+| 命令 | 结果 |
+|---|---|
+| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **179 passed in 36.04s**（P2 的 151 + P3 新增 28） |
+| `.\.venv\Scripts\python.exe -m pytest tests\test_workspace.py -o addopts="" -q` | **28 passed in 3.80s** |
+| `.\.venv\Scripts\python.exe -m pytest tests\test_attachment.py tests\test_server_api.py -q` | **55 passed**（附件/server 不回退） |
+| `.\.venv\Scripts\python.exe tools\eval_attachments.py` | **5/5 通过（pass_rate=1.0000）** |
+| `cd tools\agent\webapp; npm run check` | 通过（`tsc -b` 无输出） |
+| `npm test` | **4 files / 23 tests passed**（P1 的 14 + P3 新增 9） |
+| `npm run build` | 通过；JS 838.63 kB（gzip 258.46 kB），CSS 207.25 kB（gzip 31.31 kB） |
+
+手动冒烟（备用端口 8799，`AGENT_WORKSPACE_DIR=work/p3_smoke`，结束后清理）：
+
+1. 创建 `smoke-p3`（标题 `P3 冒烟：RSA 共模`，方向 crypto）；
+2. 加事实 `题目给了同一个 n 和两组密文`；
+3. 加尝试 `先试共模攻击 / 能恢复明文 / success`；
+4. 收藏 kb 文档 `crypto/rsa-common-modulus-attack.md`；
+5. 导出 Markdown，得到：
+
+```markdown
+# P3 冒烟：RSA 共模
+
+- 方向：crypto
+- 状态：open
+
+## 事实
+- [2026-10-28T09:06:41+00:00] 题目给了同一个 n 和两组密文
+
+## 尝试
+- [2026-10-28T09:06:41+00:00] `success` 方向：先试共模攻击；结论：能恢复明文
+
+## 资料收藏
+- [2026-10-28T09:06:41+00:00] 弱 RSA 共模攻击 — `crypto/rsa-common-modulus-attack.md`：冒烟收藏
+
+## 时间线
+- [2026-10-28T09:06:41+00:00] 创建工作区「P3 冒烟：RSA 共模」
+- [2026-10-28T09:06:41+00:00] 事实：题目给了同一个 n 和两组密文
+- [2026-10-28T09:06:41+00:00] 尝试（success）：先试共模攻击
+- [2026-10-28T09:06:41+00:00] 资料收藏：冒烟收藏
+```
+
+测试覆盖点：
+
+- workspace 存储：创建/列出/读取/改名/状态/删除、自定义 ID、重复 ID 409、
+  非法 ID、空/超长标题、事实/尝试/收藏增删、尝试状态修改、草稿校验、
+  时间线自动追加与只读、Markdown 导出模板、附件报告存库/渲染、报告体积上限。
+- workspace HTTP：CRUD、列表、时间线、导出下载、409 冲突、400 校验、
+  通过 `/api/analyze?workspace=` 把真实分析报告登记进工作区并出现在导出中。
+- 前端：附件超限预检不发请求、原始字节上传与报告展示、报告附到工作区、
+  无工作区时不提供附着；工作区创建/选择、加事实、加尝试（方向+结论+状态）、
+  时间线与导出链接、已附报告展示。
+- `work/workspaces/` 与冒烟目录都不入库；构建产物 `dist/` 仍被 gitignore。

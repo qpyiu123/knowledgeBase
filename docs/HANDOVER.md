@@ -73,6 +73,46 @@
 
 ---
 
+## 〇之四、2026-10-28 P3 更新（本批，已完成）
+
+- 新增 `tools/agent/workspace.py`：一个工作区一个本地 JSON 文件，默认
+  `work/workspaces/<id>.json`；`[workspace].dir` / `AGENT_WORKSPACE_DIR` 可改。
+  不引入数据库框架。
+- 工作区 ID 可由用户指定（`[A-Za-z0-9_-]{1,64}`），省略时自动 uuid；
+  标题必填；重复 ID 返回 409。
+- 条目：`fact`（正文）、`attempt`（方向 + 结论 + `pending/success/failed`
+  + 可选备注）、`reference`（kb 路径或 http(s) URL + 备注）。
+- 时间线自动追加创建/改名/状态/增删条目事件，只读。
+- API：
+  - `GET /api/workspaces` 列表；
+  - `POST /api/workspaces` 创建 `{title, id?, category?}`；
+  - `GET /api/workspaces/<id>` 读取；
+  - `POST /api/workspaces/<id>` 改名/状态；
+  - `DELETE /api/workspaces/<id>` 删除；
+  - `POST /api/workspaces/<id>/entries` 加条目；
+  - `POST /api/workspaces/<id>/entries/<eid>` 改尝试状态/内容；
+  - `DELETE /api/workspaces/<id>/entries/<eid>` 删条目；
+  - `GET /api/workspaces/<id>/timeline` 只读时间线；
+  - `GET /api/workspaces/<id>/export?format=md|json` 下载导出。
+- `POST /api/analyze?name=&workspace=<id>` 可在分析后直接把完整报告 JSON
+  登记为该工作区的资料收藏；工作区不存在时 404。
+- 附件报告入库上限 256 KiB；Markdown 导出渲染类型、大小、SHA256、落盘路径、
+  雕刻、结构、异常、解码、警告与“未执行”，不倾倒全部 strings。
+- 前端：
+  - 搜索页新增「分析附件」卡片：选择/拖拽后读取原始字节，先按
+    `/api/health` 的 `attachment.max_bytes` 预检，超限不发请求；报告按节折叠。
+  - 搜索结果可「收藏到工作区」。
+  - 新增「工作区」页面：创建/选择/改名/状态/删除，加事实/尝试/收藏，
+    修改尝试状态、看时间线、导出 Markdown；当前工作区写入 localStorage。
+- 测试：Python **179 passed**（P2 的 151 + 新增 28）；附件评测仍 **5/5**；
+  前端 **4 files / 23 tests**；`npm run check` / `npm run build` 通过。
+- 冒烟：创建 → 加事实 → 加尝试 → 收藏 `crypto/rsa-common-modulus-attack.md`
+  → 导出 Markdown，各节与时间线正确，详见 `docs/PROJECT_MEMORY.md` 第 9 节。
+- 边界：单机单用户、无登录；同一进程内 RLock 串行写，跨进程并发未加文件锁。
+  `work/` 下新生成的数据不入库。
+
+---
+
 ## 一、运行方式
 
 ```powershell
@@ -112,7 +152,7 @@ knowledgeBase/
 ├── tools/
 │   ├── cli.py               命令行入口
 │   ├── kb/                  检索引擎
-│   └── agent/               Web 服务 + React 前端
+│   └── agent/               Web 服务 + 附件侦察 + 工作区 + React 前端
 └── docs/                    GRAPH.md / HINT.md / IMPORT_DES.md / UI.md
 ```
 
@@ -141,6 +181,8 @@ POST /api/search      {q, top_k, category, doc_type} → {hits, graph, counts, m
 GET  /api/doc?path=   单篇全文
 POST /api/ask         {q, paths} → SSE
 POST /api/feedback    {query, path, verdict, note} → 追加本地 JSONL
+POST /api/analyze?name=  原始字节 → 只读附件侦察；可加 &workspace=<id>
+GET/POST/DELETE /api/workspaces...  本地题目工作区（JSON 文件）
 ```
 
 - 静态文件有 `relative_to(root)` 防穿越
@@ -154,16 +196,21 @@ React 19 + TS + Vite 8 + Mantine 8.3.18。
 ```
 src/
 ├── main.tsx             MantineProvider + brand 十档色阶
-├── App.tsx              AppShell + 侧栏方向筛选 + Reader 挂载
-├── api.ts               fetch 封装 + SSE + 反馈
-├── types.ts             Hit / SearchResp / DocType / MatchInfo
+├── App.tsx              AppShell + 页面切换（搜索/工作区）+ Reader 挂载
+├── api.ts               fetch 封装 + SSE + 反馈 + 附件 + 工作区
+├── types.ts             Hit / SearchResp / AttachmentReport / Workspace
 ├── lib/sse.ts           SSE 解析（tok/err/done）
-├── pages/SearchPage.tsx 搜索 / 问模型 / 类型筛选 / 解释 / 反馈
+├── pages/SearchPage.tsx 搜索 / 问模型 / 类型筛选 / 解释 / 反馈 / 附件入口
+├── pages/WorkspacePage.tsx 工作区 CRUD / 事实 / 尝试 / 收藏 / 时间线 / 导出
 ├── pages/SearchPage.test.tsx
+├── pages/WorkspacePage.test.tsx
 ├── api.test.ts
 └── components/
     ├── Md.tsx           react-markdown + rehype-highlight + 复制按钮
-    └── Reader.tsx       Drawer + 自建目录（h1-h3）
+    ├── Reader.tsx       Drawer + 自建目录（h1-h3）
+    ├── AttachmentPanel.tsx  上传预检 / 原始字节 POST / 附到工作区
+    ├── AttachmentReport.tsx 报告分节折叠展示
+    └── AttachmentPanel.test.tsx
 ```
 
 ---
@@ -282,7 +329,7 @@ P1 修掉了“一篇长文档的所有 chunk 占满 top-N”的主因（FTS 文
 
 | 位置 | 状态 |
 |---|---|
-| `work/` | **约 45.6 MB / 1237 文件**，含截图、临时脚本、模拟报告；P2 上传副本落 `work/attachments/` |
+| `work/` | **约 45.6 MB / 1237 文件**，含截图、临时脚本、模拟报告；P2 上传落 `work/attachments/`，P3 工作区落 `work/workspaces/` |
 | `temp_newData/` | **约 18.9 GB / 8609 文件**（2026-10-28 统计），已 gitignore |
 | `index/` | 约 175 MB（fts 138.7 MB / vectors 44.0 MB / graph 0.44 MB，可重建） |
 | `models/` | bge + ollama，已 gitignore，未提交 |
@@ -304,10 +351,11 @@ P1 修掉了“一篇长文档的所有 chunk 占满 top-N”的主因（FTS 文
 ```
 
 ### 测试与评测
-`pytest.ini` 已配好（`pythonpath = tools`）。2026-10-28 P1 后：
-- Python：`132 passed`（P0 的 107 + P1 的命中解释/类型筛选/反馈/评测指标）。
-- 前端：`npm test` → 14 passed（SSE、显式参数、类型筛选、解释、反馈、图谱关联）。
-- 类型/构建：`npm run check`、`npm run build` 通过。
+`pytest.ini` 已配好（`pythonpath = tools`）。2026-10-28 P3 后：
+- Python：`179 passed`（P2 的 151 + P3 的 workspace 存储/API/导出/报告 28）。
+- 附件评测：`python tools\eval_attachments.py` → 5/5（pass_rate=1.0）。
+- 前端：`npm test` → 4 files / 23 passed（SSE、搜索、附件面板、工作区）。
+- 类型/构建：`npm run check`、`npm run build` 通过；JS 838.63 kB / gzip 258.46 kB。
 - 检索评测：`python tools\eval_search.py` → 22 条，hybrid top1/MRR 均为 1.0；
   `--mode fts` 为 0.9091/0.9545，保留 hybrid 有数据依据。
 - 真实模型、真实浏览器未纳入自动化；测试全部离线 Mock。
@@ -318,6 +366,7 @@ cd tools\agent\webapp
 npm run dev     # :5173 热更新，/api 代理到 :8765
 npm run build   # 必须，Python 托管 dist
 npm run check   # 仅类型检查
+npm test        # vitest：SSE + 搜索 + 附件 + 工作区
 ```
 
 ---
@@ -326,9 +375,9 @@ npm run check   # 仅类型检查
 
 1. 先读 `docs/PROJECT_MEMORY.md` 与 `docs/DEVELOPMENT_PLAN.md`，确认本批状态。
 2. 跑 `pytest -o addopts="" -q`、`npm run check`、`npm test`，确认基线全绿。
-3. 若要真实验证：`.\start.ps1`，在浏览器点起点卡片/结果卡片“问模型”，
-   观察错误提示与“停止接收”语义。注意本机当前 8765/11434 未监听。
-4. P1、P2 已完成；下一步 P3 做持久化题目工作区，可顺带把附件上传接入 React。
+3. 若要真实验证：`.\start.ps1`，在浏览器点起点卡片/结果卡片“问模型”、
+   上传附件、在工作区加事实/尝试/收藏并导出。注意本机当前 8765/11434 未监听。
+4. P1–P3 已完成；下一步 P4 做三态适用条件、只读脚本工具架与可追溯 Writeup。
    检索排序若要继续调，先扩 `eval/search_queries.json` 评测集，不要凭感觉改权重。
 
 ---
@@ -348,6 +397,8 @@ npm run check   # 仅类型检查
 hybrid top1/MRR 1.0。真实模型/真实 Ollama/真实浏览器仍未纳入自动化。
 **P2 后（2026-10-28）**：Python 151 passed；附件评测 5/5（pass_rate=1.0）；
 前端未改，沿用 P1 的 14 passed。附件分析全部离线、只读，不执行上传内容。
+**P3 后（2026-10-28）**：Python 179 passed；前端 4 files / 23 passed；附件评测仍 5/5；
+`npm run check` / `npm run build` 通过。工作区只写本地 JSON，`work/` 不入库。
 
 ---
 
