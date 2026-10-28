@@ -564,3 +564,21 @@ git status --porcelain
 # 确认只新增 docs/TOOLS_INVENTORY.md 与 work/script_inventory/inventory.json，
 # 不改动第 9 节列出的 8 个 P2 WIP 文件
 ```
+
+---
+
+## 11. P4 只读脚本工具库（2026-10-28）
+
+P4 新增 `tools/scripts/`，把根目录/`work/` 的临时探针收敛为可测试的只读工具。
+旧探针仍保留原样（`.gitignore` 的 `/_*.py`），未删除、未移动用户文件。
+
+| 脚本 | 用途 | 输入 | 输出 |
+|---|---|---|---|
+| `tools/scripts/_shared.py` | stdio/JSON/整数解析公共函数 | — | 被其他脚本 import |
+| `tools/scripts/crypto/rsa_factor_probe.py` | 小因子试除、位长、余因子素性 | `--n/--n-file`、`--limit`、`--check-prime` | `n_bits`、`small_factors`、`cofactor*` |
+| `tools/scripts/forensics/zip_inspect.py` | ZIP/JAR 清单、顶层目录、名称/内容检索 | `--zip`、`--top`、`--grep`、`--max-bytes` | `entry_count`、`top_dirs`、`name_hits`、`content_hits` |
+| `tools/scripts/misc/filter_probe.py` | 黑名单静态比对（不执行输入） | `--blacklist(-file)`、`--payload(-file)` | `hit_count`、`hits`、`executed=false` |
+
+共同约定：只读、不写盘、不联网、不执行输入、不自动执行、不做武器化；
+均支持 `--json`。详细说明见 `tools/scripts/README.md`，测试见
+`tests/test_scripts.py`（3 个脚本均用临时数据实跑）。

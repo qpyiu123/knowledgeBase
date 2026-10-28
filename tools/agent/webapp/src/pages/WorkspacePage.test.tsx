@@ -17,7 +17,11 @@ vi.mock('../api', () => ({
       updateEntry: vi.fn(),
       removeEntry: vi.fn(),
       timeline: vi.fn(),
-      exportUrl: vi.fn((id: string) => `/api/workspaces/${id}/export?format=md`),
+      exportUrl: vi.fn(
+        (id: string, mode: 'normal' | 'writeup' = 'normal') =>
+          `/api/workspaces/${id}/export?format=md` +
+          (mode === 'writeup' ? '&mode=writeup' : ''),
+      ),
     },
   },
 }));
@@ -178,6 +182,57 @@ describe('WorkspacePage', () => {
     await screen.findByText('创建工作区');
     const link = screen.getByRole('link', { name: /导出 Markdown/ });
     expect(link.getAttribute('href')).toBe('/api/workspaces/ws1/export?format=md');
+  });
+
+  it('switches to traceable Writeup export', async () => {
+    const ws = makeWorkspace();
+    listMock.mockResolvedValue({ workspaces: [summary(ws)] });
+    getMock.mockResolvedValue({ workspace: ws });
+
+    renderPage('ws1');
+    await screen.findByText('示例题');
+    fireEvent.click(screen.getByRole('radio', { name: 'Writeup 草稿' }));
+
+    const link = await screen.findByRole('link', { name: /导出 Writeup/ });
+    expect(link.getAttribute('href')).toBe(
+      '/api/workspaces/ws1/export?format=md&mode=writeup',
+    );
+  });
+
+  it('adds a kb reference with a section anchor', async () => {
+    const ws = makeWorkspace();
+    listMock.mockResolvedValue({ workspaces: [summary(ws)] });
+    getMock.mockResolvedValue({ workspace: ws });
+    addEntryMock.mockResolvedValue({
+      ok: true,
+      workspace: ws,
+      entry: { id: 'r2', created: 'now', kind: 'reference', text: '' },
+    });
+
+    renderPage('ws1');
+    await screen.findByText('示例题');
+    fireEvent.click(screen.getByRole('radio', { name: '资料收藏' }));
+    fireEvent.change(screen.getByLabelText('资料标题'), {
+      target: { value: 'RSA 共模' },
+    });
+    fireEvent.change(screen.getByLabelText('资料 kb 路径'), {
+      target: { value: 'crypto/rsa.md' },
+    });
+    fireEvent.change(screen.getByLabelText('资料章节锚点'), {
+      target: { value: '一、识别信号' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: '添加' }));
+
+    await waitFor(() =>
+      expect(addEntryMock).toHaveBeenCalledWith('ws1', {
+        kind: 'reference',
+        title: 'RSA 共模',
+        path: 'crypto/rsa.md',
+        anchor: '一、识别信号',
+        url: '',
+        text: '',
+      }),
+    );
   });
 
   it('renders attached attachment report inside a reference entry', async () => {

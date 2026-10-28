@@ -222,6 +222,18 @@ def test_search_returns_hit_reason_and_paragraph(env):
     assert body["counts"]["topic"] == 1
 
 
+def test_search_includes_applicability_status(env):
+    status, text, _ = call(env, "POST", "/api/search",
+                           {"q": "RSA 共模攻击", "top_k": 5})
+    body = json.loads(text)
+    hit = body["hits"][0]
+
+    assert status == 200
+    assert hit["applicability"]["status"] in ("known", "unknown", "unsatisfied")
+    assert hit["applicability"]["status_label"]
+    assert body["applicability"] == {"known": 1, "unknown": 0, "unsatisfied": 0}
+
+
 def test_search_doc_type_filter(env):
     status, text, _ = call(env, "POST", "/api/search",
                            {"q": "RSA", "top_k": 5, "doc_type": "card"})
@@ -349,6 +361,33 @@ def test_ask_stream_tok_done_contract(env, monkeypatch):
     assert "".join(e.get("v", "") for e in events) == "你好"
     assert events[-1]["info"].endswith("tok/s")
     assert fake.closed is True
+
+
+def test_ask_prompt_includes_rule_based_applicability_hint(env, monkeypatch):
+    kb_dir = env["kb"].cfg.kb_dir
+    (kb_dir / "crypto" / "needs.md").write_text(
+        "---\ntitle: 进阶利用\nrequires: [crypto/rsa.md]\n---\n正文\n",
+        encoding="utf-8",
+    )
+    fake = FakeResp(lines=[b'{"message":{"content":"ok"},"done":true}'])
+    seen: dict = {}
+
+    def fake_post(_url, **kwargs):
+        seen.update(kwargs.get("json") or {})
+        return fake
+
+    monkeypatch.setattr("requests.post", fake_post)
+
+    status, _text, _ctype = call(env, "POST", "/api/ask", {
+        "q": "这题怎么打", "paths": ["crypto/needs.md"],
+    })
+    user = seen["messages"][-1]["content"]
+
+    assert status == 200
+    assert "适用前提检查" in user
+    assert "缺少前提" in user
+    assert "unknown" in user
+    assert "不要假设它成立" in user
 
 
 def test_ask_stream_emits_err_on_model_exception(env, monkeypatch):

@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "note": "规则只做确定性文本/特征判定，不调用模型。source 指向 kb 文档与章节锚点。",
+  "rules": [
+    {
+      "id": "rsa-same-modulus",
+      "paths": ["crypto/rsa-common-modulus-attack.md"],
+      "label": "已知同一 n 下的两组密文",
+      "kind": "keywords",
+      "any": ["同一个n", "相同的n", "相同n", "same modulus", "same n", "共模", "两组密文", "两组c"],
+      "none": ["不同n", "不同模数", "different modulus"],
+      "source": "crypto/rsa-common-modulus-attack.md#一识别信号题面长什么样子"
+    },
+    {
+      "id": "canary-enabled",
+      "paths": ["pwn/stack-canary-bypass.md"],
+      "label": "已确认目标启用栈 Canary",
+      "kind": "keywords",
+      "any": ["canary", "__stack_chk_fail", "fs:0x28", "fs:28", "canary found"],
+      "none": ["无canary", "没有canary", "未开启canary", "canary关闭", "no canary", "without canary"],
+      "source": "pwn/stack-canary-bypass.md#一识别信号题面长什么样子"
+    },
+    {
+      "id": "canary-fork-service",
+      "paths": ["pwn/stack-canary-bypass.md"],
+      "label": "服务会 fork 且每次连接重置",
+      "kind": "keywords",
+      "any": ["fork", "每次连接", "连接重置", "重启进程", "重置进程"],
+      "none": ["不fork", "非fork", "只执行一次", "one-shot", "oneshot"],
+      "source": "pwn/stack-canary-bypass.md#一识别信号题面长什么样子"
+    },
+    {
+      "id": "largebin-libc-version",
+      "paths": [
+        "pwn/largebin-attack-chain.md",
+        "pwn/heap-largebin-house-of-force.md"
+      ],
+      "label": "glibc 版本在 2.31–2.35",
+      "kind": "version",
+      "min": "2.31",
+      "max": "2.35",
+      "source": "pwn/largebin-attack-chain.md#一识别信号题面长什么样子"
+    },
+    {
+      "id": "largebin-write-primitive",
+      "paths": [
+        "pwn/largebin-attack-chain.md",
+        "pwn/heap-largebin-house-of-force.md"
+      ],
+      "label": "具备 UAF / 堆溢出改写 bk_nextsize 的能力",
+      "kind": "keywords",
+      "any": ["uaf", "use after free", "堆溢出", "bk_nextsize", "fd_nextsize", "任意写"],
+      "none": ["没有溢出", "无溢出", "不能写", "no overflow"],
+      "source": "pwn/largebin-attack-chain.md#一识别信号题面长什么样子"
+    },
+    {
+      "id": "ssrf-outbound-request",
+      "paths": ["web/ssrf-internal-access.md"],
+      "label": "服务端会代为发起 URL 请求",
+      "kind": "keywords",
+      "any": ["ssrf", "url参数", "回调", "webhook", "远程图片", "代理请求", "fetch"],
+      "none": ["不发起请求", "无出网", "no outbound"],
+      "source": "web/ssrf-internal-access.md#一识别信号题面长什么样子"
+    },
+    {
+      "id": "ssti-template-render",
+      "paths": [
+        "web/ssti-template-injection.md",
+        "web/ssti-blind-and-sandbox-escape.md",
+        "web/ssti-java-freemarker-spel.md"
+      ],
+      "label": "输入被服务端模板引擎渲染",
+      "kind": "keywords",
+      "any": ["ssti", "模板注入", "jinja2", "twig", "freemarker", "{{7*7}}", "{{7*'7'}}"],
+      "none": ["前端渲染", "不经过模板", "no template"],
+      "source": "web/ssti-template-injection.md#一识别信号题面长什么样子"
+    },
+    {
+      "id": "png-stego-image",
+      "paths": ["misc/png-steganography.md"],
+      "label": "已拿到 PNG 图像文件",
+      "kind": "keywords",
+      "any": ["png", ".png", "图片", "图像", "stego", "隐写"],
+      "none": ["没有图片", "无图片", "非png"],
+      "source": "misc/png-steganography.md#一识别信号题面长什么样子"
+    }
+  ]
+}

@@ -113,6 +113,32 @@
 
 ---
 
+## 〇之五、2026-10-28 P4 更新（本批，已完成）
+
+- 新增 `tools/kb/applicability.py` + `applicability_rules.json`：规则驱动的
+  适用条件三态（known / unknown / unsatisfied）。`requires` 是硬前提，
+  关键词规则支持 `any` / `none`，版本规则支持 `min` / `max`；不调用模型。
+- `/api/search` 每个命中返回 `applicability`（状态、条件、`hint`、trace），
+  顶层返回三态计数；搜索页显示“前提：已知/未知/不满足”和“缺少前提：…”。
+- `/api/ask` 生成前把同一套判定写进系统提示，要求模型不得假设未知前提成立；
+  判定失败只降级提示，不阻断问答。
+- 新增 `tools/scripts/` 只读脚本库：`crypto/rsa_factor_probe.py`、
+  `forensics/zip_inspect.py`、`misc/filter_probe.py`，公共 `_shared.py`；
+  `README.md` 列出用途/输入/输出。脚本不写盘、不执行输入、不联网、不武器化。
+- 工作区新增可追溯 Writeup 导出：`export_writeup()` +
+  `GET /api/workspaces/<id>/export?format=md&mode=writeup`。分节为
+  题目名/方向/事实/按时间尝试/ kb 资料引用（路径+章节锚+存在性）/Flag/时间线；
+  每条信息带 `来源 #entry-id` 与隐藏 `entry:` 标记。
+- 前端：工作区页增加「摘要 / Writeup 草稿」导出选择、章节锚点输入；
+  搜索页展示三态与提示。
+- 测试：Python **198 passed**（P3 的 179 + 新增 19）；检索评测 22 条
+  top1/hit/MRR/recall 均 1.0000；附件评测 5/5；前端 **4 files / 26 tests**；
+  `npm run check` / `npm run build` 通过。
+- 边界：规则覆盖有限，未登记题型返回 unknown；三态不参与排序；Writeup
+  只汇总真实记录，Flag 仅识别 `flag{...}`；脚本库不做解压/执行/反编译。
+
+---
+
 ## 一、运行方式
 
 ```powershell
@@ -351,12 +377,12 @@ P1 修掉了“一篇长文档的所有 chunk 占满 top-N”的主因（FTS 文
 ```
 
 ### 测试与评测
-`pytest.ini` 已配好（`pythonpath = tools`）。2026-10-28 P3 后：
-- Python：`179 passed`（P2 的 151 + P3 的 workspace 存储/API/导出/报告 28）。
+`pytest.ini` 已配好（`pythonpath = tools`）。2026-10-28 P4 后：
+- Python：`198 passed`（P3 的 179 + P4 的适用条件/脚本/Writeup/端点 19）。
 - 附件评测：`python tools\eval_attachments.py` → 5/5（pass_rate=1.0）。
-- 前端：`npm test` → 4 files / 23 passed（SSE、搜索、附件面板、工作区）。
-- 类型/构建：`npm run check`、`npm run build` 通过；JS 838.63 kB / gzip 258.46 kB。
-- 检索评测：`python tools\eval_search.py` → 22 条，hybrid top1/MRR 均为 1.0；
+- 前端：`npm test` → 4 files / 26 passed（SSE、搜索、附件面板、工作区）。
+- 类型/构建：`npm run check`、`npm run build` 通过；JS 839.79 kB / gzip 258.76 kB。
+- 检索评测：`python tools\eval_search.py` → 22 条，hybrid top1/hit/MRR/recall 均 1.0；
   `--mode fts` 为 0.9091/0.9545，保留 hybrid 有数据依据。
 - 真实模型、真实浏览器未纳入自动化；测试全部离线 Mock。
 
@@ -399,6 +425,8 @@ hybrid top1/MRR 1.0。真实模型/真实 Ollama/真实浏览器仍未纳入自�
 前端未改，沿用 P1 的 14 passed。附件分析全部离线、只读，不执行上传内容。
 **P3 后（2026-10-28）**：Python 179 passed；前端 4 files / 23 passed；附件评测仍 5/5；
 `npm run check` / `npm run build` 通过。工作区只写本地 JSON，`work/` 不入库。
+**P4 后（2026-10-28）**：Python 198 passed；前端 4 files / 26 passed；附件评测仍 5/5；
+检索评测 22 条 top1/hit/MRR/recall 1.0。三态与脚本库全部离线、只读，排序未改。
 
 ---
 

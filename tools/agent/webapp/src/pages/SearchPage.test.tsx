@@ -121,6 +121,28 @@ describe('SearchPage 显式参数', () => {
     await screen.findByText('命中词：RSA · 共模攻击');
   });
 
+  it('shows applicability state and actionable prerequisite hint', async () => {
+    searchMock.mockResolvedValue({
+      hits: [
+        {
+          ...HIT,
+          applicability: {
+            status: 'unknown',
+            status_label: '未知',
+            hint: '缺少前提：已知同一 n 下的两组密文（unknown）',
+          },
+        },
+      ],
+      ms: 2,
+    });
+
+    renderPage();
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+
+    await screen.findByText('前提：未知');
+    await screen.findByText(/缺少前提：已知同一 n 下的两组密文/);
+  });
+
   it('records useful feedback for a result', async () => {
     searchMock.mockResolvedValue({ hits: [HIT], ms: 2 });
 

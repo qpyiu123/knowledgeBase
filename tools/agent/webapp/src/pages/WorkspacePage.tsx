@@ -83,7 +83,9 @@ export default function WorkspacePage({
   const [conclusion, setConclusion] = useState('');
   const [refTitle, setRefTitle] = useState('');
   const [refPath, setRefPath] = useState('');
+  const [refAnchor, setRefAnchor] = useState('');
   const [refUrl, setRefUrl] = useState('');
+  const [exportMode, setExportMode] = useState<'normal' | 'writeup'>('normal');
 
   const options = useMemo(
     () =>
@@ -195,6 +197,7 @@ export default function WorkspacePage({
     } else {
       payload.title = refTitle.trim();
       payload.path = refPath.trim();
+      payload.anchor = refPath.trim() ? refAnchor.trim() : '';
       payload.url = refUrl.trim();
       payload.text = entryText.trim();
     }
@@ -208,6 +211,7 @@ export default function WorkspacePage({
       setConclusion('');
       setRefTitle('');
       setRefPath('');
+      setRefAnchor('');
       setRefUrl('');
       await loadList();
     } catch (e) {
@@ -224,6 +228,7 @@ export default function WorkspacePage({
     conclusion,
     refTitle,
     refPath,
+    refAnchor,
     refUrl,
     loadList,
   ]);
@@ -298,8 +303,8 @@ export default function WorkspacePage({
         <p className="eyebrow">题目工作区</p>
         <h1 className="page-title">把线索、尝试和资料留在一个本地文件里</h1>
         <p className="page-sub">
-          工作区只存本地 JSON（`work/workspaces/`），可随时导出 Markdown；
-          时间线由增删改自动生成且只读。
+          工作区只存本地 JSON（`work/workspaces/`），可导出摘要 Markdown
+          或可追溯的 Writeup 草稿；时间线由增删改自动生成且只读。
         </p>
       </div>
 
@@ -339,15 +344,34 @@ export default function WorkspacePage({
               </Tooltip>
             </Group>
             {ws && (
-              <Button
-                component="a"
-                href={api.workspaces.exportUrl(ws.id)}
-                download
-                leftSection={<Download size={16} />}
-                variant="light"
-              >
-                导出 Markdown
-              </Button>
+              <Group align="flex-end" wrap="wrap" gap={8}>
+                <div>
+                  <Text size="xs" fw={500} mb={4}>
+                    导出内容
+                  </Text>
+                  <SegmentedControl
+                    size="xs"
+                    aria-label="导出内容"
+                    value={exportMode}
+                    onChange={(v) =>
+                      setExportMode(v === 'writeup' ? 'writeup' : 'normal')
+                    }
+                    data={[
+                      { label: '摘要', value: 'normal' },
+                      { label: 'Writeup 草稿', value: 'writeup' },
+                    ]}
+                  />
+                </div>
+                <Button
+                  component="a"
+                  href={api.workspaces.exportUrl(ws.id, exportMode)}
+                  download
+                  leftSection={<Download size={16} />}
+                  variant="light"
+                >
+                  {exportMode === 'writeup' ? '导出 Writeup' : '导出 Markdown'}
+                </Button>
+              </Group>
             )}
           </Group>
 
@@ -485,6 +509,14 @@ export default function WorkspacePage({
                     w={260}
                   />
                   <TextInput
+                    label="章节锚点（可选）"
+                    aria-label="资料章节锚点"
+                    placeholder="一、识别信号"
+                    value={refAnchor}
+                    onChange={(e) => setRefAnchor(e.currentTarget.value)}
+                    w={220}
+                  />
+                  <TextInput
                     label="或外部 URL"
                     aria-label="资料外部 URL"
                     placeholder="https://…"
@@ -591,6 +623,7 @@ export default function WorkspacePage({
                                 {(entry.path || entry.url) && (
                                   <Text size="xs" c="dimmed" style={{ overflowWrap: 'anywhere' }}>
                                     {entry.path || entry.url}
+                                    {entry.anchor ? `#${entry.anchor.replace(/^#/, '')}` : ''}
                                   </Text>
                                 )}
                                 {entry.text && <Text size="sm">{entry.text}</Text>}

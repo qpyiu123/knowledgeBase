@@ -119,6 +119,7 @@ export const api = {
         conclusion?: string;
         title?: string;
         path?: string;
+        anchor?: string;
         url?: string;
         source?: string;
         attachment?: Record<string, unknown> | null;
@@ -144,7 +145,10 @@ export const api = {
       ),
     timeline: (id: string) =>
       getJSON<{ timeline: TimelineEvent[] }>(wsPath(id) + '/timeline'),
-    exportUrl: (id: string) => wsPath(id) + '/export?format=md',
+    exportUrl: (id: string, mode: 'normal' | 'writeup' = 'normal') =>
+      wsPath(id) +
+      '/export?format=md' +
+      (mode === 'writeup' ? '&mode=writeup' : ''),
   },
 };
 

@@ -424,6 +424,7 @@ def api_workspace_add_entry(workspace_id: str, req: dict) -> dict:
         report=req.get("report"),
         direction=req.get("direction", ""),
         conclusion=req.get("conclusion", ""),
+        anchor=req.get("anchor", ""),
     )
     return {"ok": True, "workspace": ws, "entry": entry}
 
@@ -455,16 +456,32 @@ def api_workspace_delete_entry(workspace_id: str, entry_id: str) -> dict:
     return {"ok": True, "workspace": ws}
 
 
-def api_workspace_export(workspace_id: str, fmt: str) -> tuple[bytes, str]:
+def api_workspace_export(workspace_id: str, fmt: str,
+                         mode: str = "") -> tuple[bytes, str]:
     store = _workspace_store()
+    if mode not in ("", "normal", "writeup"):
+        raise BadRequest("导出模式只能是 normal 或 writeup")
     if fmt == "json":
         ws = store.load(workspace_id)
         return (json.dumps(ws, ensure_ascii=False, indent=2).encode("utf-8"),
                 "application/json; charset=utf-8")
     if fmt not in ("", "md", "markdown"):
         raise BadRequest("导出格式只能是 md 或 json")
-    return store.export_markdown(workspace_id).encode("utf-8"), \
-        "text/markdown; charset=utf-8"
+    if mode == "writeup":
+        kb_root = None
+        try:
+            # 导出只需要 kb 根目录做存在性校验，不加载模型/索引。
+            if _KB is not None:
+                kb_root = _KB.cfg.kb_dir
+            else:
+                from kb.config import Config
+                kb_root = Config.load().kb_dir
+        except Exception:  # noqa: BLE001  # 无法校验时仍导出，标注“未校验”
+            kb_root = None
+        text = store.export_writeup(workspace_id, kb_root=kb_root)
+    else:
+        text = store.export_markdown(workspace_id)
+    return text.encode("utf-8"), "text/markdown; charset=utf-8"
 
 
 # ============================================================== 页面
@@ -549,7 +566,8 @@ def _hit_snippet(h, q: str) -> str:
     return _snip(h.doc_path, h.category, h.title)
 
 
-def _hit_item(h, q: str) -> dict:
+def _hit_item(h, q: str, context_paths=None) -> dict:
+    from kb.applicability import evaluate_conditions
     from kb.explain import doc_type, doc_type_label, match_info
 
     dtype = doc_type(h.doc_path)
@@ -565,6 +583,13 @@ def _hit_item(h, q: str) -> dict:
         "doc_type_label": doc_type_label(h.doc_path),
         "match": match_info(h, q),
     }
+    try:
+        item["applicability"] = evaluate_conditions(
+            get_kb().cfg.kb_dir, h.doc_path, q, context_paths or [])
+    except Exception as e:  # noqa: BLE001  # 解释失败不影响检索结果
+        item["applicability"] = {"status": "unknown", "status_label": "未知",
+                                 "conditions": [], "hint": f"适用条件判定失败: {e}",
+                                 "trace": {"rules": 0, "requires": 0}}
     if gv:
         item["graph_via"] = gv
     return item
@@ -587,9 +612,10 @@ def api_search(req: dict) -> dict:
     hits = kb.search(q, top_k=k, category=cat, doc_type=dtype_filter)
     ms = round((time.time() - t0) * 1000, 1)
 
+    context = [h.doc_path for h in hits]
     out, graph = [], []
     for h in hits:
-        item = _hit_item(h, q)
+        item = _hit_item(h, q, context)
         # 图谱补进来的条目放到 graph 里，主结果只留词面/向量命中的
         if item.get("graph_via"):
             graph.append(item)
@@ -602,9 +628,15 @@ def api_search(req: dict) -> dict:
         out.append(dict(graph[0]))
         counts[out[0]["doc_type"]] = counts.get(out[0]["doc_type"], 0) + 1
 
+    applic = {"known": 0, "unknown": 0, "unsatisfied": 0}
+    for item in out + graph:
+        status = (item.get("applicability") or {}).get("status")
+        if status in applic:
+            applic[status] += 1
+
     return {"hits": out, "graph": graph, "ms": ms,
             "query": q, "category": cat, "doc_type": dtype_filter,
-            "counts": counts}
+            "counts": counts, "applicability": applic}
 
 
 def api_doc(path: str) -> dict:
@@ -669,7 +701,22 @@ def _ask_stream(q: str, paths: list[str]):
         yield _sse({"t": "err", "v": err})
         return
 
-    user = ("【知识库内容】\n" + "\n\n".join(parts) +
+    # 适用前提由规则确定性判定，不让模型自由发挥；未知/不满足要显式提醒。
+    check = ""
+    try:
+        from kb.applicability import evaluate_paths
+        app = evaluate_paths(kb.cfg.kb_dir, paths, q)
+        if app.get("hint"):
+            check = (
+                "\n\n【适用前提检查（规则判定，不是模型推断）】\n"
+                + app["hint"]
+                + "\n如果关键前提未知或不满足，先在回答开头明确写出「缺少前提：…（unknown）」"
+                  "或「不满足：…（unsatisfied）」，不要假设它成立。"
+            )
+    except Exception as e:  # noqa: BLE001  # 判定失败不影响正常问答
+        check = f"\n\n【适用前提检查失败】{type(e).__name__}: {e}"
+
+    user = ("【知识库内容】\n" + "\n\n".join(parts) + check +
             f"\n\n【问题】\n{q}\n\n"
             "请给出：判断依据 → 解题步骤 → 可运行脚本。")
     payload = _ask_payload([
@@ -873,10 +920,13 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if action == "export":
                 fmt = (qs.get("format") or ["md"])[0].lower()
-                body, ctype = api_workspace_export(wid, fmt)
+                mode = (qs.get("mode") or [""])[0].lower()
+                body, ctype = api_workspace_export(wid, fmt, mode)
                 ext = "json" if ctype.startswith("application/json") else "md"
+                suffix = "-writeup" if mode == "writeup" else ""
                 self._send(200, body, ctype, {
-                    "Content-Disposition": f'attachment; filename="{wid}.{ext}"',
+                    "Content-Disposition":
+                        f'attachment; filename="{wid}{suffix}.{ext}"',
                 })
             elif action == "timeline":
                 self._json(api_workspace_timeline(wid))
@@ -884,6 +934,8 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(api_workspace_get(wid))
             else:
                 self._json({"ok": False, "error": "not found"}, 404)
+        except BadRequest as e:
+            self._json({"ok": False, "error": str(e)}, 400)
         except WorkspaceError as e:
             self._workspace_error(e)
         except Exception as e:  # noqa: BLE001
@@ -908,6 +960,8 @@ class Handler(BaseHTTPRequestHandler):
                     wid, action.split("/", 1)[1], req))
             else:
                 self._json({"ok": False, "error": "not found"}, 404)
+        except BadRequest as e:
+            self._json({"ok": False, "error": str(e)}, 400)
         except WorkspaceError as e:
             self._workspace_error(e)
         except Exception as e:  # noqa: BLE001

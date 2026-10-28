@@ -1,6 +1,6 @@
 # 知识库前端（v2 · React）
 
-**日期**：2026-10-28（P3：附件上传入口 + 题目工作区）
+**日期**：2026-10-28（P4：适用条件三态 + Writeup 导出）
 **入口**：`http://127.0.0.1:8765/`
 **源码**：`tools/agent/webapp/`（React 19 + TypeScript + Vite）
 **产物**：`tools/agent/webapp/dist/`（由 Python 服务托管）
@@ -89,6 +89,9 @@ tools/agent/
   摘要优先用真正命中的 chunk，而不是整篇文档的泛摘要
 - **类型筛选**：搜索前可选「全部 / 专题 / 比赛卡片」，结果显示类型徽章与计数
 - **关联阅读**：图谱补入的条目单独列出，不参与主排名
+- **适用条件三态（P4）**：每条结果显示「前提：已知 / 未知 / 不满足」徽章；
+  有未确认前提时显示「缺少前提：…（unknown）」或「不满足：…」及参见路径，
+  规则判定，不调用模型
 - **反馈**：每条结果可点「有用 / 无用 / 采用」，写入
   `work/feedback/feedback.jsonl`，界面显示「已记录」
 - 摘要经 `cleanSnippet()` 清洗：去 `#`/`>`、`[文字](链接)` 还原为文字、
@@ -100,6 +103,8 @@ tools/agent/
 - 中途可「停止接收」（AbortController）：只关闭本地接收，
   不谎称后端模型已停止运算
 - 后端 `err` 事件与空响应都会显示可见提示
+- 生成前由后端规则检查引用资料的适用前提；未知/不满足会写进提示，
+  要求回答显式说明，不假设前提成立
 - 完成后列出引用资料，可点开原文
 - 回答可一键复制
 
@@ -123,9 +128,11 @@ tools/agent/
 ### 题目工作区（P3）
 - 侧栏「工作区」页：创建（标题 + 可选自定义 ID）、选择、改名、改状态、删除
 - 条目：事实、尝试（方向 / 结论 / `待验证|有效|无效` + 可选备注）、
-  资料收藏（kb 路径或 http(s) URL + 备注）
+  资料收藏（kb 路径 + 可选章节锚点，或 http(s) URL + 备注）
 - 时间线由创建/改名/增删条目自动生成，界面只读
-- 「导出 Markdown」下载整个工作区；后端另有 `format=json` 完整导出
+- **导出选项（P4）**：「摘要 / Writeup 草稿」切换；Writeup 分节为题名、
+  方向、事实、按时间尝试、kb 资料引用（路径+锚+存在性）、Flag、时间线，
+  每条带来源条目 ID；后端另有 `format=json` 完整导出
 - 搜索结果卡片可「收藏到工作区」；当前工作区存 `localStorage`
 - 附件报告在资料收藏条目里可展开查看
 
@@ -163,7 +170,7 @@ def do_GET(self):
 |---|---|
 | `GET /api/health` | `model_ok` / `index_ok` 分开返回，`docs` 来自索引统计 |
 | `GET /api/stats` | 文档/分块/方向计数 |
-| `POST /api/search` | `{q, top_k, category, doc_type}`；`top_k` 限 1..50；`doc_type=topic\|card`；结果带命中段落/章节/原因/类型/计数 |
+| `POST /api/search` | `{q, top_k, category, doc_type}`；`top_k` 限 1..50；`doc_type=topic\|card`；结果带命中段落/章节/原因/类型/适用条件三态/计数 |
 | `GET /api/doc?path=` | 单篇正文；只允许 `kb/` 内 `.md` |
 | `POST /api/ask` | `{q, paths}` → SSE；串行，忙碌返回 429 |
 | `POST /api/feedback` | `{query, path?, verdict, note?}`；`verdict=useful\|useless\|adopted`；追加本地 JSONL |
@@ -177,7 +184,7 @@ def do_GET(self):
 | `POST /api/workspaces/<id>/entries/<eid>` | 修改尝试状态/内容 |
 | `DELETE /api/workspaces/<id>/entries/<eid>` | 删除条目 |
 | `GET /api/workspaces/<id>/timeline` | 只读时间线 |
-| `GET /api/workspaces/<id>/export?format=md\|json` | 下载 Markdown / JSON |
+| `GET /api/workspaces/<id>/export?format=md\|json` | 下载 Markdown / JSON；`&mode=writeup` 导出可追溯 Writeup 草稿 |
 
 ### 附件分析接口（P2）
 
@@ -264,9 +271,12 @@ Invoke-WebRequest -Uri 'http://127.0.0.1:8765/api/workspaces/web-upload/export?f
 | `report` | 附件报告 JSON，仅收藏条目，上限 256 KiB |
 | 请求体 | 工作区端点上限 512 KiB；其余 64 KiB |
 
-导出的 Markdown 固定分节：事实 / 尝试 / 资料收藏 / 时间线；附件收藏会额外
+导出的普通 Markdown 固定分节：事实 / 尝试 / 资料收藏 / 时间线；附件收藏会额外
 渲染类型、大小、SHA256、落盘路径、雕刻、结构、异常、解码、警告与“未执行”。
-JSON 导出保留完整工作区（含报告原始 JSON）。
+`mode=writeup` 改为题目名 / 方向 / 事实 / 按时间尝试 / kb 资料引用
+（路径+章节锚+存在性）/ Flag / 时间线，每条记录带 `来源 #entry-id`；
+`mode` 只接受 `normal` / `writeup`，非法返回 400。JSON 导出保留完整工作区
+（含报告原始 JSON）。
 
 SSE 契约：
 
@@ -330,4 +340,6 @@ Node 全局被误认为合法）；`vite.config.ts` / `vitest.config.ts` 由
 6. 反馈只写本地 JSONL，尚无汇总/导出页面，也尚未参与排序
 7. 工作区只面向本机单用户，无登录；同进程 RLock 串行写，跨进程并发未加锁
 8. 附件报告在 Markdown 导出中只渲染摘要；完整 strings 保留在 JSON 导出
-9. 前端测试 4 文件 / 23 用例；真实浏览器交互仍未逐路径录制
+9. 前端测试 4 文件 / 26 用例；真实浏览器交互仍未逐路径录制
+10. 适用条件规则覆盖有限，未登记题型显示“未知”；三态不参与排序
+11. Writeup 只汇总工作区已有记录；Flag 仅识别 `flag{...}` 形式

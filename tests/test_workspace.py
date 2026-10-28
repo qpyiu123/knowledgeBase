@@ -9,6 +9,7 @@ import json
 import threading
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -129,6 +130,8 @@ def test_add_entries_and_timeline_is_read_only(store: WorkspaceStore):
     {"kind": "fact", "text": "x" * 4001},
     {"kind": "reference", "title": "x", "path": "p" * 501},
     {"kind": "reference", "title": "x", "report": "not-an-object"},
+    {"kind": "reference", "title": "x", "anchor": "sec"},
+    {"kind": "reference", "title": "x", "path": "a.md", "anchor": "a" * 201},
     {"kind": "attempt", "direction": "d" * 501},
 ])
 def test_add_entry_validation(store: WorkspaceStore, payload):
@@ -157,6 +160,64 @@ def test_export_markdown_contains_all_sections(store: WorkspaceStore):
     assert "## 资料收藏" in md
     assert "`web/upload-bypass.md`" in md
     assert "## 时间线" in md
+
+
+def test_writeup_export_is_traceable(store: WorkspaceStore, tmp_path: Path):
+    kb = tmp_path / "kb"
+    (kb / "crypto").mkdir(parents=True)
+    (kb / "crypto" / "rsa.md").write_text(
+        "---\ntitle: RSA\n---\n## 三、解题步骤\n正文\n", encoding="utf-8",
+    )
+    wid = store.create("RSA 共模", "crypto").get("id")
+    _, fact = store.add_entry(wid, kind="fact", text="n 相同，e 不同")
+    _, attempt = store.add_entry(
+        wid, kind="attempt", direction="先试共模", conclusion="能直接恢复明文",
+        result="success", text="脚本见下",
+    )
+    _, ref = store.add_entry(
+        wid, kind="reference", title="RSA 共模攻击", path="crypto/rsa.md",
+        anchor="三、解题步骤", text="重点看推导",
+    )
+    store.add_entry(wid, kind="reference", title="缺失资料",
+                    path="crypto/missing.md")
+    store.add_entry(
+        wid, kind="reference", title="sample.png", source="analyze",
+        path="work/attachments/x/upload_sample.png", text="附件报告",
+        report={"executed": False, "file": {"name": "sample.png", "size": 3,
+                                            "sha256": "abc"},
+                "type": {"kind": "PNG", "is_text": False},
+                "anomalies": [], "decoded": [], "warnings": []},
+    )
+    store.add_entry(wid, kind="fact", text="最终拿到 flag{writeup_demo}")
+
+    md = store.export_writeup(wid, kb_root=kb)
+
+    assert md.startswith("# Writeup 草稿：RSA 共模")
+    assert "## 事实" in md
+    assert "## 尝试（按时间序）" in md
+    assert "## 用到的 kb 资料" in md
+    assert "## Flag" in md
+    assert "## 时间线" in md
+    assert f"来源 #{fact['id']}" in md
+    assert f"来源 #{attempt['id']}" in md
+    assert f"来源 #{ref['id']}" in md
+    assert f"<!-- entry:{fact['id']} -->" in md
+    assert "`kb/crypto/rsa.md#三、解题步骤`" in md
+    assert "kb 中存在" in md
+    assert "kb 中未找到" in md
+    assert "## 其他资料（附件 / 外部链接）" in md
+    assert "`work/attachments/x/upload_sample.png`" in md
+    assert "`flag{writeup_demo}`" in md
+    assert "先试共模" in md and "有效" in md
+
+
+def test_only_kb_path_can_carry_anchor(store: WorkspaceStore):
+    wid = store.create("锚点").get("id")
+    with pytest.raises(WorkspaceError):
+        store.add_entry(wid, kind="reference", title="x", anchor="节")
+    _, entry = store.add_entry(wid, kind="reference", title="x",
+                               path="crypto/rsa.md", anchor="#三节")
+    assert entry["anchor"] == "#三节"
 
 
 def test_attachment_report_is_stored_and_rendered(store: WorkspaceStore):
@@ -312,6 +373,39 @@ def test_api_workspace_conflict_and_validation(api_env):
                            {"kind": "attempt", "text": "x", "result": "maybe"})
     assert status == 400
     assert "pending / success / failed" in json.loads(text)["error"]
+
+
+def test_api_writeup_export_mode(api_env, monkeypatch):
+    kb = api_env["tmp"] / "kb"
+    (kb / "crypto").mkdir(parents=True)
+    (kb / "crypto" / "rsa.md").write_text(
+        "---\ntitle: RSA\n---\n正文\n", encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        server, "_KB",
+        SimpleNamespace(cfg=SimpleNamespace(kb_dir=kb)),
+    )
+
+    call(api_env, "POST", "/api/workspaces", {"title": "Writeup", "id": "wu"})
+    call(api_env, "POST", "/api/workspaces/wu/entries",
+         {"kind": "fact", "text": "flag{http_writeup}"})
+    call(api_env, "POST", "/api/workspaces/wu/entries",
+         {"kind": "reference", "title": "RSA", "path": "crypto/rsa.md",
+          "anchor": "识别"})
+
+    status, text, ctype = call(
+        api_env, "GET", "/api/workspaces/wu/export?format=md&mode=writeup")
+    assert status == 200
+    assert ctype.startswith("text/markdown")
+    assert "Writeup 草稿" in text
+    assert "flag{http_writeup}" in text
+    assert "kb/crypto/rsa.md#识别" in text
+    assert "kb 中存在" in text
+
+    status, text, _ = call(
+        api_env, "GET", "/api/workspaces/wu/export?format=md&mode=bogus")
+    assert status == 400
+    assert "normal 或 writeup" in json.loads(text)["error"]
 
 
 def test_api_attempt_status_update(api_env):

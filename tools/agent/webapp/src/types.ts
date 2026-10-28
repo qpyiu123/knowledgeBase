@@ -8,6 +8,26 @@ export type MatchInfo = {
   graph?: { via: string; hop?: number | null; boost: boolean };
 };
 
+export type ApplicabilityCondition = {
+  id: string;
+  label: string;
+  status: 'known' | 'unknown' | 'unsatisfied';
+  status_label: string;
+  evidence?: string;
+  need?: string[];
+  source?: string;
+  trace?: 'rule' | 'requires';
+};
+
+export type Applicability = {
+  status: 'known' | 'unknown' | 'unsatisfied';
+  status_label: string;
+  label?: string;
+  conditions?: ApplicabilityCondition[];
+  hint?: string;
+  trace?: { rules: number; requires: number };
+};
+
 export type Hit = {
   title: string;
   category: string;
@@ -18,6 +38,7 @@ export type Hit = {
   doc_type?: DocType;
   doc_type_label?: string;
   match?: MatchInfo;
+  applicability?: Applicability;
   graph_via?: string;
 };
 
@@ -29,6 +50,7 @@ export type SearchResp = {
   category?: string | null;
   doc_type?: DocType | null;
   counts?: { topic: number; card: number };
+  applicability?: { known: number; unknown: number; unsatisfied: number };
   error?: string;
 };
 
@@ -148,6 +170,7 @@ export type WorkspaceEntry = {
   conclusion?: string;
   title?: string;
   path?: string;
+  anchor?: string;
   url?: string;
   source?: string;
   attachment?: Record<string, unknown> | null;

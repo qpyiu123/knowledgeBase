@@ -48,7 +48,7 @@
 
 - 真实浏览器手测、真实模型质量与耗时未纳入本批。
 - 上游取消只能尽力关闭连接，不能保证 Ollama 瞬时停算。
-- P1 已在下一节完成；P2–P4 未实现。
+- P1–P4 已在后续各节完成；本批只记录 P0 当时的边界。
 
 ### 明确不做
 
@@ -200,9 +200,65 @@
 - 不执行附件，不做动态分析。
 - 不做 P4 的三态条件、脚本工具架、Writeup 生成。
 
-## P4（未实现）
+## P4（已授权，已完成 2026-10-28）
 
-- 适用条件三态：已知 / 未知 / 不满足。
-- 只读脚本工具架（禁止自动执行外部导入脚本）。
-- 由真实记录生成可追溯 Writeup 草稿。
-- 图谱可用性由评测决定，不以边数作为 KPI。
+### 目标
+
+把检索从“命中什么”推进到“前提是否成立”，收敛只读脚本工具架，并让工作区
+记录直接生成可追溯的 Writeup 草稿。不换模型、不改排序参数、不引入新依赖。
+
+### 工作项
+
+1. **适用条件三态**：新增 `tools/kb/applicability.py` 与
+   `tools/kb/applicability_rules.json`。规则完全确定性：
+   - `requires` front matter：前提资料是否在本次检索上下文，或查询是否点名；
+   - 关键词规则（含否定词）：支持线索→known，否定线索→unsatisfied，
+     无证据→unknown；
+   - glibc 版本区间规则：区间内 known、区间外 unsatisfied、未给版本 unknown。
+2. **检索解释入口**：`/api/search` 每个命中新增 `applicability`
+   （整体状态、条件明细、`hint`、规则/requires 计数），响应顶层给出三态计数；
+   搜索页显示“前提：已知/未知/不满足”和“缺少前提：…（unknown）”提示。
+3. **ask 提示入口**：`/api/ask` 生成前用同一套规则检查引用资料，把
+   “缺少前提 / 不满足 / 参见路径”写进系统提示，明确要求模型不要假设前提成立；
+   判定失败只降级为提示，不阻断问答。
+4. **只读脚本工具架**：新增 `tools/scripts/`，按 `crypto/`、`forensics/`、
+   `misc/` 分类；公共 `_shared.py` 只做 stdio/JSON/整数解析。脚本声明只读、
+   不执行输入、不联网、不自动执行、不做武器化。`tools/scripts/README.md`
+   列出每个脚本的用途、输入与输出。
+5. **可追溯 Writeup 草稿**：`WorkspaceStore.export_writeup()`
+   由事实/尝试/资料/时间线生成模板：题目名、方向、事实、按时间排序的
+   尝试（方向→结果→结论）、kb 资料引用（路径+章节锚，能校验时标注是否存在）、
+   Flag、时间线。每条信息带 `来源 #entry-id` 与隐藏 `entry:` 标记。
+   后端新增 `GET /api/workspaces/<id>/export?format=md&mode=writeup`。
+6. **前端**：工作区导出增加「摘要 / Writeup 草稿」选择；资料收藏可填写
+   可选章节锚点；搜索页展示适用条件三态。
+7. **测试**：新增 `tests/test_applicability.py`、`tests/test_scripts.py`，
+   扩展 `tests/test_workspace.py`、`tests/test_server_api.py` 与前端测试。
+8. **文档**：更新本计划、PROJECT_MEMORY、HANDOVER、UI。
+
+### 验收结果
+
+- ✅ `pytest -o addopts="" -q` → **198 passed**（P3 的 179 + P4 新增 19）。
+- ✅ `eval_search.py` → 22 条，hybrid top1 / hit / MRR / recall 均为 **1.0000**。
+- ✅ `eval_attachments.py` → **5/5 通过**（pass_rate=1.0000）。
+- ✅ `npm run check`、`npm test`（4 files / 26 tests）、`npm run build` 全绿。
+- ✅ 构建：JS 839.79 kB（gzip 258.76 kB），CSS 207.25 kB（gzip 31.31 kB）。
+- ✅ 脚本库 3 个样例脚本用临时数据实跑通过；只读标记为 `true`，均不执行输入。
+- ✅ Writeup 导出每条信息可回溯到条目 ID；kb 路径锚点与存在性校验可复现。
+
+### 未完成 / 测试局限
+
+- 适用条件仍是**规则/特征驱动**的有限覆盖；未登记的题型返回 unknown，
+  不会自动学习新规则；规则文件需要人工维护。
+- 检索排序未改；三态只作为解释与提示，不参与打分。
+- Writeup 只汇总工作区已有记录，不自动补写未记录内容；Flag 识别仅匹配
+  `flag{...}` 形式。
+- 脚本库仍是静态只读探针，不做解压、动态调试、反编译或沙箱执行。
+- 自动化测试全部离线，未在真实浏览器逐项录制交互。
+
+### 明确不做
+
+- 不用小模型自由判定适用条件，不让模型改写判定结果。
+- 不自动执行 `tools/scripts/` 或用户上传内容，不做武器化输出。
+- 不改检索权重、固定评测集、模型与索引。
+- 不做多用户、云同步、数据库或新 Web 框架。

@@ -4,7 +4,7 @@
 > 区分三类信息：**已验证事实 / 推断 / 未验证**。旧文档里的数字若未在本重复现，
 > 不得当作结论复用。
 
-**最后更新**：2026-10-28（P3 工作区与附件 UI 已完成，验证结果见第 9 节）
+**最后更新**：2026-10-28（P4 适用条件、只读脚本库与 Writeup 草稿已完成，验证结果见第 10 节）
 
 ---
 
@@ -19,8 +19,8 @@
 - 不删除用户资料，不读取/提交认证密钥，不更改全局 Git / npm 配置，
   不停止无关服务，不碰其他项目。
 - 后续方向：P1 检索可解释与评测（已完成）；P2 附件分析入口（已完成）；
-  P3 持久化题目工作区 + 附件上传 UI（已完成）；P4 三态适用条件与可追溯 Writeup。
-  图谱可用性由评测决定，不按边数凑指标。
+  P3 持久化题目工作区 + 附件上传 UI（已完成）；P4 三态适用条件、只读脚本库与
+  可追溯 Writeup 草稿（已完成）。图谱可用性由评测决定，不按边数凑指标。
 
 ---
 
@@ -43,9 +43,9 @@
   **没有** `qwen3-4b-local:latest` 的 manifest（旧 server 硬编码该名称）。
 - `config.toml` 的 `[ollama] model` 为 `qwen2.5-coder-7b`，与实际模型家族一致。
 - 基线 Python 测试：82 个用例通过；P0 后 107；P1 后 132；P2 后 151；
-  P3 后 **179**（新增 28 个工作区/存储/API 用例）。
+  P3 后 179；P4 后 **198**（新增适用条件、脚本库、Writeup 与端点用例 19 个）。
 - 前端 P0 起有 Vitest（SSE + SearchPage），P1 后 2 文件 / 14 用例；
-  P3 后 **4 文件 / 23 用例**（新增附件面板与工作区页面）。
+  P3 后 4 文件 / 23 用例；P4 后 **4 文件 / 26 用例**（新增三态展示与 Writeup 导出）。
 
 ### 旧文档中未验证的说法
 
@@ -188,9 +188,40 @@
 
 ---
 
+## 3e. P4 决策（本批，2026-10-28）
+
+1. **三态判定只用规则**：`tools/kb/applicability.py` 不调用模型。整体状态取
+   所有条件的最高严重度：有 unsatisfied 即 unsatisfied，否则有 unknown 即
+   unknown，全部 known 才是 known。没有登记条件的资料视为 known 且无提示。
+2. **`requires` 是硬前提**：解析 front matter 的 `requires`，把目标文档解析成
+   kb 相对路径；只有“在本次检索上下文里”或“查询直接点名”才算 known，
+   否则一律 unknown，不假设满足。目标不唯一/找不到时保留原始名字并标 unknown。
+3. **规则文件可维护**：`applicability_rules.json` 每条规则含 `id`、`paths`、
+   `label`、`kind`（keywords/version）、`any`/`none` 或 `min`/`max`、`source`
+   （kb 路径+章节锚）。否定线索优先于支持线索，命中即 unsatisfied。
+4. **解释与提示同源**：`/api/search` 的 `applicability`、`/api/ask` 的系统提示、
+   评测都复用同一函数；`evaluate_paths` 把未确认前提格式化为
+   “缺少前提：…（unknown）”或“不满足：…（unsatisfied）”，并附 `参见 kb/...`。
+5. **排序不变**：三态仅用于解释/提示，不进入 RRF、BM25 或图谱加权；
+   固定评测集与参数不动。
+6. **只读脚本库**：`tools/scripts/` 按主题分目录，显式声明 `read_only=true`、
+   `executed=false`；`--json` 稳定输出。README 列出用途与输入输出。
+   根目录旧探针保留原样（gitignore），不删除用户资料、不自动执行。
+7. **Writeup 可追溯**：`export_writeup()` 只用工作区真实条目生成；每条信息带
+   `来源 #entry-id` 与隐藏 `entry:` 标记；kb 引用输出 `kb/<path>#<anchor>`，
+   能拿到 kb 根目录时校验文件存在并标注“存在/未找到/未校验”。
+8. **导出模式**：`GET /api/workspaces/<id>/export?format=md&mode=writeup`；
+   `mode` 仅接受 normal/writeup，非法返回 400；文件名加 `-writeup` 后缀。
+9. **前端**：工作区页增加「摘要 / Writeup 草稿」导出选择与章节锚点输入；
+   搜索页显示“前提：已知/未知/不满足”和可操作提示。
+10. **测试**：新增 `tests/test_applicability.py`、`tests/test_scripts.py`；
+    扩展 workspace/server 与前端测试，覆盖三态、规则、脚本实跑、可追溯导出。
+
+---
+
 ## 4. 运行命令
 
-> 工具脚本清点见 `docs/TOOLS_INVENTORY.md`（21 个可执行入口 + 6 个仅 import 模块 + 10 个根目录临时探针）。
+> 工具脚本清点见 `docs/TOOLS_INVENTORY.md`（P3 时 21 个可执行入口 + 6 个仅 import 模块 + 10 个根目录临时探针；P4 新增 `tools/scripts/` 3 个只读工具与 1 个公共模块）。
 
 ```powershell
 # Python 回归（完整摘要）
@@ -201,6 +232,13 @@
 
 # P3 工作区存储 + HTTP API
 .\.venv\Scripts\python.exe -m pytest tests\test_workspace.py -q
+
+# P4 适用条件 + 只读脚本库 + Writeup
+.\.venv\Scripts\python.exe -m pytest tests\test_applicability.py tests\test_scripts.py -q
+
+# 只读脚本样例（不联网、不执行输入）
+.\.venv\Scripts\python.exe tools\scripts\crypto\rsa_factor_probe.py --n 143 --json
+.\.venv\Scripts\python.exe tools\scripts\misc\filter_probe.py --blacklist "eval" --payload "{print(1)}" --json
 
 # P2 附件侦察评测（固定样例；可加 --json / --json-out / --check）
 .\.venv\Scripts\python.exe tools\eval_attachments.py
@@ -242,6 +280,12 @@ npm run build
 - 工作区导出 Markdown 渲染附件报告摘要（类型/雕刻/结构/异常/解码/警告/落盘），
   不倾倒全部 `strings`；完整报告 JSON 仍保存在工作区 JSON 与 `format=json` 导出中。
 - 附件报告上限 256 KiB；超限会在登记工作区时返回 400，附件本身已分析完成。
+- 适用条件只覆盖已登记规则与 `requires`；未登记题型一律 unknown，
+  规则文件需人工维护，不做模型自学习。
+- 三态不参与排序；固定评测集只有 22 条，不能代表全部题型。
+- Writeup 只汇总工作区真实记录，不自动补写未记录内容；Flag 只识别
+  `flag{...}` 形式。
+- `tools/scripts/` 只做静态只读分析，不解压、不执行、不反编译、不做武器化。
 - `work/` 与 `temp_newData/` 体积大（后者约 18.9 GB），只在本地保留，不入库。
 - 外部导入脚本只允许静态审查，不在本批执行。
 
@@ -253,8 +297,8 @@ npm run build
 - P2 已完成：附件分析入口、隔离落盘、只读结构/解码嗅探、固定样例评测。
 - P3 已完成：工作区 JSON 持久化、事实/尝试/收藏/时间线、Markdown/JSON 导出、
   附件分析 React 入口与报告展示、搜索结果收藏、附件报告附到工作区。
-- P4：适用条件三态（已知/未知/不满足）、只读脚本工具架、由真实记录生成
-  可追溯 Writeup 草稿。
+- P4 已完成：适用条件三态（已知/未知/不满足）、只读脚本工具架、
+  由真实记录生成可追溯 Writeup 草稿。
 - 图谱价值继续由评测决定，不以边数作为目标；P1 固定集没有显示图谱需要提权。
 
 ---
@@ -399,3 +443,33 @@ P2 评测样例与期望：
   无工作区时不提供附着；工作区创建/选择、加事实、加尝试（方向+结论+状态）、
   时间线与导出链接、已附报告展示。
 - `work/workspaces/` 与冒烟目录都不入库；构建产物 `dist/` 仍被 gitignore。
+
+---
+
+## 10. P4 验证结果（2026-10-28）
+
+以下均为本机实测，工作目录 `F:\CTFfiles\knowledgeBase`：
+
+| 命令 | 结果 |
+|---|---|
+| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **198 passed in 37.89s**（P3 的 179 + P4 新增 19） |
+| `.\.venv\Scripts\python.exe -m pytest tests\test_applicability.py tests\test_scripts.py -o addopts="" -q` | **11 passed**（三态规则 + 3 个脚本实跑） |
+| `.\.venv\Scripts\python.exe tools\eval_search.py` | 22 条；hybrid **top1/hit/MRR/recall = 1.0000** |
+| `.\.venv\Scripts\python.exe tools\eval_attachments.py` | **5/5 通过（pass_rate=1.0000）** |
+| `cd tools\agent\webapp; npm run check` | 通过（`tsc -b` 无输出） |
+| `npm test` | **4 files / 26 tests passed**（P3 的 23 + P4 新增 3） |
+| `npm run build` | 通过；JS 839.79 kB（gzip 258.76 kB），CSS 207.25 kB（gzip 31.31 kB） |
+
+测试覆盖点：
+
+- applicability：`requires` 未知→上下文/点名后已知、关键词支持/否定、版本区间
+  内/外/缺失、`evaluate_paths` 汇总、目标路径唯一性；search 返回三态与计数；
+  ask 提示含“适用前提检查 / 缺少前提 / unknown”。
+- scripts：`rsa_factor_probe`、`zip_inspect`、`filter_probe` 用临时数据实跑；
+  校验 `read_only=true`、`executed=false`、不落盘。
+- writeup：事实/尝试/资料/Flag/时间线分节；`来源 #id` 与 `entry:` 标记；
+  路径锚点 `kb/crypto/rsa.md#...`；kb 存在/未找到校验；非法 mode 400。
+- 前端：搜索页三态徽章与提示；工作区 Writeup 导出切换；带章节锚点收藏。
+
+冒烟数据：本批脚本/评测输出只写临时目录，`work/p4_eval_search.json` 等
+中间文件已删除；`work/`、`dist/` 继续由 gitignore 排除。

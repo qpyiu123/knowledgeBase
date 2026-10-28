@@ -517,6 +517,21 @@ export default function SearchPage({
                         图谱 · {h.graph_via}
                       </Badge>
                     )}
+                    {h.applicability && (
+                      <Badge
+                        size="xs"
+                        variant="outline"
+                        color={
+                          h.applicability.status === 'unsatisfied'
+                            ? 'red'
+                            : h.applicability.status === 'unknown'
+                              ? 'yellow'
+                              : 'teal'
+                        }
+                      >
+                        前提：{h.applicability.status_label}
+                      </Badge>
+                    )}
                     {h.score ? (
                       <Badge size="xs" variant="default">
                         {Number(h.score).toFixed(4)}
@@ -554,6 +569,14 @@ export default function SearchPage({
                       ) : null}
                     </div>
                   )}
+                  {h.applicability?.hint ? (
+                    <Text
+                      size="xs"
+                      c={h.applicability.status === 'unsatisfied' ? 'red' : 'yellow'}
+                    >
+                      适用前提：{h.applicability.hint}
+                    </Text>
+                  ) : null}
                   <Group justify="space-between" mt={10} wrap="wrap" gap={8}>
                     <span className="hit-path">{h.path}</span>
                     <Group gap={4}>

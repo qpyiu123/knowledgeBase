@@ -38,6 +38,7 @@ MAX_DIRECTION = 500
 MAX_CONCLUSION = 2000
 MAX_REF_TITLE = 200
 MAX_PATH = 500
+MAX_ANCHOR = 200
 MAX_URL = 1000
 MAX_SOURCE = 120
 MAX_CATEGORY = 40
@@ -162,14 +163,18 @@ def _check_entry(
     report=None,
     direction="",
     conclusion="",
+    anchor="",
 ) -> dict:
     if not isinstance(kind, str) or kind not in ENTRY_KINDS:
         raise WorkspaceError("kind 只能是 fact / attempt / reference")
     text = _clean_str(text, "text", MAX_TEXT)
     title = _clean_str(title, "title", MAX_REF_TITLE)
     path = _clean_str(path, "path", MAX_PATH)
+    anchor = _clean_str(anchor, "anchor", MAX_ANCHOR)
     url = _clean_str(url, "url", MAX_URL)
     source = _clean_str(source, "source", MAX_SOURCE)
+    if anchor and not path:
+        raise WorkspaceError("anchor 只用于 kb 路径收藏")
     if url and not re.match(r"^https?://", url):
         raise WorkspaceError("url 只允许 http:// 或 https://")
     if kind == "attempt":
@@ -188,6 +193,7 @@ def _check_entry(
         "result": result,
         "title": title,
         "path": path,
+        "anchor": anchor,
         "url": url,
         "source": source,
         "direction": direction,
@@ -400,10 +406,11 @@ class WorkspaceStore:
         report=None,
         direction="",
         conclusion="",
+        anchor="",
     ) -> tuple[dict, dict]:
         cleaned = _check_entry(kind, text, result, title, path, url,
                                source, attachment, report, direction,
-                               conclusion)
+                               conclusion, anchor)
         with _LOCK:
             ws = self.load(workspace_id)
             entries = ws.setdefault("entries", [])
@@ -540,3 +547,179 @@ class WorkspaceStore:
             lines.append(f"- [{ev.get('ts')}] {ev.get('summary')}")
         lines.append("")
         return "\n".join(lines)
+
+    def export_writeup(self, workspace_id: str,
+                       kb_root: str | Path | None = None) -> str:
+        """由真实工作区记录生成 Writeup 草稿。
+
+        每条事实/尝试/资料都带来源条目 ID；kb 引用带可点击路径锚点，
+        能校验时标注是否存在。不编造条目之外的内容。
+        """
+        ws = self.load(workspace_id)
+        root = Path(kb_root) if kb_root else None
+        entries = ws.get("entries") or []
+        facts = [e for e in entries if e.get("kind") == "fact"]
+        attempts = [e for e in entries if e.get("kind") == "attempt"]
+        refs = [e for e in entries if e.get("kind") == "reference"]
+        attempts.sort(key=lambda e: str(e.get("created") or ""))
+
+        lines = [f"# Writeup 草稿：{ws.get('title') or '未命名工作区'}", ""]
+        lines.append("> 由题目工作区导出；每条信息后的 `来源 #entry-id` 可回溯到"
+                     "工作区 JSON。请按需删改后再发布。")
+        lines.append("")
+        lines.append(f"- 题目名：{ws.get('title') or '未命名'}")
+        lines.append(f"- 方向：{ws.get('category') or '未分类'}")
+        lines.append(f"- 状态：{ws.get('status') or 'open'}")
+        lines.append(f"- 工作区：`{ws.get('id')}`")
+        lines.append(f"- 记录时间：{ws.get('created') or ''} → {ws.get('updated') or ''}")
+        lines.append("")
+
+        lines.append("## 事实")
+        if not facts:
+            lines.append("")
+            lines.append("_未记录_")
+            lines.append("")
+        else:
+            for e in facts:
+                text = _one_line(e.get("text"))
+                lines.append(
+                    f"- {text or '（空）'}（来源 #{e.get('id')}）"
+                    f"<!-- entry:{e.get('id')} -->"
+                )
+            lines.append("")
+
+        lines.append("## 尝试（按时间序）")
+        if not attempts:
+            lines.append("")
+            lines.append("_未记录_")
+            lines.append("")
+        else:
+            for i, e in enumerate(attempts, 1):
+                direction = _one_line(e.get("direction")) or "未记录"
+                result = e.get("result") or "pending"
+                result_label = {"pending": "待验证", "success": "有效",
+                                "failed": "无效"}.get(result, result)
+                conclusion = _one_line(e.get("conclusion")) or "未记录"
+                note = _one_line(e.get("text"))
+                line = (f"{i}. [{e.get('created') or ''}] {direction} → "
+                        f"{result_label}（`{result}`）→ {conclusion}"
+                        f"（来源 #{e.get('id')}）<!-- entry:{e.get('id')} -->")
+                lines.append(line)
+                if note:
+                    lines.append(f"   - 备注：{note}")
+            lines.append("")
+
+        lines.append("## 用到的 kb 资料")
+        kb_refs = [e for e in refs if _is_kb_ref(e)]
+        if not kb_refs:
+            lines.append("")
+            lines.append("_未记录_")
+            lines.append("")
+        else:
+            for e in kb_refs:
+                rel = str(e.get("path") or "").replace("\\", "/")
+                title = e.get("title") or rel
+                link = _kb_link(rel, e.get("anchor"))
+                exists = _kb_exists(root, rel)
+                mark = ("kb 中存在" if exists is True else
+                        "kb 中未找到" if exists is False else "未校验")
+                lines.append(
+                    f"- 《{title}》 — [`{link}`]({link}) （来源 #{e.get('id')}；"
+                    f"{mark}）<!-- entry:{e.get('id')} -->"
+                )
+                if e.get("anchor"):
+                    lines.append(f"  - 章节锚点：`{link}`")
+                note = _one_line(e.get("text"))
+                if note:
+                    lines.append(f"  - 备注：{note}")
+                report = e.get("report")
+                if isinstance(report, dict) and report:
+                    lines.extend(_report_lines(report))
+            lines.append("")
+
+        lines.append("## 其他资料（附件 / 外部链接）")
+        others = [e for e in refs if not _is_kb_ref(e)]
+        if not others:
+            lines.append("")
+            lines.append("_未记录_")
+            lines.append("")
+        else:
+            for e in others:
+                title = e.get("title") or e.get("url") or e.get("path") or "资料"
+                target = e.get("url") or ""
+                line = f"- 《{title}》"
+                if target:
+                    line += f" — <{target}>"
+                elif e.get("path"):
+                    line += f" — `{str(e['path']).replace(chr(92), '/')}`"
+                line += f"（来源 #{e.get('id')}）<!-- entry:{e.get('id')} -->"
+                lines.append(line)
+                note = _one_line(e.get("text"))
+                if note:
+                    lines.append(f"  - 备注：{note}")
+            lines.append("")
+
+        flags = _collect_flags(entries)
+        lines.append("## Flag")
+        if not flags:
+            lines.append("")
+            lines.append("_未记录_")
+            lines.append("")
+        else:
+            for value, entry_ids in flags:
+                src = "、".join(f"#{i}" for i in entry_ids)
+                lines.append(f"- `{value}`（来源 {src}）")
+            lines.append("")
+
+        lines.append("## 时间线")
+        for ev in ws.get("timeline", []):
+            lines.append(f"- [{ev.get('ts')}] {ev.get('summary')}")
+        lines.append("")
+        return "\n".join(lines)
+
+
+def _is_kb_ref(entry: dict) -> bool:
+    """只有真正指向 kb 文档的收藏才进“用到 kb 资料”一节。"""
+    return bool(entry.get("path")) and not entry.get("report") \
+        and entry.get("source") != "analyze"
+
+
+def _one_line(value) -> str:
+    return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def _kb_link(rel: str, anchor=None) -> str:
+    rel = rel.strip().replace("\\", "/")
+    target = rel if rel.startswith("kb/") else f"kb/{rel}"
+    if anchor:
+        target += "#" + str(anchor).strip().lstrip("#")
+    return target
+
+
+def _kb_exists(root: Path | None, rel: str) -> bool | None:
+    if root is None:
+        return None
+    rel = rel.strip().replace("\\", "/")
+    if rel.startswith("kb/"):
+        rel = rel[3:]
+    try:
+        p = (Path(root) / rel).resolve()
+        p.relative_to(Path(root).resolve())
+    except (OSError, ValueError):
+        return False
+    return p.is_file()
+
+
+_FLAG_RE = re.compile(r"flag\{[^}\s]{1,300}\}", re.IGNORECASE)
+
+
+def _collect_flags(entries: list[dict]) -> list[tuple[str, list[str]]]:
+    seen: dict[str, list[str]] = {}
+    for e in entries:
+        for field in ("text", "title", "direction", "conclusion"):
+            for m in _FLAG_RE.finditer(str(e.get(field) or "")):
+                value = m.group(0)
+                ids = seen.setdefault(value, [])
+                if e.get("id") and e["id"] not in ids:
+                    ids.append(e["id"])
+    return list(seen.items())
