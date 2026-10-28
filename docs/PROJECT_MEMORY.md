@@ -4,7 +4,7 @@
 > 区分三类信息：**已验证事实 / 推断 / 未验证**。旧文档里的数字若未在本重复现，
 > 不得当作结论复用。
 
-**最后更新**：2026-10-28（P4 适用条件、只读脚本库与 Writeup 草稿已完成，验证结果见第 10 节）
+**最后更新**：2026-10-28（修复批：start.ps1 pid 记录、旧后端提示、索引新鲜度与 -Reindex；验证见第 11 节）
 
 ---
 
@@ -219,6 +219,32 @@
 
 ---
 
+## 3f. 修复批决策（2026-10-28 晚）
+
+1. **pid 记录真实监听者**：`start.ps1` 启动后轮询
+   `Get-NetTCPConnection -LocalPort ... -State Listen` 的 `OwningProcess`，
+   覆盖写入 `logs/web.pid` / `logs/ollama.pid`；不再保存 `Start-Process -PassThru`
+   得到的外壳 pid。`-Stop` 先按端口关闭，再核对 pid 文件里的残留外壳进程。
+2. **不误杀**：按端口停止前用 `Win32_Process.CommandLine` 校验命令行属于本项目；
+   pid 文件里的进程若不属于本项目，只警告并删除记录，不发 `Stop-Process`。
+3. **端口占用可解释**：`GET /api/health` 新增 `build`（git 短 HEAD +
+   源码指纹）；端口已被占用时 `start.ps1 -Start` / `-Status` 读取运行中后端的
+   `build` 并与当前代码比较。缺字段（旧后端）或不一致时黄字提示
+   “检测到旧版本后端正在运行，建议先 .\start.ps1 -Stop 再 -Start”，不静默跳过。
+4. **代码指纹**：新增 `tools/agent/buildinfo.py`，对 `tools/agent/*.py`、
+   `tools/kb/*.py` 与 `start.ps1` 做内容 SHA256（取前 8 位），git 可用时
+   前缀短 HEAD。只读文件，不联网、不启动服务。
+5. **索引新鲜度**：`-Status` / `-Start` 比较 `kb/` 最新 `.md` 的
+   LastWriteTime 与 `index/fts.db` 的 LastWriteTime，并比较 kb Markdown 数
+   与 FTS `docs` 数；任一不一致即黄字提示
+   “索引可能过期，运行 .\start.ps1 -Reindex”。
+6. **-Reindex**：前台执行 `python tools\cli.py index`（FTS + 向量），显示进度；
+   后端仍在运行时提示重建后需 `-Stop` / `-Start` 才能让新索引生效。
+7. **兼容性**：只使用 Windows PowerShell 5.1 与 pwsh 都支持的语法；
+   `start.ps1` 保持 UTF-8 BOM；不新增依赖、不换模型、不动监听中的服务。
+
+---
+
 ## 4. 运行命令
 
 > 工具脚本清点见 `docs/TOOLS_INVENTORY.md`（P3 时 21 个可执行入口 + 6 个仅 import 模块 + 10 个根目录临时探针；P4 新增 `tools/scripts/` 3 个只读工具与 1 个公共模块）。
@@ -257,6 +283,7 @@ npm run build
 # 真实运行（不用于本批自动化测试）
 .\start.ps1
 .\start.ps1 -Status
+.\start.ps1 -Reindex
 .\start.ps1 -Stop
 ```
 
@@ -286,6 +313,14 @@ npm run build
 - Writeup 只汇总工作区真实记录，不自动补写未记录内容；Flag 只识别
   `flag{...}` 形式。
 - `tools/scripts/` 只做静态只读分析，不解压、不执行、不反编译、不做武器化。
+- pid 归属依赖 `Win32_Process.CommandLine` 含项目根路径；命令行不可读或从别处
+  启动、参数是相对路径时会被视为“非本项目”，此时 `-Stop` 只提示不改杀。
+- `build` 只覆盖后端 Python 源码与 `start.ps1`；`config.toml`、前端 `dist/`
+  变化不会改变指纹。端口被非本项目占用或 health 不可用时只能提示，不能判断版本。
+- 索引新鲜度用“最新 md 时间 + 文章数”判断，不做内容哈希；只改内容且不改
+  时间戳/数量的情况检测不到。
+- 本批未实际重建索引（用户服务仍在运行）；需要用户执行
+  `.\start.ps1 -Stop` → `.\start.ps1 -Reindex` → `.\start.ps1` 才能让新索引生效。
 - `work/` 与 `temp_newData/` 体积大（后者约 18.9 GB），只在本地保留，不入库。
 - 外部导入脚本只允许静态审查，不在本批执行。
 
@@ -473,3 +508,29 @@ P2 评测样例与期望：
 
 冒烟数据：本批脚本/评测输出只写临时目录，`work/p4_eval_search.json` 等
 中间文件已删除；`work/`、`dist/` 继续由 gitignore 排除。
+
+---
+
+## 11. 修复批验证结果（2026-10-28 晚）
+
+以下均为本机实测，工作目录 `F:\CTFfiles\knowledgeBase`：
+
+| 命令 / 操作 | 结果 |
+|---|---|
+| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **200 passed in 40.76s**（P4 的 198 + 新增 build 用例 2） |
+| `.\.venv\Scripts\python.exe -m pytest tests\test_server_api.py -o addopts="" -q` | **46 passed** |
+| `cd tools\agent\webapp; npm run check` / `npm test` / `npm run build` | 全通过；**4 files / 26 tests**；JS 839.79 kB、CSS 207.25 kB（本批未改前端源码） |
+| `.\start.ps1 -Status`（现有 8765/11434） | Web pid=41332、Ollama pid=42712；识别到旧后端缺 `build` 并给出 `-Stop`/`-Start` 提示；识别 kb 1568 篇 vs 索引 1567 篇 |
+| 备用端口 8799 冒烟 | `logs\web.pid` 写入 42696，与 `:8799` 的 OwningProcess 一致；`/api/health` 返回 `build`；`-Stop -Port 8799` 后 8799 释放、11434 仍在监听 |
+
+测试覆盖点：
+
+- server：health 在模型可达/不可达两条路径都返回 `build`，值等于
+  `server.BUILD_ID`；`buildinfo` 对同一源码稳定、对源码变更敏感。
+- `start.ps1`：语法解析通过；`-Status` 能读真实端口 pid、比较后端 build、
+  比较 kb/索引时间与文章数；备用端口实测 pid 反查与停止逻辑。
+- 未引入新依赖；未改检索、模型、端口规则；现有 8765/11434 服务未被停止或重启。
+
+局限：没有 Pester 自动化用例，PowerShell 行为由上述 `-Status` 与备用端口
+手工冒烟验证；未在 pwsh 上实测（本机未安装 pwsh），但语法只用 5.1/pwsh 公共子集。
+本批未重建索引。

@@ -1,17 +1,20 @@
 ﻿# CTF 知识库 一键启动
 #
 #   .\start.ps1              启动 Ollama + Web 搜索界面，并打开浏览器
-#   .\start.ps1 -Stop        停止全部
+#   .\start.ps1 -Stop        停止全部服务
+#   .\start.ps1 -Status      只看状态（含后端版本与索引新鲜度）
+#   .\start.ps1 -Reindex     重建索引（FTS + 向量，前台显示进度）
 #   .\start.ps1 -NoBrowser   不自动开浏览器
 #   .\start.ps1 -CpuOnly     强制 CPU 推理（显存被别的程序占了时用）
-#   .\start.ps1 -Status      只看状态
 #
-# 说明：本脚本自己拉起 ollama serve 和 Web 服务，都写到 logs/ 下，
-#      进程号记在 logs/*.pid，方便 -Stop 精确关闭。
+# 说明：本脚本自己拉起 ollama serve 和 Web 服务，都写到 logs/ 下。
+#      pid 文件记录的是按端口反查到的“真实监听进程”，不是 Start-Process 外壳；
+#      -Stop 先按监听端口关闭，再核对 pid 文件，避免关错或留下孤儿监听。
 
 param(
     [switch]$Stop,
     [switch]$Status,
+    [switch]$Reindex,
     [switch]$NoBrowser,
     [switch]$CpuOnly,
     [int]$Port = 8765,
@@ -26,6 +29,8 @@ $Srv   = Join-Path $Root 'tools\agent\server.py'
 $OlExe = Join-Path $Root 'models\ollama-server\ollama.exe'
 $OlLib = Join-Path $Root 'models\ollama-server\lib\ollama'
 $OlMod = Join-Path $Root 'models\ollama-models'
+$BuildScript = Join-Path $Root 'tools\agent\buildinfo.py'
+$CliScript   = Join-Path $Root 'tools\cli.py'
 
 New-Item -ItemType Directory -Force -Path $LogD | Out-Null
 
@@ -60,15 +65,186 @@ function Wait-Http([string]$url, [int]$timeout = 40) {
     return $false
 }
 
-function Stop-ByPidFile([string]$file, [string]$what) {
+function Get-ProcCommandLine([int]$procId) {
+    if (-not $procId) { return '' }
+    try {
+        $p = Get-CimInstance Win32_Process -Filter "ProcessId = $procId" `
+             -ErrorAction Stop
+        if ($p -and $p.CommandLine) { return [string]$p.CommandLine }
+    } catch { }
+    try {
+        $p = Get-WmiObject Win32_Process -Filter "ProcessId = $procId" `
+             -ErrorAction Stop
+        if ($p -and $p.CommandLine) { return [string]$p.CommandLine }
+    } catch { }
+    return ''
+}
+
+function Test-ProjectProcess([int]$procId) {
+    $cmd = Get-ProcCommandLine $procId
+    if (-not $cmd) { return $false }
+    return ($cmd.IndexOf($Root, [System.StringComparison]::OrdinalIgnoreCase) -ge 0)
+}
+
+function Get-Health([int]$p, [int]$timeout = 5) {
+    try {
+        return Invoke-RestMethod "http://127.0.0.1:$p/api/health" `
+               -TimeoutSec $timeout -ErrorAction Stop
+    } catch { return $null }
+}
+
+function Get-ExpectedBuild {
+    if (-not (Test-Path $Venv) -or -not (Test-Path $BuildScript)) { return '' }
+    try {
+        $out = & $Venv $BuildScript 2>$null
+        if ($LASTEXITCODE -ne 0) { return '' }
+        $line = @($out) | Where-Object { "$_".Trim() } | Select-Object -Last 1
+        if ($line) { return "$line".Trim() }
+    } catch { }
+    return ''
+}
+
+function Show-BackendHealth([int]$p) {
+    $h = Get-Health $p
+    if (-not $h) {
+        Warn "端口 :$p 被占用，但 /api/health 不可用，无法确认后端版本"
+        return $false
+    }
+    $running = ''
+    if ($null -ne $h.build) { $running = "$($h.build)".Trim() }
+    $expected = Get-ExpectedBuild
+    if (-not $running) {
+        Warn '检测到旧版本后端正在运行（health 无 build 字段），建议先 .\start.ps1 -Stop 再 -Start'
+        return $false
+    }
+    if ($expected -and $running -ne $expected) {
+        Warn "检测到旧版本后端正在运行（运行中 build=$running，当前代码=$expected），建议先 .\start.ps1 -Stop 再 -Start"
+        return $false
+    }
+    Ok "后端版本一致 (build=$running)"
+    return $true
+}
+
+function Get-IndexInfo {
+    $db = Join-Path $Root 'index\fts.db'
+    if (-not (Test-Path $db)) { return $null }
+    $kbDir = Join-Path $Root 'kb'
+    $files = @()
+    if (Test-Path $kbDir) {
+        $files = @(Get-ChildItem -LiteralPath $kbDir -Recurse -Filter *.md `
+                   -File -ErrorAction SilentlyContinue)
+    }
+    $latest = $files | Sort-Object LastWriteTime -Descending |
+              Select-Object -First 1
+    $dbTime = (Get-Item -LiteralPath $db).LastWriteTime
+    $latestTime = $null
+    $latestPath = ''
+    if ($latest) {
+        $latestTime = $latest.LastWriteTime
+        $latestPath = $latest.FullName
+    }
+    $mtimeStale = $false
+    if ($latestTime -and $latestTime -gt $dbTime) { $mtimeStale = $true }
+    return [pscustomobject]@{
+        DbTime     = $dbTime
+        MdCount    = $files.Count
+        LatestTime = $latestTime
+        LatestPath = $latestPath
+        MtimeStale = $mtimeStale
+    }
+}
+
+function Get-FtsStats {
+    if (-not (Test-Path $Venv)) { return $null }
+    $tools = Join-Path $Root 'tools'
+    # 注意：Windows PowerShell 5.1 传原生参数会吞掉双引号，Python 代码里只用单引号。
+    $code = "import json,sys; sys.path.insert(0, r'$tools'); " +
+            "from kb.config import Config; from kb.fts import FtsIndex; " +
+            "c=Config.load(); " +
+            "print(json.dumps(FtsIndex(c.index_dir / 'fts.db').stats(), ensure_ascii=False))"
+    try {
+        $out = & $Venv -c $code 2>$null
+        if ($LASTEXITCODE -eq 0 -and $out) {
+            return (($out -join "`n") | ConvertFrom-Json)
+        }
+    } catch { }
+    return $null
+}
+
+function Show-IndexFreshness {
+    $info = Get-IndexInfo
+    if (-not $info) {
+        Warn '索引不存在，运行 .\start.ps1 -Reindex 建立'
+        return
+    }
+    $docs = -1
+    $h = Get-Health $Port
+    if ($h -and $h.index -and ($null -ne $h.index.docs)) {
+        $docs = [int]$h.index.docs
+    } else {
+        $st = Get-FtsStats
+        if ($st -and ($null -ne $st.docs)) { $docs = [int]$st.docs }
+    }
+    $issues = @()
+    if ($info.MtimeStale) {
+        $issues += ("kb 最新更新 {0:yyyy-MM-dd HH:mm} 晚于索引 {1:yyyy-MM-dd HH:mm}" -f $info.LatestTime, $info.DbTime)
+    }
+    if ($docs -ge 0 -and $docs -ne $info.MdCount) {
+        $issues += ("kb {0} 篇，索引 {1} 篇" -f $info.MdCount, $docs)
+    }
+    if ($issues.Count -gt 0) {
+        Warn ("索引可能过期（" + ($issues -join '；') + "），运行 .\start.ps1 -Reindex")
+    } elseif ($docs -ge 0) {
+        Ok ("索引较新（kb {0} 篇 / 索引 {1} 篇，构建 {2:yyyy-MM-dd HH:mm}）" -f $info.MdCount, $docs, $info.DbTime)
+    } else {
+        Ok ("索引时间不早于 kb（构建 {0:yyyy-MM-dd HH:mm}），但无法读取索引文章数" -f $info.DbTime)
+    }
+}
+
+function Stop-Listening([int]$p, [string]$what) {
+    $procId = Get-PortPid $p
+    if (-not $procId) { return $false }
+    if (-not (Test-ProjectProcess $procId)) {
+        Warn ":$p 被 pid=$procId 占用，但命令行不属于本项目，跳过停止（请手动检查）"
+        return $false
+    }
+    try {
+        Stop-Process -Id $procId -Force -ErrorAction Stop
+    } catch {
+        Warn "$what 停止失败 (pid=$procId): $($_.Exception.Message)"
+        return $false
+    }
+    for ($i = 0; $i -lt 20; $i++) {
+        if (-not (Get-PortPid $p)) { break }
+        Start-Sleep -Milliseconds 200
+    }
+    $left = Get-PortPid $p
+    if ($left) {
+        Warn "$what 端口 :$p 仍被 pid=$left 占用（可能需要管理员）"
+        return $false
+    }
+    Ok "$what 已停止 (pid=$procId, :$p)"
+    return $true
+}
+
+function Stop-PidFile([string]$file, [string]$what) {
     if (-not (Test-Path $file)) { return }
-    $text = (Get-Content $file -Raw -ErrorAction SilentlyContinue).Trim()
+    $text = Get-Content $file -Raw -ErrorAction SilentlyContinue
+    if ($null -ne $text) { $text = $text.Trim() }
     if ($text -match '^\d+$') {
-        $proc = Get-Process -Id ([int]$text) -ErrorAction SilentlyContinue
+        $procId = [int]$text
+        $proc = Get-Process -Id $procId -ErrorAction SilentlyContinue
         if ($proc) {
-            try { Stop-Process -Id $proc.Id -Force -ErrorAction Stop
-                  Ok "$what 已停止 (pid=$($proc.Id))" }
-            catch { Warn "$what 停止失败: $($_.Exception.Message)" }
+            if (Test-ProjectProcess $procId) {
+                try {
+                    Stop-Process -Id $procId -Force -ErrorAction Stop
+                    Ok "$what 记录的外壳进程已停止 (pid=$procId)"
+                } catch {
+                    Warn "$what 记录进程停止失败 (pid=$procId): $($_.Exception.Message)"
+                }
+            } else {
+                Warn "忽略 $file 中的 pid=$procId（命令行不属于本项目）"
+            }
         }
     }
     Remove-Item $file -Force -ErrorAction SilentlyContinue
@@ -82,8 +258,12 @@ function Show-Status {
     Say '=== 当前状态 ===' 'Cyan'
     if ($op) { Ok "Ollama   运行中  pid=$op  :$OllamaPort" }
     else     { Warn "Ollama   未运行" }
-    if ($sp) { Ok "Web 界面 运行中  pid=$sp  :$Port" }
-    else     { Warn "Web 界面 未运行" }
+    if ($sp) {
+        Ok "Web 界面 运行中  pid=$sp  :$Port"
+        Show-BackendHealth $Port | Out-Null
+    } else {
+        Warn "Web 界面 未运行"
+    }
 
     if ($op) {
         try {
@@ -94,26 +274,45 @@ function Show-Status {
         } catch { Warn '模型列表获取失败' }
     }
     Say ''
+    Say '--- 索引新鲜度 ---' 'Cyan'
+    Show-IndexFreshness
+    Say ''
 }
 
 # ---------------------------------------------------------------- 停止
 if ($Stop) {
     Say '' ; Say '=== 停止服务 ===' 'Cyan'
-    Stop-ByPidFile (Join-Path $LogD 'web.pid') 'Web 界面'
-    Stop-ByPidFile (Join-Path $LogD 'ollama.pid') 'Ollama'
-
-    # 兜底：按端口找残留
-    foreach ($p in @($Port, $OllamaPort)) {
-        $procId = Get-PortPid $p
-        if ($procId) {
-            try {
-                Stop-Process -Id $procId -Force -ErrorAction Stop
-                Ok "已关闭占用 :$p 的进程 (pid=$procId)"
-            } catch { Warn ":$p 仍被 pid=$procId 占用（可能需要管理员）" }
-        }
-    }
+    # 先按真实监听者关闭，再核对 pid 文件里可能残留的外壳进程。
+    Stop-Listening $Port 'Web 界面' | Out-Null
+    Stop-Listening $OllamaPort 'Ollama' | Out-Null
+    Stop-PidFile (Join-Path $LogD 'web.pid') 'Web 界面'
+    Stop-PidFile (Join-Path $LogD 'ollama.pid') 'Ollama'
     Say ''
     Ok '全部停止'
+    return
+}
+
+if ($Reindex) {
+    Say '' ; Say '=== 重建索引 ===' 'Cyan'
+    if (-not (Test-Path $Venv)) {
+        Bad "找不到 venv: $Venv"
+        return
+    }
+    if (-not (Test-Path $CliScript)) {
+        Bad "找不到 $CliScript"
+        return
+    }
+    if (Get-PortPid $Port) {
+        Warn '后端仍在运行；重建完成后请再执行 .\start.ps1 -Stop 然后 -Start 使新索引生效'
+    }
+    Push-Location $Root
+    try {
+        & $Venv $CliScript index
+        if ($LASTEXITCODE -eq 0) { Ok '索引重建完成' }
+        else { Bad "索引重建失败（退出码 $LASTEXITCODE）" }
+    } finally {
+        Pop-Location
+    }
     return
 }
 
@@ -161,9 +360,10 @@ if ($hasIndex) { Ok '知识库索引' }
 else {
     Warn '索引不存在，正在建立（首次约 4 分钟）'
     Push-Location $Root
-    & $Venv (Join-Path $Root 'tools\cli.py') index
+    & $Venv $CliScript index
     Pop-Location
 }
+Show-IndexFreshness
 
 # ---------------------------------------------------------------- Ollama
 Say ''
@@ -187,7 +387,18 @@ if ($olPid) {
         $sp.Id | Set-Content (Join-Path $LogD 'ollama.pid') -Encoding ASCII
 
         if (Wait-Http "http://127.0.0.1:$OllamaPort/api/version" 40) {
-            Ok "已启动 (pid=$($sp.Id))"
+            $listenPid = 0
+            for ($i = 0; $i -lt 20; $i++) {
+                $listenPid = Get-PortPid $OllamaPort
+                if ($listenPid) { break }
+                Start-Sleep -Milliseconds 250
+            }
+            if ($listenPid) {
+                $listenPid | Set-Content (Join-Path $LogD 'ollama.pid') -Encoding ASCII
+                Ok "已启动 (pid=$listenPid)"
+            } else {
+                Warn "未查到 :$OllamaPort 的监听进程，暂记启动器 pid=$($sp.Id)"
+            }
             try {
                 $tags = Invoke-RestMethod "http://127.0.0.1:$OllamaPort/api/tags" `
                         -TimeoutSec 10
@@ -208,6 +419,7 @@ Say '=== 3. Web 搜索界面 ===' 'Cyan'
 $webPid = Get-PortPid $Port
 if ($webPid) {
     Ok "已在运行 (pid=$webPid)"
+    Show-BackendHealth $Port | Out-Null
 } else {
     $env:AGENT_PORT = "$Port"
     $env:AGENT_HOST = '127.0.0.1'
@@ -225,7 +437,18 @@ if ($webPid) {
     $sp.Id | Set-Content (Join-Path $LogD 'web.pid') -Encoding ASCII
 
     if (Wait-Http "http://127.0.0.1:$Port/api/health" 30) {
-        Ok "已启动 (pid=$($sp.Id))"
+        $listenPid = 0
+        for ($i = 0; $i -lt 20; $i++) {
+            $listenPid = Get-PortPid $Port
+            if ($listenPid) { break }
+            Start-Sleep -Milliseconds 250
+        }
+        if ($listenPid) {
+            $listenPid | Set-Content (Join-Path $LogD 'web.pid') -Encoding ASCII
+            Ok "已启动 (pid=$listenPid)"
+        } else {
+            Warn "未查到 :$Port 的监听进程，暂记启动器 pid=$($sp.Id)"
+        }
     } else {
         Bad "启动超时，看日志: $(Join-Path $LogD 'web.err.log')"
         if (Test-Path (Join-Path $LogD 'web.err.log')) {
@@ -252,5 +475,6 @@ if (-not $NoBrowser) {
 Say ''
 Say '提示：' 'DarkGray'
 Say '  .\start.ps1 -Status   查看状态' 'DarkGray'
+Say '  .\start.ps1 -Reindex  重建索引' 'DarkGray'
 Say '  .\start.ps1 -Stop     停止全部服务' 'DarkGray'
 Say ''

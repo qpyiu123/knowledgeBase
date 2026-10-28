@@ -139,26 +139,49 @@
 
 ---
 
+## 〇之六、2026-10-28 修复批（已完成）
+
+- `start.ps1` 不再把 `Start-Process -PassThru` 的外壳 pid 写进 `logs/*.pid`；
+  启动后按 `Get-NetTCPConnection` 的 OwningProcess 反查真实监听进程并覆盖写入。
+  `-Stop` 先按端口关闭，再处理 pid 文件里可能残留的外壳进程。
+- 停止前用 `Win32_Process.CommandLine` 校验进程属于本项目根目录；不属于则只提示，
+  不误杀无关进程。端口释放会轮询确认，避免留下孤儿监听。
+- `/api/health` 新增 `build`（`tools/agent/buildinfo.py`：git 短 HEAD + 源码指纹）。
+  端口被占用时 `start.ps1 -Start` / `-Status` 会比较运行中后端与当前代码：
+  旧后端（无 `build`）或不一致时明确提示先 `-Stop` 再 `-Start`，不再静默跳过。
+- `-Status` / `-Start` 检查索引新鲜度：kb 最新 `.md` 时间 vs `fts.db` 时间，
+  以及 kb Markdown 数 vs FTS `docs` 数；过期时黄字提示 `-Reindex`。
+- 新增 `.\start.ps1 -Reindex`：前台运行 `python tools\cli.py index`。
+- 测试：Python **200 passed**（P4 的 198 + 新增 2）；server 测试 46 passed。
+  备用端口冒烟验证了 pid 反查、health build、按端口停止；现有 8765/11434 未重启。
+- 边界：`build` 只覆盖后端 Python 与 `start.ps1`，不含 `config.toml`/前端 `dist/`；
+  索引新鲜度是时间+数量判断，不做内容哈希；未在未安装的 pwsh 上实测。
+
+---
+
 ## 一、运行方式
 
 ```powershell
 cd F:\CTFfiles\knowledgeBase
 .\start.ps1            # 拉起 Ollama + Web，开浏览器
-.\start.ps1 -Status    # 看状态
+.\start.ps1 -Status    # 看状态（含后端 build 与索引新鲜度）
+.\start.ps1 -Reindex   # 重建 FTS + 向量索引（前台进度）
 .\start.ps1 -Stop      # 全停
 ```
 
 Web 界面：`http://127.0.0.1:8765/`
 
-**当前状态（2026-10-27 21:12 实测）**：8765 和 11434 **都没有在监听**。
-服务是停的。要验证任何东西，先跑 `.\start.ps1`。
+**当前状态以 `.\start.ps1 -Status` 为准。** 2026-10-28 晚实测 8765/11434
+均在监听；其中 8765 可能仍是修复批之前启动的旧后端（health 无 `build` 字段），
+需要 `-Stop` 后重新 `-Start` 才会载入本次修复。旧文档“2026-10-27 都没有监听”
+已不成立。
 
 `start.ps1` 会做这些：
-1. 检查 venv / server.py
-2. 检查前端 `dist/`，没有就 `npm install && npm run build`
-3. 检查索引，没有就 `kb index`
-4. 起 Ollama（`models/ollama-server/ollama.exe serve`），等待 `/api/version`
-5. 起 Web 服务，写 pid 到 `logs/`
+1. 检查 venv / server.py / 前端 `dist/`，缺失时构建
+2. 检查索引是否存在；报告索引时间与文章数是否落后于 kb
+3. 起 Ollama（`models/ollama-server/ollama.exe serve`），等待 `/api/version`
+4. 起 Web 服务，等待 `/api/health`，按端口反查真实监听 pid 写入 `logs/`
+5. 端口已占用时比较运行中后端的 `build` 与当前代码，提示旧版本
 
 ---
 

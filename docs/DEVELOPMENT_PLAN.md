@@ -262,3 +262,44 @@
 - 不自动执行 `tools/scripts/` 或用户上传内容，不做武器化输出。
 - 不改检索权重、固定评测集、模型与索引。
 - 不做多用户、云同步、数据库或新 Web 框架。
+
+---
+
+## 修复批（2026-10-28 晚，已授权，已完成）
+
+### 目标
+
+修复一键启动脚本在用户实测中暴露的三个问题：pid 记录错、端口被旧后端占用时
+静默跳过、索引过期无人提示；不改变 8765/11434 的端口与路径规则。
+
+### 工作项
+
+1. pid 修正：启动后按端口反查真实监听进程写入 `logs/*.pid`；`-Stop` 先按端口
+   关闭，再处理 pid 文件残留外壳；按命令行校验归属，避免误杀。
+2. 旧后端提示：`/api/health` 增加 `build`（git 短 HEAD + 源码指纹）；
+   端口被占用时比较运行中 build 与当前代码，缺字段或不一致明确提示
+   `-Stop` / `-Start`，不静默跳过。
+3. 索引新鲜度：`-Status` / `-Start` 比较 kb 最新 md 时间与 `fts.db` 时间，
+   并比较 kb 文章数与 FTS `docs` 数；过期提示 `-Reindex`。
+4. 新增 `-Reindex`：前台运行 `python tools\cli.py index`，显示进度。
+5. 兼容与文档：Windows PowerShell 5.1 / pwsh 公共语法，`start.ps1` 保持
+   UTF-8 BOM；同步 PROJECT_MEMORY、HANDOVER 与脚本注释。
+6. 测试：pytest 全绿；server 测试断言 health `build`；用备用端口冒烟
+   pid 反查、停止与 build 比较。
+
+### 验收结果
+
+- ✅ `pytest -o addopts="" -q` → **200 passed**（P4 198 + 新增 2）。
+- ✅ `tests/test_server_api.py` → **46 passed**。
+- ✅ 前端未改源码，`npm run check` / `npm test`（4 files / 26 tests）/ `npm run build` 仍通过。
+- ✅ 备用端口 8799 冒烟：`logs\web.pid` 与端口 OwningProcess 一致；
+  health 返回 `build`；`-Stop -Port 8799` 后端口释放，11434 未受影响。
+- ✅ `-Status` 能识别现有旧后端（无 `build`）与索引 1568 vs 1567 的不一致。
+- ✅ 没有停止/重启现有 8765/11434，没有新增依赖或改模型。
+
+### 未完成 / 测试局限
+
+- 自动化测试没有 Pester 覆盖 PowerShell；行为由 `-Status` 与备用端口手工冒烟验证。
+- 本机未安装 pwsh，未实测；仅使用 5.1/pwsh 公共语法。
+- `build` 不含 `config.toml` 与前端 `dist/`；索引新鲜度是时间+数量判断，无内容哈希。
+- 本批未实际重建索引；需要用户执行 `-Stop` → `-Reindex` → `-Start`。

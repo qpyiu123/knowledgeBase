@@ -32,6 +32,8 @@ from urllib.parse import parse_qs, unquote, urlparse
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from agent.buildinfo import BUILD_ID  # noqa: E402
+
 # ---- 配置：config.toml 是唯一事实来源，环境变量只做显式覆盖 ----
 try:
     from kb.config import Config as _Config
@@ -1022,6 +1024,7 @@ class Handler(BaseHTTPRequestHandler):
                 "ok": bool(names),
                 "model_ok": bool(names),
                 "index_ok": index["ok"],
+                "build": BUILD_ID,
                 "model": model,
                 "models": names,
                 "index": index,
@@ -1034,6 +1037,7 @@ class Handler(BaseHTTPRequestHandler):
                 "ok": False,
                 "model_ok": False,
                 "index_ok": index["ok"],
+                "build": BUILD_ID,
                 "model": MODEL,
                 "models": [],
                 "index": index,

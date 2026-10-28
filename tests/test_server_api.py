@@ -176,6 +176,32 @@ def test_health_reports_model_and_index_independently(env, monkeypatch):
     assert body["index"]["docs"] == 1
 
 
+def test_health_reports_build_id(env, monkeypatch):
+    monkeypatch.setattr("requests.get", lambda *a, **k: FakeResp(payload={"models": []}))
+    status, text, _ = call(env, "GET", "/api/health")
+    body = json.loads(text)
+
+    assert status == 200
+    assert body["build"] == server.BUILD_ID
+    assert body["build"]
+
+
+def test_buildinfo_tracks_source_changes(tmp_path):
+    from agent import buildinfo
+
+    (tmp_path / "tools" / "agent").mkdir(parents=True)
+    (tmp_path / "tools" / "kb").mkdir(parents=True)
+    (tmp_path / "start.ps1").write_text("# start\n", encoding="utf-8")
+    source = tmp_path / "tools" / "agent" / "server.py"
+    source.write_text("print(1)\n", encoding="utf-8")
+
+    first = buildinfo.build_id(tmp_path)
+    assert first == buildinfo.build_id(tmp_path)
+
+    source.write_text("print(2)\n", encoding="utf-8")
+    assert buildinfo.build_id(tmp_path) != first
+
+
 def test_health_resolves_actual_model_name(env, monkeypatch):
     monkeypatch.setattr(
         "requests.get",
