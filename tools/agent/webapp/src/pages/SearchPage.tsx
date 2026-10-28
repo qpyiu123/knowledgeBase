@@ -78,6 +78,7 @@ export default function SearchPage({
   const [answer, setAnswer] = useState('');
   const [answerOpen, setAnswerOpen] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  const [doneInfo, setDoneInfo] = useState('');
   const [copied, setCopied] = useState(false);
   const ta = useRef<HTMLTextAreaElement>(null);
   const ctrl = useRef<AbortController | null>(null);
@@ -98,12 +99,14 @@ export default function SearchPage({
   const runSearch = useCallback(async (override?: string) => {
     const text = (override ?? q).trim();
     if (!text) return;
+    setQ(text);
     setBusy(true);
     setError('');
     setPhase('正在查找资料…');
     setSearched(true);
     setAnswerOpen(false);
     setAnswer('');
+    setDoneInfo('');
     try {
       const r = await api.search(text, 10, category);
       if (r.error) setError(r.error);
@@ -120,10 +123,12 @@ export default function SearchPage({
   const runAsk = useCallback(async (override?: string) => {
     const text = (override ?? q).trim();
     if (!text) return;
+    setQ(text);
     setBusy(true);
     setError('');
     setAnswerOpen(true);
     setAnswer('');
+    setDoneInfo('');
     setPhase('正在检索资料…');
     t0.current = Date.now();
     ctrl.current?.abort();
@@ -150,7 +155,14 @@ export default function SearchPage({
             setAnswer(acc);
             setElapsed((Date.now() - t0.current) / 1000);
           },
-          onError: (m) => setError(m),
+          onError: (m) => {
+            setError(m);
+            if (!acc.trim()) setAnswer('> 未收到模型内容，请查看上方提示。');
+          },
+          onDone: (info) => {
+            setDoneInfo(info);
+            setElapsed((Date.now() - t0.current) / 1000);
+          },
         },
         c.signal,
       );
@@ -175,7 +187,7 @@ export default function SearchPage({
     ctrl.current?.abort();
     setBusy(false);
     setPhase('');
-    setError('已停止等待这次回答。');
+    setError('已停止接收本次回答；本地连接已断开，后端模型可能仍在收尾。');
   }, []);
 
   const refs = useMemo(() => hits.slice(0, 3), [hits]);
@@ -187,14 +199,13 @@ export default function SearchPage({
       const text = h.slice(4);
       setQ(text);
       setMode('ask');
-      const t = window.setTimeout(() => void runAsk(text), 240);
-      return () => window.clearTimeout(t);
+      void runAsk(text);
+      return;
     }
     if (h.startsWith('q=')) {
       const text = h.slice(2);
       setQ(text);
-      const t = window.setTimeout(() => void runSearch(text), 240);
-      return () => window.clearTimeout(t);
+      void runSearch(text);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -239,20 +250,20 @@ export default function SearchPage({
               allowDeselect={false}
             />
             <Group gap={8}>
-              {busy ? (
+              {busy && mode === 'ask' ? (
                 <Button
                   variant="light"
                   color="gray"
                   leftSection={<Square size={14} />}
                   onClick={stop}
                 >
-                  停止等待
+                  停止接收
                 </Button>
               ) : (
                 <Button
                   leftSection={mode === 'ask' ? <Sparkles size={16} /> : <Search size={16} />}
                   onClick={run}
-                  disabled={!q.trim()}
+                  disabled={busy || !q.trim()}
                 >
                   {mode === 'ask' ? '提问' : '查找'}
                 </Button>
@@ -294,6 +305,11 @@ export default function SearchPage({
               {elapsed > 0 && (
                 <Text size="xs" c="dimmed">
                   {elapsed.toFixed(1)} 秒
+                </Text>
+              )}
+              {doneInfo && (
+                <Text size="xs" c="dimmed">
+                  {doneInfo}
                 </Text>
               )}
             </Group>
@@ -408,9 +424,10 @@ export default function SearchPage({
                         variant="subtle"
                         size="compact-sm"
                         onClick={() => {
-                          setQ(`结合《${h.title}》说明这类题的判断依据和解题步骤`);
+                          const question = `结合《${h.title}》说明这类题的判断依据和解题步骤`;
+                          setQ(question);
                           setMode('ask');
-                          setImmediate(() => runAsk());
+                          void runAsk(question);
                         }}
                       >
                         问模型
@@ -443,7 +460,7 @@ export default function SearchPage({
               onClick={() => {
                 setQ(s.q);
                 setMode('direct');
-                setImmediate(() => runSearch());
+                void runSearch(s.q);
               }}
             >
               <b>{s.t}</b>

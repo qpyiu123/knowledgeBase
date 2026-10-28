@@ -1,6 +1,6 @@
 # CTF 知识库
 
-一个**本机能跑**的 CTF 解题知识库：覆盖 11 个赛道、507 篇条目，支持**中文模糊检索**，并配套**本地小模型**做检索增强问答（RAG）。
+一个**本机能跑**的 CTF 解题知识库：覆盖 11 个赛道、1567 篇条目，支持**中文模糊检索**，并配套**本地小模型**做检索增强问答（RAG）。
 
 针对本机硬件（RTX 3050 Ti Laptop **4GB 显存** / i5-12500H / 31GB 内存）专门调优。
 
@@ -129,7 +129,7 @@ knowledgeBase/
 │       ├── fusion.py       # RRF 融合
 │       ├── llm.py          # Ollama / llama.cpp 双后端
 │       └── rag.py          # 检索增强问答
-└── tests/                  # 41 个单元/集成测试
+└── tests/                  # 107 个单元/集成测试
 ```
 
 ---
@@ -327,7 +327,7 @@ python tools\agent\start.py      # 自动启动并打开 http://127.0.0.1:8765
 ## 测试
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest tests -q   # 82 个测试
+.\.venv\Scripts\python.exe -m pytest tests -q   # 107 个测试
 python tools\kbcheck.py                          # 知识库质量（当前 241 篇，0 问题）
 python tools\model_check.py                      # 模型与环境
 ```

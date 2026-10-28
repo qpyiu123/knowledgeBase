@@ -38,5 +38,7 @@ keep_alive = "30m"
 ollama_num_gpu = 18
 
 [ollama]
+# server.py 与 kb.llm 都从这里读；AGENT_OLLAMA / AGENT_MODEL 仅做显式覆盖。
+# 本机实际 manifest 名为 qwen2.5-coder-7b:local，server 会按 /api/tags 自动解析。
 host = "http://127.0.0.1:11434"
 model = "qwen2.5-coder-7b"

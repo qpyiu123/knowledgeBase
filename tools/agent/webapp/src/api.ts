@@ -1,8 +1,22 @@
 import type { Health, SearchResp, Stats } from './types';
+import { readAskStream, type AskHandlers } from './lib/sse';
+
+export type { AskHandlers } from './lib/sse';
+
+async function errorMessage(r: Response): Promise<string> {
+  let detail = '';
+  try {
+    const j = (await r.json()) as { error?: string };
+    if (j && typeof j.error === 'string') detail = j.error;
+  } catch {
+    // 非 JSON 错误体，保留 HTTP 状态。
+  }
+  return detail ? `${detail}（HTTP ${r.status}）` : `HTTP ${r.status}`;
+}
 
 async function getJSON<T>(url: string, init?: RequestInit): Promise<T> {
   const r = await fetch(url, init);
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  if (!r.ok) throw new Error(await errorMessage(r));
   return (await r.json()) as T;
 }
 
@@ -21,13 +35,7 @@ export const api = {
     }),
 };
 
-export type AskHandlers = {
-  onStart?: () => void;
-  onToken: (text: string) => void;
-  onError?: (message: string) => void;
-};
-
-/** POST /api/ask，按 SSE 逐段回调。 */
+/** POST /api/ask，按 SSE 契约逐段回调 tok / err / done。 */
 export async function ask(
   q: string,
   paths: string[],
@@ -40,32 +48,15 @@ export async function ask(
     body: JSON.stringify({ q, paths }),
     signal,
   });
-  if (!r.ok || !r.body) throw new Error(`HTTP ${r.status}`);
+  if (!r.ok || !r.body) throw new Error(await errorMessage(r));
 
   handlers.onStart?.();
-  const reader = r.body.getReader();
-  const dec = new TextDecoder();
-  let buf = '';
-
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buf += dec.decode(value, { stream: true });
-    let nl: number;
-    while ((nl = buf.indexOf('\n\n')) >= 0) {
-      const chunk = buf.slice(0, nl);
-      buf = buf.slice(nl + 2);
-      for (const line of chunk.split('\n')) {
-        if (!line.startsWith('data: ')) continue;
-        let ev: { t?: string; v?: string; err?: string };
-        try {
-          ev = JSON.parse(line.slice(6));
-        } catch {
-          continue;
-        }
-        if (ev.t === 'tok' && typeof ev.v === 'string') handlers.onToken(ev.v);
-        else if (ev.err) handlers.onError?.(ev.err);
-      }
+  const { tokens, terminal } = await readAskStream(r.body, handlers, signal);
+  if (!terminal) {
+    if (tokens === 0) {
+      handlers.onError?.('模型没有返回内容。确认本地模型已启动。');
+    } else {
+      handlers.onDone?.('完成');
     }
   }
 }

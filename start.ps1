@@ -211,7 +211,8 @@ if ($webPid) {
 } else {
     $env:AGENT_PORT = "$Port"
     $env:AGENT_HOST = '127.0.0.1'
-    if (-not $env:AGENT_MODEL) { $env:AGENT_MODEL = 'qwen3-4b-local:latest' }
+    # 模型/host/context 由 config.toml 决定；这里不再硬编码模型名。
+    # AGENT_MODEL / AGENT_OLLAMA 只有在用户显式设置时才覆盖配置。
     if ($CpuOnly) { $env:AGENT_OLLAMA = "http://127.0.0.1:$OllamaPort" }
 
     Push-Location $Root

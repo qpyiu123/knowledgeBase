@@ -82,8 +82,10 @@ tools/agent/
 
 ### 问模型（自由提问）
 - 先检索 3 篇最相关资料，再交给本地模型
-- **SSE 流式渲染**，边生成边显示，带已用时间
-- 中途可「停止等待」（AbortController）
+- **SSE 流式渲染**，边生成边显示，带已用时间和完成信息（`done.info`）
+- 中途可「停止接收」（AbortController）：只关闭本地接收，
+  不谎称后端模型已停止运算
+- 后端 `err` 事件与空响应都会显示可见提示
 - 完成后列出引用资料，可点开原文
 - 回答可一键复制
 
@@ -126,11 +128,21 @@ def do_GET(self):
 
 | 接口 | 说明 |
 |---|---|
-| `GET /api/health` | 模型状态 + 文档数 |
+| `GET /api/health` | `model_ok` / `index_ok` 分开返回，`docs` 来自索引统计 |
 | `GET /api/stats` | 文档/分块/方向计数 |
-| `POST /api/search` | `{q, top_k, category}` |
-| `GET /api/doc?path=` | 单篇正文 |
-| `POST /api/ask` | `{q, paths}` → SSE |
+| `POST /api/search` | `{q, top_k, category}`；`top_k` 限 1..50 |
+| `GET /api/doc?path=` | 单篇正文；只允许 `kb/` 内 `.md` |
+| `POST /api/ask` | `{q, paths}` → SSE；串行，忙碌返回 429 |
+
+SSE 契约：
+
+```
+{"t":"tok","v":"..."}     增量正文
+{"t":"err","v":"..."}     可展示错误
+{"t":"done","info":"..."} 正常结束
+```
+
+模型/host/context 从 `config.toml` 读取；`AGENT_*` 环境变量只做显式覆盖。
 
 ---
 
@@ -138,14 +150,19 @@ def do_GET(self):
 
 ```powershell
 cd F:\CTFfiles\knowledgeBase\tools\agent\webapp
-npm install          # 首次
+npm install --cache ../../../.npm-cache   # 首次；缓存放项目内 F 盘
 npm run dev          # 热更新，:5173，/api 代理到 :8765
 npm run build        # 产出 dist/
-npm run check        # 仅类型检查
+npm run check        # 仅类型检查（tsconfig.app + tsconfig.node）
+npm test             # vitest：SSE 契约 + SearchPage 组件测试
 ```
 
 改完 `src/` 后必须 `npm run build`，Python 服务才会看到变化
 （它托管的是 `dist/`，不是源码）。
+
+`tsconfig.app.json` 是浏览器配置，不引入 Node 类型（防止 `setImmediate` 这类
+Node 全局被误认为合法）；`vite.config.ts` / `vitest.config.ts` 由
+`tsconfig.node.json` 单独检查。
 
 ---
 
@@ -162,6 +179,8 @@ npm run check        # 仅类型检查
 
 ## 已知限制
 
-1. 检索排序仍有噪音：主题文档共享通用词，非目标条目可能进前几名
-2. 4B 模型生成一次约 100 秒，慢但可用；换 7B 会更慢
-3. 首屏 JS 约 790 KB（gzip 244 KB），本地访问无感；要更快可拆包
+1. 检索排序仍有噪音：主题文档共享通用词，非目标条目可能进前几名（P1）
+2. 真实模型单次生成耗时未在本批复测；旧文档的 105 秒/4B 对比不作结论
+3. 首屏 JS 约 791 KB（gzip 245 KB），本地访问无感；要更快可拆包
+4. “停止接收”只关闭本地连接；上游 Ollama 可能短暂收尾
+5. 自动化测试全部离线 Mock，未覆盖真实模型与真实浏览器

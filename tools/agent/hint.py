@@ -134,15 +134,37 @@ def _parse(text: str) -> dict | None:
     return None
 
 
+def _ollama_defaults(host: str | None, ollama_model: str | None):
+    """模型/host 统一从 config.toml 读取，并解析成实际可用名。"""
+    cfg_host = "http://127.0.0.1:11434"
+    cfg_model = "qwen2.5-coder-7b"
+    try:
+        from kb.config import Config
+        from kb.llm import OllamaBackend
+
+        cfg = Config.load()
+        cfg_host = str(cfg.get("ollama", "host", cfg_host))
+        cfg_model = str(cfg.get("ollama", "model", cfg_model))
+        if ollama_model is None:
+            try:
+                ollama_model = OllamaBackend(cfg).resolve_model()
+            except Exception:  # noqa: BLE001
+                ollama_model = cfg_model
+    except Exception:  # noqa: BLE001
+        pass
+    return host or cfg_host, ollama_model or cfg_model
+
+
 def hint_for(path: str, question: str = "", kb=None,
-             model: str | None = None, host: str = "http://127.0.0.1:11434",
-             ollama_model: str = "qwen3-4b-local:latest") -> HintResult:
+             model: str | None = None, host: str | None = None,
+             ollama_model: str | None = None) -> HintResult:
     """对单个附件生成方向建议。
 
     kb 传入 KB 实例时会把知识库相关条目作为背景；不传也能工作。
     """
     import requests
 
+    host, ollama_model = _ollama_defaults(host, ollama_model)
     res = HintResult(path=path)
 
     ok, probe = _recon.probe_file(path)
