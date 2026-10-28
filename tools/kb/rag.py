@@ -1,0 +1,236 @@
+"""检索增强问答（RAG）。
+
+流程：查询 → FTS + 向量双路召回 → RRF 融合 → 组装上下文 → 本地模型生成。
+上下文按 token 预算裁剪，避免 4GB 显存下 KV cache 吃满。
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any
+
+from .config import Config
+from .fts import FtsIndex
+from .fusion import FusedHit, fuse_single_source, rrf_fuse
+from .llm import BaseBackend, LLMError, get_backend
+from .vectors import Embedder, VectorIndex
+
+SYSTEM_PROMPT = (
+    "你是 CTF 解题助手。用户会描述题目或贴题面特征，你要：\n"
+    "1) 先判断题目所属方向（misc/crypto/reverse/pwn/web/forensics/mobile/blockchain/hardware/osint/ai）；\n"
+    "2) 指出命中的识别信号；\n"
+    "3) 给出分步解题思路；\n"
+    "4) 给出可直接运行或略作修改即可使用的脚本/payload。\n"
+    "优先使用【知识库】中的方法。如果知识库不足以覆盖，明确说明「知识库未覆盖」，"
+    "再给出你的通用经验，并标注这是推演而非知识库结论。不要编造不存在的工具选项。\n"
+    "用中文回答，代码块标注语言。"
+)
+
+
+@dataclass
+class RagAnswer:
+    answer: str
+    hits: list[FusedHit]
+    backend: str
+    model: str
+    stats: dict[str, Any]
+
+
+class KB:
+    """统一入口：装配 FTS + 向量 + 图谱 + LLM。"""
+
+    def __init__(self, cfg: Config):
+        self.cfg = cfg
+        self.fts = FtsIndex(cfg.index_dir / "fts.db")
+        import os
+        onnx_dir = cfg.resolve(str(cfg.get("embed", "onnx_dir", "models/bge-small-zh-v1.5-onnx")))
+        self.embedder = Embedder(
+            cfg.resolve(str(cfg.get("embed", "model_dir"))),
+            query_prefix=str(cfg.get("embed", "query_prefix", "")),
+            onnx_dir=onnx_dir,
+            gguf_fallback=cfg.resolve(str(cfg.get("embed", "gguf_fallback",
+                                                   "models/gguf/bge-small-zh-v1.5-q8_0.gguf"))),
+            allow_numpy=os.environ.get("KB_ALLOW_NUMPY_EMBED") == "1",
+        )
+        self.vec = VectorIndex(cfg.index_dir / "vectors.db", self.embedder)
+        self._llm: BaseBackend | None = None
+        self._graph = None
+
+    # ---------- 图谱 ----------
+    def graph(self):
+        """惰性加载图谱；索引没建过就返回 None（检索照常工作）。"""
+        if self._graph is None:
+            try:
+                from .graph import Graph
+                p = self.cfg.index_dir / "graph.db"
+                if p.exists():
+                    self._graph = Graph(p)
+            except Exception:  # noqa: BLE001
+                self._graph = None
+        return self._graph
+
+    # ---------- 检索 ----------
+    def search(self, query: str, top_k: int | None = None, category: str | None = None,
+               mode: str = "or", expand: bool = True,
+               hops: int = 1) -> list[FusedHit]:
+        k = int(top_k or self.cfg.get("search", "top_k", 8))
+        rrf_k = int(self.cfg.get("search", "rrf_k", 60))
+        fts_hits = self.fts.search(query, top_k=k * 3, category=category, mode=mode)
+        vec_hits = self.vec.search(query, top_k=k * 3, category=category)
+        if not vec_hits:
+            base = fuse_single_source(fts_hits, k)
+        else:
+            base = rrf_fuse(fts_hits, vec_hits, k=rrf_k, top_k=k)
+        if not expand:
+            return base
+        return self._expand_hits(base, k, hops=hops)
+
+    def _expand_hits(self, hits: list[FusedHit], k: int,
+                     hops: int = 1) -> list[FusedHit]:
+        """在图上有界扩展，把关联但没被词面/向量召回的知识点补进来。
+
+        严格遵守原设计：
+        - 只有 boosting 类关系（requires / uses_tool / illustrated_by）
+          补进来的条目才获得一定名次加成；
+        - relates_to / analogous_to / differs_from 补进来的只排到尾部，
+          标成"可对照阅读"，不参与主排名；
+        - 扩展受跳数/节点/扇出/耗时预算约束，截断会体现在 note 里。
+        """
+        g = self.graph()
+        if g is None or not hits:
+            return hits
+        seeds = [h.doc_path for h in hits[:4]]
+        try:
+            exp = g.expand(seeds, hops=hops, max_nodes=12, max_fanout=4,
+                           budget_ms=120)
+        except Exception:  # noqa: BLE001
+            return hits
+        if not exp.nodes:
+            return hits
+
+        have = {h.doc_path for h in hits}
+        # 图谱补入的条目不提升到前 k，只补在 k 之后作为"关联阅读"，
+        # 这样主结果的可信度不受影响。
+        extra: list[FusedHit] = []
+        for n in exp.nodes:
+            if n.key in have:
+                continue
+            have.add(n.key)
+            try:
+                path = self.cfg.kb_dir / n.key
+                if not path.exists():
+                    continue
+                fh = FusedHit(doc_path=n.key, title=n.title or n.key,
+                              category=n.category, score=0.0,
+                              sources=[f"graph:{n.via}"], best_text="")
+            except Exception:  # noqa: BLE001
+                continue
+            # 标记用途：boosting 的可以靠前，reading 的只做对照
+            setattr(fh, "graph_via", n.via)
+            setattr(fh, "graph_hop", n.hop)
+            setattr(fh, "graph_boost", n.via in
+                    ("requires", "uses_tool", "illustrated_by"))
+            extra.append(fh)
+
+        if not extra:
+            return hits
+        # boosting 插到结果中间偏后，reading 放最后
+        boost = [h for h in extra if getattr(h, "graph_boost", False)]
+        read = [h for h in extra if not getattr(h, "graph_boost", False)]
+        merged = hits[:k] + boost + read
+        return merged
+
+    def expand(self, seeds: list[str], hops: int = 1) -> dict:
+        """对外暴露的图扩展接口，方便调试。"""
+        g = self.graph()
+        if g is None:
+            return {"note": "图谱未建立"}
+        return g.expand(seeds, hops=hops).to_dict()
+
+    # ---------- 上下文组装 ----------
+    def build_context(self, hits: list[FusedHit], char_budget: int = 7000) -> str:
+        blocks: list[str] = []
+        used = 0
+        for i, h in enumerate(hits, 1):
+            body = ""
+            f = self.cfg.kb_dir / h.doc_path
+            if f.exists():
+                body = f.read_text(encoding="utf-8", errors="replace")
+                # 去掉 front-matter，省 token
+                if body.startswith("---"):
+                    end = body.find("\n---", 4)
+                    if end != -1:
+                        body = body[end + 4:]
+            elif h.best_text:
+                body = h.best_text
+            excerpt = _trim_md(body.strip(), 1600)
+            tag = ""
+            gv = getattr(h, "graph_via", None)
+            if gv:
+                kind = "关联" if getattr(h, "graph_boost", False) else "对照"
+                tag = f"  [图谱{kind}: {gv}]"
+            block = f"[{i}] {h.title}  (路径: {h.doc_path}){tag}\n{excerpt}"
+            if used + len(block) > char_budget:
+                remain = char_budget - used
+                if remain < 400:
+                    break
+                block = block[:remain]
+            blocks.append(block)
+            used += len(block)
+        return "\n\n---\n\n".join(blocks)
+
+    def prompt(self, question: str, hits: list[FusedHit], char_budget: int = 7000) -> list[dict[str, str]]:
+        ctx = self.build_context(hits, char_budget)
+        user = (
+            f"【知识库】（共 {len(hits)} 条，按相关度排序）\n{ctx}\n\n"
+            f"【题目 / 问题】\n{question}\n\n"
+            "请给出：方向判断 → 识别信号 → 解题步骤 → 可运行脚本。"
+        )
+        return [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user},
+        ]
+
+    # ---------- 生成 ----------
+    def backend(self, force: str | None = None) -> BaseBackend | None:
+        if force is not None or self._llm is None:
+            try:
+                self._llm = get_backend(self.cfg, force)
+            except LLMError:
+                raise
+        return self._llm
+
+    def ask(self, question: str, top_k: int | None = None, category: str | None = None,
+            force_backend: str | None = None, max_tokens: int | None = None) -> RagAnswer:
+        hits = self.search(question, top_k=top_k, category=category)
+        be = self.backend(force_backend)
+        if be is None:
+            return RagAnswer(
+                answer="", hits=hits, backend="none", model="",
+                stats={"note": "未启用模型，仅返回检索结果"},
+            )
+        msgs = self.prompt(question, hits)
+        res = be.chat(msgs, max_tokens=max_tokens)
+        return RagAnswer(
+            answer=res.text, hits=hits, backend=res.backend, model=res.model,
+            stats={
+                "prompt_tokens": res.prompt_tokens,
+                "completion_tokens": res.completion_tokens,
+                "seconds": res.seconds,
+                "tokens_per_sec": res.tokens_per_sec,
+            },
+        )
+
+    def ask_stream(self, question: str, top_k: int | None = None,
+                   category: str | None = None, force_backend: str | None = None):
+        hits = self.search(question, top_k=top_k, category=category)
+        be = self.backend(force_backend)
+        if be is None:
+            raise LLMError("未启用模型后端")
+        msgs = self.prompt(question, hits)
+        return hits, be.stream(msgs)
+
+
+def _trim_md(text: str, limit: int) -> str:
+    if len(text) <= limit:
+        return text
+    return text[:limit].rsplit("\n", 1)[0] + "\n...(截断)"

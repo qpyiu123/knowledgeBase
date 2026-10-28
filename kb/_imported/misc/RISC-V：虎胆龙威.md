@@ -1,0 +1,119 @@
+---
+title: "RISC-V：虎胆龙威"
+category: misc
+tags: [Hackergame 2024, wp prose]
+signals: [RISC-V：虎胆龙威]
+difficulty: medium
+source: "https://github.com/USTC-Hackergame/hackergame2024-writeups/blob/deb6fa3f906e2d0e905f5de5b12757d89f54f812/official/RISC-V%EF%BC%9A%E8%99%8E%E8%83%86%E9%BE%99%E5%A8%81/README.md"
+tools: []
+origin: imported
+origin_id: official-1606fb7bd94fc61cf5053f
+origin_sha256: 967167d28314eab8957324da0511fb067c0ac0290902583a2e272aecff106b93
+origin_event: "Hackergame 2024"
+origin_kind: wp_prose
+license: "NOASSERTION"
+updated: 2026-10-23
+---
+# Hackergame 2024 / RISC-V：虎胆龙威
+
+> 来源：Hackergame 2024  |  类型：wp_prose  |  https://github.com/USTC-Hackergame/hackergame2024-writeups/blob/deb6fa3f906e2d0e905f5de5b12757d89f54f812/official/RISC-V%EF%BC%9A%E8%99%8E%E8%83%86%E9%BE%99%E5%A8%81/README.md
+
+# RISC-V：虎胆龙威
+
+题解作者：[Peter Gu](https://github.com/regymm)
+
+出题人、验题人、文案设计等：见 [Hackergame 2024 幕后工作人员](../../credits.pdf)。
+
+## 题目描述
+
+- 题目分类：binary
+
+- 题目分值：线程故障 / Fault in the Hart（200）+ 警告：易碎 / Fragility（200）+ 四分之三 / Three of the Four（250）
+
+您为 RISC-V 处理器编写过代码吗？如果没有，这将是学习的绝好机会！
+
+任务很简单，你只需要在仿真硬件上对 16 个数进行排序。
+
+该硬件由一个 PicoRV32（支持 RV32I 指令集）核心和 4 KB 内存组成，内存地址从 0x000 至 0xffc。你的固件将会被加载进入此内存并运行。开始运行之前，16 个随机 32 位正整数将被放至 0xf80 到 0xfbc 的地址处。你有充足的时间（1000000 个时钟周期）将这些数排序并写入 0xfc0 至 0xffc。
+
+我们甚至提供一份示例程序，请见压缩包中的 `riscv_straight.S`。
+
+只是，现实生活中的硬件通常并不尽如人意……
+
+#### 线程故障 / Fault in the Hart
+
+CPU 也可能有 bug，严重程度从浮点数计算错误到越权读取数据不等。对于现代处理器而言，大部分的 bug 可以靠 BIOS 微码等方式修复——如果不能，那把出问题的功能禁用掉也并非不是合理的选择。如果 bug 严重到即使这样都无法修复，那这批处理器多半需要被召回了。但今天，在新产品发布会的前一天，摆在你面前的是一批特殊的处理器：它们的算数逻辑单元（ALU）只能做加法。这早已脱离了 bug 的范畴，但你别无选择。Failure is not an option. 如果新产品的固件不能正确运行……你将无法想象即将到来的明天。
+
+#### 警告：易碎 / Fragility
+
+有一种存储器，每个地址处的值只能被读取一次。你并不关心为什么这种扭曲的设备会被造出来，你只是好奇，是什么人会想在这种设备里存放指令代码，并进行 Execution in Place，还适配了一整套开发测试环境和工具链。
+只有在像这样的、并不多见的时刻里，你才会感觉到社区的精力原来是如此的充沛。
+
+#### 四分之三 / Three of the Four
+
+能定制自己的 CPU 并不见得完全是一件好事。有着过多空闲时间、开发板、和社交帐号的好事之徒们总能想尽办法让根本不该被写出来的代码进入上游，甚至成为标准的一部分。
+如果你的主存由 4 片 RAM 芯片组成，现在有一片坏掉了，你要怎么做呢？应该没有人会想要放弃每条 32 位指令或数据中 8 位的内容，并期望指令集可以鲁棒到看到每条指令的四分之三就知道该做什么。
+但这种骇人听闻的事情就是发生在了你的眼前。而你被迫为其编写汇编代码。
+
+
+**提示**：开始判题后，如下警告是正常的，请忽略：`WARNING: testbench.v:150: $readmemh(/tmp/firmware.hex): Not enough words in the file for the requested range [0:1023].`
+判题需要一些时间，请耐心等待。如果运行中遇到非法指令等导致 CPU 进入 TRAP，会判为失败（第二问除外）。
+
+**提示**：可以使用 `-D DEBUG` 和 `-D VERBOSE` 参数打印出 CPU 和存储器的调试信息。将示例代码转换成题目输入十六进制固件的示例指令： `riscv64-elf-as -march=rv32i -mabi=ilp32 riscv_straight.S -o a.out && riscv64-elf-objcopy -O binary a.out a.bin && python3 makehex.py a.bin > firmware.hex`。这三个挑战难度可能因人而异，并不需要或推荐按顺序完成。
+
+**[下载题目源代码](files/riscv_die_hard.zip)**
+
+你可以通过 `nc 202.38.93.141 10025` 来连接，或者点击下面的「打开/下载题目」按钮通过网页终端与远程交互。
+
+> 如果你不知道 `nc` 是什么，或者在使用上面的命令时遇到了困难，可以参考我们编写的 [萌新入门手册：如何使用 nc/ncat？](https://lug.ustc.edu.cn/planet/2019/09/how-to-use-nc/)
+
+[打开/下载题目](http://202.38.93.141:10026/?token={token})
+
+## 题解
+
+### 背景
+
+背景是在 RISC-V baremetal 软核开发的正常流程，计算机组成原理的课程也会涉猎这部分内容。为了制作软核需要的 bootrom 代码，可以手写汇编，也可以进行 C 和汇编混合开发来简化流程。
+
+[一个 MIPS 的例子 ~~17，18 级的课程还在用 MIPS~~](https://github.com/libreliu/COD-Resources-2017/blob/master/libreliu/CompDesign/lab6/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86_Lab6.md#mips-c--%E6%B1%87%E7%BC%96%E6%B7%B7%E5%90%88%E7%BC%96%E7%A8%8B)
+
+[一个 RISC-V 的例子，实现了 framebuffer VT100 终端](https://github.com/regymm/quasiSoC/tree/master/firmware/vt100)
+
+这里使用 iverilog 进行了仿真，没有额外外设，只有内存。不习惯仿真的小伙伴可以感受一下进行仿真是如此的容易（x
+
+### 线程故障
+
+这一问可能是三问里唯一需要阅读一下 Verilog 代码的，可以看到 picorv32.v 中 CPU 执行阶段，两个操作数只能相加。这导致分支跳转指令无法使用，除了和 0 比较的 bnez。其他 lw，sw，j 等指令均正常。la 因为被实现成里 lui 再加一个负数，所以也可以直接使用。
+
+即使这样，我们也没办法对两个数相减进而和 0 比较（取负数相加或许可以）。想到的一个办法是用移位指令：在被“禁用”的 ALU 代码正下方，就是没有受影响的 sll，srl，slli，srli，sra，srai 移位指令。可以用它们将 32 为数的每一位逐一提出，判断是否为 0，进而比较数的大小。这个方法每次比较一位，速度非常慢，需要的执行时间也是三个问里最长的。
+
+[答案汇编文件](riscv_fault_in_the_hart.S)
+
+### 警告：易碎
+
+这一问难度和第一问差不多。每个内存地址只能访问一次，于是需要向前跳转/重复执行的循环结构就无法使用了（因此，这一问没有 TRAP 检查，因为无法设置死循环），存在内存中的待排序数也只能读取一次。
+
+但我们有 32 个寄存器，直接把这 16 个数全部读取到寄存器中，再手动顺序进行任何排序算法的全部流程（如果两个数不需要交换，向下跳转略过一段代码是没问题的），最后写入目标内存地址，就结束了，payload 写出来很好看。
+
+[答案汇编文件](riscv_fragility.S)
+
+本来出题的时候想要 32 个数排序，出这一问的时候决定，还是 16 个数吧，正好放在寄存器里。
+
+### 四分之三
+
+这一问难度较大。
+
+所有的指令直接掏空了四分之一，看 [RISC-V 指令列表](https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf)，23:16 的 8 位全部绑定到 0 的情况下，指令受到极大的影响：
+
+- 对于 I-type（比如 lw，addi），立即数低位受损，无法直接读取非 0x10 对齐的数据
+- 对于所有需要源寄存器的指令，rs1 只能是 x1（或 x0），rs2 只能是 x16（或 x0），别无任何选择，也就是我们只有 2 个寄存器可以使用。
+- 对于 U-type，立即数高位受损（没有太大影响）
+- 对于 J-type，立即数很多位受损（不用 jal 就好了）
+
+第一点可能是最难的部分，为了读取 0x4，0x8，0xc 处的指令，我想到的办法是使用 auipc（U-type）加载当前指令计数器（PC）的地址，然后再加法凑出需要读取的地址。可以通过加入 nop 指令，控制 PC 的值。可以通过 objdump 反汇编查看每条指令的地址，类似 la 的汇编指令，翻译成机器指令时会变成两条或多条。
+
+因为凑这个地址要花费很多条指令，而且因为 nop 的数量不同，不方便循环读出，可以直接一次读取，之后存在 0x10 对齐的方便的地址处，这不会浪费太多内存。
+
+即使这样，像第二问一样手动排序很可能超出内存大小*（第二问中，只需要三条指令就可以交换两个寄存器中的数，但这里要只用两个寄存器来交换两个内存地址中的值，要将近 20 条指令了），所以可以写一个选择或者冒泡排序，循环执行，而循环变量等统统放在方便读取的内存地址中。
+
+[答案汇编文件](riscv_three_of_the_four.S)

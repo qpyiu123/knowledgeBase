@@ -1,0 +1,37 @@
+# ---- 大目录 / 可重建产物（保留在本地，不提交）----
+models/
+index/
+temp_newData/
+work/
+_happy/
+logs/
+tools/agent/webapp/dist/
+tools/agent/webapp/node_modules/
+.npm-cache/
+.vite/
+.cache/
+*.tsbuildinfo
+
+# ---- Python ----
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ---- 本地日志 / 缓存 / 临时脚本 ----
+*.log
+.DS_Store
+Thumbs.db
+/_*.py
+/_*.js
+
+# ---- 密钥 / 本地环境（绝不提交）----
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.toml

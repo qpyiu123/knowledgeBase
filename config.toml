@@ -1,0 +1,42 @@
+[kb]
+root = "."
+kb_dir = "kb"
+index_dir = "index"
+models_dir = "models"
+
+[search]
+top_k = 8
+rrf_k = 60
+chunk_chars = 900
+chunk_overlap = 120
+
+[embed]
+model_dir = "models/bge-small-zh-v1.5"
+model_id = "BAAI/bge-small-zh-v1.5"
+# 实际使用 ONNX 导出（onnxruntime + tokenizers，零 torch，约 1.3 ms/条）
+onnx_dir = "models/bge-small-zh-v1.5-onnx"
+gguf_fallback = "models/gguf/bge-small-zh-v1.5-q8_0.gguf"
+query_prefix = "为这个句子生成表示以用于检索相关文章："
+batch_size = 32
+
+[llm]
+# ollama 能用上 3050Ti（16~18 tok/s）；llama_cpp 的 pip wheel 是 CPU-only（9.6 tok/s）
+backend = "ollama"
+gguf_path = "models/gguf/qwen2.5-coder-7b-instruct-q4_k_m.gguf"
+chat_format = "chatml"
+n_ctx = 8192
+n_gpu_layers = 0
+kv_cache_type = "q8_0"
+n_threads = 8
+n_batch = 256
+temperature = 0.2
+max_tokens = 1200
+timeout = 300
+keep_alive = "30m"
+# 独占显存时的最优值：18 层卸载 + 8192 上下文 = 19.0 tok/s（显存 3846/4096 MB）
+# 若有其它程序抢显存，降到 16（17.8 tok/s）或 14 更稳
+ollama_num_gpu = 18
+
+[ollama]
+host = "http://127.0.0.1:11434"
+model = "qwen2.5-coder-7b"

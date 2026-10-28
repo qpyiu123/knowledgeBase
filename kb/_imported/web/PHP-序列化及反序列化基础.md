@@ -1,0 +1,883 @@
+---
+title: "PHP 序列化及反序列化基础"
+category: web
+tags: [licensed chinese reference]
+signals: [PHP 序列化及反序列化基础, PHP]
+difficulty: medium
+source: "https://github.com/ProbiusOfficial/Hello-CTF/blob/8e9d6396a0d1ccc1f606810d575d1abb3dd567de/docs/hc-web/php_unser.md"
+tools: []
+origin: imported
+origin_id: helloctf-279ee245603bf0
+origin_sha256: f76494ce2552a49b09942b14500a8e935d31dea8f8ca4aebd01e5ed8d4d8731f
+origin_event: ""
+origin_kind: licensed_chinese_reference
+license: "CC-BY-SA-4.0"
+updated: 2026-10-23
+---
+# PHP 序列化及反序列化基础
+
+> 来源：https://github.com/ProbiusOfficial/Hello-CTF/blob/8e9d6396a0d1ccc1f606810d575d1abb3dd567de/docs/hc-web/php_unser.md
+
+---
+comments: true
+---
+
+# PHP 序列化及反序列化基础
+
+### 介绍
+
+标题有说道，这两种数据处理方式， 序列化 和 反序列化。  
+
+- **序列化** 是将 PHP 对象转换为字符串的过程，可以使用 `serialize()` 函数来实现。该函数将对象的状态以及它的类名和属性值编码为一个字符串。序列化后的字符串可以存储在文件中，存储在数据库中，或者通过网络传输到其他地方。
+- **反序列化** 是将序列化后的字符串转换回 PHP 对象的过程，可以使用 `unserialize()` 函数来实现。该函数会将序列化的字符串解码，并将其转换回原始的 PHP 对象。
+- 序列化的目的是方便数据的存储，在PHP中，他们常被用到缓存、session、cookie等地方。
+
+下面我们从数组的反序列化开始 一步一步讲解。
+
+### 数组的反序列化
+
+
+上面对数组的反序列化会输出：
+
+
+在上面反序列化中的字符中，每个部分代表不同的属性：
+
+〔原图省略〕
+
+以此类推ww
+
+### **普通对象的反序列化**
+
+我们先看一个简单的对象示例：
+
+
+该对象允许使用下面的语法创建：
+
+
+下面我们对其进行序列化，并且输出出来：
+
+
+可以得到下面的输出：
+
+
+〔原图省略〕
+
+此时我们如果采用数组为姓名变量：
+
+
+则再次运行，输出就变成了：
+
+
+〔原图省略〕
+
+其实拆分开来没那么难理解。
+
+然后我们针对上面的代码，添加点类中的其他属性，如：`保护变量` `私有变量` `自定义函数`
+
+
+其输出为：  
+
+
+为了方便理解，我们这样拆分一下：
+
+
+观察不同类型变量名的字符长度标识，你会发现长度和你看到的好像有些不一样，那是因为在 `protected` 和 `private`类型的变量中都加入了不可见字符：
+
+如果是 `protected` 变量，则会在变量名前加上`\x00*\x00`
+
+如果是 `private` 变量，则会在变量名前加上`\x00类名`
+
+或许下面控制台的输出比起上面不可见字符变成了类似"` `"空格的字符更直观（虽然也直观不到哪里去。
+
+〔原图省略〕
+
+所以一般我们在输出的时候都会先编码后输出，以免遇到保护和私有类序列化后不可见字符丢失的问题。
+
+
+`echo  urlencode($serializedData)` :
+
+
+### **自定义类的反序列化**
+
+如果我们把上面的类改成这样：
+
+
+在User类中，通过 `class User implements Serializable` 中的 `Serializable` 接口，我们可以定义`serialize()` 和 `unserialize()` 两个方法，实现控制类实例在序列化和反序列化过程中的行为。
+
+这两个方法分别负责将类实例的属性序列化为字符串和从字符串中还原属性。
+
+当我们使用全局的 `serialize()` 和 `unserialize()` 函数时，这些方法会自动调用，从而让我们更好地控制序列化和反序列化过程。这也是该类型的类叫做 "CustomObject"的原因。
+
+当我们运行上面的程序时，控制台输出如下：
+
+
+其格式大致为：`C:<className length>:"<class name>":<data length>:{<data>}`
+
+为了方便理解，我们这样同样拆分一下：
+
+〔原图省略〕
+
+### 其他标识
+
+除了上面常见的几个序列化字母标识外，还有其他标识,这里我们一起总结一下:
+
+- a:array 数组
+
+
+- b:boolean bool值
+
+
+- C:custom object 自定义对象序列化
+
+  使用 Serializable 接口定义了序列化和反序列化方法的类
+
+
+- d:double 小数
+
+
+- i:integer 整数
+
+
+- o:commonObject 对象
+
+
+- O:Object 对象
+
+
+- r:reference 对象引用 && R:pointer reference 指针引用
+
+
+  控制台输出：
+
+
+  〔原图省略〕
+
+  此外，引用对象的属性值取决于声明顺序。
+
+
+  
+
+- s:string 字符串
+
+
+- S:encoded string
+
+
+- N:null NULL值
+
+
+### 魔术方法
+
+在 PHP 的序列化中，魔术方法（Magic Methods）是一组特殊的方法，这些方法以双下划线（`__`）作为前缀，可以在特定的序列化阶段触发从而使开发者能够进一步的控制 序列化 / 反序列化 的过程。
+
+你可以在PHP官方文档中查找到对应魔术方法的定义和使用方法：[PHP: 魔术方法 - Manual](https://www.php.net/manual/zh/language.oop5.magic.php)
+
+一般在题目中常见的几个方法如下：
+
+
+一份比较全面的表格：
+
+| magicMethods | attribute                                                    |
+| ------------ | :----------------------------------------------------------- |
+| __construct  | 当一个对象被创建时自动调用这个方法，可以用来初始化对象的属性。 |
+| __destruct   | 当一个对象被销毁时自动调用这个方法，可以用来释放对象占用的资源。 |
+| __call       | 在对象中调用一个不存在的方法时自动调用这个方法，可以用来实现动态方法调用。 |
+| __callStatic | 在静态上下文中调用一个不存在的方法时自动调用这个方法，可以用来实现动态静态方法调用。 |
+| __get        | 当一个对象的属性被读取时自动调用这个方法，可以用来实现属性的访问控制。 |
+| __set        | 当一个对象的属性被设置时自动调用这个方法，可以用来实现属性的访问控制。 |
+| __isset      | 当使用 isset() 或 empty() 测试一个对象的属性时自动调用这个方法，可以用来实现属性的访问控制。 |
+| __unset      | 当使用 unset() 删除一个对象的属性时自动调用这个方法，可以用来实现属性的访问控制。 |
+| __toString   | 当一个对象被转换为字符串时自动调用这个方法，可以用来实现对象的字符串表示。 |
+| __invoke     | 当一个对象被作为函数调用时自动调用这个方法，可以用来实现对象的可调用性。 |
+| __set_state  | 当使用 var_export() 导出一个对象时自动调用这个方法，可以用来实现对象的序列化和反序列化。 |
+| __clone      | 当一个对象被克隆时自动调用这个方法，可以用来实现对象的克隆。 |
+| __debugInfo  | 当使用 var_dump() 或 print_r() 输出一个对象时自动调用这个方法，可以用来控制对象的调试信息输出。 |
+| __sleep      | 在对象被序列化之前自动调用这个方法，可以用来控制哪些属性被序列化。 |
+| __wakeup     | 在对象被反序列化之后自动调用这个方法，可以用来重新初始化对象的属性。 |
+
+PHP官方文档已经很详细了，这里不再赘述，不一定需要学会所有的函数，除开常见的，其他的在遇到的时候查阅即可。
+
+### 对魔术方法的一些补充
+
+探老师写的反序列化方法已经很详细了，这里简单对一些方法进行补充。
+
+#### __wakeup()
+
+> 当使用unserialize时被调用，可用于做些对象的初始化操作（unserialize触发）
+
+继续修改上面的代码，我们添加一个 `__wakeup()` 方法
+
+
+如果我们没有对 `__construct `中的 `$oneFive` 变量做过滤的话，`unserialize`在执行完后时会自动调用`__wakeup()`的，所以`__wakeup()`一般在赛场上做过滤（可以绕过），实际开发应该用于对象反序列化后对其状态进行恢复
+
+〔原图省略〕
+
+接下来我们在`__wakeup()`里加入一些过滤方法，来看看怎么利用`__wakeup()`函数失效（[CVE-2016-7124](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-7124)）来绕过这个函数
+
+
+将序列化后的数据的参数数量+1即可
+
+〔原图省略〕
+
+加了一后，正常运行
+
+〔原图省略〕
+
+#### __sleep()
+
+> serialize() 函数会检查类中是否存在一个魔术方法 __sleep()。如果存在，该方法会先被调用，然后才执行序列化操作。（serialize）
+>
+> 注意：__sleep()只能返回数组
+
+
+很好理解
+
+#### __destruct()
+
+> __destruct 函数会在到某个对象的所有引用都被删除或者当对象被显式销毁时执行
+
+
+很好理解
+
+〔原图省略〕
+
+#### __toString()
+
+> 方法用于一个类被当成字符串时应怎样回应。例如 `echo $obj;` 应该显示些什么。
+
+很好理解
+
+
+〔原图省略〕
+
+#### __invoke()
+
+> 当尝试以调用函数的方式调用一个对象时，[__invoke()](https://www.php.net/manual/zh/language.oop5.magic.php#object.invoke) 方法会被自动调用。
+
+
+非常好理解👍
+
+〔原图省略〕
+
+#### __construct()
+
+> PHP 允许开发者在一个类中定义一个方法作为 **构造函数**（__construct）。具有构造函数的类会在每次创建新对象时先调用此方法，所以非常适合在使用对象之前做一些初始化工作
+
+
+很好理解，他将输出
+
+
+#### __destruct()
+
+> PHP 有 **析构函数**（__destruct）的概念，这类似于其它面向对象的语言，如 C++。**析构函数会在到某个对象的所有引用都被删除或者当对象被显式销毁时执行。**
+
+
+很好理解，这将输出
+
+
+#### __call()和__callStatic()
+
+> 在对象中调用一个不可访问方法时，[__call()](https://www.php.net/manual/zh/language.oop5.overloading.php#object.call) 会被调用。
+>
+> 在静态上下文中调用一个不可访问方法时，[__callStatic()](https://www.php.net/manual/zh/language.oop5.overloading.php#object.callstatic) 会被调用。
+
+很好理解
+
+
+非常好理解，爱来自我❤
+
+#### 属性重载
+
+- 在给不可访问（protected 或 private）或不存在的属性赋值时，[__set()](https://www.php.net/manual/zh/language.oop5.overloading.php#object.set) 会被调用。
+- 读取不可访问（protected 或 private）或不存在的属性的值时，[__get()](https://www.php.net/manual/zh/language.oop5.overloading.php#object.get) 会被调用。
+- 当对不可访问（protected 或 private）或不存在的属性调用 [isset()](https://www.php.net/manual/zh/function.isset.php) 或 [empty()](https://www.php.net/manual/zh/function.empty.php) 时，[__isset()](https://www.php.net/manual/zh/language.oop5.overloading.php#object.isset) 会被调用。
+- 当对不可访问（protected 或 private）或不存在的属性调用 [unset()](https://www.php.net/manual/zh/function.unset.php) 时，[__unset()](https://www.php.net/manual/zh/language.oop5.overloading.php#object.unset) 会被调用。
+
+这一块没什么好说的，但在POP链反序列化里会比较常见，建议自己到官网看看。
+
+[PHP: 重载 - Manual](https://www.php.net/manual/zh/language.oop5.overloading.php#object.set)
+
+## 实战
+
+### PHP 字符串序列化
+
+
+〔原图省略〕
+
+打开网页登录界面，题目说登录不进去，尝试找找其他线索
+
+〔原图省略〕
+
+在 CSS 文件中找到注释
+
+〔原图省略〕
+
+URL 跟上参数拿到源码
+
+我们在 Cookie 的 BUGKU 参数中传入序列化后的值
+
+〔原图省略〕
+
+找个在线生成的网站即可
+
+〔原图省略〕
+
+BurpSuite 拦截抓包修改拿到 flag
+
+〔原图省略〕
+
+
+### PHP 反序列化之 __toString() 魔术方法
+
+
+〔原图省略〕
+
+打开网页给出源码
+
+〔原图省略〕
+
+
+让 `$data->username == 'ZeroZone'`，并让 `$data->password`
+
+由于 `__destruct()` 会输出 `$data->password`，如果能让 `$data->password` 为一个 `ZeroZone` 对象，并且触发 `__toString()`，就可以执行任意代码
+
+
+〔原图省略〕
+
+
+### PHP & 引用相同内存
+
+
+〔原图省略〕
+
+打开靶场给出源码
+
+
+md5 绕过很简单，科学计数法及数组绕过都可以
+
+这才来到最关键的地方，如何在序列化前让 `$this->correct === $this->input`  呢？
+
+我们创建 BUU 类后，重新给 $this->correct 赋值成 $this->input 的值
+
+在 PHP 中，`&` 表示 **引用赋值**，效果是：
+
+ 两个变量或者属性同时指向同一块内存，**任何一方变化，另一方立刻同步变化**
+
+
+〔原图省略〕
+
+
+### PHP POP 链
+
+
+〔原图省略〕
+
+
+首先传入 Year 中的 $key="happy new year"
+
+条件成立调用 firecrackers 方法
+
+但 Rabbit 中 wish 不存在，所以调用 get 魔法方法
+
+此时 $name() 对象被当成函数访问，类型实际上是 Rabbit 对象
+
+但 invoke 方法实际上是调用了 Nevv
+
+因为 check() 是个方法不存在，所以调用了 call 方法
+
+$a 和 $b 是两个 Year 对象，$c 是一个 Rabbit 对象
+
+它的构造函数接受 $b（另一个 Year 对象）作为参数
+
+这意味着 Rabbit 对象 $c 会持有 $b 对象
+
+$e 是一个 Happy 对象用于执行系统命令
+
+将 Rabbit 对象 $c 赋值给 $a->rabbit
+
+将 Nevv 对象 $d 赋值给 $b->rabbit
+
+将 Nevv 对象 $d 赋值给 $b->rabbit
+
+Year 对象的 $rabbit 属性会被赋值为 Rabbit 对象
+
+而 Rabbit 对象的 $aspiration 属性会被赋值为 Year 对象，依此类推
+
+
+拿到 flag
+
+〔原图省略〕
+
+
+### PHP 个数不等绕过__wakeup()
+
+
+〔原图省略〕
+
+打开网页给出了备份提示
+
+〔原图省略〕
+
+扫后台发现 ZIP 文件
+
+〔原图省略〕
+
+下载下来打开 index.php 拿到源码（flag.php 是假的）
+
+〔原图省略〕
+
+看到了反序列化，接下来去看 class.php
+
+
+我们需要传入 username = admin，password = 100，于是构造反序列化
+
+
+还没有结束，因为类的两个属性声明为 private，只在所声明的类中可见，在该类的子类和该类的对象实例中均不可见
+
+所以要在此基础上补上 %00 的空字符
+
+
+最后是绕过 __wakeup()
+
+当反序列化中对象属性的个数和真实的个数不等时，__wakeup() 就会被绕过，所以修改使其不相等即可
+
+
+〔原图省略〕
+
+
+### PHP 反序列化字符逃逸
+
+
+〔原图省略〕
+
+打开网页拿到源码
+
+
+首先让参数f等于 “phpinfo”，因为题目提示说这里可能会找到些东西
+
+〔原图省略〕
+
+很明显是要读取这个文件，代码里读取文件的地方在这里
+
+
+**反序列化字符串逃逸的原理：**
+
+
+首先康康反序列化结果长啥样
+
+
+那么我们如果想要读取 `d0g3_f1ag.php` 文件的内容就需要令反序列化后的
+
+
+则初步反序列化内容
+
+
+再看到 `$serialize_info = filter(serialize($_SESSION));`
+
+先经过序列化，然后在进行 `filter` 函数，也就是过滤替换操作
+
+这样的话就很有可能会造成序列化字符串逃逸的问题
+
+首先默认的序列化数据是
+
+
+这里可以控制的部分是 user 和 function 的内容
+
+于是要利用过滤，用 user 吃掉后面的，加 `;` 闭合掉前面的键值 `function`
+
+
+之后在 function 的部分便可以写入数据控制后面的内容了
+
+要吃掉的数据一共是 22 个，于是 user 的值为 phpphpphpphpphpphpflag
+
+_SESSION[function] 的值为
+
+
+这里要保证数组内的个数相等，所以要传入两个值，于是构造利用 payload
+
+
+由于 `_SESSION` 数组有 3 个值，则需要在后面补充随便一个值即可
+
+传入后 `$serialize_info` 的就为以下值
+
+
+随后再读取 `s:3:"img";s:20:"ZDBnM19mMWFnLnBocA==";`
+
+随后大括号闭合
+
+后面的 `";s:3:"img";s:20:"Z3Vlc3RfaW1nLnBuZw==";}` 值丢弃
+
+读取到 `d0g3_f1ag.php` 内容为
+
+
+再依法读取 `/d0g3_fllllllag` 即可
+
+
+〔原图省略〕
+
+
+### Python Pickle 反序列化之 subprocess
+
+
+〔原图省略〕
+
+提示了源码在 /src 目录，直接访问
+
+〔原图省略〕
+
+
+- `/ppicklee` 路由只支持 `POST` 方法。
+- 从表单中获取 `data` 字段，并进行 Base64 解码。
+- 通过 `sys.modules` 禁用 `os` 和 `sys` 模块。
+- 检查反序列化数据中是否包含黑名单中的关键字，如果包含则返回错误信息。
+- 如果数据通过检查，则尝试反序列化数据，成功返回 `success pickle`，失败返回 `fail pickle`
+
+因为题目告诉了我们 flag 在 /flag下，且其 src 路由会读取文件 app.py 内容并输出
+
+因为禁用了 os 和 sys 模块，所以我们使用另一个模块 **subprocess** 执行系统命令
+
+
+〔原图省略〕
+
+访问 src 目录拿到 flag
+
+〔原图省略〕
+
+
+### Python Pickle 反序列化之 commands
+
+
+〔原图省略〕
+
+打开网页给出提示
+
+〔原图省略〕
+
+网页太多了，用脚本去找
+
+
+〔原图省略〕
+
+找到后购买钱不够，修改前端代码的折扣
+
+〔原图省略〕
+
+购买后显示只能 admin 访问
+
+〔原图省略〕
+
+查看 Cookies 发现有 JWT
+
+〔原图省略〕
+
+使用工具破解密钥
+
+〔原图省略〕
+
+去在线网站生成 admin 的 JWT
+
+〔原图省略〕
+
+替换掉刷新网页
+
+〔原图省略〕
+
+点击后没反应，查看源代码有压缩文件
+
+〔原图省略〕
+
+下载后拿到源码
+
+
+become 参数存在 Pickle 反序列化漏洞
+
+
+替换为脚本生成的序列化代码拿到 flag
+
+〔原图省略〕
+
+
+### PHP Create_function() 反序列化
+
+
+〔原图省略〕
+
+打开网页给出了源码
+
+
+首先，反序列化不调用构造函数
+
+因为反序列化时通过读取对象的字节流来恢复对象的状态，而不是通过调用对象的构造函数来创建对象
+
+所以直接来看析构函数
+
+
+但是空的的函数不能执行，所以我们要构造一个
+
+这里要利用 `Create_function()` 函数
+
+
+`create_function` 实际上会在内部执行以下操作：
+
+1. 生成一个唯一的函数名(如 `__lambda_func`)
+2. 用给定的参数和代码体创建一个新函数
+3. 返回这个函数名以便后续调用
+
+构造序列化代码
+
+
+这样相当于
+
+
+实际创建的代码为
+
+
+得到
+
+
+需要注意因为是 `private` 属性，所以不能直接使用
+
+应该为 `\00类名\00`
+
+
+〔原图省略〕
+
+
+### PHP %00 绕过 Private
+
+
+〔原图省略〕
+
+打开网页给出了备份提示
+
+〔原图省略〕
+
+扫后台发现 ZIP 文件
+
+〔原图省略〕
+
+下载下来打开 index.php 拿到源码（flag.php 是假的）
+
+〔原图省略〕
+
+看到了反序列化，接下来去看 class.php
+
+
+我们需要传入 username = admin，password = 100，于是构造反序列化
+
+
+还没有结束，因为类的两个属性声明为 private，只在所声明的类中可见，在该类的子类和该类的对象实例中均不可见
+
+所以要在此基础上补上 `%00`
+
+
+最后是绕过 __wakeup()
+
+当反序列化中对象属性的个数和真实的个数不等时，__wakeup() 就会被绕过，所以修改使其不相等即可
+
+
+〔原图省略〕
+
+
+### PHP \00 绕过 Private
+
+
+〔原图省略〕
+
+打开网页给出了源码
+
+
+首先，反序列化不调用构造函数
+
+因为反序列化时通过读取对象的字节流来恢复对象的状态，而不是通过调用对象的构造函数来创建对象
+
+所以直接来看析构函数
+
+
+但是空的的函数不能执行，所以我们要构造一个
+
+这里要利用 `Create_function()` 函数
+
+
+`create_function` 实际上会在内部执行以下操作：
+
+1. 生成一个唯一的函数名(如 `__lambda_func`)
+2. 用给定的参数和代码体创建一个新函数
+3. 返回这个函数名以便后续调用
+
+构造序列化代码
+
+
+这样相当于
+
+
+实际创建的代码为
+
+
+得到
+
+
+需要注意因为是 `private` 属性，所以不能直接使用
+
+应该为 `\00类名\00`
+
+
+〔原图省略〕
+
+
+## 进阶利用方式
+
+前面讲的都是代码里直接调用 `unserialize()` 的场景。但实际题目里经常找不到 `unserialize()`，这时候就要用到下面三种"间接触发"的打法：phar 反序列化、session 反序列化和原生类反序列化。
+
+### phar 反序列化
+
+#### phar 是什么
+
+phar（PHP Archive）是 PHP 的一种打包格式，可以把多个 PHP 文件打成一个 `.phar` 压缩包分发，类似于 Java 的 jar 包。一个 phar 文件由四部分组成：
+
+1. **stub**：phar 的引导代码，必须以 `__HALT_COMPILER(); ?>` 结尾。前面的内容可以随意——这就是关键，我们可以把 stub 部分伪装成一张正常的图片（比如 `GIF89a` 开头）来骗过文件上传的 MIME 检测。
+2. **manifest**：存放每个文件的元数据（metadata）。这里的元数据是被 `serialize()` 序列化过的。
+3. **contents**：被打包文件的原始内容。
+4. **signature**：签名（可选）。
+
+重点在第二部分：**PHP 在解析 phar 文件时，会把 manifest 里的 metadata 反序列化**。也就是说，只要我们能控制某个 phar 文件的 metadata（把恶意对象塞进去），再让服务器用 `phar://` 协议访问这个文件，就会触发反序列化——全程不需要 `unserialize()`。
+
+#### 触发条件
+
+- 目标存在可以控制的文件（通常通过文件上传把构造好的 phar 传上去）。
+- 目标代码存在接收文件路径的函数，且参数可控，能传 `phar://` 协议。
+- `phar` 扩展开启（默认开启），且 `phar.readonly=Off`（仅生成 phar 时需要，攻击目标不需要）。
+
+能触发反序列化的不只是 `file_exists()`，几乎所有接受路径的函数都可以，常见的有：
+
+
+只要这些函数的参数里出现 `phar://` 且指向我们上传的文件，metadata 就会被反序列化，魔术方法随之触发。
+
+#### 构造 phar
+
+PHP 提供了 `Phar` 类来生成 phar 文件，配合 `setMetadata()` 写入恶意对象：
+
+
+运行后得到 `evil.phar`，把它重命名成 `evil.jpg` 再上传。因为 stub 部分是 `GIF89a` 开头，能过掉大部分基于文件头的类型检测（文件上传的绕过思路见「文件上传」章节）。
+
+注意几点：
+
+- 生成脚本要在 `php.ini` 里设置 `phar.readonly = Off`，或者用 `php -d phar.readonly=0 gen.php` 运行。
+- 类定义需要和目标站点一致（包括命名空间），否则反序列化出来的只是 `__PHP_Incomplete_Class`。
+- 如果目标对上传文件做了二次渲染（如用 GD 库 `imagecreatefromjpeg` 重新生成），phar 结构会被破坏，需要用"找一张被渲染后字节不变的图片"等进阶技巧，初学者先掌握基本场景即可。
+
+#### 例题思路
+
+看一个典型的组合题（假设题目提供源码）：
+
+
+完整解题过程：
+
+1. 审代码发现 `check.php` 里 `file_exists()` 参数完全可控，且存在 `Flag::__destruct()` 这个危险魔术方法——这是典型的 phar 反序列化入口。
+2. 本地写生成脚本，把 `Flag` 类的 `$file` 设为 `/flag`，生成 phar 并改名为 `evil.jpg`。
+3. 通过 `upload.php` 上传 `evil.jpg`，得到路径 `uploads/evil.jpg`。
+4. 访问 `check.php?path=phar://uploads/evil.jpg/test.txt`。`file_exists()` 解析 phar 时反序列化 metadata，还原出 `Flag` 对象；脚本结束时对象销毁，`__destruct()` 读取并输出 `/flag`。
+
+这类题的本质是：**文件上传负责"送货"，文件操作函数负责"点火"**，两步配合才能完成反序列化。
+
+### session 反序列化
+
+#### session 的存储与 serialize_handler
+
+PHP 的 session 默认保存在文件里（如 `/var/lib/php/sessions/sess_xxxx`），内容就是把 `$_SESSION` 序列化后的字符串。序列化方式由 `session.serialize_handler` 决定，有三种：
+
+| handler | 存储格式示例 | 说明 |
+| --- | --- | --- |
+| `php` | `name\|s:5:"admin";` | 键名和值之间用竖线 `\|` 分隔 |
+| `php_binary` | `\x04name` + `s:5:"admin";` | 键名长度用二进制字节表示 |
+| `php_serialize` | `a:1:{s:4:"name";s:5:"admin";}` | 整个数组直接 `serialize()` |
+
+漏洞出在：**写入 session 和读取 session 用的是不同的 handler**。比如一个页面用 `php_serialize` 写入，另一个页面用默认的 `php` 读取。
+
+当用 `php` handler 读取时，`\|` 之前的部分会被当成"键名"，之后的部分才会被 `unserialize()`。所以如果我们能往 session 里写入一个以 `|` 开头的序列化字符串：
+
+
+`php_serialize` 会把它整体当作一个普通字符串存进去：
+
+
+而 `php` handler 读取时，以第一个 `\|` 为分界，后面那串 `O:4:"Evil"...` 就被当成真正的序列化数据反序列化了——漏洞触发。
+
+#### 例题思路
+
+
+解题过程：
+
+1. 访问 `index.php?name=|O:4:"Evil":1:{s:3:"cmd";s:13:"system("id");";}`，session 文件里写入了带 `\|` 前缀的 payload。
+2. 访问 `flag.php`，它用 `php` handler 解析同一个 session 文件，把 `\|` 后的内容反序列化，`Evil::__destruct()` 中的 `eval()` 执行了我们的命令。
+
+如果题目把 payload 里的双引号转义了，可以改用十六进制字符串 `S:3:"\63\61\74"` 之类的写法绕过。
+
+#### session.upload_progress 配合 LFI
+
+前面的打法要求"能控制写入 session 的值"。如果没有这种接口，但存在 **文件包含** 漏洞，还有一个更通用的技巧：利用 `session.upload_progress`（PHP 5.4+ 默认开启）。
+
+原理：当 PHP 处理文件上传时，会把上传进度写进 session 文件，键名为 `upload_progress_123`（`123` 来自表单里 `PHP_SESSION_UPLOAD_PROGRESS` 字段的值），而这个字段的值是 **我们可控的**，且会被原样写进 session 文件。配合 LFI 包含这个 session 文件，就能执行代码。
+
+利用条件：
+
+- 目标存在 LFI（文件包含，见「文件包含」章节）。
+- 能拿到 `PHPSESSID`（自己带一个 Cookie 即可）。
+- `session.upload_progress.enabled = On`（默认开启）。
+
+构造一个上传表单（也可以直接用脚本发 multipart 请求）：
+
+
+上传后，session 文件 `/var/lib/php/sessions/sess_<PHPSESSID>` 中会包含：
+
+
+然后包含它：
+
+
+即可执行 `phpinfo()`。注意两点：
+
+- session 文件在上传处理完成后可能被清理（`session.upload_progress.cleanup = On` 时），实际比赛常用 **条件竞争**：一边不停上传，一边不停包含。
+- session 内容会经过 `urlencode` 式的转义处理，`<?php phpinfo(); ?>` 这类短标签通常不受影响，但复杂 payload 可能需要 base64 编码后用 `php://filter` 解码。
+
+### 原生类反序列化
+
+前面的利用都要求目标代码里定义了带有危险魔术方法的类。如果目标没有定义任何可用类，还有一条路：**利用 PHP 内置的原生类**。这些类不需要题目定义，反序列化时可以直接还原。
+
+#### 用 Error / Exception 绕过哈希比较
+
+`Error` 和 `Exception` 类在比较时会把完整报错信息（含文件路径、行号）转成字符串。当题目用 `md5($a) === md5($b)` 之类比较两个对象时，构造两个内容完全相同的 `Exception` 对象即可绕过，常用于 `__wakeup()` 里的校验绕过。
+
+#### SoapClient 打 SSRF / CRLF
+
+`SoapClient` 是 PHP 内置的 SOAP 客户端类，需要 `php-soap` 扩展。它有一个非常关键的行为：**调用一个不存在的方法时，会真正把 SOAP 请求发出去**（本质是 `__call()` 的实现里发起了 HTTP 请求）。
+
+
+当反序列化链的终点是"调用某个对象不存在的方法"（即触发 `__call`）时，把这个对象换成 `SoapClient`，就能向内网发起请求——这就是 SSRF（配合思路见「SSRF注入」章节）。
+
+更进一步，`user_agent` 参数可控且没有过滤换行，可以注入 CRLF 构造完整的 POST 请求：
+
+
+反序列化后再想办法触发一次不存在方法的调用（很多题目的链里本身就有 `__call` 终点），`SoapClient` 就会带着我们伪造的头部访问内网接口。
+
+#### SimpleXMLElement 打 XXE
+
+`SimpleXMLElement` 的构造函数支持三个参数：XML 数据、选项、以及一个布尔值 `data_is_url`。当第三个参数为 `true` 时，第一个参数会被当作 URL 读取：
+
+
+如果题目能在反序列化过程中实例化可控参数的类（比如通过 `__wakeup` 里的 `$class = new $this->className($this->arg1, $this->arg2, $this->arg3);`），就可以指定 `SimpleXMLElement` 发起 XXE 攻击，读取本地文件（XXE 的细节见「XXE注入」章节）。
+
+#### ZipArchive 删文件
+
+`ZipArchive::open()` 如果以 `ZipArchive::OVERWRITE` 方式打开一个不存在的文件，在某些版本下配合 `ZipArchive::FL_NOCASE` 等 flag 会产生副作用；更常见的是利用 `SplFileObject`、`DirectoryIterator` 等读目录/读文件的原生类。例如 `SplFileObject` 反序列化后被当作字符串输出时，可以读取目标文件内容，常用于"没有读取接口，只有 echo 对象"的场景。
+
+#### 例题思路（SoapClient 打内网）
+
+
+这条链的终点是 `call_user_func([$this->func, 'hello'])`——`hello` 方法不存在，如果 `$this->func` 是一个 `SoapClient` 对象，就会触发 `SoapClient::__call` 发出请求。构造 payload：
+
+
+调用链为 `__wakeup → __toString → __get → __invoke → SoapClient::__call`，最终向内网 `http://127.0.0.1/flag` 发起 SOAP 请求。由于 `SoapClient` 的请求回显一般看不到，实战中常配合 CRLF 注入把请求改成能带出数据的接口，或者打内网里"访问即执行"的端点。
+
+#### 小结
+
+- 找不到 `unserialize()` 时，想 phar 和 session；找不到可用类时，想原生类。
+- 做题前先确认环境：有没有 `phar`、`soap`、`libxml` 扩展，`session.serialize_handler` 是什么，`session.upload_progress` 是否开启——`phpinfo()` 页面往往就是题目故意给的。

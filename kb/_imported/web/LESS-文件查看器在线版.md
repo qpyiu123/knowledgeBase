@@ -1,0 +1,85 @@
+---
+title: "LESS 文件查看器在线版"
+category: web
+tags: [Hackergame 2024, wp prose]
+signals: [LESS 文件查看器在线版]
+difficulty: medium
+source: "https://github.com/USTC-Hackergame/hackergame2024-writeups/blob/deb6fa3f906e2d0e905f5de5b12757d89f54f812/official/LESS%20%E6%96%87%E4%BB%B6%E6%9F%A5%E7%9C%8B%E5%99%A8%E5%9C%A8%E7%BA%BF%E7%89%88/README.md"
+tools: []
+origin: imported
+origin_id: official-7a76830839ca2f777193f1
+origin_sha256: 72d055ea39973b282b0e5bae3773368bf29b3677b23d3ea6104dcaa27b6cd34b
+origin_event: "Hackergame 2024"
+origin_kind: wp_prose
+license: "NOASSERTION"
+updated: 2026-10-23
+---
+# Hackergame 2024 / LESS 文件查看器在线版
+
+> 来源：Hackergame 2024  |  类型：wp_prose  |  https://github.com/USTC-Hackergame/hackergame2024-writeups/blob/deb6fa3f906e2d0e905f5de5b12757d89f54f812/official/LESS%20%E6%96%87%E4%BB%B6%E6%9F%A5%E7%9C%8B%E5%99%A8%E5%9C%A8%E7%BA%BF%E7%89%88/README.md
+
+# LESS 文件查看器在线版
+
+题解作者：[zzh1996](https://github.com/zzh1996)
+
+出题人、验题人、文案设计等：见 [Hackergame 2024 幕后工作人员](../../credits.pdf)。
+
+## 题目描述
+
+- 题目分类：web
+
+- 题目分值：250
+
+> 以下内容包含 AI 辅助创作
+
+「等等，你说 less 是个指令？我还以为它就是‘更少’的意思呢！」小 W 一脸困惑地看着 Linux 用户协会的招新海报。
+
+「对啊，less 是个很方便的工具，可以查看文件内容，显示行号，还能搜索……」Linux 用户协会会长耐心地解释道。
+
+「可是……」小 W 欲言又止，「我电脑上还没装 Linux……」
+
+「别担心！」一个正在摆弄笔记本的同学突然抬起头，「我写了个网站，上传文件就能看到 less 的输出结果。这下大家都能体验 Linux 的美妙了！」
+
+「哇，太棒了！」小 W 开心地说，「这下总算不用被嫌弃了……」
+
+然而会长却若有所思地看着那个热心的同学：「你确定这样……安全吗？」
+
+「安全？」小 W 一头雾水，「不就是看个文件内容嘛，能出什么问题？」
+
+> AI 辅助创作部分结束
+
+**[下载题目源代码](files/LESS.zip)**
+
+[打开/下载题目](http://202.38.93.141:10060/?token={token})
+
+## 出题思路
+
+某一天我看到某同学说 less 命令还可以用来看 PDF，而我只用过 less 阅读纯文本文件。我就研究了一下 less 是怎么做到的，它竟然可以查看各种各样的文件。我发现 less 是用 lesspipe 来处理各种类型的文件，lesspipe 就是一个脚本，根据不同的文件类型决定如何把对应的文件转换为文本，然后管道给 less，其中处理 PDF 格式使用的是 pdftotext 命令。
+
+更有趣的是，我发现 Ubuntu 的 bashrc 中会默认启用 lesspipe（而 Debian 等发行版没有）。我就在想，我们很多人会使用 less 来查看并不信任的文件，比如从网上随便下载的文件或者刚解压出来的文件。如果 lesspipe 可以支持这么多种格式的文件，那这里有很大的攻击面啊。只要有一种文件格式的处理是不安全的，那用 less 随便查看文件就有安全隐患。很多文件格式设计的时候是考虑了打开任意文件的安全性的，但是也有文件格式设计的时候可能会故意允许包含其他文件，或者打开的时候自动执行一些命令，或者读取当前目录的配置文件之类的。
+
+于是我立马上网搜了一下有没有人研究过这个问题，使用「lesspipe RCE」之类的关键词，很容易搜索到一些相关的讨论。
+
+比如说，很容易找到 [这个讨论](https://seclists.org/fulldisclosure/2014/Nov/74)。阅读这个邮件列表的讨论中的各种回复之后，我发现 [这里](https://seclists.org/oss-sec/2014/q4/1027) 提供了一个方案，我自己在最新版的 Ubuntu 上面复现一下，发现就能做到任意命令执行。
+
+为了让大家知道，在 lesspipe 开启的情况下，不应该随便去 less 不信任的文件，所以我把它出成了这道题。
+
+这道题的解题人数并不多。很多人疑惑为什么这题分值并不高，就是因为这道题可以通过搜索来解决，并不需要自己实现漏洞的复杂利用。
+
+当然，我相信这道题不止有一种解法，因为上面这个帖子也有别人找到了其他程序的缺陷。完全有可能只需要一个文件，甚至不需要控制文件名，就可以 getshell。
+
+## 题解
+
+根据上面提到的讨论里面的内容，在跟题目附件提供的 Dockerfile 相同的环境下，执行以下命令：
+
+
+然后把生成的 `plugin.so`、`.a`、`@.a` 三个文件上传即可在服务器上执行列目录的命令。这里要注意，上传时选择的文件的顺序很重要，一定要保证 `@.a` 是最后一个。在我的 macOS 的 Chrome 浏览器上面，按照文件大小排序就能保证上传的顺序，其他操作系统我没测试，但是总是可以通过 curl 之类的命令或者写脚本来保证上传顺序。
+
+最后把上面的命令替换成 `cat /flag`，重新上传一次，就可以得到 flag。
+
+## 一些吐槽
+
+1. 这题本来想用今年 Hackergame 新搞的 web 题框架，给每个选手开单独的容器并且允许多次上传文件的，但是没时间搞了，只能用比较扭曲的网站后端 nc 题目容器这种方式。不过也不太影响解题。
+2. 如果想让 less 用上 Ubuntu 默认的 `.bashrc`，而不是刻意去加载，就只能搞一个 TTY 来模拟交互了，并且因此要考虑很多额外问题，比如怎么安全传递文件名。
+3. 为了让题目环境有 `ar` 而且不去刻意安装，我尝试了半天，发现安装 `python3-pip` 就会自动安装上，看起来就很不刻意。
+4. 大家记得不要在开了 lesspipe 的情况下 less 不信任的文件。
