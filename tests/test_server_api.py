@@ -108,6 +108,7 @@ def env(tmp_path: Path, monkeypatch):
     fake_kb = FakeKB(kb_dir, index_dir)
     monkeypatch.setattr(server, "CFG", fake_kb.cfg)
     monkeypatch.setattr(server, "_KB", fake_kb)
+    monkeypatch.setenv("AGENT_ATTACHMENT_DIR", str(tmp_path / "attachments"))
 
     srv = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
     th = threading.Thread(target=srv.serve_forever, daemon=True)
@@ -130,6 +131,20 @@ def call(env, method: str, path: str, body=None):
             data = json.dumps(body, ensure_ascii=False).encode("utf-8")
             headers["Content-Type"] = "application/json"
         conn.request(method, path, body=data, headers=headers)
+        r = conn.getresponse()
+        text = r.read().decode("utf-8", errors="replace")
+        return r.status, text, r.getheader("Content-Type") or ""
+    finally:
+        conn.close()
+
+
+def call_raw(env, path: str, data: bytes,
+             ctype: str = "application/octet-stream"):
+    conn = http.client.HTTPConnection("127.0.0.1", env["port"], timeout=10)
+    try:
+        conn.request("POST", path, body=data,
+                     headers={"Content-Type": ctype,
+                              "Content-Length": str(len(data))})
         r = conn.getresponse()
         text = r.read().decode("utf-8", errors="replace")
         return r.status, text, r.getheader("Content-Type") or ""
@@ -421,3 +436,83 @@ def test_feedback_rejects_bad_input(env, monkeypatch, payload):
     assert body["ok"] is False
     assert "error" in body
     assert not fb.exists()
+
+
+def test_health_advertises_attachment_limit(env, monkeypatch):
+    monkeypatch.setattr("requests.get", lambda *a, **k: FakeResp(payload={"models": []}))
+    status, text, _ = call(env, "GET", "/api/health")
+    body = json.loads(text)
+
+    assert status == 200
+    assert body["attachment"]["max_bytes"] == server._attachment_max_bytes()
+
+
+def test_analyze_saves_isolated_copy_and_returns_structured_report(env):
+    import base64
+
+    flag = "flag{p2_text_d3cod3}"
+    data = ("hint: " + base64.b64encode(flag.encode()).decode() + "\n").encode()
+    status, text, ctype = call_raw(env, "/api/analyze?name=note.txt", data)
+    body = json.loads(text)
+
+    assert status == 200
+    assert "application/json" in ctype
+    assert body["ok"] is True
+    assert body["executed"] is False
+    assert body["storage"]["isolated"] is True
+    assert body["type"]["is_text"] is True
+    assert body["decoded"][0]["decoded"] == flag
+
+    saved = Path(body["storage"]["saved"])
+    assert saved.is_file()
+    assert saved.read_bytes() == data
+    assert saved.parent.parent == env["tmp"] / "attachments"
+    assert saved.name == "upload_note.txt"
+
+
+def test_analyze_sanitizes_upload_name(env):
+    status, text, _ = call_raw(
+        env, "/api/analyze?name=" + "%2E%2E%2F%2E%2E%2Fsecret.txt", b"hello")
+    body = json.loads(text)
+
+    assert status == 200
+    saved = Path(body["storage"]["saved"])
+    assert saved.name == "upload_secret.txt"
+    assert saved.parent.parent == env["tmp"] / "attachments"
+    assert saved.read_bytes() == b"hello"
+
+
+def test_analyze_rejects_empty_and_long_names(env):
+    status, text, _ = call_raw(env, "/api/analyze?name=x.txt", b"")
+    assert status == 400
+    assert "附件为空" in json.loads(text)["error"]
+
+    long_name = "n" * (server.MAX_ATTACHMENT_NAME + 1)
+    status, text, _ = call_raw(
+        env, "/api/analyze?name=" + long_name, b"hello")
+    assert status == 400
+    assert "附件名太长" in json.loads(text)["error"]
+
+
+def test_analyze_rejects_oversize_without_writing(env, monkeypatch):
+    monkeypatch.setenv("AGENT_ATTACHMENT_MAX_BYTES", "8")
+    root = env["tmp"] / "attachments"
+    status, text, _ = call_raw(env, "/api/analyze?name=big.bin", b"x" * 20)
+
+    assert status == 413
+    assert "附件过大" in json.loads(text)["error"]
+    assert not root.exists()
+
+
+def test_analyze_warns_for_scripts_and_never_executes(env):
+    status, text, _ = call_raw(
+        env, "/api/analyze?name=run.py", b"print('hello')\n")
+    body = json.loads(text)
+
+    assert status == 200
+    assert body["executed"] is False
+    assert any("不会运行" in w for w in body["warnings"])
+    assert Path(body["storage"]["saved"]).is_file()
+
+
+

@@ -11,7 +11,8 @@
   POST /api/search       {q, category, top_k} -> 结果 + 图谱关联
   GET  /api/doc?path=    取某篇全文
   POST /api/ask          {q, paths} -> SSE 流式模型回答
-  POST /api/hint         {path, question} -> 方向建议（附件侦察 + 小模型）
+  POST /api/feedback     {query, path, verdict, note} -> 本地 JSONL
+  POST /api/analyze?name= 原始字节 -> 附件只读侦察（隔离目录，不执行）
 
 启动：python tools/agent/server.py
 """
@@ -81,6 +82,10 @@ MAX_PATH_CHARS = 500
 MAX_NOTE_CHARS = 500
 FEEDBACK_VERDICTS = {"useful", "useless", "adopted"}
 DOC_TYPES = {"topic", "card"}
+# 附件侦察：请求体上限与文件名长度；硬上限防止配置写出离谱值。
+MAX_ATTACHMENT_NAME = 240
+ATTACHMENT_HARD_MAX = 64 * 1024 * 1024
+DEFAULT_ATTACHMENT_MAX = 8 * 1024 * 1024
 
 # 每类结果的命中上限，避免同方向刷屏
 CATS = ["misc", "crypto", "web", "pwn", "reverse",
@@ -280,6 +285,52 @@ def api_feedback(req: dict) -> dict:
     except OSError as e:
         return {"ok": False, "saved": 0, "error": f"反馈写入失败: {e}"}
     return {"ok": True, "saved": 1, "file": str(f)}
+
+
+# ---------------------------------------------------------------- 附件侦察
+def _attachment_max_bytes() -> int:
+    """每次读取配置/环境变量，便于测试与临时调小。"""
+    raw = (os.environ.get("AGENT_ATTACHMENT_MAX_BYTES")
+           or _cfg("attachment", "max_bytes", DEFAULT_ATTACHMENT_MAX))
+    try:
+        n = int(raw)
+    except (TypeError, ValueError):
+        n = DEFAULT_ATTACHMENT_MAX
+    return max(1, min(n, ATTACHMENT_HARD_MAX))
+
+
+def _attachment_dir() -> Path:
+    raw = (os.environ.get("AGENT_ATTACHMENT_DIR")
+           or str(_cfg("attachment", "dir", "work/attachments")))
+    p = Path(raw)
+    return p if p.is_absolute() else (ROOT / p)
+
+
+def _check_attachment_name(raw) -> str:
+    if raw in (None, ""):
+        return "attachment.bin"
+    if not isinstance(raw, str):
+        raise BadRequest("附件名必须是字符串")
+    name = raw.strip()
+    if len(name) > MAX_ATTACHMENT_NAME:
+        raise BadRequest(f"附件名太长（最多 {MAX_ATTACHMENT_NAME} 字符）")
+    return name or "attachment.bin"
+
+
+def api_analyze(name, data: bytes) -> dict:
+    """保存到隔离目录并做只读结构化侦察；任何情况下都不执行附件。"""
+    name = _check_attachment_name(name)
+    if not isinstance(data, (bytes, bytearray)) or not data:
+        raise BadRequest("附件为空")
+    limit = _attachment_max_bytes()
+    if len(data) > limit:
+        raise BadRequest(f"附件过大（上限 {limit} 字节）")
+
+    from agent.attachment import analyze_upload
+
+    report = analyze_upload(bytes(data), name, _attachment_dir())
+    report["ok"] = True
+    return report
 
 
 # ============================================================== 页面
@@ -636,6 +687,39 @@ class Handler(BaseHTTPRequestHandler):
             self._json({"docs": 0, "chunks": 0, "categories": {},
                         "error": f"{type(e).__name__}: {e}"})
 
+    def _analyze(self, u):
+        """/api/analyze：原始字节上传，限大小，保存到隔离目录后只读解析。"""
+        qs = parse_qs(u.query)
+        name = (qs.get("name") or [""])[0]
+        try:
+            n = int(self.headers.get("Content-Length", "0") or 0)
+        except ValueError:
+            self._json({"ok": False, "error": "Content-Length 不合法"}, 400)
+            return
+        limit = _attachment_max_bytes()
+        if n <= 0:
+            self._json({"ok": False, "error": "附件为空"}, 400)
+            return
+        if n > limit:
+            self._json({"ok": False,
+                        "error": f"附件过大（上限 {limit} 字节）"}, 413)
+            return
+        try:
+            raw = self.rfile.read(n)
+        except Exception as e:  # noqa: BLE001
+            self._json({"ok": False, "error": f"附件读取失败: {e}"}, 400)
+            return
+        if len(raw) != n:
+            self._json({"ok": False, "error": "附件读取不完整"}, 400)
+            return
+        try:
+            self._json(api_analyze(name, raw))
+        except BadRequest as e:
+            self._json({"ok": False, "error": str(e)}, 400)
+        except Exception as e:  # noqa: BLE001
+            self._json({"ok": False,
+                        "error": f"{type(e).__name__}: {e}"}, 500)
+
     def _health(self):
         import requests
         index = _index_status()
@@ -653,6 +737,7 @@ class Handler(BaseHTTPRequestHandler):
                 "index": index,
                 "docs": index.get("docs", 0),
                 "ollama": OLLAMA,
+                "attachment": {"max_bytes": _attachment_max_bytes()},
             })
         except Exception as e:  # noqa: BLE001
             self._json({
@@ -665,10 +750,14 @@ class Handler(BaseHTTPRequestHandler):
                 "docs": index.get("docs", 0),
                 "error": f"模型不可达: {e}",
                 "ollama": OLLAMA,
+                "attachment": {"max_bytes": _attachment_max_bytes()},
             })
 
     def do_POST(self):
         u = urlparse(self.path)
+        if u.path == "/api/analyze":
+            self._analyze(u)
+            return
         try:
             n = int(self.headers.get("Content-Length", "0") or 0)
         except ValueError:

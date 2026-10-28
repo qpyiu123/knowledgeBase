@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "description": "P2 附件侦察固定样例。样例由 tools/eval_attachments.py 的 BUILDERS 现场生成，pytest 与 CLI 共用；不提交二进制。",
+  "cases": [
+    {
+      "id": "png-appended-zip",
+      "builder": "png_appended_zip",
+      "name": "carved.png",
+      "expect": {
+        "kind_contains": "PNG",
+        "mismatch": false,
+        "carve_types": ["ZIP"],
+        "decoded_contains": "flag{p2_c4rv3_d3c0d3}",
+        "anomaly_contains": "IEND",
+        "structure": "png"
+      }
+    },
+    {
+      "id": "fake-png-zip",
+      "builder": "fake_png_zip",
+      "name": "fake.png",
+      "expect": {
+        "kind_contains": "ZIP",
+        "mismatch": true,
+        "zip_entry_contains": "readme.txt",
+        "structure": "zip"
+      }
+    },
+    {
+      "id": "text-base64",
+      "builder": "text_base64",
+      "name": "hint.txt",
+      "expect": {
+        "kind_contains": "文本",
+        "is_text": true,
+        "decoded_contains": "flag{p2_text_d3cod3}"
+      }
+    },
+    {
+      "id": "wav-tail",
+      "builder": "wav_tail",
+      "name": "sound.wav",
+      "expect": {
+        "kind_contains": "RIFF",
+        "anomaly_contains": "尾部追加",
+        "structure": "wav"
+      }
+    },
+    {
+      "id": "script-warning",
+      "builder": "script_warning",
+      "name": "run.py",
+      "expect": {
+        "kind_contains": "文本",
+        "is_text": true,
+        "warning_contains": "不会运行"
+      }
+    }
+  ]
+}

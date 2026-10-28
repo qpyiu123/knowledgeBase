@@ -376,10 +376,12 @@ def _auto_decode_interesting(strs: list[str]) -> list[str]:
         if ratio < 0.9:
             return False
 
-        # 大段重复（如 JUNKJUNKJUNK）说明是填充数据，不是有效编码
+        # 大段重复（如 JUNKJUNKJUNK）说明是填充数据，不是有效编码。
+        # 注意必须重复至少两次：否则 12~13 字符的正常结果会被误杀。
         if len(t) >= 12:
             head = t[:8]
-            if t.count(head) * len(head) >= len(t) * 0.6:
+            reps = t.count(head)
+            if reps >= 2 and reps * len(head) >= len(t) * 0.6:
                 return False
         return True
 

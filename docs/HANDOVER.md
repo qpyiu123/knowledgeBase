@@ -50,6 +50,29 @@
 
 ---
 
+## 〇之三、2026-10-28 P2 更新（本批，已完成）
+
+- 新增只读附件分析：`tools/agent/attachment.py`，只解析字节，不执行脚本/
+  可执行文件，不调用 `binwalk`/`exiftool`/`strings` 等外部命令。
+- 新增 `POST /api/analyze?name=<文件名>`：请求体为原始字节。默认上限 8 MiB
+  （`[attachment].max_bytes` / `AGENT_ATTACHMENT_MAX_BYTES` 覆盖，硬上限
+  64 MiB），名字最长 240 字符；空附件/超长名字/超限分别 400/400/413。
+- 上传副本写入 `work/attachments/<uuid>/upload_<安全名>`，隔离目录可配置；
+  文件名只保留最后一段并清洗非法字符，防路径穿越。
+- 返回结构化报告：`file`、`type`、`carve`、`structures`（PNG/WAV/ZIP）、
+  `anomalies`、`decoded`（base64/hex/url）、`strings`、`warnings`、`storage`；
+  `executed` 恒为 `false`。脚本扩展名只警告“不会运行”，不拒绝上传。
+- `GET /api/health` 增加 `attachment.max_bytes`；`model_ok` / `index_ok` 语义不变。
+- 新增固定评测：`eval/attachment_cases.json` 5 个样例（PNG 追加 ZIP、伪装 PNG、
+  文本 base64、WAV 尾部、脚本警告），样例由 `tools/eval_attachments.py`
+  的 `BUILDERS` 现场生成，pytest 与 CLI 共用，不提交二进制。
+- 测试：Python **151 passed**（P1 的 132 + P2 新增 19）；附件评测 **5/5**。
+  本批未改 React 源码，前端检查/测试/构建沿用 P1 结果。
+- 已知边界：只做静态结构/字符串/编码嗅探，不反编译、不模拟执行、不沙箱运行；
+  ZIP 只列目录不解压；`work/attachments/` 暂无自动清理策略。
+
+---
+
 ## 一、运行方式
 
 ```powershell
@@ -259,7 +282,7 @@ P1 修掉了“一篇长文档的所有 chunk 占满 top-N”的主因（FTS 文
 
 | 位置 | 状态 |
 |---|---|
-| `work/` | **约 45.6 MB / 1237 文件**，含截图、临时脚本、模拟报告 |
+| `work/` | **约 45.6 MB / 1237 文件**，含截图、临时脚本、模拟报告；P2 上传副本落 `work/attachments/` |
 | `temp_newData/` | **约 18.9 GB / 8609 文件**（2026-10-28 统计），已 gitignore |
 | `index/` | 约 175 MB（fts 138.7 MB / vectors 44.0 MB / graph 0.44 MB，可重建） |
 | `models/` | bge + ollama，已 gitignore，未提交 |
@@ -305,8 +328,8 @@ npm run check   # 仅类型检查
 2. 跑 `pytest -o addopts="" -q`、`npm run check`、`npm test`，确认基线全绿。
 3. 若要真实验证：`.\start.ps1`，在浏览器点起点卡片/结果卡片“问模型”，
    观察错误提示与“停止接收”语义。注意本机当前 8765/11434 未监听。
-4. P1 已完成；下一步 P2 从附件分析入口开始，评测复用 `eval/search_queries.json`。
-   扩评测集后再考虑排序权重。
+4. P1、P2 已完成；下一步 P3 做持久化题目工作区，可顺带把附件上传接入 React。
+   检索排序若要继续调，先扩 `eval/search_queries.json` 评测集，不要凭感觉改权重。
 
 ---
 
@@ -323,6 +346,8 @@ npm run check   # 仅类型检查
 前端 10 passed；`npm run check` / `npm run build` 通过。
 **P1 后（2026-10-28）**：Python 132 passed；前端 14 passed；评测 22 条
 hybrid top1/MRR 1.0。真实模型/真实 Ollama/真实浏览器仍未纳入自动化。
+**P2 后（2026-10-28）**：Python 151 passed；附件评测 5/5（pass_rate=1.0）；
+前端未改，沿用 P1 的 14 passed。附件分析全部离线、只读，不执行上传内容。
 
 ---
 

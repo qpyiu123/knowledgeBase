@@ -46,3 +46,9 @@ model = "qwen2.5-coder-7b"
 [feedback]
 # P1 反馈记录：只追加本地 JSONL，不参与检索排序。
 file = "work/feedback/feedback.jsonl"
+
+[attachment]
+# P2 附件侦察：上传副本落到独立随机目录，只读解析，永不执行。
+# AGENT_ATTACHMENT_DIR / AGENT_ATTACHMENT_MAX_BYTES 只做显式覆盖。
+dir = "work/attachments"
+max_bytes = 8388608

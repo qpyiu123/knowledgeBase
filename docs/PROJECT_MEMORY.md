@@ -4,7 +4,7 @@
 > 区分三类信息：**已验证事实 / 推断 / 未验证**。旧文档里的数字若未在本重复现，
 > 不得当作结论复用。
 
-**最后更新**：2026-10-28（P1 批次已完成，验证结果见第 7 节）
+**最后更新**：2026-10-28（P2 附件分析入口已完成，验证结果见第 8 节）
 
 ---
 
@@ -18,8 +18,9 @@
 - 一批工作一个提交；测试要可复现；事实与猜测必须区分。
 - 不删除用户资料，不读取/提交认证密钥，不更改全局 Git / npm 配置，
   不停止无关服务，不碰其他项目。
-- 后续方向：P1 检索可解释与评测；P2 前端附件分析；P3 题目工作区；
-  P4 三态适用条件与可追溯 Writeup。图谱可用性由评测决定，不按边数凑指标。
+- 后续方向：P1 检索可解释与评测（已完成）；P2 附件分析入口（已完成）；
+  P3 题目工作区；P4 三态适用条件与可追溯 Writeup。
+  图谱可用性由评测决定，不按边数凑指标。
 
 ---
 
@@ -41,7 +42,7 @@
   `qwen25c7b-cpu0`、`qwen25c7b-gpu10`、`qwen25c7b-gpu14`。
   **没有** `qwen3-4b-local:latest` 的 manifest（旧 server 硬编码该名称）。
 - `config.toml` 的 `[ollama] model` 为 `qwen2.5-coder-7b`，与实际模型家族一致。
-- 基线 Python 测试：82 个用例通过；P0 后 107；P1 后 132。
+- 基线 Python 测试：82 个用例通过；P0 后 107；P1 后 132；P2 后 151。
 - 前端 P0 起有 Vitest（SSE + SearchPage），P1 后 2 文件 / 14 用例。
 
 ### 旧文档中未验证的说法
@@ -117,14 +118,51 @@
 
 ---
 
+## 3c. P2 决策（本批，2026-10-28）
+
+1. **只读附件侦察**：新增 `tools/agent/attachment.py`，只解析字节，不执行
+   附件中的脚本/可执行文件，也不调用 `binwalk`/`exiftool`/`strings` 等外部命令；
+   结构解析复用 `agent.carve`，字符串与解码复用 `agent.recon`。
+2. **隔离落盘**：`POST /api/analyze` 把原始字节复制到
+   `work/attachments/<uuid>/upload_<安全名>`。文件名只保留最后一段、去掉控制
+   字符与 Windows 非法字符，防路径穿越；`[attachment].dir` 或
+   `AGENT_ATTACHMENT_DIR` 可改根目录。
+3. **大小与名字边界**：默认上限 8 MiB（`[attachment].max_bytes` 或
+   `AGENT_ATTACHMENT_MAX_BYTES` 覆盖，硬上限 64 MiB）；名字最长 240 字符；
+   空附件、超长名字、超大附件分别返回 400/400/413，且超限时不写盘。
+4. **结构化结果**：返回 `file`（大小/SHA256/扩展名）、`type`（真实类型、
+   是否文本、预览、扩展名不符）、`carve`（内嵌雕刻）、`structures`
+   （PNG/WAV/ZIP）、`anomalies`、`decoded`（base64/hex/url）、`strings`、
+   `warnings`、`storage`，以及恒为 `false` 的 `executed`。
+5. **安全提示不拦截**：可执行/脚本扩展名只给警告（“不会运行”），不拒绝上传；
+   扩展名与真实内容不符只作为异常提示，不改写文件。
+6. **兼容旧入口**：`analyze_probe()` 保留原文本格式，供 hint/CLI 继续复用；
+   新增 `analyze_path` / `analyze_bytes` / `analyze_upload` 结构化入口。
+7. **可复现评测**：`eval/attachment_cases.json` 固定 5 个代表性样例
+   （PNG 追加 ZIP+base64、伪装 PNG 的 ZIP、纯文本 base64、WAV 尾部追加、
+   脚本警告），由 `tools/eval_attachments.py` 的 `BUILDERS` 现场生成，
+   pytest 与 CLI 共用同一份 manifest，不提交二进制。
+8. **健康检查**：`GET /api/health` 增加 `attachment.max_bytes`，方便前端/调用方
+   在发请求前就知道上限；原有 `model_ok` / `index_ok` 语义不变。
+9. **前端范围**：本批不改 React 源码；接口与 PowerShell 调用方式补在
+   `docs/UI.md`，后续可由前端直接接上传入口。
+
+---
+
 ## 4. 运行命令
+
+> 工具脚本清点见 `docs/TOOLS_INVENTORY.md`（21 个可执行入口 + 6 个仅 import 模块 + 10 个根目录临时探针）。
 
 ```powershell
 # Python 回归（完整摘要）
 .\.venv\Scripts\python.exe -m pytest -o addopts="" -q
 
-# 仅 server 测试
-.\.venv\Scripts\python.exe -m pytest -o addopts="" -q tests\test_server_api.py
+# 仅 server / 附件测试
+.\.venv\Scripts\python.exe -m pytest tests\test_server_api.py tests\test_attachment.py -q
+
+# P2 附件侦察评测（固定样例；可加 --json / --json-out / --check）
+.\.venv\Scripts\python.exe tools\eval_attachments.py
+.\.venv\Scripts\python.exe tools\eval_attachments.py --json --json-out work/attachment_eval.json
 
 # P1 检索评测（固定查询集；可加 --mode fts / --json / --json-out）
 .\.venv\Scripts\python.exe tools\eval_search.py
@@ -153,6 +191,10 @@ npm run build
   signals 很多的长文档；固定评测集只有 22 条，不能代表全部题型。
 - 真实模型回答质量与耗时仍未纳入自动化；自动化测试全部离线 Mock。
 - 反馈只落本地 JSONL，尚未做汇总/导出 UI；是否用于排序需后续评测决定。
+- 附件分析只做静态结构/字符串/编码嗅探，不做反编译、模拟执行或沙箱运行；
+  ZIP 只列目录不解压，加密 ZIP 只提示需要密码。
+- 附件分析结果会写入 `work/attachments/`（默认保留），暂未做自动清理策略；
+  `work/` 不入库。
 - `work/` 与 `temp_newData/` 体积大（后者约 18.9 GB），只在本地保留，不入库。
 - 外部导入脚本只允许静态审查，不在本批执行。
 
@@ -161,8 +203,9 @@ npm run build
 ## 6. 下一步（不在本批实现）
 
 - P1 已完成：命中段落/原因、类型筛选、图谱关联阅读、反馈记录、可复现评测。
-- P2：前端附件分析（大小限制、隔离、默认不执行脚本）；与 P1 评测共用样例。
-- P3：持久化题目工作区（事实/尝试/资料收藏）。
+- P2 已完成：附件分析入口、隔离落盘、只读结构/解码嗅探、固定样例评测；
+  前端 React 上传入口留待 P3 一起接（本批只补接口文档）。
+- P3：持久化题目工作区（事实/尝试/资料收藏），可顺带接入附件上传 UI。
 - P4：适用条件三态（已知/未知/不满足）、只读脚本工具架、由真实记录生成
   可追溯 Writeup 草稿。
 - 图谱价值继续由评测决定，不以边数作为目标；P1 固定集没有显示图谱需要提权。
@@ -218,3 +261,36 @@ P1 评测对照（同一固定集，改动前 → 改动后）：
 - 评测集 22 条是人工挑选的固定样例，覆盖常见方向但不代表全库分布。
 - 未在真实浏览器手动点选全部路径；交互验证依据组件测试 + 生产构建。
 - `/api/ask` 的上游取消仍是“尽力而为”，Ollama 可能短暂收尾。
+
+---
+
+## 8. P2 验证结果（2026-10-28）
+
+以下均为本机实测，工作目录 `F:\CTFfiles\knowledgeBase`：
+
+| 命令 | 结果 |
+|---|---|
+| `.\.venv\Scripts\python.exe -m pytest tests\test_attachment.py tests\test_server_api.py -q` | **55 passed** |
+| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **151 passed in 31.09s**（P1 的 132 + P2 新增 19） |
+| `.\.venv\Scripts\python.exe tools\eval_attachments.py` | **5/5 通过（pass_rate=1.0000）** |
+
+P2 评测样例与期望：
+
+| id | 样例 | 关键期望 | 结果 |
+|---|---|---|---|
+| `png-appended-zip` | PNG + 尾部 base64 + 追加 ZIP | PNG、雕刻出 ZIP、解出 flag、IEND 异常 | PASS |
+| `fake-png-zip` | `.png` 实际为 ZIP | 真实类型 ZIP、扩展名不符、列出条目 | PASS |
+| `text-base64` | 纯文本 base64 | UTF-8 文本、解出 flag | PASS |
+| `wav-tail` | WAV 尾部追加文本 | RIFF、尾部追加异常、WAV 结构 | PASS |
+| `script-warning` | `.py` 脚本 | 文本类型、警告“不会运行”、`executed=false` | PASS |
+
+测试覆盖点：
+
+- attachment：PNG/类型/雕刻/解码、SHA256 与结构化 schema、伪装扩展名与 ZIP
+  条目、严格 base64、脚本只警告不执行、文件名清洗、隔离目录落盘、
+  `analyze_probe` 文本兼容、固定评测集全通过且样例可重复生成、
+  未知 builder 拒绝、不联网/不调用模型。
+- server：`/api/analyze` 正常上传并保存隔离副本、返回结构化报告；
+  路径穿越名字清洗；空附件/超长名字 400；超限 413 且不写盘；
+  `health` 暴露附件上限。
+- 本批未改 React 源码；前端类型检查/测试/构建沿用 P1 结果，未重新执行。

@@ -143,6 +143,47 @@ def do_GET(self):
 | `GET /api/doc?path=` | 单篇正文；只允许 `kb/` 内 `.md` |
 | `POST /api/ask` | `{q, paths}` → SSE；串行，忙碌返回 429 |
 | `POST /api/feedback` | `{query, path?, verdict, note?}`；`verdict=useful\|useless\|adopted`；追加本地 JSONL |
+| `POST /api/analyze?name=` | 请求体为原始字节；只读附件侦察，复制到隔离目录后返回结构化报告 |
+
+### 附件分析接口（P2）
+
+`POST /api/analyze?name=<文件名>`，请求体是文件原始字节（不是 multipart，
+也不是 JSON）。`name` 只用于展示与落盘文件名清洗，可省略，默认
+`attachment.bin`。
+
+```powershell
+# 原始字节上传；响应为 JSON
+$bytes = [IO.File]::ReadAllBytes("C:\path\to\sample.png")
+$r = Invoke-WebRequest -Method Post `
+  -Uri "http://127.0.0.1:8765/api/analyze?name=sample.png" `
+  -ContentType "application/octet-stream" -Body $bytes
+$r.Content | ConvertFrom-Json
+```
+
+响应要点（`schema_version=1`）：
+
+| 字段 | 说明 |
+|---|---|
+| `ok` / `executed` | 成功标记；`executed` 恒为 `false`（只读，不运行附件） |
+| `file` | `name` / `size` / `sha256` / `ext`，落盘时另有 `saved` / `dir` / `original_name` |
+| `type` | `kind`（魔数或 UTF-8 文本）、`detected`、`is_text`、`preview`、`extension_mismatch` |
+| `carve` | 内嵌文件雕刻结果（`type` / `offset` / `offset_hex` / `size`） |
+| `structures` | PNG chunk、WAV 参数、ZIP 条目（只列目录，不解压） |
+| `anomalies` | 扩展名不符、PNG/WAV 尾部追加、ZIP 加密/损坏等提示 |
+| `decoded` | base64 / hex / URL 自动解码结果（严格过滤假线索） |
+| `strings` | 关键词优先的可读字符串 |
+| `warnings` | 安全提示，如脚本/可执行扩展名“不会运行” |
+| `storage` | `isolated=true`、隔离目录与保存路径 |
+
+边界：
+
+- 默认上限 8 MiB（`[attachment].max_bytes` 或 `AGENT_ATTACHMENT_MAX_BYTES`），
+  硬上限 64 MiB；名字最长 240 字符。
+- 空附件 / 超长名字返回 400，超限返回 413，且超限时不写盘。
+- 上传副本写入 `work/attachments/<uuid>/upload_<安全名>`；`[attachment].dir`
+  或 `AGENT_ATTACHMENT_DIR` 可改根目录。`work/` 不入库。
+- `GET /api/health` 返回 `attachment.max_bytes`，调用方可先读上限再上传。
+- 本批只提供接口，React 页面尚未接入上传按钮；后续可在 P3 接。
 
 SSE 契约：
 
