@@ -58,11 +58,15 @@ def test_requires_is_unknown_without_context_or_named_query(kb: Path):
     assert "kb/b.md" in out["hint"]
 
 
-def test_requires_becomes_known_when_context_includes_it(kb: Path):
+def test_requires_stays_unknown_when_context_only_mentions_it(kb: Path):
+    # next_2：检索命中前提资料 ≠ 前提已满足，只能给 unknown。
     out = evaluate_conditions(kb, "a.md", "这题怎么打", ["b.md"])
-    assert out["status"] == STATUS_KNOWN
-    assert out["conditions"][0]["status"] == STATUS_KNOWN
-    assert "已在本次检索上下文中" in out["conditions"][0]["evidence"]
+    assert out["status"] == STATUS_UNKNOWN
+    cond = out["conditions"][0]
+    assert cond["status"] == STATUS_UNKNOWN
+    assert "在本批命中中出现过" in cond["evidence"]
+    assert "由你确认" in cond["evidence"]
+    assert "kb/b.md" in cond["evidence"]
 
 
 def test_requires_becomes_known_when_query_names_target(kb: Path):
@@ -72,10 +76,22 @@ def test_requires_becomes_known_when_query_names_target(kb: Path):
     assert "点名" in out["conditions"][0]["evidence"]
 
 
-def test_no_conditions_is_known(kb: Path):
+def test_document_without_rules_is_unknown(kb: Path):
+    # next_1：有 front matter 的条目没有登记规则时不能再假装 known。
     out = evaluate_conditions(kb, "crypto/c.md", "任意查询", [])
-    assert out["status"] == STATUS_KNOWN
+    assert out["status"] == STATUS_UNKNOWN
     assert out["conditions"] == []
+    assert out["label"] == "尚未评估，无已知前提线索"
+    assert "没有登记适用条件" in out["hint"]
+    assert "人工补规则" in out["hint"]
+    assert out["trace"] == {"rules": 0, "requires": 0}
+
+
+def test_non_document_without_front_matter_stays_known(kb: Path):
+    (kb / "note.md").write_text("随手记，不是资料条目\n", encoding="utf-8")
+    out = evaluate_conditions(kb, "note.md", "任意查询", [])
+    assert out["status"] == STATUS_KNOWN
+    assert out["label"] == "无额外适用前提"
     assert out["hint"] == ""
     assert out["trace"] == {"rules": 0, "requires": 0}
 
@@ -96,6 +112,69 @@ def test_keyword_rule_known_unknown_and_negative(kb: Path):
     assert "不同n" in bad["hint"]
 
 
+def test_keyword_rule_conflicting_evidence_is_unknown(kb: Path):
+    # next_4：肯定词与否定词同时出现时不强行判满足。
+    rel = "crypto/rsa-common-modulus-attack.md"
+    out = evaluate_conditions(kb, rel, "同一个 n，但是不同 n", [])
+    cond = next(c for c in out["conditions"] if c["id"] == "rsa-same-modulus")
+    assert out["status"] == STATUS_UNKNOWN
+    assert cond["status"] == STATUS_UNKNOWN
+    assert "线索冲突" in cond["evidence"]
+    assert "同时出现" in cond["evidence"]
+    assert "缺少前提" in out["hint"]
+
+
+def _use_version_rule(monkeypatch, **overrides):
+    rule = {
+        "id": "version-test",
+        "paths": ["crypto/c.md"],
+        "label": "版本测试",
+        "kind": "version",
+        "source": "crypto/c.md",
+    }
+    rule.update(overrides)
+    monkeypatch.setattr("kb.applicability.load_rules", lambda: (rule,))
+
+
+def test_version_rule_accepts_segmented_versions_in_range(kb: Path, monkeypatch):
+    # next_3：2.31 / 2.32 按整数段比较，2.31 与 2.31.0 视为相等。
+    _use_version_rule(monkeypatch, min="2.31", max="2.32")
+    for query in ("glibc 2.31", "glibc 2.32", "glibc 2.31.0"):
+        out = evaluate_conditions(kb, "crypto/c.md", query, [])
+        assert out["status"] == STATUS_KNOWN, query
+        assert out["conditions"][0]["status"] == STATUS_KNOWN
+
+
+def test_version_rule_lower_bound_is_inclusive(kb: Path, monkeypatch):
+    # 2.27 在 2.27–2.35 的闭区间内，仍然算 known。
+    _use_version_rule(monkeypatch, min="2.27", max="2.35")
+    out = evaluate_conditions(kb, "crypto/c.md", "glibc 2.27", [])
+    assert out["status"] == STATUS_KNOWN
+    assert "2.27–2.35" in out["conditions"][0]["evidence"]
+
+
+def test_version_rule_rejects_out_of_range_and_overflow(kb: Path, monkeypatch):
+    _use_version_rule(monkeypatch, min="2.31", max="2.35")
+    over = evaluate_conditions(kb, "crypto/c.md", "glibc 3.2", [])
+    assert over["status"] == STATUS_UNSATISFIED
+    assert "超出" in over["conditions"][0]["evidence"]
+
+    work = evaluate_conditions(kb, "crypto/c.md", "glibc 2.35.1", [])
+    assert work["status"] == STATUS_UNSATISFIED
+    assert "2.35.1" in work["conditions"][0]["evidence"]
+
+    missing = evaluate_conditions(kb, "crypto/c.md", "版本没给", [])
+    assert missing["status"] == STATUS_UNKNOWN
+    assert "未给出 glibc 版本" in missing["conditions"][0]["evidence"]
+
+
+def test_version_rule_invalid_bounds_is_unknown(kb: Path, monkeypatch):
+    _use_version_rule(monkeypatch, min="abc", max="2.35")
+    out = evaluate_conditions(kb, "crypto/c.md", "glibc 2.32", [])
+    assert out["status"] == STATUS_UNKNOWN
+    assert out["conditions"][0]["evidence"] == "规则版本区间无效"
+
+
 def test_version_rule_known_and_out_of_range(kb: Path):
     rel = "pwn/largebin-attack-chain.md"
     inside = evaluate_conditions(kb, rel, "glibc 2.35 的 largebin UAF 堆溢出", [])
@@ -112,15 +191,23 @@ def test_version_rule_known_and_out_of_range(kb: Path):
 
 
 def test_evaluate_paths_summarizes_unknown(kb: Path):
-    out = evaluate_paths(kb, ["a.md", "crypto/c.md"], "这题怎么打")
+    (kb / "note.md").write_text("随手记\n", encoding="utf-8")
+    out = evaluate_paths(kb, ["a.md", "note.md"], "这题怎么打")
     assert out["status"] == STATUS_UNKNOWN
     assert out["unknown"] == 1
     assert out["unsatisfied"] == 0
     assert any("缺少前提" in line for line in out["hint"].splitlines())
 
-    known = evaluate_paths(kb, ["b.md", "crypto/c.md"], "这题怎么打")
+    # next_1：有 front matter 但没有规则，也要在汇总里显式标 unknown。
+    no_rule = evaluate_paths(kb, ["crypto/c.md", "note.md"], "这题怎么打")
+    assert no_rule["status"] == STATUS_UNKNOWN
+    assert no_rule["unknown"] == 1
+    assert any("尚未评估" in line for line in no_rule["hint"].splitlines())
+
+    known = evaluate_paths(kb, ["note.md"], "这题怎么打")
     assert known["status"] == STATUS_KNOWN
     assert known["unknown"] == 0
+    assert known["hint"] == "所有可判定前提均已知，或该资料没有额外前提。"
 
 
 def test_resolve_target_rejects_ambiguous_and_missing(kb: Path):

@@ -257,7 +257,9 @@ def test_search_includes_applicability_status(env):
     assert status == 200
     assert hit["applicability"]["status"] in ("known", "unknown", "unsatisfied")
     assert hit["applicability"]["status_label"]
-    assert body["applicability"] == {"known": 1, "unknown": 0, "unsatisfied": 0}
+    # P5 next_1：mock 命中 crypto/rsa.md 有 front matter，但没有登记任何规则，
+    # 不再把“没规则”当成“没前提”，因此从 known 变为 unknown。
+    assert body["applicability"] == {"known": 0, "unknown": 1, "unsatisfied": 0}
 
 
 def test_search_doc_type_filter(env):

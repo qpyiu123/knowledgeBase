@@ -33,14 +33,34 @@ STATUS_LABEL = {
 _RULES_FILE = Path(__file__).with_name("applicability_rules.json")
 
 _LIBC_VERSION_RE = re.compile(
-    r"(?:glibc|libc)[^0-9]{0,12}([0-9]+\.[0-9]+)"
-    r"|(?<![0-9.])(2\.(?:1[6-9]|2[0-9]|3[0-9]|4[0-5]))(?![0-9.])"
+    r"(?:glibc|libc)[^0-9]{0,12}([0-9]+(?:\.[0-9]+)*)"
+    r"|(?<![0-9.])(2\.(?:1[6-9]|2[0-9]|3[0-9]|4[0-5])(?:\.[0-9]+)*)(?![0-9.])"
 )
 
 
 def _norm(text: str) -> str:
     """去空白 + casefold：让「没有 canary」和「没有canary」等价判定。"""
     return re.sub(r"\s+", "", str(text or "").casefold())
+
+
+def _parse_version(s: Any) -> tuple[int, ...] | None:
+    """把版本号拆成点分整数段；忽略非数字后缀，解析失败返回 None。
+
+    例：``2.31-0ubuntu9.2`` → ``(2, 31, 0, 9, 2)``；``2.31.0`` → ``(2, 31, 0)``。
+    不能再用 float：``2.3`` 与 ``2.31`` 的先后关系会被错误压平。
+    """
+    nums = re.findall(r"\d+", str(s or ""))
+    if not nums:
+        return None
+    return tuple(int(n) for n in nums)
+
+
+def _compare_versions(a: tuple[int, ...], b: tuple[int, ...]) -> int:
+    """按数值分段比较，缺省段补 0，保证 ``2.31`` 与 ``2.31.0`` 相等。"""
+    width = max(len(a), len(b))
+    a = a + (0,) * (width - len(a))
+    b = b + (0,) * (width - len(b))
+    return (a > b) - (a < b)
 
 
 @lru_cache(maxsize=4)
@@ -118,20 +138,28 @@ def _rule_status(rule: dict, query: str) -> dict[str, Any]:
 def _keyword_status(rule: dict, q: str) -> dict[str, Any]:
     any_terms = [str(t) for t in (rule.get("any") or []) if str(t).strip()]
     none_terms = [str(t) for t in (rule.get("none") or []) if str(t).strip()]
-    for term in none_terms:
-        if _norm(term) and _norm(term) in q:
-            return {
-                "status": STATUS_UNSATISFIED,
-                "evidence": f"查询中出现否定线索「{term}」",
-                "need": any_terms[:4],
-            }
-    for term in any_terms:
-        if _norm(term) and _norm(term) in q:
-            return {
-                "status": STATUS_KNOWN,
-                "evidence": f"查询中出现「{term}」",
-                "need": any_terms[:4],
-            }
+    none_hit = next((t for t in none_terms if _norm(t) and _norm(t) in q), None)
+    any_hit = next((t for t in any_terms if _norm(t) and _norm(t) in q), None)
+    if none_hit and any_hit:
+        # 正负线索同时出现时不强行判满足，交给人工确认。
+        return {
+            "status": STATUS_UNKNOWN,
+            "evidence": (f"同时出现「{any_hit}」与「{none_hit}」，"
+                         "线索冲突，请人工确认"),
+            "need": any_terms[:4],
+        }
+    if none_hit:
+        return {
+            "status": STATUS_UNSATISFIED,
+            "evidence": f"查询中出现否定线索「{none_hit}」",
+            "need": any_terms[:4],
+        }
+    if any_hit:
+        return {
+            "status": STATUS_KNOWN,
+            "evidence": f"查询中出现「{any_hit}」",
+            "need": any_terms[:4],
+        }
     return {
         "status": STATUS_UNKNOWN,
         "evidence": "查询里没有找到支持或否定该前提的线索",
@@ -140,12 +168,11 @@ def _keyword_status(rule: dict, q: str) -> dict[str, Any]:
 
 
 def _version_status(rule: dict, q: str) -> dict[str, Any]:
-    lo = str(rule.get("min") or "")
-    hi = str(rule.get("max") or "")
-    try:
-        lo_f = float(lo)
-        hi_f = float(hi)
-    except ValueError:
+    lo_text = str(rule.get("min") or "")
+    hi_text = str(rule.get("max") or "")
+    lo = _parse_version(lo_text)
+    hi = _parse_version(hi_text)
+    if lo is None or hi is None:
         return {"status": STATUS_UNKNOWN, "evidence": "规则版本区间无效",
                 "need": []}
 
@@ -157,20 +184,24 @@ def _version_status(rule: dict, q: str) -> dict[str, Any]:
     if not versions:
         return {
             "status": STATUS_UNKNOWN,
-            "evidence": f"查询未给出 glibc 版本（需要 {lo}–{hi}）",
-            "need": [f"glibc {lo}–{hi}"],
+            "evidence": f"查询未给出 glibc 版本（需要 {lo_text}–{hi_text}）",
+            "need": [f"glibc {lo_text}–{hi_text}"],
         }
-    inside = [v for v in versions if lo_f - 1e-9 <= float(v) <= hi_f + 1e-9]
+    parsed = [(v, _parse_version(v)) for v in versions]
+    inside = [v for v, p in parsed
+              if p is not None
+              and _compare_versions(lo, p) <= 0
+              and _compare_versions(p, hi) <= 0]
     if inside:
         return {
             "status": STATUS_KNOWN,
-            "evidence": f"查询给出 glibc {inside[0]}，在 {lo}–{hi} 内",
-            "need": [f"glibc {lo}–{hi}"],
+            "evidence": f"查询给出 glibc {inside[0]}，在 {lo_text}–{hi_text} 内",
+            "need": [f"glibc {lo_text}–{hi_text}"],
         }
     return {
         "status": STATUS_UNSATISFIED,
-        "evidence": f"查询给出 glibc {versions[0]}，超出 {lo}–{hi}",
-        "need": [f"glibc {lo}–{hi}"],
+        "evidence": f"查询给出 glibc {versions[0]}，超出 {lo_text}–{hi_text}",
+        "need": [f"glibc {lo_text}–{hi_text}"],
     }
 
 
@@ -188,10 +219,14 @@ def _requires_conditions(kb_dir: Path, rel: str, query: str,
         q = _norm(query)
         hit = (target_rel in context_paths) if target_rel else False
         named = bool(_norm(target_title)) and _norm(target_title) in q
-        if hit or named:
+        if named:
             status = STATUS_KNOWN
-            evidence = ("前提资料已在本次检索上下文中"
-                        if hit else "查询直接点名了该前提")
+            evidence = "查询直接点名了该前提"
+        elif hit:
+            # 检索命中只代表资料出现过，不代表选手已经掌握。
+            status = STATUS_UNKNOWN
+            evidence = (f"前提资料《{target_title}》在本批命中中出现过；"
+                        f"是否已掌握由你确认；参见 kb/{target_rel}")
         else:
             status = STATUS_UNKNOWN
             evidence = "本次上下文没有包含该前提资料"
@@ -236,6 +271,22 @@ def evaluate_conditions(kb_dir: str | Path, rel: str, query: str,
     conditions.extend(_requires_conditions(root, rel, query, ctx))
 
     if not conditions:
+        meta = _read_meta(root, rel)
+        title = str(meta.get("title") or "").strip()
+        # 资料型条目（有 front matter 且 title 不是路径回填）只是“没有登记规则”，
+        # 不能等于“没有前提”：状态保持 unknown。
+        # 没有 front matter 的杂项（或 title 就是相对路径）不是资料条目，
+        # 返回 known 才合理。
+        if meta and title and title != rel:
+            return {
+                "status": STATUS_UNKNOWN,
+                "status_label": STATUS_LABEL[STATUS_UNKNOWN],
+                "label": "尚未评估，无已知前提线索",
+                "conditions": [],
+                "hint": ("本条没有登记适用条件，状态未知；"
+                         "确认题面特征后可人工补规则"),
+                "trace": {"rules": 0, "requires": 0},
+            }
         return {"status": STATUS_KNOWN, "status_label": STATUS_LABEL[STATUS_KNOWN],
                 "label": "无额外适用前提", "conditions": [], "hint": "",
                 "trace": {"rules": 0, "requires": 0}}
@@ -289,6 +340,9 @@ def evaluate_paths(kb_dir: str | Path, paths: Iterable[str], query: str) -> dict
     lines = []
     for i in items:
         app = i["applicability"]
+        if not app["conditions"] and app["status"] == STATUS_UNKNOWN:
+            lines.append(f"- {i['path']}：{app['label']}（unknown）")
+            continue
         for c in app["conditions"]:
             if c["status"] == STATUS_UNKNOWN:
                 lines.append(f"- {i['path']}：缺少前提：{c['label']}（unknown）")
