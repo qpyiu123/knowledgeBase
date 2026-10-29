@@ -1,0 +1,426 @@
+{
+  "version": 1,
+  "description": "P10 扩容检索评测集：全部查询从 kb/ 现有文档的标题与正文派生，expected 为对应文档真实路径。查询以用户口吻描述题面现象，不直接复制文档标题。",
+  "queries": [
+    {
+      "id": "x-classical-rot13-flag",
+      "query": "一串纯字母的密文，synt 开头，怎么判断是凯撒、ROT13 还是维吉尼亚这类古典密码",
+      "expected": [
+        "crypto/classical-cipher.md"
+      ]
+    },
+    {
+      "id": "x-otp-crib",
+      "query": "给了好几段一样长的密文，源码里 key 只生成一次，怎么用 crib 把明文拖出来",
+      "expected": [
+        "crypto/otp-many-time-pad.md"
+      ]
+    },
+    {
+      "id": "x-hash-length-extension",
+      "query": "服务端用 md5(secret 拼 data) 做签名，我知道原 hash 和 data，想追加 &admin=1",
+      "expected": [
+        "crypto/hash-length-extension.md"
+      ]
+    },
+    {
+      "id": "x-hastad-broadcast",
+      "query": "同一个 m 用三个不同的 n、e 都是 3 加密，广播攻击 CRT 合并后开三次方",
+      "expected": [
+        "crypto/rsa-broadcast-attack.md"
+      ]
+    },
+    {
+      "id": "x-coppersmith-high-bits",
+      "query": "题目只给了 p 的高位，后面几百位未知，怎么用 small_roots 恢复因子",
+      "expected": [
+        "crypto/rsa-coppersmith.md"
+      ]
+    },
+    {
+      "id": "x-ecdsa-nonce-reuse",
+      "query": "两条 ECDSA 签名的 r 完全一样，nonce 被重用了，私钥怎么推",
+      "expected": [
+        "crypto/ecdsa-nonce-reuse-lattice.md"
+      ]
+    },
+    {
+      "id": "x-shamir-lagrange",
+      "query": "给了 threshold 和几个 (x,y) 分享点，常数项就是 flag，怎么拉格朗日插值",
+      "expected": [
+        "crypto/shamir-secret-sharing.md"
+      ]
+    },
+    {
+      "id": "x-des-2des-mitm",
+      "query": "代码里 DES 加密了两层，两把密钥各 56 位，中间相遇怎么打",
+      "expected": [
+        "crypto/des-3des-weakkey-mitm.md"
+      ]
+    },
+    {
+      "id": "x-sqli-waf-bypass",
+      "query": "union select 被 WAF 拦了，空格和逗号也过滤了，sqlmap 加什么 tamper",
+      "expected": [
+        "web/sql-injection-waf-bypass.md"
+      ]
+    },
+    {
+      "id": "x-xxe-file-read",
+      "query": "接口只收 XML，还能上传 svg，能不能用 DOCTYPE 外部实体读 /flag",
+      "expected": [
+        "web/xxe-injection.md"
+      ]
+    },
+    {
+      "id": "x-xss-csp-bot",
+      "query": "留言板有存储型 XSS，CSP 是 script-src self，admin bot 访问时怎么绕过限制执行 JS 并外带 cookie",
+      "expected": [
+        "web/xss-and-csp.md"
+      ]
+    },
+    {
+      "id": "x-http-smuggling",
+      "query": "前面 nginx 后面 Tomcat，请求里同时有 Content-Length 和 chunked，像是走私",
+      "expected": [
+        "web/http-request-smuggling.md"
+      ]
+    },
+    {
+      "id": "x-fastjson-autotype",
+      "query": "JSON 里塞 @type 指向 JdbcRowSetImpl，触发 JNDI，fastjson 哪些版本能打",
+      "expected": [
+        "web/fastjson-autotype.md"
+      ]
+    },
+    {
+      "id": "x-php-filter-chain",
+      "query": "include 参数可控，想读源码但 base64 被 ban，php://filter 过虑器链怎么构造",
+      "expected": [
+        "web/php-filter-chain.md"
+      ]
+    },
+    {
+      "id": "x-java-ysoserial",
+      "query": "base64 解出来 rO0AB 开头，依赖里有 commons-collections，ysoserial 用哪条链",
+      "expected": [
+        "web/java-deserialization.md"
+      ]
+    },
+    {
+      "id": "x-graphql-introspection",
+      "query": "站点只有 /graphql，introspection 被关了，能不能靠 Cannot query field 的字段建议猜 schema",
+      "expected": [
+        "web/graphql-attack.md"
+      ]
+    },
+    {
+      "id": "x-pyc-magic",
+      "query": "附件只有 pyc，文件头是 55 0d 0d 0a，反编译报 Unknown magic number",
+      "expected": [
+        "reverse/pyc-reverse.md"
+      ]
+    },
+    {
+      "id": "x-golang-pclntab",
+      "query": "静态链接的二进制很大，满是 runtime.morestack，函数名全是 sub_，怎么恢复 Go 符号",
+      "expected": [
+        "reverse/golang-reverse.md"
+      ]
+    },
+    {
+      "id": "x-upx-oep",
+      "query": "段表里有 UPX0 UPX1，入口是 pushad，upx -d 失败后怎么手动找 OEP",
+      "expected": [
+        "reverse/packed-upx.md"
+      ]
+    },
+    {
+      "id": "x-flutter-libapp",
+      "query": "apk 里 dex 只有 FlutterActivity，业务逻辑在 libapp.so，用 Blutter 怎么还原",
+      "expected": [
+        "reverse/flutter-dart-aot.md"
+      ]
+    },
+    {
+      "id": "x-wasm-decompile",
+      "query": "网页 fetch 一个 .wasm，文件开头是 00 61 73 6d，怎么转成可读伪代码",
+      "expected": [
+        "reverse/wasm-reverse.md"
+      ]
+    },
+    {
+      "id": "x-vm-dispatcher",
+      "query": "主函数是一个巨大 switch，还有 bytecode 数组和 pc 变量，自研虚拟机保护怎么还原",
+      "expected": [
+        "reverse/vm-protection.md"
+      ]
+    },
+    {
+      "id": "x-z3-linear-check",
+      "query": "校验全是异或移位没有分支，angr 跑不动，能不能直接翻译成 z3 约束",
+      "expected": [
+        "reverse/z3-solve.md"
+      ]
+    },
+    {
+      "id": "x-ret2csu-pop-rsi",
+      "query": "64 位程序找不到 pop rsi，只有 pop rdi，要调 write 传三个参数怎么办",
+      "expected": [
+        "pwn/ret2csu.md"
+      ]
+    },
+    {
+      "id": "x-ret2dlresolve",
+      "query": "程序没有 system 也没法泄露 libc，只有 Partial RELRO，能不能伪造动态链接结构",
+      "expected": [
+        "pwn/ret2dlresolve.md"
+      ]
+    },
+    {
+      "id": "x-srop-small-overflow",
+      "query": "静态链接，溢出只能覆盖很少字节，用 SROP 伪造 sigreturn frame 设置全部寄存器",
+      "expected": [
+        "pwn/ret2syscall.md"
+      ]
+    },
+    {
+      "id": "x-tcache-poisoning",
+      "query": "libc 2.31 菜单堆题有 UAF 和 double free，改 tcache next 拿任意地址",
+      "expected": [
+        "pwn/heap-tcache-dup.md"
+      ]
+    },
+    {
+      "id": "x-unsortedbin-leak",
+      "query": "free 一个大于 0x408 的 chunk 再 show，读出 0x7f 开头地址，怎么算 libc base",
+      "expected": [
+        "pwn/heap-unsortedbin-leak.md"
+      ]
+    },
+    {
+      "id": "x-fmt-hhn",
+      "query": "只能 printf 一次，要连续改六个地址，用 %hhn 按字节写大数值",
+      "expected": [
+        "pwn/format-string-advanced-hhn.md"
+      ]
+    },
+    {
+      "id": "x-canary-fork-bruteforce",
+      "query": "checksec 显示 Canary found，服务是 fork 出来的，能不能逐字节爆破 canary",
+      "expected": [
+        "pwn/stack-canary-bypass.md"
+      ]
+    },
+    {
+      "id": "x-audio-spectrogram",
+      "query": "wav 播放一直嘟嘟响，频谱图上好像画着字，这种音频隐写先看什么",
+      "expected": [
+        "misc/audio-steganography.md"
+      ]
+    },
+    {
+      "id": "x-qr-missing-finder",
+      "query": "二维码缺了一个定位角，扫出来只有半截 flag，怎么重建或者靠纠错恢复",
+      "expected": [
+        "misc/qr-and-barcode.md"
+      ]
+    },
+    {
+      "id": "x-pdf-hidden-object",
+      "query": "pdf 打开只有一句话但文件很大，strings 里看到两个 EOF，旧对象怎么提取",
+      "expected": [
+        "misc/pdf-and-doc.md"
+      ]
+    },
+    {
+      "id": "x-nc-menu-protocol",
+      "query": "题目只给 nc 地址，连上去是 1-5 的菜单，还有 SSH-2.0 横幅，脚本怎么 recvuntil",
+      "expected": [
+        "misc/nc-protocol-interaction.md"
+      ]
+    },
+    {
+      "id": "x-game-rng-predict",
+      "query": "nc 连上去是猜数字，要连胜 20 局，随机数用的 mt19937，怎么预测下一局",
+      "expected": [
+        "misc/game-and-interactive-misc.md"
+      ]
+    },
+    {
+      "id": "x-mp4-tail-frame",
+      "query": "mp4 结尾黑屏但进度条还有几秒，某一帧闪一下有文字，怎么逐帧导出",
+      "expected": [
+        "misc/video-steganography.md"
+      ]
+    },
+    {
+      "id": "x-log-top-ip",
+      "query": "几十万行 access.log 统计出现次数最多的 IP，用 awk sort uniq 一行流怎么写",
+      "expected": [
+        "misc/shell-oneliner-tricks.md"
+      ]
+    },
+    {
+      "id": "x-pcap-export-objects",
+      "query": "pcap 里想还原黑客上传的文件，tshark 的 --export-objects http 怎么用",
+      "expected": [
+        "forensics/pcap-basics.md"
+      ]
+    },
+    {
+      "id": "x-exif-gps",
+      "query": "只给一张照片问在哪拍的，元数据里应该看 GPS、相机型号还是拍摄时间",
+      "expected": [
+        "forensics/exif-metadata.md"
+      ]
+    },
+    {
+      "id": "x-mft-ads-timestomp",
+      "query": "附件是 $MFT，要找被删文件的时间和 Alternate Data Stream 里藏的内容",
+      "expected": [
+        "forensics/ntfs-mft-forensics.md"
+      ]
+    },
+    {
+      "id": "x-evtx-logon",
+      "query": "给的是 Security.evtx，想查 4624 4625 谁登录成功失败过，以及 U 盘插拔记录",
+      "expected": [
+        "forensics/registry-and-eventlog.md"
+      ]
+    },
+    {
+      "id": "x-usbstor-first-connect",
+      "query": "注册表 SYSTEM hive 里 USBSTOR 怎么还原 U 盘序列号和首次接入时间",
+      "expected": [
+        "forensics/usb-removable-forensics.md"
+      ]
+    },
+    {
+      "id": "x-sqlite-wal-delete",
+      "query": "sqlite 数据库记录被删了，同目录还有 -wal 和 -journal，怎么恢复旧数据",
+      "expected": [
+        "forensics/sqlite-forensics.md"
+      ]
+    },
+    {
+      "id": "x-apk-jadx-smali",
+      "query": "apk 先用 jadx 看 Java 逻辑，再改 smali 里的判断重打包签名，流程是什么",
+      "expected": [
+        "mobile/apk-static-analysis.md"
+      ]
+    },
+    {
+      "id": "x-ssl-pinning",
+      "query": "mitmproxy 抓不到 https，logcat 报 SSLHandshakeException，jadx 里有 CertificatePinner",
+      "expected": [
+        "mobile/android-ssl-pinning-bypass.md"
+      ]
+    },
+    {
+      "id": "x-ios-cryptid",
+      "query": "ipa 解压出 arm64 Mach-O，cryptid 是 1，还有 ptrace 反调试，怎么 dump 分析",
+      "expected": [
+        "mobile/ios-reverse.md"
+      ]
+    },
+    {
+      "id": "x-fart-dexdump",
+      "query": "classes.dex 只有几十 KB，lib 里有 libjiagu.so，静态看不到逻辑，怎么脱壳",
+      "expected": [
+        "mobile/android-unpacking-fart.md"
+      ]
+    },
+    {
+      "id": "x-uart-tx-find",
+      "query": "板子上只有 4 针排针，串口没输出，怎么用万用表或逻辑分析仪找 TX 和波特率",
+      "expected": [
+        "hardware/uart-jtag-swd.md"
+      ]
+    },
+    {
+      "id": "x-spi-flash-dump",
+      "query": "板上有 8 脚 W25Q 芯片，用 CH341A 夹子配合 flashrom 怎么 dump 固件",
+      "expected": [
+        "hardware/spi-flash-eeprom.md"
+      ]
+    },
+    {
+      "id": "x-can-obd",
+      "query": "附件是 candump 日志，0x7DF 发请求 0x7E8 收响应，车载 CAN 报文怎么分析",
+      "expected": [
+        "hardware/can-bus.md"
+      ]
+    },
+    {
+      "id": "x-sdr-ook",
+      "query": "433.92MHz 遥控器录音，看起来是 OOK 调制，怎么按脉宽还原按键码",
+      "expected": [
+        "hardware/sdr-signal-decoding.md"
+      ]
+    },
+    {
+      "id": "x-geolocation-shadow",
+      "query": "只给一张街景照片，有路牌和明显阴影，要反推经纬度写进 flag",
+      "expected": [
+        "osint/osint-geolocation.md"
+      ]
+    },
+    {
+      "id": "x-crt-subdomain",
+      "query": "给一个域名，想用证书透明度 crt.sh 和 FOFA 找子域名与同源资产",
+      "expected": [
+        "osint/osint-domain-infra.md"
+      ]
+    },
+    {
+      "id": "x-person-username",
+      "query": "给一个用户名，用 sherlock 找他的 GitHub 和社交账号，再交叉验证是不是同一人",
+      "expected": [
+        "osint/person-tracing.md"
+      ]
+    },
+    {
+      "id": "x-prompt-injection",
+      "query": "有个聊天接口，想让它吐出系统提示词，直接注入和藏在网页里的间接注入有什么区别",
+      "expected": [
+        "ai/prompt-injection.md"
+      ]
+    },
+    {
+      "id": "x-rag-poisoning",
+      "query": "文档问答机器人允许上传资料，怎么投毒让恶意块进入 top-k 并被模型当成指令",
+      "expected": [
+        "ai/rag-poisoning.md"
+      ]
+    },
+    {
+      "id": "x-membership-inference",
+      "query": "只给预测接口和 softmax 置信度，判断某条样本是不是训练集成员，没有影子模型怎么做",
+      "expected": [
+        "ai/model-extraction-membership.md"
+      ]
+    },
+    {
+      "id": "x-solidity-reentrancy",
+      "query": "withdraw 里先 call 转账再扣余额，还有 fallback，怎么重入把合约掏空",
+      "expected": [
+        "blockchain/solidity-reentrancy.md"
+      ]
+    },
+    {
+      "id": "x-evm-private-slot",
+      "query": "flag 藏在合约 private 变量里，用 getStorageAt 读 slot，mapping 和数组的槽怎么算",
+      "expected": [
+        "blockchain/evm-storage-slot.md"
+      ]
+    },
+    {
+      "id": "x-solana-signer",
+      "query": "Solana 程序只比较了 admin.key，没有检查 is_signer，能不能传任意账户绕过",
+      "expected": [
+        "blockchain/solana-ctf.md"
+      ]
+    }
+  ]
+}

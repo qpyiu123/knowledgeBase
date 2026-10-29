@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import json
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable, Sequence
@@ -159,5 +160,92 @@ def evaluate(
             {"id": s.case.id, "query": s.case.query,
              "expected": s.case.expected, "ranked": s.ranked}
             for s in scores if s.hit_at_k == 0.0
+        ],
+    }
+
+
+def evaluate_at_ks(
+    cases: Sequence[QueryCase],
+    search: Callable[..., Sequence[Any]],
+    ks: Sequence[int] = (5, 10),
+    primary_k: int | None = None,
+    measure_latency: bool = True,
+) -> dict[str, Any]:
+    """一次检索同时计算多个截断点的指标，并可记录单条查询延迟。
+
+    与 ``evaluate`` 的区别：只调用一次 search（top_k 取最大的 k），
+    因此 recall@5 与 recall@10 来自同一份排名，不会因候选深度不同而漂移。
+    ``primary_k`` 默认取最小的 k，用于 top1 / hit / recall 的兼容字段。
+    """
+    cutoffs = sorted({int(k) for k in ks})
+    if not cutoffs or cutoffs[0] <= 0:
+        raise ValueError("ks 必须是正整数")
+    max_k = cutoffs[-1]
+    primary = int(primary_k or cutoffs[0])
+    if primary not in cutoffs:
+        cutoffs = sorted(set(cutoffs) | {primary})
+        max_k = cutoffs[-1]
+
+    scores: list[dict[str, Any]] = []
+    for case in cases:
+        t0 = time.perf_counter()
+        hits = search(case.query, top_k=max_k, category=case.category,
+                      doc_type=case.doc_type)
+        elapsed_ms = (time.perf_counter() - t0) * 1000.0
+        ranked: list[str] = []
+        for h in hits:
+            p = h if isinstance(h, str) else getattr(h, "doc_path", None)
+            if p and p not in ranked:
+                ranked.append(str(p))
+
+        m = rank_metrics(ranked, case.expected, top_k=primary)
+        row: dict[str, Any] = {
+            "id": case.id,
+            "query": case.query,
+            "expected": case.expected,
+            "ranked": ranked,
+            "first_hit_rank": m["first"],
+            "top1": m["top1"],
+            "rr": round(m["rr"], 4),
+            "latency_ms": round(elapsed_ms, 2) if measure_latency else None,
+        }
+        for k in cutoffs:
+            mk = rank_metrics(ranked, case.expected, top_k=k)
+            row[f"hit@{k}"] = mk["hit"]
+            row[f"recall@{k}"] = round(mk["recall"], 4)
+            row[f"mrr@{k}"] = round(mk["rr"], 4)
+        row["hit"] = row[f"hit@{primary}"]
+        row["recall"] = row[f"recall@{primary}"]
+        scores.append(row)
+
+    n = len(scores)
+    if n == 0:
+        raise ValueError("没有评测查询")
+
+    agg: dict[str, Any] = {
+        "queries": n,
+        "top_k": max_k,
+        "primary_k": primary,
+        "top1": round(sum(s["top1"] for s in scores) / n, 4),
+        "mrr": round(sum(s["rr"] for s in scores) / n, 4),
+    }
+    for k in cutoffs:
+        agg[f"hit@{k}"] = round(sum(s[f"hit@{k}"] for s in scores) / n, 4)
+        agg[f"recall@{k}"] = round(
+            sum(s[f"recall@{k}"] for s in scores) / n, 4)
+        agg[f"mrr@{k}"] = round(sum(s[f"mrr@{k}"] for s in scores) / n, 4)
+    agg["hit"] = agg[f"hit@{primary}"]
+    agg["recall"] = agg[f"recall@{primary}"]
+    if measure_latency:
+        lat = [s["latency_ms"] for s in scores if s["latency_ms"] is not None]
+        agg["avg_latency_ms"] = round(sum(lat) / len(lat), 1) if lat else 0.0
+
+    return {
+        "aggregate": agg,
+        "scores": scores,
+        "misses": [
+            {"id": s["id"], "query": s["query"],
+             "expected": s["expected"], "ranked": s["ranked"]}
+            for s in scores if s[f"hit@{primary}"] == 0.0
         ],
     }

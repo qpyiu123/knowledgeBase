@@ -576,3 +576,46 @@ P9 后（2026-10-29）：Python **226 passed**（server 5 + workspace 1）；
   `/api/ask` 的上下文注入只用离线 Mock 核对请求体，真实模型输出质量待下次验证。
 - 选择器/弹窗仅有 jsdom 用例，未做真实浏览器录制。
 - 工作区文本只做长度截断和“数据非指令”标注，不是强注入隔离。
+
+---
+
+## 十四、评测扩容与真实模型 e2e（P10，2026-10-29）
+
+新增 `eval/search_queries_expanded.json`：60 条查询、60 篇不同文档（1:1），
+覆盖全部 11 个方向，`expected` 为 kb 真实路径。旧 22 条 `eval/search_queries.json`
+原样保留作基线。评测方法、案例来源与偏差见新建的 **`docs/EVAL.md`**。
+
+`tools/kb/evaluation.py` 新增 `evaluate_at_ks()`：每条查询只检索一次
+（`top_k=10`），同一排名同时算 @5/@10 并可记延迟。`tools/eval_search.py` 新增
+`--set all|legacy|expanded`、`--no-warmup`、`--no-latency`、`-v`，旧集
+`recall@5` 下降超过 1 个绝对点时退出码 2。
+
+| 集合 | 条数 | top1 | hit@5 | MRR | recall@5 | 平均延迟 |
+|---|---|---|---|---|---|---|
+| legacy | 22 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 400.7 ms |
+| expanded | 60 | 0.9833 | 1.0000 | 0.9917 | 1.0000 | 385.3 ms |
+
+- 唯一未进 top1：`x-xss-csp-bot`（`web/xss-and-csp.md` 排第 2）；未调权重。
+- 扩容集有两条查询首轮未进前 5，人工改写措辞后命中（`expected` 未动）。
+  改写前原文未留档，流程已如实写进 `docs/EVAL.md` 2.3 节，指标偏乐观。
+
+### 模型 manifest 404 修复（`tools/agent/server.py`）
+
+Ollama 残留 manifest 会让 `/api/tags` 列出名字，但实际 blob 不可用，旧
+`_pick_model` 选中后 `/api/chat` 返回 404。现在 `_resolve_model()` 先按名称打分，
+唯一最高分保持旧行为；多个同分候选才用 `/api/show` 逐个探活，取第一个可用者。
+health 的 `model_ok` 改用探活结果，`ok` 跟随 `model_ok`；不可用时返回
+“有模型标签但没有可用模型（/api/show 探测失败）”。`index_ok` 仍独立。
+
+### 真实模型 e2e
+
+`tools/e2e_ask.py`（标准库）建临时工作区、注入 2 fact + 1 failed attempt，
+带 `workspace_id` 调 `/api/ask`，再不带上下文调一次。实测 **PASS**
+（`work/e2e_ask_result.json`，服务 pid 27888 未停止）：带上下文 135.2 s /
+`579 tok · 4.3 tok/s`，无上下文 131.6 s / `769 tok · 5.9 tok/s`，均无 err，
+临时工作区已清理。SSE 契约没有 `start` 事件，脚本对此项如实标 SKIP。
+
+P10 后：Python **229 passed**（P9 226 + 新增 3）；前端 **6 files / 35 tests**；
+`npm run check` / `npm run build` 通过（JS 849.49 kB / gzip 261.02 kB）；
+`eval_search.py` legacy 22 条全 1.0000、expanded 见上表。真实模型 e2e 仍是
+一次性脚本，未纳入 pytest。

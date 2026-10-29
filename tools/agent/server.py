@@ -855,14 +855,60 @@ def _index_status() -> dict:
                 "error": f"{type(e).__name__}: {e}"}
 
 
+def _norm_model(name: str) -> str:
+    return "".join(ch for ch in name.lower() if ch not in "._-")
+
+
+def _model_score(name: str) -> int:
+    wnorm = _norm_model(MODEL)
+    nn = _norm_model(name)
+    if name == MODEL:
+        return 100
+    if nn == wnorm:
+        return 90
+    if nn.startswith(wnorm) or wnorm.startswith(nn):
+        return 60
+    if wnorm in nn:
+        return 40
+    return 0
+
+
+def _rank_models(names: list[str]) -> list[str]:
+    ranked = [n for n in names if _model_score(n) > 0]
+    return ranked or list(names)
+
+
+def _probe_model(name: str) -> bool:
+    """Ollama 的 /api/tags 可能残留同名但不可用的 manifest，需用 /api/show 探活。"""
+    import requests
+    try:
+        r = requests.post(f"{OLLAMA}/api/show", json={"model": name}, timeout=3)
+        return r.status_code == 200
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def _resolve_model(names: list[str]) -> tuple[str, bool]:
+    """返回 (实际模型名, 是否确认可用)。
+
+    只有一个最高分候选时保持旧行为（测试与离线场景不额外发请求）；
+    多个候选同分时才逐个 /api/show 探测，避免哈希残留名导致 404。
+    """
+    if not names:
+        return MODEL, False
+    ranked = _rank_models(names)
+    top = max(_model_score(n) for n in ranked)
+    group = [n for n in ranked if _model_score(n) == top]
+    if len(group) == 1:
+        return group[0], True
+    for cand in group:
+        if _probe_model(cand):
+            return cand, True
+    return group[0], False
+
+
 def _pick_model(names: list[str]) -> str:
-    if MODEL in names:
-        return MODEL
-    base = MODEL.split(":")[0].lower()
-    for n in names:
-        if n.split(":")[0].lower() == base:
-            return n
-    return names[0] if names else MODEL
+    return _resolve_model(names)[0]
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -1071,10 +1117,10 @@ class Handler(BaseHTTPRequestHandler):
             r = requests.get(f"{OLLAMA}/api/tags", timeout=4)
             r.raise_for_status()
             names = [m["name"] for m in r.json().get("models", [])]
-            model = _pick_model(names)
-            self._json({
-                "ok": bool(names),
-                "model_ok": bool(names),
+            model, model_ok = _resolve_model(names)
+            payload = {
+                "ok": model_ok,
+                "model_ok": model_ok,
                 "index_ok": index["ok"],
                 "build": BUILD_ID,
                 "config": CONFIG_ID,
@@ -1084,7 +1130,10 @@ class Handler(BaseHTTPRequestHandler):
                 "docs": index.get("docs", 0),
                 "ollama": OLLAMA,
                 "attachment": {"max_bytes": _attachment_max_bytes()},
-            })
+            }
+            if not model_ok:
+                payload["error"] = "Ollama 有模型标签，但没有可用的模型（/api/show 探测失败）"
+            self._json(payload)
         except Exception as e:  # noqa: BLE001
             self._json({
                 "ok": False,

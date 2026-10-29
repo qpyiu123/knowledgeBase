@@ -443,3 +443,48 @@ P4 的三态实现存在“把未知粉饰成已知”的偏差，本批只改�
 - **真实模型 e2e 未验证**：提交时 Ollama `:11434` 未运行，本批未启动服务；
   上下文注入只由离线 Mock 断言请求体。真实浏览器交互也未录制。
 - 工作区文本只做长度截断和“数据非指令”标注，不是强提示注入隔离。
+
+---
+
+## P10（已完成 2026-10-29）
+
+### 目标
+
+把固定评测集从 22 条扩到 ≥60 条并保持旧集不回退；补 P9 遗留的真实模型
+`/api/ask` 端到端验证；修掉 Ollama 残留 manifest 导致的 `/api/chat` 404。
+
+### 工作项
+
+1. 新增 `eval/search_queries_expanded.json`：从 kb 现有文档派生 60 条查询，
+   60 篇不同文档 1:1 标注，覆盖全部 11 个方向；`expected` 为真实路径，
+   查询用用户口吻描述现象，不直接复制标题。旧 22 条不动。
+2. `tools/kb/evaluation.py` 新增 `evaluate_at_ks()`：单次检索（`top_k=10`）
+   同时产出 @5/@10 的 hit/recall/MRR 与单条延迟，避免不同深度排名漂移。
+3. `tools/eval_search.py` 新增 `--set all|legacy|expanded`、`--no-warmup`、
+   `--no-latency`、`-v`；默认预热；旧集 `recall@5` 下降 >1 个绝对点时退出码 2。
+4. 新建 `docs/EVAL.md`：评测方法、legacy/expanded 案例来源、指标表、已知偏差；
+   如实记录扩容集两条查询首轮未进前 5、人工改写措辞后命中的流程。
+5. 修 `tools/agent/server.py`：`_resolve_model()` 按名称打分，多个同分候选用
+   `/api/show` 探活，避开残留 manifest；health 的 `model_ok` 改用探活结果，
+   `ok` 跟随 `model_ok`，不可用时给出可见错误。
+6. 新增 `tools/e2e_ask.py`：标准库真实模型冒烟，建临时工作区注入 2 fact +
+   1 failed attempt，带/不带 `workspace_id` 各问一次，断言 SSE 终态 `done`。
+
+### 验收结果
+
+- ✅ `pytest -o addopts="" -q` → **229 passed in 53.64s**（P9 226 + 新增 3）。
+- ✅ `npm run check` / `npm test -- --run` / `npm run build` 全通过；
+  前端 **6 files / 35 tests**，JS 849.49 kB（gzip 261.02 kB）。
+- ✅ `eval_search.py`：legacy 22 条 top1/hit@5/MRR/recall@5 全 **1.0000**（未回退）；
+  expanded 60 条 **top1=0.9833、hit@5=1.0000、MRR=0.9917、recall@5=1.0000**。
+- ✅ 真实模型 e2e **PASS**（`work/e2e_ask_result.json`）：带工作区 135.2 s /
+  `579 tok · 4.3 tok/s`，无上下文 131.6 s / `769 tok · 5.9 tok/s`，均无 err。
+- ✅ 未改 kb 内容、未重建索引、未停止用户服务（pid 27888 保持运行）。
+
+### 未完成 / 测试局限
+
+- expanded 集有两条查询在首轮未命中后人工改写措辞（`expected` 未动），
+  改写前原文未留档，指标偏乐观，且不是严格冻结盲测集。
+- 查询从文档派生，存在词汇泄漏；每条只标 1 篇，同主题好文档会被判未命中。
+- 未做图谱扩展/类型筛选的消融；平均延迟随本机负载波动。
+- `tools/e2e_ask.py` 是一次性脚本，真实模型验证未纳入 pytest 自动化。

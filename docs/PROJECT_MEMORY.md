@@ -4,7 +4,7 @@
 > 区分三类信息：**已验证事实 / 推断 / 未验证**。旧文档里的数字若未在本重复现，
 > 不得当作结论复用。
 
-**最后更新**：2026-10-28（P8：单文件不可读优雅降级；验证见第 13.5 节）
+**最后更新**：2026-10-29（P10：扩容评测集 60 条 + 真实模型 ask e2e；见第 13.7 节）
 
 ---
 
@@ -717,3 +717,74 @@ Writeup 导出把附件报告压成可读摘要。
 服务，`/api/ask` 上下文注入只用离线 Mock 断言请求体；真实浏览器里的
 选择器/弹窗交互仍只由 jsdom 用例覆盖。工作区上下文注入的是用户自己录入的文本，
 仅做长度截断与“数据非指令”标注，不构成对提示注入的强隔离。
+
+---
+
+## 13.7 P10 验证结果：评测集扩容 + 真实模型 e2e（2026-10-29）
+
+**结论**：旧 22 条基线未回退；新增 60 条从真实文档派生的查询前 5 名全部命中；
+真实模型 `/api/ask` 带/不带工作区上下文均已跑通。
+
+### 13.7.1 评测集与脚本
+
+- 新增 `eval/search_queries_expanded.json`：60 条查询、60 篇不同文档、1:1 标注，
+  覆盖全部 11 个方向；`expected` 均为 `kb/` 内真实路径，pytest 会校验存在性。
+- `tools/kb/evaluation.py` 新增 `evaluate_at_ks()`：每条查询只检索一次
+  （`top_k=10`），同一份排名同时算 hit/recall@5 与 @10，并记录单条耗时。
+- `tools/eval_search.py` 新增 `--set all|legacy|expanded`、`--no-warmup`、
+  `--no-latency`、`-v`；默认先预热一次；旧集 `recall@5` 比基线下降超过 1 个
+  绝对点时退出码为 2 并标注“回退”。
+- 评测方法与案例来源、已知偏差见新建的 `docs/EVAL.md`。扩容集有**两条查询**
+  在首轮未进前 5，人工改写措辞（`expected` 不变）后命中；改写前原文未留档，
+  该流程已在 `docs/EVAL.md` 第 2.3 节如实记录，指标因此略偏乐观。
+
+| 集合 | 条数 | top1 | hit@5 | MRR | recall@5 | recall@10 | 平均延迟 |
+|---|---|---|---|---|---|---|---|
+| legacy | 22 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 400.7 ms |
+| expanded | 60 | **0.9833** | **1.0000** | **0.9917** | **1.0000** | 1.0000 | 385.3 ms |
+
+唯一未进 top1 的是 `x-xss-csp-bot`（expected `web/xss-and-csp.md`，实际第 1 名为
+`web/css-injection-xs-leak.md`，第 2 名命中），因此 MRR = `(59 + 0.5) / 60`。
+本批未因该条调整任何权重。
+
+### 13.7.2 server.py 模型解析修复
+
+- **问题**：Ollama 模型目录可能残留 manifest（`/api/tags` 仍列出该名字），但
+  blob 已缺失/不可用；旧 `_pick_model` 只看名字，可能选中这种残留项，
+  随后 `/api/chat` 返回 **404**。
+- **修复**：`_resolve_model()` 先按归一化名称打分（精确 > 忽略 `._-` 后相等 >
+  前缀 > 包含）；只有一个最高分候选时保持旧行为、不额外发请求；多个候选同分时
+  用 `/api/show` 逐个探活，返回第一个 200 的模型。全部探活失败时返回首选名并
+  标记不可用。
+- **health 语义**：`model_ok` 改为 `_resolve_model()` 的探活结果，`ok` 跟随
+  `model_ok`；不可用时附带
+  “Ollama 有模型标签，但没有可用的模型（/api/show 探测失败）”。`index_ok`
+  独立，不再用“有模型标签”冒充模型可用。
+- `/api/ask` 仍通过 `_ask_model() → _pick_model()` 取同一个解析结果，避免
+  health 说可用、实际 chat 却打到坏 manifest。
+
+### 13.7.3 真实模型 e2e
+
+- 新增 `tools/e2e_ask.py`：标准库实现，建临时工作区 → 注入 2 条 fact + 1 条
+  failed attempt → 带 `workspace_id` 调 `/api/ask` → 再不带上下文调一次；
+  断言 SSE 终态 `done`、有 tok、无 err；结果可 `--out` 落盘。
+- 既有 SSE 契约固定为 `tok/err/done`，没有 `start` 事件；脚本把“首个非 tok 为
+  start”如实标 **SKIP** 并说明原因，`done` 仍按硬要求断言。
+- 实测结果（`work/e2e_ask_result.json`，服务 `:8765` pid 27888，未停止）：
+  **STATUS: PASS**。带工作区：566 个事件、135.2 s、`579 tok · 4.3 tok/s`；
+  无上下文：756 个事件、131.6 s、`769 tok · 5.9 tok/s`。两次均无 err，
+  临时工作区已清理。
+
+### 13.7.4 回归
+
+| 命令 | 结果 |
+|---|---|
+| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **229 passed in 53.64s**（P9 的 226 + 新增 3：扩容集加载/存在性、`evaluate_at_ks` 多截断点与延迟） |
+| `cd tools\agent\webapp; npm run check` | 通过（`tsc -b` 无输出） |
+| `npm test -- --run` | **6 files / 35 tests passed** |
+| `npm run build` | 通过；JS 849.49 kB（gzip 261.02 kB），CSS 207.25 kB（gzip 31.31 kB） |
+| `.\.venv\Scripts\python.exe tools\eval_search.py` | legacy 22 条全 1.0000；expanded 60 条见上表 |
+
+局限：expanded 集仍有词汇泄漏与两条人工改写带来的偏乐观；平均延迟随本机负载
+波动；`tools/e2e_ask.py` 不是 pytest 用例，真实模型结果依赖本机 Ollama 状态；
+未做图谱/类型筛选的消融实验。
