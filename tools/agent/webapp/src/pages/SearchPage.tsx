@@ -29,6 +29,9 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Md from '../components/Md';
 import AttachmentPanel from '../components/AttachmentPanel';
+import WorkspacePicker, {
+  type PickedWorkspace,
+} from '../components/WorkspacePicker';
 import { api, ask } from '../api';
 import type { DocType, Hit } from '../types';
 
@@ -82,6 +85,7 @@ export default function SearchPage({
   docs,
   workspaceId,
   workspaceTitle,
+  onSelectWorkspace,
   attachmentMaxBytes,
 }: {
   category: string;
@@ -89,6 +93,7 @@ export default function SearchPage({
   docs: number;
   workspaceId?: string;
   workspaceTitle?: string;
+  onSelectWorkspace?: (id: string, title: string) => void;
   attachmentMaxBytes?: number;
 }) {
   const [q, setQ] = useState('');
@@ -110,6 +115,8 @@ export default function SearchPage({
   const [elapsed, setElapsed] = useState(0);
   const [doneInfo, setDoneInfo] = useState('');
   const [copied, setCopied] = useState(false);
+  const [pickerHit, setPickerHit] = useState<Hit | null>(null);
+  const [defaultPickerOpen, setDefaultPickerOpen] = useState(false);
   const ta = useRef<HTMLTextAreaElement>(null);
   const ctrl = useRef<AbortController | null>(null);
   const t0 = useRef(0);
@@ -211,8 +218,10 @@ export default function SearchPage({
             setDoneInfo(info);
             setElapsed((Date.now() - t0.current) / 1000);
           },
+          onNotice: (m) => setError(m),
         },
         c.signal,
+        workspaceId,
       );
       if (!acc.trim()) setAnswer('> 模型没有返回内容。确认本地模型已启动。');
     } catch (e) {
@@ -224,7 +233,7 @@ export default function SearchPage({
       setBusy(false);
       setPhase('');
     }
-  }, [q, category, docType]);
+  }, [q, category, docType, workspaceId]);
 
   const run = useCallback(() => {
     if (mode === 'ask') runAsk();
@@ -254,25 +263,21 @@ export default function SearchPage({
 
   const refs = useMemo(() => hits.slice(0, 3), [hits]);
 
-  const saveToWorkspace = useCallback(
-    async (h: Hit) => {
-      if (!workspaceId) {
-        setError('先到「工作区」页创建或选择一个工作区，再收藏资料。');
-        return;
-      }
-      try {
-        await api.workspaces.addEntry(workspaceId, {
-          kind: 'reference',
-          title: h.title,
-          path: h.path,
-          text: '从搜索结果收藏',
-        });
-        setSavedToWorkspace((m) => ({ ...m, [h.path]: true }));
-      } catch (e) {
-        setError(`收藏失败：${String((e as Error).message || e)}`);
-      }
+  const saveHitToWorkspace = useCallback(
+    async (h: Hit, ws: PickedWorkspace) => {
+      // 图谱展开命中优先用 doc_id；没有时退回 path。
+      const target = h.doc_id || h.path;
+      if (!target) throw new Error('这条命中没有可收藏的文档路径');
+      await api.workspaces.addEntry(ws.id, {
+        kind: 'reference',
+        title: h.title,
+        path: target,
+        text: '从搜索结果收藏',
+      });
+      onSelectWorkspace?.(ws.id, ws.title);
+      setSavedToWorkspace((m) => ({ ...m, [target]: true }));
     },
-    [workspaceId],
+    [onSelectWorkspace],
   );
 
   // #q=关键词 / #ask=问题 自动执行（方便分享与测试）
@@ -302,11 +307,34 @@ export default function SearchPage({
           输入题面特征、函数名、报错信息，或描述已经试过的方法。
           {category ? ` 当前只看「${category}」方向。` : ''}
         </p>
-        <Text size="xs" c="dimmed" mt={6}>
-          {workspaceId
-            ? `当前工作区：${workspaceTitle || workspaceId}`
-            : '尚未选择工作区；到「工作区」页创建后可收藏资料、附着附件报告。'}
-        </Text>
+        <Group gap={8} mt={6} wrap="wrap">
+          <Text size="xs" c="dimmed">
+            {workspaceId
+              ? `默认工作区：${workspaceTitle || workspaceId}`
+              : '尚未选择默认工作区；问模型与收藏会先让你选择或新建。'}
+          </Text>
+          {onSelectWorkspace && (
+            <>
+              <Button
+                variant="subtle"
+                size="compact-xs"
+                onClick={() => setDefaultPickerOpen(true)}
+              >
+                {workspaceId ? '切换' : '选择工作区'}
+              </Button>
+              {workspaceId && (
+                <Button
+                  variant="subtle"
+                  size="compact-xs"
+                  color="gray"
+                  onClick={() => onSelectWorkspace('', '')}
+                >
+                  清除
+                </Button>
+              )}
+            </>
+          )}
+        </Group>
       </div>
 
       <Card withBorder radius="lg" className="search-card">
@@ -391,6 +419,7 @@ export default function SearchPage({
         maxBytes={attachmentMaxBytes}
         workspaceId={workspaceId}
         workspaceTitle={workspaceTitle}
+        onSelectWorkspace={onSelectWorkspace}
       />
 
       {busy && (
@@ -603,18 +632,25 @@ export default function SearchPage({
                       <Tooltip
                         label={
                           workspaceId
-                            ? `收藏到「${workspaceTitle || workspaceId}」`
-                            : '先到「工作区」页选择工作区'
+                            ? `收藏到「${workspaceTitle || workspaceId}」，可另选或新建`
+                            : '选择已有工作区或输入标题新建'
                         }
                       >
                         <Button
-                          variant={savedToWorkspace[h.path] ? 'light' : 'subtle'}
+                          variant={
+                            savedToWorkspace[h.doc_id || h.path] ? 'light' : 'subtle'
+                          }
                           size="compact-sm"
                           leftSection={<BookmarkPlus size={14} />}
-                          disabled={!workspaceId || savedToWorkspace[h.path]}
-                          onClick={() => void saveToWorkspace(h)}
+                          disabled={
+                            !(h.doc_id || h.path) ||
+                            savedToWorkspace[h.doc_id || h.path]
+                          }
+                          onClick={() => setPickerHit(h)}
                         >
-                          {savedToWorkspace[h.path] ? '已收藏' : '收藏到工作区'}
+                          {savedToWorkspace[h.doc_id || h.path]
+                            ? '已收藏'
+                            : '收藏到题目工作区'}
                         </Button>
                       </Tooltip>
                     </Group>
@@ -738,6 +774,32 @@ export default function SearchPage({
           知识库共 {docs} 篇 · 支持 Ctrl + K 快速聚焦
         </Text>
       )}
+
+      <WorkspacePicker
+        opened={pickerHit !== null}
+        onClose={() => setPickerHit(null)}
+        defaultId={workspaceId}
+        hint={
+          pickerHit
+            ? `收藏《${pickerHit.title}》到题目工作区；选择已有工作区或输入标题新建。`
+            : undefined
+        }
+        onPicked={async (ws) => {
+          if (pickerHit) await saveHitToWorkspace(pickerHit, ws);
+          setPickerHit(null);
+        }}
+      />
+
+      <WorkspacePicker
+        opened={defaultPickerOpen}
+        onClose={() => setDefaultPickerOpen(false)}
+        defaultId={workspaceId}
+        hint="选择默认工作区后，问模型会带上该题已确认的事实与失败尝试。"
+        onPicked={async (ws) => {
+          onSelectWorkspace?.(ws.id, ws.title);
+          setDefaultPickerOpen(false);
+        }}
+      />
     </Stack>
   );
 }

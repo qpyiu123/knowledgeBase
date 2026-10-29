@@ -31,6 +31,18 @@ async function getJSON<T>(url: string, init?: RequestInit): Promise<T> {
   return (await r.json()) as T;
 }
 
+/** 只有后端明确返回“工作区不存在”时，才允许调用方回落。 */
+async function isMissingWorkspace(r: Response): Promise<boolean> {
+  if (r.status !== 404) return false;
+  try {
+    const j = (await r.clone().json()) as { error?: unknown; code?: unknown };
+    if (j.code === 'workspace_not_found') return true;
+    return typeof j.error === 'string' && j.error.includes('工作区不存在');
+  } catch {
+    return false;
+  }
+}
+
 function postJSON<T>(url: string, body: unknown): Promise<T> {
   return getJSON<T>(url, {
     method: 'POST',
@@ -158,13 +170,26 @@ export async function ask(
   paths: string[],
   handlers: AskHandlers,
   signal?: AbortSignal,
+  workspaceId?: string | null,
 ): Promise<void> {
-  const r = await fetch('/api/ask', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ q, paths }),
-    signal,
-  });
+  const send = (withWorkspace: boolean) =>
+    fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        withWorkspace && workspaceId
+          ? { q, paths, workspace_id: workspaceId }
+          : { q, paths },
+      ),
+      signal,
+    });
+
+  let r = await send(true);
+  // 仅当后端明确说“工作区不存在”时，回落到无上下文提问一次并提示。
+  if (workspaceId && (await isMissingWorkspace(r))) {
+    handlers.onNotice?.('默认工作区不存在，已改为无上下文提问。');
+    r = await send(false);
+  }
   if (!r.ok || !r.body) throw new Error(await errorMessage(r));
 
   handlers.onStart?.();

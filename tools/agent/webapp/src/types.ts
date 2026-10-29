@@ -32,6 +32,7 @@ export type Hit = {
   title: string;
   category: string;
   path: string;
+  doc_id?: string;
   score: number;
   snippet: string;
   section?: string;

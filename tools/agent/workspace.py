@@ -645,6 +645,10 @@ class WorkspaceStore:
             lines.append("")
         else:
             for e in others:
+                report = e.get("report")
+                if isinstance(report, dict) and report:
+                    lines.extend(_writeup_report_block(e, report))
+                    continue
                 title = e.get("title") or e.get("url") or e.get("path") or "资料"
                 target = e.get("url") or ""
                 line = f"- 《{title}》"
@@ -676,6 +680,35 @@ class WorkspaceStore:
             lines.append(f"- [{ev.get('ts')}] {ev.get('summary')}")
         lines.append("")
         return "\n".join(lines)
+
+
+_IMAGE_KINDS = {"PNG", "JPEG", "JPG", "GIF", "BMP", "WEBP", "TIFF"}
+
+
+def _writeup_report_block(entry: dict, report: dict) -> list[str]:
+    """Writeup 里把附件类型与异常数压成一行；异常 >0 时列出前 3 条。"""
+    f = report.get("file") or {}
+    t = report.get("type") or {}
+    name = _one_line(entry.get("title") or f.get("name")) or "附件"
+    kind = _one_line(t.get("kind")) or "未知类型"
+    kind_label = kind + " 图" if kind.upper() in _IMAGE_KINDS else kind
+    anomalies = report.get("anomalies") or []
+    line = (f"- {name} — {kind_label}"
+            f"（附件报告：{kind_label}，{len(anomalies)} 异常）"
+            f"（来源 #{entry.get('id')}）")
+    saved = entry.get("path") or f.get("saved") \
+        or (report.get("storage") or {}).get("saved")
+    if saved:
+        line += f" — `{str(saved).replace(chr(92), '/')}`"
+    line += f"<!-- entry:{entry.get('id')} -->"
+    out = [line]
+    if anomalies:
+        out.append("  - 异常：" + "；".join(
+            _one_line(a) for a in anomalies[:3]))
+    note = _one_line(entry.get("text"))
+    if note:
+        out.append(f"  - 备注：{note}")
+    return out
 
 
 def _is_kb_ref(entry: dict) -> bool:

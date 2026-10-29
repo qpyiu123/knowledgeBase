@@ -122,6 +122,69 @@ describe('ask SSE 契约', () => {
     ).rejects.toThrow(/模型正在处理上一条问题.*429/);
   });
 
+  it('falls back to context-free ask once when the workspace is missing', async () => {
+    const bodies: string[] = [];
+    const fetchMock = vi.fn(async (_url: string, init?: RequestInit) => {
+      bodies.push(String(init?.body || ''));
+      if (bodies.length === 1) {
+        return new Response(JSON.stringify({ error: '工作区不存在' }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+      return new Response(
+        streamFrom(splitBytes('data: {"t":"done","info":"ok"}\n\n')),
+        { status: 200 },
+      );
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const notices: string[] = [];
+    const done: string[] = [];
+    await ask(
+      '问题',
+      ['crypto/a.md'],
+      {
+        onToken: () => {},
+        onNotice: (m) => notices.push(m),
+        onDone: (info) => done.push(info),
+      },
+      undefined,
+      'gone',
+    );
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(bodies[0]).workspace_id).toBe('gone');
+    expect(JSON.parse(bodies[1]).workspace_id).toBeUndefined();
+    expect(notices).toHaveLength(1);
+    expect(done).toEqual(['ok']);
+  });
+
+  it('does not fall back on an unrelated 404', async () => {
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ error: '接口不存在' }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const notices: string[] = [];
+    await expect(
+      ask(
+        '问题',
+        ['crypto/a.md'],
+        { onToken: () => {}, onNotice: (m) => notices.push(m) },
+        undefined,
+        'ws1',
+      ),
+    ).rejects.toThrow(/接口不存在.*404/);
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(notices).toEqual([]);
+  });
+
   it('propagates cancellation as AbortError', async () => {
     vi.stubGlobal(
       'fetch',

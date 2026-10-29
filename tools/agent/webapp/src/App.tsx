@@ -20,25 +20,15 @@ import Reader, { type ReaderTarget } from './components/Reader';
 import SearchPage from './pages/SearchPage';
 import WorkspacePage from './pages/WorkspacePage';
 import { api } from './api';
+import {
+  clearLastWorkspace,
+  loadLastWorkspace,
+  saveLastWorkspace,
+} from './lib/lastWorkspace';
 import type { Health, Stats } from './types';
 
 type Page = 'search' | 'workspace';
 type CurrentWorkspace = { id: string; title: string };
-
-const WS_KEY = 'ctf-kb-current-workspace';
-
-function loadWorkspace(): CurrentWorkspace {
-  try {
-    const raw = localStorage.getItem(WS_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as CurrentWorkspace;
-      if (parsed && typeof parsed.id === 'string') return parsed;
-    }
-  } catch {
-    // 忽略损坏的本地记录。
-  }
-  return { id: '', title: '' };
-}
 
 const CAT_LABEL: Record<string, string> = {
   web: 'Web',
@@ -63,17 +53,13 @@ export default function App() {
   const [reader, setReader] = useState<ReaderTarget>(null);
   const [page, setPage] = useState<Page>('search');
   const [currentWorkspace, setCurrentWorkspace] =
-    useState<CurrentWorkspace>(loadWorkspace);
+    useState<CurrentWorkspace>(loadLastWorkspace);
 
   const selectWorkspace = (id: string, title: string) => {
     const next = { id, title: title || id };
     setCurrentWorkspace(next);
-    try {
-      if (id) localStorage.setItem(WS_KEY, JSON.stringify(next));
-      else localStorage.removeItem(WS_KEY);
-    } catch {
-      // localStorage 不可用时只保留内存状态。
-    }
+    if (id) saveLastWorkspace(next);
+    else clearLastWorkspace();
   };
 
   useEffect(() => {
@@ -241,6 +227,7 @@ export default function App() {
                 docs={total}
                 workspaceId={currentWorkspace.id || undefined}
                 workspaceTitle={currentWorkspace.title || undefined}
+                onSelectWorkspace={selectWorkspace}
                 attachmentMaxBytes={health?.attachment?.max_bytes}
               />
             ) : (

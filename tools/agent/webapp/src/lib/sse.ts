@@ -11,6 +11,8 @@ export type AskHandlers = {
   onToken: (text: string) => void;
   onError?: (message: string) => void;
   onDone?: (info: string) => void;
+  /** 非致命的上下文提示（如默认工作区已不存在后自动回落）。 */
+  onNotice?: (message: string) => void;
 };
 
 /** 从缓冲区切出完整 SSE 事件，返回事件与剩余的半截数据。 */

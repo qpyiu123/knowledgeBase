@@ -211,6 +211,28 @@ def test_writeup_export_is_traceable(store: WorkspaceStore, tmp_path: Path):
     assert "先试共模" in md and "有效" in md
 
 
+def test_writeup_compresses_attachment_report_with_anomalies(store: WorkspaceStore):
+    wid = store.create("附件题", "forensics").get("id")
+    _, entry = store.add_entry(
+        wid, kind="reference", title="sample.png", source="analyze",
+        path="work/attachments/x/upload_sample.png",
+        report={
+            "executed": False,
+            "file": {"name": "sample.png", "size": 12, "sha256": "abc"},
+            "type": {"kind": "PNG", "is_text": False},
+            "anomalies": ["尾部追加数据", "CRC 不符", "多余 chunk", "第四条"],
+        },
+    )
+
+    md = store.export_writeup(wid)
+
+    assert ("sample.png — PNG 图（附件报告：PNG 图，4 异常）"
+            f"（来源 #{entry['id']}）") in md
+    assert "`work/attachments/x/upload_sample.png`" in md
+    assert "异常：尾部追加数据；CRC 不符；多余 chunk" in md
+    assert "第四条" not in md
+
+
 def test_only_kb_path_can_carry_anchor(store: WorkspaceStore):
     wid = store.create("锚点").get("id")
     with pytest.raises(WorkspaceError):

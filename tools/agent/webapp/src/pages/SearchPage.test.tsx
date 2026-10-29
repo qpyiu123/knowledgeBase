@@ -13,6 +13,11 @@ vi.mock('../api', () => ({
     stats: vi.fn(),
     doc: vi.fn(),
     feedback: vi.fn(),
+    workspaces: {
+      list: vi.fn(),
+      create: vi.fn(),
+      addEntry: vi.fn(),
+    },
   },
   ask: vi.fn(),
 }));
@@ -36,10 +41,16 @@ const HIT: Hit = {
   },
 };
 
-function renderPage() {
+function renderPage(workspaceId?: string) {
   return render(
     <MantineProvider>
-      <SearchPage category="" onOpenDoc={() => {}} docs={1567} />
+      <SearchPage
+        category=""
+        onOpenDoc={() => {}}
+        docs={1567}
+        workspaceId={workspaceId}
+        workspaceTitle={workspaceId ? '示例工作区' : undefined}
+      />
     </MantineProvider>,
   );
 }
@@ -47,13 +58,29 @@ function renderPage() {
 const searchMock = vi.mocked(api.search);
 const askMock = vi.mocked(ask);
 const feedbackMock = vi.mocked(api.feedback);
+const wsListMock = vi.mocked(api.workspaces.list);
+const wsCreateMock = vi.mocked(api.workspaces.create);
+const addEntryMock = vi.mocked(api.workspaces.addEntry);
 
 beforeEach(() => {
   searchMock.mockReset();
   askMock.mockReset();
   feedbackMock.mockReset();
+  wsListMock.mockReset();
+  wsCreateMock.mockReset();
+  addEntryMock.mockReset();
   searchMock.mockResolvedValue({ hits: [], ms: 1 });
   feedbackMock.mockResolvedValue({ ok: true, saved: 1 });
+  wsListMock.mockResolvedValue({ workspaces: [] });
+  wsCreateMock.mockResolvedValue({
+    ok: true,
+    workspace: { id: 'new1', title: '新题目' } as never,
+  });
+  addEntryMock.mockResolvedValue({
+    ok: true,
+    workspace: {} as never,
+    entry: {} as never,
+  });
 });
 
 describe('SearchPage 显式参数', () => {
@@ -85,6 +112,42 @@ describe('SearchPage 显式参数', () => {
 
     await screen.findByText('12 tok · 1.0 tok/s');
     await screen.findByText(/步骤一/);
+  });
+
+  it('passes the default workspace id to ask', async () => {
+    searchMock.mockResolvedValue({ hits: [HIT], ms: 2 });
+    askMock.mockImplementation(async () => {});
+
+    renderPage('ws1');
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+    await screen.findByRole('button', { name: '问模型' });
+    fireEvent.click(screen.getByRole('button', { name: '问模型' }));
+
+    await waitFor(() => expect(askMock).toHaveBeenCalledTimes(1));
+    expect(askMock.mock.calls[0][4]).toBe('ws1');
+  });
+
+  it('saves a hit into a newly titled workspace from the picker', async () => {
+    searchMock.mockResolvedValue({ hits: [HIT], ms: 2 });
+
+    renderPage();
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+    fireEvent.click(
+      await screen.findByRole('button', { name: '收藏到题目工作区' }),
+    );
+
+    fireEvent.change(await screen.findByLabelText('新工作区标题'), {
+      target: { value: '新题目' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /^存入$/ }));
+
+    await waitFor(() => expect(wsCreateMock).toHaveBeenCalledWith('新题目'));
+    await waitFor(() => expect(addEntryMock).toHaveBeenCalledTimes(1));
+    const [id, entry] = addEntryMock.mock.calls[0];
+    expect(id).toBe('new1');
+    expect(entry.kind).toBe('reference');
+    expect(entry.path).toBe(HIT.path);
+    expect(entry.source).toBeUndefined();
   });
 
   it('shows backend errors from the ask stream', async () => {

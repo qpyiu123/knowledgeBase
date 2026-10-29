@@ -9,5 +9,8 @@ export default defineConfig({
     include: ['src/**/*.test.{ts,tsx}'],
     setupFiles: ['src/test/setup.ts'],
     restoreMocks: true,
+    // 本机 Windows 上 fork worker 常因启动超时报错；线程池 + 2 并发稳定。
+    pool: 'threads',
+    maxWorkers: 2,
   },
 });

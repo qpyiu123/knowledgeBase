@@ -9,6 +9,8 @@ vi.mock('../api', () => ({
   api: {
     analyze: vi.fn(),
     workspaces: {
+      list: vi.fn(),
+      create: vi.fn(),
       addEntry: vi.fn(),
     },
   },
@@ -16,6 +18,8 @@ vi.mock('../api', () => ({
 
 const analyzeMock = vi.mocked(api.analyze);
 const addEntryMock = vi.mocked(api.workspaces.addEntry);
+const listMock = vi.mocked(api.workspaces.list);
+const createMock = vi.mocked(api.workspaces.create);
 
 const REPORT: AttachmentReport = {
   schema_version: 1,
@@ -65,6 +69,9 @@ function renderPanel(maxBytes = 1024, workspaceId: string | null = 'ws1') {
 beforeEach(() => {
   analyzeMock.mockReset();
   addEntryMock.mockReset();
+  listMock.mockReset();
+  createMock.mockReset();
+  listMock.mockResolvedValue({ workspaces: [] });
 });
 
 describe('AttachmentPanel', () => {
@@ -122,6 +129,40 @@ describe('AttachmentPanel', () => {
     expect(entry.kind).toBe('reference');
     expect(entry.report).toEqual(REPORT);
     await screen.findByText(/已附到「示例工作区」/);
+  });
+
+  it('saves the report into a newly titled workspace from the picker', async () => {
+    analyzeMock.mockResolvedValue(REPORT);
+    createMock.mockResolvedValue({
+      ok: true,
+      workspace: { id: 'new1', title: '新题目' } as never,
+    });
+    addEntryMock.mockResolvedValue({
+      ok: true,
+      workspace: {} as never,
+      entry: {} as never,
+    });
+    renderPanel(1024, null);
+
+    fireEvent.change(screen.getByLabelText('选择附件'), {
+      target: { files: [new File(['x'], 'sample.png')] },
+    });
+    await screen.findByText('分析结果：sample.png');
+    fireEvent.click(screen.getByRole('button', { name: '存入工作区' }));
+
+    fireEvent.change(await screen.findByLabelText('新工作区标题'), {
+      target: { value: '新题目' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /^存入$/ }));
+
+    await waitFor(() => expect(createMock).toHaveBeenCalledWith('新题目'));
+    await waitFor(() => expect(addEntryMock).toHaveBeenCalledTimes(1));
+    const [id, entry] = addEntryMock.mock.calls[0];
+    expect(id).toBe('new1');
+    expect(entry.kind).toBe('reference');
+    expect(entry.source).toBe('analyze');
+    expect(entry.text).toContain('PNG');
+    expect(entry.report).toEqual(REPORT);
   });
 
   it('does not offer attach without a current workspace', async () => {
