@@ -1,0 +1,109 @@
+---
+title: "GeekGame 2024 / [Algorithm] 神秘计算器（misc）"
+category: misc
+tags: ["GeekGame 2024", "[Algorithm] 神秘计算器", "cases", "官方资料", "official_writeup/algo-codegolf/README.md", "origin_tag:imported_cats"]
+signals: ["GeekGame 2024", "[Algorithm] 神秘计算器", "cases"]
+difficulty: medium
+source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/algo-codegolf/README.md"
+tools: []
+origin: imported_cats
+origin_id: "official-2dfff60e750740fb67c26c"
+origin_domain: "cases"
+origin_family: "official_event_archive"
+origin_event: "GeekGame 2024"
+origin_year: 2024
+origin_license: "not_declared"
+origin_attribution: ""
+origin_verification: "official_source_not_reproduced"
+origin_content_sha256: "3751c42bd2d1db59d4605a807dad6b30334f82ad0d7cbff08eff99a2dd6e9e14"
+origin_body_sha256: 2132d6ab632378c5eb14b6d4de6ba8b1e69fcad7f6b912c94de3a9aad3c9829b
+origin_title: "GeekGame 2024 / [Algorithm] 神秘计算器（misc）"
+origin_meta:
+  asset_refs: [{"downloaded_bytes": 624, "kind": "original_code_file", "local_path": "62_官方赛事题库/objects/d11cd6799d864532210aaa1939c95de8c18df5d2b360dd70375425a8c0f3e883.blob", "owner_id": "official-2dfff60e750740fb67c26c", "policy": "reference_only_no_execution", "relative_path": "official_writeup/algo-codegolf/attachment/algo-codegolf.py", "sha256": "d11cd6799d864532210aaa1939c95de8c18df5d2b360dd70375425a8c0f3e883", "source_url": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/algo-codegolf/attachment/algo-codegolf.py"}, {"downloaded_bytes": 106, "kind": "attachment", "local_path": "62_官方赛事题库/objects/3c7c69d521df9a0e9c9b9d50d072bed53b9248eb482090f7611c4c49f06e8eba.blob", "owner_id": "official-2dfff60e750740fb67c26c", "policy": "reference_only_no_execution", "relative_path": "official_writeup/algo-codegolf/sol/sol.txt", "sha256": "3c7c69d521df9a0e9c9b9d50d072bed53b9248eb482090f7611c4c49f06e8eba", "source_url": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/algo-codegolf/sol/sol.txt"}]
+  basis: "original_prose_not_runtime_verified"
+  challenge_key: "geekgame2024:official_writeup/algo-codegolf"
+  chunk_ids: [7246]
+  content_sha256: "3751c42bd2d1db59d4605a807dad6b30334f82ad0d7cbff08eff99a2dd6e9e14"
+  domain: "cases"
+  domain_basis: "unclassified_not_inferred_from_code"
+  event: "GeekGame 2024"
+  external_links_not_followed: 0
+  id: "official-2dfff60e750740fb67c26c"
+  kind: "official_wp_prose"
+  language: "zh"
+  license: "not_declared"
+  local_path: "62_官方赛事题库/objects/e8d45d0d11c7562293370a56129d6ec0d9331d6771f94255159ebba01bda1f96.blob"
+  official_evidence: "https://github.com/PKU-GeekGame/geekgame-4th"
+  original_path: "official_writeup/algo-codegolf/README.md"
+  revision: "a21d7f7387512ec7ef77720e998d60efa16f2353"
+  scope_note: "官方发布来源的说明正文；代码单独索引，未运行或分析。按文件收录，不把多份文件算作多道题。图片及附件下载状态见清单；仅按路径/原题分类标方向，binary 等跨方向资料留待分类。"
+  source_family: "official_event_archive"
+  source_url: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/algo-codegolf/README.md"
+  tags: ["GeekGame 2024", "[Algorithm] 神秘计算器", "cases", "官方资料", "official_writeup/algo-codegolf/README.md"]
+  title: "GeekGame 2024 / [Algorithm] 神秘计算器"
+  verification_status: "official_source_not_reproduced"
+  year: 2024
+updated: 2026-10-31
+---
+# GeekGame 2024 / [Algorithm] 神秘计算器（misc）
+
+> 本文由授权中文赛事 WP 正文导入（阶段 1，仅散文，代码段未导入）。
+>
+> - 来源：https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/algo-codegolf/README.md
+> - 许可：not_declared
+> - 署名：（未提供）
+> - 文档族：official_event_archive
+> - 赛事：GeekGame 2024
+> - 年份：2024
+> - 核验状态：official_source_not_reproduced
+> - 正文 sha256：3751c42bd2d1db59d4605a807dad6b30334f82ad0d7cbff08eff99a2dd6e9e14
+> - 导入 ID：official-2dfff60e750740fb67c26c
+> - 原 domain：cases
+> - 本地快照：62_官方赛事题库/objects/e8d45d0d11c7562293370a56129d6ec0d9331d6771f94255159ebba01bda1f96.blob
+> - 源修订：a21d7f7387512ec7ef77720e998d60efa16f2353
+> - 收录说明：官方发布来源的说明正文；代码单独索引，未运行或分析。按文件收录，不把多份文件算作多道题。图片及附件下载状态见清单；仅按路径/原题分类标方向，binary 等跨方向资料留待分类。
+> - 判定依据：original_prose_not_runtime_verified
+> - 附件引用：[{"owner_id": "official-2dfff60e750740fb67c26c", "relative_path": "official_writeup/algo-codegolf/attachment/algo-codegolf.py", "local_path": "62_官方赛事题库/objects/d11cd6799d864532210aaa1939c95de8c18df5d2b360dd70375425a8c0f3e883.blob", "downloaded_bytes": 624, "source_url": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/algo-codegolf/attachment/algo-codegolf.py", "sha256": "d11cd6799d864532210aaa1939c95de8c18df5d2b360dd70375425a8c0f3e883", "kind": "original_code_file", "policy": "reference_only_no_execution"}, {"owner_id": "official-2dfff60e750740fb67c26c", "relative_path": "official_writeup/algo-codegolf/sol/sol.txt", "local_path": "62_官方赛事题库/objects/3c7c69d521df9a0e9c9b9d50d072bed53b9248eb482090f7611c4c49f06e8eba.blob", "downloaded_bytes": 106, "source_url": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/algo-codegolf/sol/sol.txt", "sha256": "3c7c69d521df9a0e9c9b9d50d072bed53b9248eb482090f7611c4c49f06e8eba", "kind": "attachment", "policy": "reference_only_no_execution"}]
+
+> 原文：https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/algo-codegolf/README.md
+
+## [Algorithm] 神秘计算器
+
+- 命题人：debugger
+- 素数判断函数：200 分
+- Pell数（一）：200 分
+- Pell数（二）：300 分
+
+## 题目描述
+
+**[【附件：下载题目源码（algo-codegolf.py）】](attachment/algo-codegolf.py)**
+
+**【终端交互：连接到题目】**
+
+## 素数判断函数
+
+由于费马小定理，n为素数时`(2**n-2)%n==0`，从而有费马素性检验：`0**((2**n-2)%n)`用于判定一个数是否是素数。对于素数，这个表达式一定返回0。有少数合数也会使表达式返回0，这些数称为（模2的）伪素数。500以内的伪素数只有341。对于本题来说，可以用`0**((2**n-2)%n+0**((n-341)**2)))`来排除掉341。
+
+## Pell数
+
+Pell数有一个类似Binet公式的通项公式： $P_n=\frac{\left(1+\sqrt2\right)^n-\left(1-\sqrt2\right)^n}{2\sqrt2}$ ，也就是`((1+2**(1/2))**(n-1)-(1-2**(1/2))**(n-1))/2**(3/2)`（Python表达式，注意题目的n从1开始）。但是因为浮点误差，直接提交这个表达式是无法通过的。需要对结果取整：`(((1+2**(1/2))**(n-1)-(1-2**(1/2))**(n-1))/2**(3/2)+1/2)//1`，但是这个表达式已经达到50字符。注意`(1-2**(1/2))**n`是绝对值小于1的数，可以忽略掉，也就是`((((1+2**(1/2))**(n-1))/2**(3/2)+1/2)//1`。
+
+上面的表达式不能用于Flag 3，因为双精度浮点数最多只能精确表示2^53以内的整数，而且Flag 3要求返回的是整数。需要精确计算第200项必须要其他方法。
+
+生成函数是一种用每一项的系数表示数列的幂级数，也即 $\sum_{n=0}^\infty a_n x^n$ 。很多数列的生成函数具有封闭表达式，例如Pell数的生成函数是`x/(1 - 2*x - x^2)`（可以直接在<a href="https://oeis.org/A000129">OEIS</a>上找到）。如果我们代入x=1/1000，得到的数0.0010020050120290703，其中前几位（看成1000进制数）分别是1, 2, 5, 12, 29, 70，也就是Pell数的前几项。假如我们要提取出里面的29，可以用（Python表达式）`((1/1000)/(1-2/1000-1/1000**2)*(1000**5))//1%1000`。然后我们把分数两边乘以1000的平方，并把里面的除法改成整除，这样得到的结果是精确的整数：`(1000*1000**5)//(1000**
+
+2-2*1000-1)%1000`
+
+回到原题，把1000换成m，然后再考虑计算第n项，公式是`(m**n)//(m**2-2*m-1)%m`。这里m需要取一个任意的大整数（必须大于可能的结果），例如取m=2^1000，化简后的表达式是`(2**(1000*n))//(2**2000-2**1001-1)%(2**1000)`。
+
+## 其他解法
+
+验题人在验此题时，最开始被长度限制卡了，于是非常生气，就卷了一下三道题的长度。验题人的解答在[sol文件](./sol/sol.txt)中。三道题的长度分别是34，35，33。当然第二题可以直接交第三题的答案，不过没有必要，还是使用一下期望解法。
+
+赛后我统计了一下三问中选手提交的所有解答及其长度。选手们提交的答案都非常多样，分布还是比较均匀的。做法也有多种，且使用不同方式所压出来的式子也不太一致。
+
+第一问的最短解答只有19字符，为 `1//(10103**(n-1)%n)`。不难发现这也是一个非常经典的伪素数判定方式。只是这位选手找到了一个非常短且好的底数，使得检查范围内的所有素数和合数均可以正确通过判定。去写一个程序枚举找到这样的数字也不难。其他选手的也采用了不同但类似的伪素数判定方法，例如使用多个底数同时判定，或者像预期解法一样单独排除掉一个数字。
+
+第二问的最短期望解答有33字符，比我构造的短2个。为 `((1+2**(1/2))**(n-1)+1)//2**(3/2)`。不难发现这个构造和我的其实是一样的，只是使用了整除代替了我单独加的`//1`取整。这个表达式同样是基于预期解法上的，而且在化简方式中，仅仅使用了常规的表达式化简方法，同时把取整系数挪到分子的括号内。由于这个取整不需要太高的精度，所以在分子上直接`+1`也可以得到正确结果。这一问有很多同学都给出了神秘但类似的解答。例如某位同学构造了`(6625109*(93222358/38613965)**(n-1)/9369319+1)//2`长度正好为49的解答。显然，这位同学并没有发现我们可以使用`2**(1/2)`的方式开根，而是大力使用分数逼近构造了一个`2**(1/2)+1`。
+
+第三问的最短解答为29个字符，比我构造的短4个，为`9**n**2//((9**n-1)**2-2)%9**n`。和我的解答的区别是分母做了一下整理，更短了。这个构造的具体做法和预期解法是一致的，只是带入的数字替换成了`9**n`，并做了一些表达式化简。当然本题还有多种其他做法，例如有十几位同学直接找到了OEIS的FORMULA栏目的最后一行，将其写成了Python表达式并通过了此题(不过看起来大部分同学都和我一样并没有注意到这一行)。还有大量的数理基础扎实的同学(例如[这位同学](../../players_writeup/1047/README.md#flag3-4))，构造了一个可以表达根号2的模意义下的环，并在上面做了一定的数学推导，进而得出了此题的解。

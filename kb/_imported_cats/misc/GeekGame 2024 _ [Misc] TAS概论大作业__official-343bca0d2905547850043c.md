@@ -1,0 +1,169 @@
+---
+title: "GeekGame 2024 / [Misc] TAS概论大作业"
+category: misc
+tags: ["GeekGame 2024", "[Misc] TAS概论大作业", "misc", "官方资料", "official_writeup/misc-mario/README.md", "origin_tag:imported_cats"]
+signals: ["GeekGame 2024", "[Misc] TAS概论大作业", "misc"]
+difficulty: medium
+source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/README.md"
+tools: []
+origin: imported_cats
+origin_id: "official-343bca0d2905547850043c"
+origin_domain: "misc"
+origin_family: "official_event_archive"
+origin_event: "GeekGame 2024"
+origin_year: 2024
+origin_license: "not_declared"
+origin_attribution: ""
+origin_verification: "official_source_not_reproduced"
+origin_content_sha256: "c3af7c61bd2df0567c95d3f977f6c95606196cd5bf7c88c47b96dc772912f009"
+origin_body_sha256: 0bb326b115c470f9699902d6cde89742f1aa5b6d08134f6bbd64ccc52f71ce22
+origin_title: "GeekGame 2024 / [Misc] TAS概论大作业"
+origin_meta:
+  asset_refs: [{"downloaded_bytes": 38875, "kind": "attachment", "local_path": "62_官方赛事题库/objects/e34761a0cd6b03eb321ba042c5d777202a6780071addd2fbb8a5e490dd0db8c2.blob", "owner_id": "official-343bca0d2905547850043c", "policy": "reference_only_no_execution", "relative_path": "official_writeup/misc-mario/attachment/misc-mario.zip", "sha256": "e34761a0cd6b03eb321ba042c5d777202a6780071addd2fbb8a5e490dd0db8c2", "source_url": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/attachment/misc-mario.zip"}, {"downloaded_bytes": 2504, "kind": "original_code_file", "local_path": "62_官方赛事题库/objects/e782ec51a3945520266070eadf6c2bb9b2c9301a3ef257e6b7f6a30cb37f702b.blob", "owner_id": "official-343bca0d2905547850043c", "policy": "reference_only_no_execution", "relative_path": "official_writeup/misc-mario/sol/flag3-mem.S", "sha256": "e782ec51a3945520266070eadf6c2bb9b2c9301a3ef257e6b7f6a30cb37f702b", "source_url": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/sol/flag3-mem.S"}, {"downloaded_bytes": 19343, "kind": "image", "local_path": "62_官方赛事题库/objects/5b5d264f104ff77ed839d5ce9be305759cabc72d28f3d3064c36cb9eb447c1a0.blob", "owner_id": "official-343bca0d2905547850043c", "policy": "reference_only_no_execution", "relative_path": "official_writeup/misc-mario/watch.png", "sha256": "5b5d264f104ff77ed839d5ce9be305759cabc72d28f3d3064c36cb9eb447c1a0", "source_url": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/watch.png"}]
+  basis: "original_prose_not_runtime_verified"
+  challenge_key: "geekgame2024:official_writeup/misc-mario"
+  chunk_ids: [7416]
+  content_sha256: "c3af7c61bd2df0567c95d3f977f6c95606196cd5bf7c88c47b96dc772912f009"
+  domain: "misc"
+  domain_basis: "repository_path"
+  event: "GeekGame 2024"
+  external_links_not_followed: 11
+  id: "official-343bca0d2905547850043c"
+  kind: "official_wp_prose"
+  language: "zh"
+  license: "not_declared"
+  local_path: "62_官方赛事题库/objects/7763027c01f0da7c123729fe8f8fb03244617dc6745f01e794b6f91fc4800873.blob"
+  official_evidence: "https://github.com/PKU-GeekGame/geekgame-4th"
+  original_path: "official_writeup/misc-mario/README.md"
+  revision: "a21d7f7387512ec7ef77720e998d60efa16f2353"
+  scope_note: "官方发布来源的说明正文；代码单独索引，未运行或分析。按文件收录，不把多份文件算作多道题。图片及附件下载状态见清单；仅按路径/原题分类标方向，binary 等跨方向资料留待分类。"
+  source_family: "official_event_archive"
+  source_url: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/README.md"
+  tags: ["GeekGame 2024", "[Misc] TAS概论大作业", "misc", "官方资料", "official_writeup/misc-mario/README.md"]
+  title: "GeekGame 2024 / [Misc] TAS概论大作业"
+  verification_status: "official_source_not_reproduced"
+  year: 2024
+updated: 2026-10-31
+---
+# GeekGame 2024 / [Misc] TAS概论大作业
+
+> 本文由授权中文赛事 WP 正文导入（阶段 1，仅散文，代码段未导入）。
+>
+> - 来源：https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/README.md
+> - 许可：not_declared
+> - 署名：（未提供）
+> - 文档族：official_event_archive
+> - 赛事：GeekGame 2024
+> - 年份：2024
+> - 核验状态：official_source_not_reproduced
+> - 正文 sha256：c3af7c61bd2df0567c95d3f977f6c95606196cd5bf7c88c47b96dc772912f009
+> - 导入 ID：official-343bca0d2905547850043c
+> - 原 domain：misc
+> - 本地快照：62_官方赛事题库/objects/7763027c01f0da7c123729fe8f8fb03244617dc6745f01e794b6f91fc4800873.blob
+> - 源修订：a21d7f7387512ec7ef77720e998d60efa16f2353
+> - 收录说明：官方发布来源的说明正文；代码单独索引，未运行或分析。按文件收录，不把多份文件算作多道题。图片及附件下载状态见清单；仅按路径/原题分类标方向，binary 等跨方向资料留待分类。
+> - 判定依据：original_prose_not_runtime_verified
+> - 附件引用：[{"owner_id": "official-343bca0d2905547850043c", "relative_path": "official_writeup/misc-mario/attachment/misc-mario.zip", "local_path": "62_官方赛事题库/objects/e34761a0cd6b03eb321ba042c5d777202a6780071addd2fbb8a5e490dd0db8c2.blob", "downloaded_bytes": 38875, "source_url": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/attachment/misc-mario.zip", "sha256": "e34761a0cd6b03eb321ba042c5d777202a6780071addd2fbb8a5e490dd0db8c2", "kind": "attachment", "policy": "reference_only_no_execution"}, {"owner_id": "official-343bca0d2905547850043c", "relative_path": "official_writeup/misc-mario/sol/flag3-mem.S", "local_path": "62_官方赛事题库/objects/e782ec51a3945520266070eadf6c2bb9b2c9301a3ef257e6b7f6a30cb37f702b.blob", "downloaded_bytes": 2504, "source_url": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/sol/flag3-mem.S", "sha256": "e782ec51a3945520266070eadf6c2bb9b2c9301a3ef257e6b7f6a30cb37f702b", "kind": "original_code_file", "policy": "reference_only_no_execution"}, {"owner_id": "official-343bca0d2905547850043c", "relative_path": "official_writeup/misc-mario/watch.png", "local_path": "62_官方赛事题库/objects/5b5d264f104ff77ed839d5ce9be305759cabc72d28f3d3064c36cb9eb447c1a0.blob", "downloaded_bytes": 19343, "source_url": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/watch.png", "sha256": "5b5d264f104ff77ed839d5ce9be305759cabc72d28f3d3064c36cb9eb447c1a0", "kind": "image", "policy": "reference_only_no_execution"}]
+
+> 原文：https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/README.md
+
+## [Misc] TAS概论大作业
+
+- 命题人：MaxXing、xmcp
+- 你过关：150 分
+- 只有神知道的世界：200 分
+- 诗人握持：350 分
+
+## 题目描述
+
+**[【附件：下载题目附件（misc-mario.zip）】](attachment/misc-mario.zip)**
+
+**【网页链接：访问题目网页】**
+
+## 预期解法
+
+大家好啊，我是 MaxXing，今天来点大家想看的东西。
+
+这次题目的思路是 xmcp 提供的。最开始我们是想出一个关于超级马里奥的 pwn 题，大概就是那种“手柄一通操作输入一堆申必代码之后游戏就通关”之类看起来很炫酷的操作。
+
+这种操作的学名叫做任意代码执行（Arbitrary Code Execution，ACE）。关于马里奥系列的 ACE，最经典的例子有两个：
+
+* **超任（Super Famicom 或者叫 SNES）平台的超级马里奥世界（Super Mario World）**：[实机 41.022 秒通关](https://www.youtube.com/watch?v=mDUt198P6FM)，还有个更离谱的[在游戏里注入其他游戏](https://www.youtube.com/watch?v=OPcV9uIY5i4)的例子。
+* **红白机平台的超级马里奥三代（Super Mario Bros. 3）**：[利用基于 ACE 的 wrong warp 技巧速通](https://www.youtube.com/watch?v=fxZuzos7Auk)。
+
+但以上两个例子最大的问题是，要想实现 ACE，你必须精确操控游戏里某些物品的 X、Y 坐标或者其他状态，比如龟壳。为了完成 pwn，选手必须自己打出这种操作，然而即便可以利用 TAS，这类操作对于毫无经验的新手来说也有点太难了（我自己就是新手）。
+
+于是，在一通别样的搜索大战之后，我找到了一个基于红白机超级马里奥一代（Super Mario Bros.）的 ACE 的例子，也就是这个 [Bad Apple](https://tasvideos.org/8991S)。它有几点好：
+
+1. 基于广为人知的初代超级马里奥，有坚实的群众基础。
+2. 流程不长，且整个过程不需要穿墙之类的单帧操作，你水平还行的话完全可以不用 TAS 手打。
+3. ACE 的 payload 是预先载入到内存里的，不需要用各种奇怪的方式输入到游戏中去。虽然这样看起来有点耍赖，需要借助换卡带之类的第三方手段操作内存，不如前两个例子的整体性强，但贵在简单。
+
+在坐牢一整个十一假期，爆看四五个红白机模拟器的源代码（甚至给其中的一些提了 PR），手打 + TAS 若干轮之后，我终于把这道题搞定了。
+
+意外的是，这道题本来打算出成 binary 的，可能是考虑到前两个 flag 的成分，还是被 xmcp 放到了 misc 分类下。至于为什么要有前两个 flag，主要是因为上来就让大家 ACE 有点不太友好，还是需要两个和 TAS 相关的 flag 来缓冲一下难度，同时维持和题目标题的联系。
+
+当然，这也导致了本题第三个 flag 和前两个之间难度上的割裂（主要是第三个 flag 相比前两个步骤太多，而且不好 debug），我再次背大锅，向大家道歉……
+
+最后，感谢 xmcp 和 thezzisu 在搭建本题 web 前端方面的的协助！
+
+> [!NOTE]
+> **关于译名的叠甲**：我注意到有选手吐槽“马里奥”的官方中文译名应为“马力欧”，**我个人**向来对日本人把机器猫翻译为“哆啦A梦”、把喷射战士翻译为“斯普拉遁”的行为不感冒，所以在此选择了**我主观感受上**中国大陆游戏圈子内接受程度相对较高的“马里奥”来称呼マリオ。如有冒犯，你当看一乐即可。
+
+> [!NOTE]
+> **关于 TAS 相关术语的叠甲**：我本人只是一个喜欢看别人打 TAS 的游戏爱好者，但几乎从没自己打过 TAS。因此，尽管我已经尽力避免，但依然可能会在一些地方出现表述上的错误，敬请见谅。
+>
+> 例如之前提示中关于 lag frame 的表述被指出，“lag frame”的说法非常外行（虽然模拟器源码里也是这么写的），其存在的意义是为了支持 subframe 操作，并非一无是处。
+>
+> 如果你跟我一样外行，请勿轻信我所描述的内容，如有需要，请自行查证。
+
+## Flag 1：你过关
+
+如果你玩过初代马里奥的话，这道题基本上就是送分题。你只需要在模拟器中，按照 1-1、1-2、4-1、4-2、8-1、8-2、8-3、8-4 的路线打通游戏，然后把录像转换成题目要求的格式，即可拿到 flag。
+
+如果你没玩过，但意识到了什么是 TAS，并且擅长搜索，那这道题更是送分中的送分。你可以尝试搜索：“nes super mario tas movie”，之后不难看到 TASVideos 网站的[专题页面](https://tasvideos.org/1G)。在其中找一个时长小于 10 分钟的录像，比如 [HappyLee 的世界纪录](https://tasvideos.org/1715M)（这位是国人，在 B 站也有[账号](https://space.bilibili.com/1497270)），简单分析 FM2 的录像格式之后，写个脚本转换一下格式即可：
+
+## Flag 2：只有神知道的世界
+
+和 flag 1 类似，区别是为了进入负世界，你需要在 1-2 的跳关处穿墙，在跳关目标还没被加载出来之前，进入最左边的管道。
+
+有两种方式，一种是找现成的录像，注意尽量不要找 FDS（磁碟机系统）平台的录像，这个和普通的红白机还是有些区别的，两者并不可以直接互换。然而我并没找到，但有些选手似乎找到了，你不妨去看看他们的 writeup。
+
+另一种就是[自己打](https://www.bilibili.com/video/BV1Fy411B7KE/?t=18)，或者基于现有录像的前半段，自己打后半段。比如之前提到的 HappyLee 的 TAS 录像就利用了 1-2 穿墙的技巧跳关，基于这个录像很容易改出一个进入负世界的版本。
+
+## Flag 3：诗人握持
+
+Flag 3 的预期解法和 Bad Apple ACE 的流程如出一辙。
+
+首先，修改内存，让游戏初始化之后可以直接从 N-1 续关。查询[游戏的反汇编](https://gist.github.com/1wErt3r/4048722)得知，游戏初始化后会检查内存的两个位置：
+
+* `0x07d7` 处的最高分纪录中每个字节的数值必须小于 10。
+* `0x07ff` 处必须为 `0xa5`。
+
+否则，游戏会拒绝从 `0x07fd` 处读取关卡记录。将上述位置设置妥善，并将 `0x07fd` 修改为 `0x16`，才可从 N-1 续关。
+
+游戏初始化后，同时按 A 键和开始键即可续关。在通关 N-1 的流程中，你需要让马里奥拿到火花的状态，为击杀库巴做准备。
+
+之后，一路打到 N-2 关底。第 N-1 和 N-2 关属于卡了游戏的 bug，并非游戏中预期会出现的关卡，因此它们的内容分别和 8-3、8-4 关几乎完全一致，区别是 N-2 不存在类似 8-4 中的循环点，所以一直走就可以见到库巴。
+
+接下来，使用火花打出五个火球击杀库巴。在第五个火球接触库巴之前，按住 A 键，此后游戏会经过一系列流程，跳转执行 `0x1181`（即内存 `0x0181`）处的代码。关于此过程的详细解释请参考 [Bad Apple 中的文字说明](https://tasvideos.org/8991S#ExecutingArbitraryCode)，或者[对应视频](https://www.youtube.com/watch?v=Wa0u1CjGtEQ)。
+
+最后，你需要编写一份把手柄输入显示在屏幕上的 6502 程序，在游戏初始化之前，把它放在内存的对应位置。超级马里奥中，可供你放置这份 payload 的未初始化内存总大小只有大概 138 字节，所以你的程序不能写得太复杂。
+
+[我实现的 payload](sol/flag3-mem.S) 的流程大致如下：
+
+1. 初始化 PPU 状态，使其加载 `0x1000` 作为 background pattern table，以便输出 16 进制字符。此外，关闭 vblank NMI，避免 CPU 执行超级马里奥本来的中断处理代码，破坏内存的数据（好家伙，谁破坏谁啊）。
+2. 死循环，直到 vblank 出现，这代表旧的一帧已经结束了，新的一帧即将开始。
+3. 读取当前帧的手柄输入，大小为一个字节。
+4. 判断这个字节如果为 0（flag 中一定不会出现 `'\0'`），则忽略这次输入，继续等下一帧。这部分是为了避免刚执行 payload 时屏幕上出现无关内容。
+5. 将输入的字节分成高 4-bit 和低 4-bit，分别算出对应的 16 进制字符 pattern 的地址，写到 PPU 的 nametable 中。
+6. 更新地址指针、PPU 滚动偏移量等杂项内容。
+7. 画面更新完了，回到第 2 步
+
+，接着等下一帧。
+
+终于，在播放完录像之后，你可以看到这样的画面：
+
+终于，在播放完录像之后，你可以看到这样的画面：
+
+将画面顶端的 16 进制按 ASCII 转换为字符，即可得到最终的 flag。

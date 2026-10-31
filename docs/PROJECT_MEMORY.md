@@ -4,7 +4,7 @@
 > 区分三类信息：**已验证事实 / 推断 / 未验证**。旧文档里的数字若未在本重复现，
 > 不得当作结论复用。
 
-**最后更新**：2026-10-29（P10：扩容评测集 60 条 + 真实模型 ask e2e；见第 13.7 节）
+**最后更新**：2026-10-31（import0：导入授权中文赛事 WP 散文 277 篇；见第 14 节）
 
 ---
 
@@ -788,3 +788,69 @@ Writeup 导出把附件报告压成可读摘要。
 局限：expanded 集仍有词汇泄漏与两条人工改写带来的偏乐观；平均延迟随本机负载
 波动；`tools/e2e_ask.py` 不是 pytest 用例，真实模型结果依赖本机 Ollama 状态；
 未做图谱/类型筛选的消融实验。
+
+---
+
+## 14. 导入批 import0：授权中文赛事 WP 正文（2026-10-31）
+
+### 14.1 来源与范围
+
+- 来源：`F:\ctf\CTF知识库\80_知识工作台\data\evidence.sqlite3`，**只读**
+  （`sqlite3.connect("file:<路径>?mode=ro", uri=True)`），全程未写 `F:\ctf`。
+- 只导 `kind='source_prose'`（574 个 source / 5113 段）。**`user_prose` 整批不导**：
+  其 metadata 没有 `license`/`verification_status` 字段（13058 段全缺），只用
+  `review_status` 表达审核状态；内容与本地书 PDF、语言官方文档、`CTF大赛WP集合`
+  快照高度重合（同一份存量资料，重复收录对检索是噪声），许可无法逐篇追溯。
+- `source_code`（21626 段）与 `technique_guide`（26 段）本批不导。
+
+### 14.2 脚本与落盘
+
+- 脚本 `tools/import_cat_prose.py`（标准库 + 既有依赖；无新增 pip 依赖）。
+  `--dry-run/--limit N/--full/--resume`，每 100 篇落 `work/import_cats/progress.json`。
+- 输出 `kb/_imported_cats/<category>/<title>__<source_id>.md`，**277 篇**
+  （misc 84 / crypto 61 / reverse 48 / web 46 / pwn 38），正文合计 672,341 字。
+- manifest：`work/import_cats/manifest.json`（277 条，含 content_sha256/source_url/
+  body_sha256/passages/chars）；报告 `work/import_cats/import_report.json`。
+- 段落重叠剪枝：同一 source 的相邻段是带重叠的抽取窗口，拼接前剪掉重叠，
+  共剪 155,122 字（首段全保留，正文无丢失）。
+- 许可保留：`license/attribution/source_url/event/year/content_sha256` 既进
+  front-matter 的 `origin_*` 字段，也**原样**写进 `origin_meta`（整份 JSON 全部键），
+  还在正文顶部"来源/许可/署名/核验状态/正文 sha256/收录说明"元信息块里重复一遍。
+
+### 14.3 去重（269 个 source 跳过 / 31 个 source 并入首篇）
+
+| 判据 | 数量 | 说明 |
+|---|---|---|
+| 同 source_url（既有 kb 已收录） | 244 | 既有 `_imported/` 已按方向拆篇收过同一 WP |
+| 同标题（既有 kb） | 14 | 既有条目同名 |
+| 正文 sha256 相同 | 11 | 本批已保留篇目正文完全一致 |
+| 同 source_url（本批）→ 并入首篇 | 31 | 抽取器把一篇 WP 按方向拆成多个 source_id |
+
+- 修正的坑：源库 `content_sha256` 实为**每段**哈希，NewStar/Hello-CTF 的首页段
+  只有 `---\ncomments: true\n---` 之类的样板，最大的一组有 88 篇不同 source 共享
+  同一哈希。按它做文档级去重会误杀 300+ 篇，故改为「正文两两比对相同才判重」。
+
+### 14.4 重建与指标（实测）
+
+| 项 | 导入前 | 导入后 |
+|---|---|---|
+| FTS doc / chunk | 1567 / 14139 | **1844 / 15564** |
+| graph 节点 | 1567 | 1844 |
+| legacy 22 条 top1 / MRR / recall@5 | 0.9091 / 0.9545 / 1.0 | **1.0000 / 1.0000 / 1.0000** |
+| expanded 60 条 top1 / MRR / recall@5 | 0.9833 / 0.9917 / 1.0 | **0.9833 / 0.9889 / 1.0000** |
+
+- reindex：`python tools\cli.py index` → `docs=1844, chunks=15564, reused=14139,
+  reencoded=1425, removed_chunks=0, 96.75s`。注意**必须用 `.venv` 的 Python**
+  （系统 python 没有 onnxruntime/llama_cpp，走向量阶段会失败回滚）。
+- 回退如实记录：expanded `MRR 0.9917 → 0.9889`（-0.0028），仅 `x-xss-csp-bot`
+  一条从 rank1 掉到 rank3（新增 `NewStar CTF 2025 / 小 E 的留言板` 插到第 2），
+  top1/recall@5/hit@10 均未变；legacy 22 条稳在 1.0，`regressions: []`。
+  平均延迟由 108/120 ms 升到 348/457 ms（语料增 ~18%、候选池更大）。
+- pytest：`.\.venv\Scripts\python.exe -m pytest` → **229 passed in 67.64s**（零改动基线）。
+
+### 14.5 已知限制
+
+- 全新导入篇目没有手写 `relates_to/requires` 关系，图谱只有 26 条边不变，
+  `kb/_index.md` 未改（不发明新簿）。
+- 中文文件名较长（标题__source_id），Windows 路径长度需注意。
+- 检索质量实测只有固定集（82 条），新增 277 篇是否覆盖真实提问面未验证。
