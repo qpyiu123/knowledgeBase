@@ -537,3 +537,57 @@ P4 的三态实现存在“把未知粉饰成已知”的偏差，本批只改�
   结论：mtime 警告只是启发式，判定以 manifest 哈希为准。
 - `backup.ps1` 首发 GBK 解析报错，重存 BOM 后正常（老坑第 N 次重现：
   PowerShell 脚本必须 UTF-8 BOM）。
+
+## P12 — DB-Q1 知识库只读质量审计
+
+**目标**：在不改正文、不改索引、不启停服务的前提下，给 1844 篇语料一次可复核的
+规模/质量/重复盘点，并冻结下一批人工确认与评测的协议。**本批不跑检索评测，
+不声称任何指标提升。**
+
+### 交付
+
+1. `tools/audit_corpus.py`：只读审计 CLI。文档集合直接调 `kb.parser.iter_md_paths`
+   （与索引同源，不另立 rglob 规则）；输出 inventory / duplicate_candidates /
+   import_check / sample_plan / eval_protocol / run_meta / report；
+   `--hash-before` + `compare-hash` 子命令自证输入未被改写。
+2. `tests/test_audit_corpus.py`：23 个测试，全部基于合成语料（精确副本、近似副本、
+   同模板不同解法、摘要卡包含、合法/未闭合/引用块/行内反引号围栏、缺元数据、
+   YAML 语法错误、缺图、不可解码、类别越界、确定性、不写入输入、候选不截断、
+   短文档不采信包含度、抽样可复现、compare-hash 检出变化）。
+3. `docs/DB_QUALITY.md`：运行方法、实测规模、疑似分布、抽样结论、误报边界、Q2–Q4 计划。
+4. `work/db_quality1/report.md` 与 `sample_review.md`（工作产物，gitignore）。
+
+### 验收结果
+
+- ✅ 覆盖：`docs=1844`，与预期一致（`kb/**/*.md` 1845 减去被 `_` 前缀排除的 `kb/_index.md`）。
+- ✅ 只读自证：`kb/` 1845 个文件逐条 SHA-256 前后完全一致（`changed`/`added`/
+  `removed` 全空），`compare-hash` 退出码 0；人工抽样读完后再取一次 live 快照仍一致。
+  `index/` 7 个文件哈希前后一致（审计不重建索引）。
+- ✅ 测试：新增 23 项全绿；全量 `pytest` **252 passed in 57.46s**（基线 229 + 23）。
+- ✅ 统计：非法围栏 0、精确副本 0、近似候选对 230 / 簇 30（0.7500–0.9997）、
+  同 URL 线索 3 组；front-matter YAML 语法错误 21；本地缺图 8 篇（47 个引用全缺）；
+  无合法围栏 545（`_imported_cats` 275 / `_imported` 264 / `_des` 6）。
+- ✅ 抽样：`_imported_cats` 18 层、种子 20261101、24 篇逐篇读完，证据带行号/短引文。
+
+### 过程记录（教训）
+
+- **别自己另写文档枚举规则**：`tools/kbcheck.py` 的 rglob+跳过 `_` 目录与索引
+  `iter_md_paths` 不同源，直接调索引侧函数才保证"审计的篇数 = 索引的篇数"。
+- **围栏识别要先剥引用前缀**：`> ``` ` 若不剥 `> `，整篇被判成"无围栏 + 围栏外散落
+  ```"，5 篇误报。另外整行 4 空格缩进的 ``` 属缩进代码块，不能计数。
+- **front-matter 解析失败 ≠ 缺少**：21 篇 `signals: [[Misc] …]`、`[RSA? cmd5!]`
+  这类未加引号 flow 序列让 `yaml.safe_load` 抛错，早期实现把整块元数据当"不存在"。
+  必须区分四类并回显原始报错行；实测这 21 篇 `source` 全空、其余 245 篇全非空。
+- **去重候选不能按分数截断**：按"共享 shingle 排名取前 N 对"会漏掉分数最高但
+  shingle 池较小的对——实测漏掉了 0.9997 的
+  `_des/wp_summary/web/ctfshow-php特性.md` ↔ `ctfshow-命令执行wp.md`（两篇各 216 个围栏）。
+  改为**逐对可证明下界**（jaccard≥t ⇒ shared ≥ t/(1+t)·max(|A|,|B|)；
+  containment≥c ⇒ shared ≥ c·min(|A|,|B|)，取较小者），阈值以上的对全部评分。
+- **包含度对短文档不可信**：短边 <50 shingle 时只认 jaccard，并显式打
+  `tiny_doc_containment_ignored`。实测最小 shingle 集 144，该保护不排除任何真实文档。
+- **同模板要挡在门外**：共用赛事模板、解法不同的两篇 jaccard 可到 0.667，
+  默认阈值因此取 0.7 而不是 0.6。
+- **argparse 子命令参数位置**：`--project-root/--kb-dir/--out-dir` 定义在主 parser 上，
+  必须写在子命令**之前**，否则 `unrecognized arguments` 并退出 2（写测试时踩到）。
+- **pytest 在 GBK 控制台读源码**：注释里出现非 GBK 字符会被替换成 U+FFFD 触发
+  SyntaxError；`latin-1` 也无法编码中文，合成"不可解码文件"要先转义再 encode。

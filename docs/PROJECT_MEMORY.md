@@ -892,3 +892,80 @@ Writeup 导出把附件报告压成可读摘要。
 - e2e 未纳入 pytest（依赖真实 Edge 与运行中的服务，保持一次性脚本定位）。
 - 新 277 篇导入的真实查询面覆盖仍未验证（P1 盲测待用户拍板）。
 - 464 方法卡试点同样待用户拍板。
+
+## 16. P12 / DB-Q1：知识库只读质量审计（2026-11-01）
+
+### 16.1 交付
+
+- `tools/audit_corpus.py`：只读审计 CLI（`--out-dir`、`--min-jaccard`、
+  `--min-containment`、`--max-pairs`、`--sample-size`、`--seed`、`--hash-before`、
+  `compare-hash` 子命令）。文档集合调 `kb.parser.iter_md_paths`，与索引同源。
+- `tests/test_audit_corpus.py`：23 个合成语料测试。
+- `docs/DB_QUALITY.md`：运行方法 / 实测 / 疑似分布 / 抽样 / 误报边界 / Q2–Q4 计划。
+- `work/db_quality1/{inventory.jsonl, duplicate_candidates.json, import_check.json,
+  sample_plan.json, eval_protocol.json, run_meta.json, report.md, sample_review.md,
+  hash_before.json, hash_after.json}`（gitignore，不入库）。
+
+### 16.2 实测（已验证事实）
+
+| 项 | 值 |
+|---|---|
+| 覆盖篇数 | **1844**（`kb/**/*.md` 1845 − 被 `_` 前缀排除的 `kb/_index.md`） |
+| 耗时 | 20.1 s（盘点 3.7 s / 去重 10.4 s） |
+| 解析/读取异常 | 21（全部 front-matter YAML 语法错误，0 解码失败） |
+| 精确正文副本 / 近似候选 | **0 组** / **230 对（30 簇，0.7500–0.9997）** |
+| 同 URL 线索组 | 3 |
+| 有合法围栏 / 无合法围栏 | 1299 / 545（`_imported_cats` 275、`_imported` 264、`_des` 6） |
+| 本地缺图 | 8 篇 / 47 个引用（**全部**不存在，全在 `_des/`） |
+| 缺 `license` 字段 / `verification` unknown | 1322 / 1567 |
+| 只读自证 | `kb/` 1845 文件前后哈希逐条一致，`compare-hash` 退出码 0；`index/` 7 文件哈希不变 |
+
+三个结构性结论：
+1. **21 篇 YAML 缺陷是旧批遗留**：全部在 `_imported/`，全是 `signals: [[Misc] …]`、
+   `[RSA? cmd5!]` 这类未加引号的 flow 序列；实测这 21 篇 `source` 全空，
+   同批其余 245 篇无一为空。
+2. **导入批是无代码的散文正文**：`_imported_cats` 277 篇中仅 2 篇有合法围栏，
+   正文第 3 行固定声明"阶段 1，仅散文，代码段未导入"。检索命中该批不能指望可运行 exp。
+3. **近似候选 230 对里 202 对是 `_imported_cats` 内部**：导入器把同一赛事页多篇
+   writeup 合进一个文件并追加 `## 【来源分段】`，段落互相包含 → `a_subset_of_b` 大量命中，
+   **大概率不是重复**。真正待裁的是 **25 对 `_imported` ↔ `_imported_cats` 同题双份**；
+   `_des`/`_imported` 内部各只有 1 对。
+
+### 16.3 人工抽样（`_imported_cats`，18 层，种子 20261101，24 篇逐篇读完）
+
+内容可用 6、参考/摘要类 3、空壳导读 7、**标题与正文题目不一致 10**、
+类别与导向矛盾 3、一文件合多方向 2、博客页眉噪声 2、表格折断 1、重复行 4、
+`origin_license: not_declared` 已收录 2。证据（行号 + 短引文）在
+`work/db_quality1/sample_review.md`。
+
+### 16.4 新增坑与规则
+
+1. **别自造文档枚举规则**：`tools/kbcheck.py` 的 rglob+跳过 `_` 目录与索引
+   `iter_md_paths` 不同源；审计必须直接调索引侧函数。
+2. **围栏要先剥 `> ` 引用前缀**（最多 3 层），否则引用块围栏被误判成"整篇无围栏"；
+   整行 4 空格缩进的 ``` 属缩进代码块，不计入散落标记；只有奇数个 ``` 才是散落。
+3. **front-matter 解析失败 ≠ 缺少**：必须区分缺失 / 未闭合 / YAML 语法错误 /
+   非键值映射，并回显原始报错行。
+4. **去重候选不能按分数截断**：按"共享 shingle 排名取前 N 对"会漏掉 0.9997 的
+   `ctfshow-php特性.md` ↔ `ctfshow-命令执行wp.md`。改用逐对可证明下界
+   （jaccard≥t ⇒ shared ≥ t/(1+t)·max(|A|,|B|)；containment≥c ⇒ shared ≥ c·min(|A|,|B|)，
+   取较小者），阈值以上的对全部评分；`--max-pairs` 只作内存保险并在报告里告警。
+5. **包含度对短文档不可信**：短边 <50 shingle 只认 jaccard（实测最小 shingle 集 144，
+   该保护不排除任何真实文档）。
+6. **同模板 ≠ 重复**：共用赛事模板、解法不同可到 jaccard 0.667，默认阈值取 0.7 而非 0.6。
+7. **argparse 主参数必须在子命令前**：`--project-root/--kb-dir/--out-dir` 写在
+   `compare-hash` 之后会 `unrecognized arguments` 并退出 2。
+8. **导入批 `body_sha256` 必然"不一致"**：清单记的是段落正文，落盘文件含 front-matter
+   与来源分段标题；不能用它判断事后编辑。
+9. **pytest 在 GBK 控制台读源码**：注释含非 GBK 字符会被替换成 U+FFFD 触发
+   SyntaxError；`latin-1` 无法编码中文，合成"不可解码文件"需先转义再 encode。
+
+### 16.5 未做 / 后续
+
+- **未跑检索评测**，不声称任何指标提升；`eval_protocol.json` 仅是协议草案。
+- 未修改任何 `kb/` 正文、未改 `index/`、未启停服务、未联网核验源站与远端图片。
+- 未做语义/向量去重，只做字符 shingle。
+- Q2：25 对同题双份逐对裁决、修 21 篇 `signals` 引号、补/标记 47 个缺图、
+  给题名错配等打结构化标签（改正文须 Q2 单独授权）。
+- Q3：先建冻结查询集与标注规则，再在**不改语料**前提下比较切块/排序策略。
+- Q4：`index/` 备份改走 SQLite 在线备份 API / `VACUUM INTO` 并验证可打开与行数一致。
