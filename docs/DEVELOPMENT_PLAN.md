@@ -488,3 +488,52 @@ P4 的三态实现存在“把未知粉饰成已知”的偏差，本批只改�
 - 查询从文档派生，存在词汇泄漏；每条只标 1 篇，同主题好文档会被判未命中。
 - 未做图谱扩展/类型筛选的消融；平均延迟随本机负载波动。
 - `tools/e2e_ask.py` 是一次性脚本，真实模型验证未纳入 pytest 自动化。
+
+## P11（已完成 2026-11-01）
+
+### 目标
+
+真实浏览器全流程验收（含真实模型问答）；`backup.ps1` 备份 + 恢复演练；
+把 day-one 状态显示补全（索引 manifest / 最近备份）；就地修复发现的缺陷。
+
+### 工作项
+
+1. `tools/e2e_browser.py`：Playwright（默认 Edge channel，绝不自动下载内核）
+   五步真实浏览器流程 —— 首页加载/搜索/看全文抽屉、收藏到题目工作区、
+   附件上传（假 PNG 实为 ZIP）与报告落库、问模型（附件+工作区上下文，
+   `--skip-model` 或模型不可用时标 SKIP）、工作区 Writeup 导出（断言附件
+   摘要行与 `来源 #id`）；截图入 `work/shots/`，结果 JSON 入
+   `work/e2e_browser_result.json`；结束时删除测试工作区（`--keep-workspace` 保留）。
+2. `backup.ps1`：staging 拷贝（规避 `graph.db` 等被占用的句柄）→
+   `backup\ctf_kb_YYYYMMDD_HHMMSS.zip`，默认保留 3 份；只依赖
+   Windows 自带 Compress-Archive。
+3. `start.ps1 -Status` 新增 `Show-DataProtection`：只读展示索引 manifest
+   `built_at`/篇数与最近备份文件（`backup\ctf_kb_*.zip` 最新一份）。
+4. 修 `backup.ps1`：源目录补 `kb\_imported_cats\`（import0 批导入落盘处，
+   原脚本只含 `kb\_imported\`）；文件重存为 UTF-8 BOM，否则 Windows
+   PowerShell 5.1 按 GBK 解析中文串直接解析报错（与 start.ps1 同坑）。
+5. `.gitignore` 增加 `backup/`（备份 zip 不入库）。
+
+### 验收结果
+
+- ✅ 浏览器 e2e **5 PASS / 0 SKIP / 0 FAIL**（含真实模型分支：回答 673 字符，
+  1078b / 832 tok @ 35 tok/s，截图 7 张，`work/e2e_browser_result.json` status=PASS）。
+- ✅ 备份：`ctf_kb_20261101_112314.zip`（94.05 MB），源目录确认
+  `kb\_imported, kb\_imported_cats, index, work\workspaces`（`work\feedback`
+  尚不存在，脚本优雅跳过并警告）；旧备份轮转后保留 3 份。
+- ✅ 恢复演练：解压到临时目录后文件数三层全等（266 / 277 / 7）；
+  用恢复出的 `index\fts.db` 直接检索「RSA 共模攻击」返回正确命中，
+  stats `docs=1844, chunks=15564` —— 备份不只是文件齐全，恢复即可用。
+- ✅ 索引一致性独立验证：manifest 哈希 vs 磁盘，543 个导入区文件
+  0 缺失 / 0 多余 / 0 改动（`kb\_imported` + `kb\_imported_cats`）。
+- ✅ `start.ps1 -Status` 三层全绿；增量 `cli.py index` 复跑
+  `reused=15564, reencoded=0`（零改动，13.2s）。
+
+### 过程记录（教训）
+
+- 启动时 upgrade 提示「索引可能过期（kb 最新 20:44 晚于索引 20:33）」——
+  mtime 陷阱：导入文件在重排后被触碰但内容未变。用 manifest 哈希比对
+  证明索引一致后按增量索引刷新时间戳，`-Status` 恢复绿色。
+  结论：mtime 警告只是启发式，判定以 manifest 哈希为准。
+- `backup.ps1` 首发 GBK 解析报错，重存 BOM 后正常（老坑第 N 次重现：
+  PowerShell 脚本必须 UTF-8 BOM）。

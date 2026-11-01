@@ -854,3 +854,41 @@ Writeup 导出把附件报告压成可读摘要。
   `kb/_index.md` 未改（不发明新簿）。
 - 中文文件名较长（标题__source_id），Windows 路径长度需注意。
 - 检索质量实测只有固定集（82 条），新增 277 篇是否覆盖真实提问面未验证。
+
+## 15. P11 验证结果：浏览器 e2e + 备份恢复（2026-11-01）
+
+### 15.1 交付
+
+- `tools/e2e_browser.py`：Playwright 真实浏览器五步验收（Edge channel，
+  不下载内核；`--skip-model` 分支；截图 + JSON 结果；自清理工作区）。
+- `backup.ps1`：staging 拷贝 + Compress-Archive，保留 3 份；
+  源补 `kb\_imported_cats`；重存 UTF-8 BOM。
+- `start.ps1 -Status` 新增只读「索引 manifest + 最近备份」展示段。
+- `.gitignore` + `backup/`。
+
+### 15.2 实测
+
+- 浏览器 e2e：**5 PASS / 0 SKIP / 0 FAIL**，含真实模型问答
+  （673 字符回答，832 tok @ 35 tok/s；截图 `work/shots/06_ask_answer.png`
+  显示附件 ZIP 徽章/异常警示/目录树与模型"判断依据→解题步骤→可运行脚本"）。
+- 备份 `ctf_kb_20261101_112314.zip` 94.05 MB（266 + 277 导入 md + index 7 文件
+  + workspaces 空目录如实打包）；`work\feedback` 不存在被优雅跳过。
+- 恢复演练：临时目录解压后三层文件数与在线全等；**直接用恢复出的 fts.db
+  检索成功**（docs=1844/chunks=15564，"RSA 共模攻击"返回正确命中）——
+  恢复可用的证据，不只是文件齐全。
+
+### 15.3 新增坑与规则
+
+1. **mtime ≠ 内容**：索引过期警告以 mtime 为启发式；导入批文件被触碰
+   （内容不变）即可误报。判定一律以 `index\manifest.json` 哈希比对为准，
+   复跑 `cli.py index` 增量（reused=15564, reencoded=0）即自动消警。
+2. **PowerShell 脚本必须 UTF-8 BOM**（又一次由 backup.ps1 验证；
+   `powershell -File` 在 Windows PowerShell 5.1 下无 BOM 时按 GBK 解析）。
+3. 当前工作区存储 `work\workspaces` 为空（历史工作区未随项目迁移，
+   e2e 工作区自清理），备份如实打包空目录；`work\feedback` 同理。
+
+### 15.4 未做 / 后续
+
+- e2e 未纳入 pytest（依赖真实 Edge 与运行中的服务，保持一次性脚本定位）。
+- 新 277 篇导入的真实查询面覆盖仍未验证（P1 盲测待用户拍板）。
+- 464 方法卡试点同样待用户拍板。
