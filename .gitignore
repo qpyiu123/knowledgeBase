@@ -4,6 +4,7 @@ index/
 temp_newData/
 work/
 _happy/
+backup/
 logs/
 tools/agent/webapp/dist/
 tools/agent/webapp/node_modules/
