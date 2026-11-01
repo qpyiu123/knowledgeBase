@@ -348,6 +348,49 @@ function Show-IndexFreshness {
     }
 }
 
+function Format-FileSize([long]$bytes) {
+    if ($bytes -ge 1GB) { return ('{0:N2} GB' -f ($bytes / 1GB)) }
+    if ($bytes -ge 1MB) { return ('{0:N2} MB' -f ($bytes / 1MB)) }
+    if ($bytes -ge 1KB) { return ('{0:N1} KB' -f ($bytes / 1KB)) }
+    return ('{0} B' -f $bytes)
+}
+
+# 只读展示：索引 manifest 时间戳 + 最近一次本地备份时间戳。
+function Show-DataProtection {
+    $manifestPath = Join-Path $Root 'index\manifest.json'
+    if (Test-Path -LiteralPath $manifestPath) {
+        try {
+            $m = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8 |
+                 ConvertFrom-Json
+            $mt = (Get-Item -LiteralPath $manifestPath).LastWriteTime
+            $count = -1
+            if ($null -ne $m.files) {
+                $count = @($m.files.PSObject.Properties).Count
+            }
+            Ok ("索引清单 manifest: built_at={0}，{1} 篇（文件 {2:yyyy-MM-dd HH:mm}）" -f `
+                "$($m.built_at)", $count, $mt)
+        } catch {
+            Warn "索引清单 manifest 存在但无法读取: $($_.Exception.Message)"
+        }
+    } else {
+        Warn '索引清单 manifest 不存在（运行 .\start.ps1 -Reindex 生成）'
+    }
+
+    $backupDir = Join-Path $Root 'backup'
+    $latest = $null
+    if (Test-Path -LiteralPath $backupDir) {
+        $latest = Get-ChildItem -LiteralPath $backupDir -Filter 'ctf_kb_*.zip' `
+                  -File -ErrorAction SilentlyContinue |
+                  Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    }
+    if ($latest) {
+        Ok ("最近备份: {0}（{1}，{2:yyyy-MM-dd HH:mm}）" -f `
+            $latest.Name, (Format-FileSize $latest.Length), $latest.LastWriteTime)
+    } else {
+        Warn '尚无本地备份（运行 .\backup.ps1 生成）'
+    }
+}
+
 function Stop-Listening([int]$p, [string]$what) {
     $procId = Get-PortPid $p
     if (-not $procId) { return $false }
@@ -405,6 +448,7 @@ function Show-Status {
     Show-WebStatus
     Say '[索引]' 'Cyan'
     Show-IndexStatus
+    Show-DataProtection
     Say '[模型]' 'Cyan'
     Show-ModelStatus
     Say ''
