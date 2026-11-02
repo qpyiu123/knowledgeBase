@@ -2,7 +2,7 @@
 title: "[Tutorial] 签到（囯内）"
 category: misc
 tags: [GeekGame 2024, wp prose]
-signals: [[Tutorial] 签到（囯内）, Python]
+signals: ["[Tutorial] 签到（囯内）", "Python"]
 difficulty: medium
 source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/tutorial-signin/README.md"
 tools: []

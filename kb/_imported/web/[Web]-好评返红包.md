@@ -2,7 +2,7 @@
 title: "[Web] 好评返红包"
 category: web
 tags: [GeekGame 2024, wp prose]
-signals: [[Web] 好评返红包]
+signals: ["[Web] 好评返红包"]
 difficulty: medium
 source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/web-crx/README.md"
 tools: []

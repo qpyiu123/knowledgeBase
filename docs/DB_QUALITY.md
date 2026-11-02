@@ -139,3 +139,107 @@ $env:PYTHONIOENCODING = 'utf-8'
 - **Q2 — 人工确认重复与质量标签**：对 25 对 `_imported` ↔ `_imported_cats` 同题双份逐对裁决（保留哪份、是否合并）；修 21 篇 `signals` 的 YAML 引号；补 47 个缺失本地图片或改用"图不可用"标记；给"题名错配/空壳导读/方向矛盾"打结构化标签（探索 `relates_to`/`differs_from` 已有的 9/6 条先例）。**所有改动正文的动作都必须在 Q2 单独授权。**
 - **Q3 — 冻结检索评测后试验分块排序**：先建冻结查询集（协议见 `eval_protocol.json`：固定查询来源、固定相关性标注规则、固定 k 与指标、标注者间一致性检查），在**不改语料**的前提下比较切块/排序策略，用同一查询集前后对照。**指标提升必须由冻结集给出，不预告数值。**
 - **Q4 — SQLite 一致性备份验证**：`index/` 内 `fts.db` / `graph.db` / `vectors.db` 的备份必须走 SQLite 在线备份 API 或 `VACUUM INTO`，并验证备份可打开、行数与主库一致、FTS/GEXF 索引完整；不允许直接 `copy` 正在被写入的库文件。
+
+---
+
+## 10. DB-Q2 最小修复与人工复核（2026-11-02，已完成）
+
+> 本批只做已授权的 Q2：修 21 篇 `signals` 引号、逐对复核 25 对跨批重复候选、
+> 更正抽样结论；**没有删除/合并任何文档，没有改检索算法，没有开始 Q3**。
+> Q1 的历史结论保留在上文，本节只追加更正与实测。
+
+### 10.1 产物与只读边界
+
+- 基线（修复前）：`work/db_quality2/baseline/kb_sha256.json`（1845 文件）与
+  `index_sha256.json`（7 文件）；阶段进度 `work/db_quality2/progress.json`。
+- 复核与报告：`duplicate_review.md`、`sample_review_corrections.md`、`repair_evidence.json`。
+- Q2 重跑审计：`work/db_quality2/audit/`；评测：`eval_search.json`；日志：`index_rebuild.log`、
+  `graph_rebuild.log`、`pytest.log`、`npm_*.log`。`work/` 不入库。
+- 21 篇修复前后对比：kb 仅这 21 个文件哈希变化（`added=0, removed=0`），
+  其余 1824 个文件逐字节不变；`index/` 在重建前 7 个文件哈希不变。
+  `work/db_quality1/` 原报告未覆写。
+
+### 10.2 21 篇 `signals` 修复：只改一行，正文逐字不变
+
+- 工具：`tools/repair_signals.py`；显式清单：
+  `tools/kb/signals_repair_manifest.json`（21 条，含原/新 SHA256、正文 SHA256、
+  `signals` 原行/新行/期望解析值）。
+- 写入前校验原文件 SHA256；`--dry-run` 报告 `would_repair=21`；写入后第二次运行
+  全部 `already_repaired`，无任何写入（幂等）。
+- 每篇只把 `signals: [...]` 一行改成带引号的 flow 序列；front-matter 其它行、
+  CRLF 换行与正文完全不变。回归测试用“反向替换可还原原文件哈希”证明仅改这一行。
+- **更正 Q1**：Q1 说这 21 篇“`source` 全空”，实际原文有 `source` 字段，
+  是 YAML 解析失败导致索引侧整块丢弃元数据、工具读成空串。修复后
+  `source` 缺失 0、YAML 解析失败 0；缺 `license` 字段因这 21 篇恢复解析由
+  1322 降到 1301。
+- 修复后同 URL 线索组由 3 组变为 24 组，原因是这 21 篇的 `source` 第一次可读，
+  不是新增了文档或重复。
+
+### 10.3 25 对跨 `_imported` ↔ `_imported_cats` 候选：4 可合并建议、21 互补
+
+逐对读全文后按正规化正文是否逐字相等判定，**不把包含度或同赛事页自动当副本**：
+
+| 结论 | 对数 | 说明 |
+|---|---|---|
+| 可合并（建议，不执行） | 4 | #4、#5、#7、#12：剥离标题/元信息后正规化正文逐字相等，新篇保留来源信息 |
+| 互补/保留 | 21 | 旧篇多含 `〔原图省略〕` 标记且正文更干净；新篇带 source/origin/license/附件元信息，并常含导入器重复句 |
+| 疑似 | 0 | 未发现无法定位的语义冲突 |
+| 实际删除/合并 | **0** | 本批不改正文、不删文件 |
+
+- `_imported/misc/misc.md` 与 `_imported/crypto/crypto.md` 是同一 CISCN 博客按方向
+  拆出的分段，`_imported_cats/crypto/CISCN 2024 Qual Writeup _ crypto...` 把
+  crypto+misc 合并成一份；新篇是超集，但方向纯度不同，保留两篇。
+- 逐对分数、包含度、差异片段与证据见 `work/db_quality2/duplicate_review.md`。
+
+### 10.4 抽样复核更正：Q1 的“题名错配 10 篇”是误判
+
+- 回看 10 篇的 front-matter 标题、第一个 `题目：` 行和全部
+  `## 【来源分段】` 后确认：**标题全部等于第一个来源分段的题目**，后面还有
+  1–4 个不同题目的分段。这是“一文件合并多题”，不是题名错配。
+  本批不猜题名、不拆文件。
+- Q1 的“分类矛盾 3 篇”（ByteCTF ezheap、强网杯 Password Game、强网拟态
+  Find way to read video）同样是多题合并：主分类对应首段，后续分段来自
+  Web/密码学/逆向方向。
+- 空壳导读 7 篇是明写“仅短导读”的资料类型，不是导入失败；是否保留属产品决策。
+- `origin_license: not_declared` 只记为**未核验**：不据此说侵权，也不宣称全库已授权。
+- 本地缺图：Q1 文档写 47 个引用，但 Q1 自身 `inventory.jsonl` 与 Q2 重跑都得到
+  **8 篇 / 43 个去重 target**（全部在 `_des/`）。本批按可复核产物更正为 43；
+  不下载、不虚构恢复。
+- 逐篇证据表见 `work/db_quality2/sample_review_corrections.md`。
+
+### 10.5 Q2 重跑审计对照
+
+| 指标 | Q1（修复前） | Q2（修复后） |
+|---|---|---|
+| 收录篇数 | 1844 | 1844 |
+| 解析/读取异常 | 21（YAML） | **0** |
+| 缺少 `source` 字段 | 21 | **0** |
+| 缺少 `license` 字段 | 1322 | **1301** |
+| 精确正文副本 | 0 组 | 0 组 |
+| 近似候选对 / 簇 | 230 / 30 | 230 / 30 |
+| 同 URL 线索组 | 3 | **24**（21 篇 source 恢复可读） |
+| 本地缺图 | 8 篇 / 47（Q1 文档） | **8 篇 / 43 个去重 target** |
+| 无合法围栏 | 545 | 545 |
+
+### 10.6 索引、评测与测试（本机实测）
+
+| 命令 | 结果 |
+|---|---|
+| `.\.venv\Scripts\python.exe tools\cli.py index` | `完整增量更新 docs=1844, chunks=15564, reused=15396, reencoded=168, removed_chunks=0, 29.01s`；修改 21 篇 |
+| `.\.venv\Scripts\python.exe tools\cli.py graph --build` | 1844 节点 / 26 边 / 8 跨方向（与导入后基线一致） |
+| `.\.venv\Scripts\python.exe tools\eval_search.py --set all` | legacy 22：top1/MRR/recall@5 全 **1.0000**；expanded 60：top1 **0.9833**、MRR **0.9889**、recall@5 **1.0000** |
+| `.\.venv\Scripts\python.exe -m pytest -o addopts="" -q` | **257 passed in 73.27s**（252 基线 + 5 新增） |
+| 前端 `npm run check` / `npm test -- --run` / `npm run build` | 通过；6 文件 / 35 用例；JS 849.49 kB（gzip 261.02 kB） |
+
+- expanded 唯一非 top1 仍是 `x-xss-csp-bot`（expected `web/xss-and-csp.md`，
+  本次第 3 名，第 1 名为 `web/css-injection-xs-leak.md`），与导入后基线一致；
+  未改查询措辞、未调查询集、未改排序。
+- 新增 `tests/test_repair_signals.py`（5 个）：清单覆盖、当前文件可解析且正文哈希
+  不变、仅一行变化且原文确曾解析失败、dry-run/幂等、哈希不匹配拒绝写入。
+
+### 10.7 未做 / 待决定
+
+- 不拆分“一文件多题”的 10 篇，也不新增 parser 不支持的多题标签；需要单独立项。
+- 不修博客页眉噪声、折断表格、导入批重复句；这些属正文改写或重跑导入。
+- 不下载/恢复 43 个缺失本地图，不联网核验源站与许可。
+- 未做语义去重，未开始 Q3 冻结评测，未改 Q3 协议。

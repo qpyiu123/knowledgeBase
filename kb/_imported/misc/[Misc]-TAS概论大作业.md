@@ -2,7 +2,7 @@
 title: "[Misc] TAS概论大作业"
 category: misc
 tags: [GeekGame 2024, wp prose]
-signals: [[Misc] TAS概论大作业]
+signals: ["[Misc] TAS概论大作业"]
 difficulty: medium
 source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/README.md"
 tools: []

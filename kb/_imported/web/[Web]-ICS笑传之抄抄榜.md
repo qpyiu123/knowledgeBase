@@ -2,7 +2,7 @@
 title: "[Web] ICS笑传之抄抄榜"
 category: web
 tags: [GeekGame 2024, wp prose]
-signals: [[Web] ICS笑传之抄抄榜]
+signals: ["[Web] ICS笑传之抄抄榜"]
 difficulty: medium
 source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/web-manuallab/README.md"
 tools: []

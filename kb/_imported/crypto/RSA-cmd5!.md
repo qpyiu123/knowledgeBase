@@ -2,7 +2,7 @@
 title: "RSA? cmd5!"
 category: crypto
 tags: [NewStar CTF 2024, wp prose]
-signals: [RSA? cmd5!]
+signals: ["RSA? cmd5!"]
 difficulty: medium
 source: "https://github.com/pj-newstar/wiki-docs/blob/1a0f2ba21a30f950276396118b315eef0328371c/docs/wp/2024/week5/crypto/rsa_cmd5.md"
 tools: []

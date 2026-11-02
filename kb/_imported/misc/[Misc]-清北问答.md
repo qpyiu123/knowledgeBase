@@ -2,7 +2,7 @@
 title: "[Misc] 清北问答"
 category: misc
 tags: [GeekGame 2024, wp prose]
-signals: [[Misc] 清北问答, Git]
+signals: ["[Misc] 清北问答", "Git"]
 difficulty: medium
 source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-trivia/README.md"
 tools: []

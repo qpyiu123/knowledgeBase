@@ -2,7 +2,7 @@
 title: "[Binary] 完美的代码"
 category: pwn
 tags: [GeekGame 2024, wp prose]
-signals: [[Binary] 完美的代码, Rust]
+signals: ["[Binary] 完美的代码", "Rust"]
 difficulty: medium
 source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/binary-saferustplus/README.md"
 tools: []

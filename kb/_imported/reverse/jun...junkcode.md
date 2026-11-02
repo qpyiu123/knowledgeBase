@@ -2,7 +2,7 @@
 title: "jun...junkcode?"
 category: reverse
 tags: [NewStar CTF 2024, wp prose]
-signals: [jun...junkcode?]
+signals: ["jun...junkcode?"]
 difficulty: medium
 source: "https://github.com/pj-newstar/wiki-docs/blob/1a0f2ba21a30f950276396118b315eef0328371c/docs/wp/2024/week5/reverse/junkcode.md"
 tools: []

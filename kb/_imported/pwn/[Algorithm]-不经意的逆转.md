@@ -2,7 +2,7 @@
 title: "[Algorithm] 不经意的逆转"
 category: pwn
 tags: [GeekGame 2024, wp prose]
-signals: [[Algorithm] 不经意的逆转]
+signals: ["[Algorithm] 不经意的逆转"]
 difficulty: medium
 source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/algo-ot/README.md"
 tools: []

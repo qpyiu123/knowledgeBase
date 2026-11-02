@@ -2,7 +2,7 @@
 title: "[Web] 概率题目概率过"
 category: web
 tags: [GeekGame 2024, wp prose]
-signals: [[Web] 概率题目概率过]
+signals: ["[Web] 概率题目概率过"]
 difficulty: medium
 source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/web-ppl/README.md"
 tools: []

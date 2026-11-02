@@ -2,7 +2,7 @@
 title: "[Misc] 大模型模型虎视眈眈"
 category: misc
 tags: [GeekGame 2024, wp prose]
-signals: [[Misc] 大模型模型虎视眈眈]
+signals: ["[Misc] 大模型模型虎视眈眈"]
 difficulty: medium
 source: "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-llm/README.md"
 tools: []

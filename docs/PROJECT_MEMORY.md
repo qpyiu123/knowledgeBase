@@ -969,3 +969,72 @@ Writeup 导出把附件报告压成可读摘要。
   给题名错配等打结构化标签（改正文须 Q2 单独授权）。
 - Q3：先建冻结查询集与标注规则，再在**不改语料**前提下比较切块/排序策略。
 - Q4：`index/` 备份改走 SQLite 在线备份 API / `VACUUM INTO` 并验证可打开与行数一致。
+
+## 17. DB-Q2：语料元数据最小修复与重复复核（2026-11-02）
+
+### 17.1 交付（已验证事实）
+
+- `tools/repair_signals.py`：按显式清单修复 21 篇 `signals` YAML 引号；
+  写入前校验原文件 SHA256，支持 `--dry-run`，重复运行 `already_repaired`。
+- `tools/kb/signals_repair_manifest.json`：21 条，含原/新文件 SHA256、
+  正文 SHA256、`signals` 原行/新行/期望解析值。
+- `tests/test_repair_signals.py`：5 个回归测试（清单覆盖、当前解析、仅一行变化、
+  dry-run/幂等、哈希不符拒绝）。
+- 工作产物（gitignore）：`work/db_quality2/` 下基线哈希、`progress.json`、
+  `audit/`、`duplicate_review.md`、`sample_review_corrections.md`、
+  `repair_evidence.json`、`eval_search.json`、重建/测试日志。
+
+### 17.2 21 篇修复（已验证事实）
+
+- 修复前：21 篇 front-matter YAML 解析失败（`signals` 未加引号的 flow 序列）；
+  第二次运行全部 `already_repaired`，无写入。
+- 修复只改 `signals` 一行：kb 1845 文件中仅 21 个哈希变化，`added=0/removed=0`，
+  正文 SHA256 全部与清单记录一致；修复前 `index/` 7 个文件哈希不变。
+- 修复后 parser 能读到 `source` 与 `signals`；审计 YAML 异常 **21→0**、
+  缺 `source` **21→0**、缺 `license` **1322→1301**。
+- **Q1 更正**：这 21 篇不是“原文缺 `source`”，而是解析失败导致整块元数据被丢弃；
+  修复后同 URL 线索组由 3 增至 24，原因是 21 篇 `source` 首次可读。
+
+### 17.3 25 对跨批候选（已验证事实 + 人工判断）
+
+- 逐对读全文，剥离标题/引用元信息后正规化正文比较：**4 对可合并建议**
+  （#4 `不经意的逆转`、#5 `神秘计算器`、#7 `随机数生成器`、#12 `大整数类`），
+  正文逐字相等且新篇保留来源信息；**21 对互补/保留**；**0 疑似**。
+- 互补原因：旧篇多含 `〔原图省略〕` 且正文更干净，新篇带 source/origin/license/
+  附件元信息并常含导入器重复句；`_imported/misc/misc.md` 与
+  `_imported/crypto/crypto.md` 是同一 CISCN 博客的方向分段，新篇把两段合并，
+  属互补而非纯副本。
+- **本批未删除、未移动、未合并任何文档**；4 对只是报告建议。
+- 证据：`work/db_quality2/duplicate_review.md`（25 行分数/包含度/差异片段/结论）。
+
+### 17.4 抽样复核更正（已验证事实 + 人工判断）
+
+- Q1 的“题名错配 10 篇”是误判：10 篇标题都等于**第一个来源分段**的题目，
+  后面还有 1–4 个不同题目的 `## 【来源分段】`，属“一文件合并多题”。
+- Q1 的“分类矛盾 3 篇”同源：主分类对应首段，后续分段来自其他方向。
+- “空壳导读 7 篇”是明写“仅短导读”的资料类型，不是导入失败。
+- 本地缺图按 Q1/Q2 inventory 为 **8 篇 / 43 个去重 target**（Q1 文档写 47，
+  未能复现）；全部在 `_des/`，本批不下载、不虚构恢复。
+- `origin_license: not_declared` 只记录为未核验，不推断侵权，也不宣称全库授权。
+- 证据：`work/db_quality2/sample_review_corrections.md`。
+
+### 17.5 索引、评测、测试（已验证事实）
+
+| 命令 | 结果 |
+|---|---|
+| `tools\cli.py index` | `docs=1844, chunks=15564, reused=15396, reencoded=168, removed_chunks=0, 29.01s`；修改 21 篇 |
+| `tools\cli.py graph --build` | 1844 节点 / 26 边 / 8 跨方向（与导入后基线一致） |
+| `tools\eval_search.py --set all` | legacy 22 全 1.0000；expanded top1=0.9833、MRR=0.9889、recall@5=1.0000 |
+| `pytest -o addopts="" -q` | **257 passed in 73.27s**（252 + 5） |
+| 前端 `npm run check` / `npm test -- --run` / `npm run build` | 均通过；6 文件 / 35 用例；JS 849.49 kB（gzip 261.02 kB） |
+
+- expanded 唯一非 top1 仍为 `x-xss-csp-bot`（第 3 名，expected `web/xss-and-csp.md`），
+  与导入后基线一致；未改查询措辞、未改排序。
+- 本批提交信息：`feat: repair verified corpus metadata and document duplicate review`。
+
+### 17.6 未做 / 待决定
+
+- 4 对“可合并”不执行；移除旧篇需后续单独授权。
+- 不拆分 10 篇多题合并文件，不新增 parser 不支持的多题标签。
+- 博客页眉噪声、折断表格、导入批重复句、43 个缺图未修。
+- 未做语义去重；未开始 Q3，未改 Q3 协议。
