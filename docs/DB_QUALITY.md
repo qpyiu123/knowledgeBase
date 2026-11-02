@@ -243,3 +243,53 @@ $env:PYTHONIOENCODING = 'utf-8'
 - 不修博客页眉噪声、折断表格、导入批重复句；这些属正文改写或重跑导入。
 - 不下载/恢复 43 个缺失本地图，不联网核验源站与许可。
 - 未做语义去重，未开始 Q3 冻结评测，未改 Q3 协议。
+
+## 12. DB-Q3 Part B：方法论卡片试点（2026-11-02）
+
+### 12.1 目标与范围
+
+在 `kb/_methods/` 下沉淀**可执行的方法卡**：每张卡 = 识别信号 + 步骤 + 脚本 + 实跑示例 + 失效场景 + kb 出处。
+本批只做试点（12 个方法 / 13 个 md），不扩库、不改检索算法。
+
+### 12.2 交付物与规模
+
+| 产物 | 路径 | 规模 |
+|---|---|---|
+| 方法卡 | `kb/_methods/*.md` | **13** |
+| 自检脚本 | `kb/_methods/scripts/*.py` | **11** |
+| 回归测试 | `tests/test_method_scripts.py` | 13 个用例（11 参数化 + 2 结构） |
+| 主题 backlog | `work/q3/method_backlog.json` | **53 项**，`done=12` |
+
+### 12.3 质量要求（本批自定并已执行）
+
+1. **front-matter 完整**：`title`（以「方法卡 · 」开头）、`category`、`tags`（含 `方法卡`）、`signals`、
+   `difficulty`、`source`（真实 kb 路径）、`tools`、`updated`。
+2. **七栏齐全**：适用场景 / 前置条件 / 步骤 / 立即可用脚本 / 手工示例 / 失效场景 / 相关文档。
+3. **出处可点击**：`source` 与「相关文档」只引用索引中真实存在的路径（本轮脚本校验 0 缺失）。
+4. **示例实跑**：每张卡的手工示例都跑过，数值与输出写进卡片；反例（会失败的参数）也写明。
+5. **脚本可回归**：每个脚本必须 `--selftest` exit 0，且被 `tests/test_method_scripts.py` 覆盖。
+
+### 12.4 本机实测
+
+| 命令 | 结果 |
+|---|---|
+| `.\.venv\Scripts\python.exe kb/_methods/scripts/<x>.py --selftest`（11 个） | 全部 exit 0，耗时均 < 3s |
+| `.\tools\cli.py` 解析规则核对 | `_` 前缀文件的跳过逻辑仅针对文件名，卡片命名已规避 |
+| `.\venv\Scripts\python.exe -m pytest -q -o addopts=` | **279 passed in 70.94s** |
+| backlog 路径校验（自写临时脚本） | 53 项 / 出处路径 0 缺失 / 脚本 11 个与卡片 12 个全部存在 |
+
+### 12.5 已知局限
+
+- `zip_password_attack.py` 的"字典命中"自检在无法回读 ZipCrypto 流的环境下跳过（脚本打印原因，其余 5 项真实执行）；
+  该脚本的字典/掩码路径需用真加密 zip 另行验证。
+- EJS 卡无脚本：利用依赖目标 Node 运行时，纯本地自检无增量，只提供 payload 与识别信号。
+- Vigenère 自动破解的 IoC 峰值可能落在密钥长整数倍（如 5 与 10 同高），卡片已写明"除回 k"的处理方式。
+- 新增卡片尚未执行 `cli.py index`，检索侧暂不可见。
+
+### 12.6 后续批次（只计划，本批不实施）
+
+`work/q3/method_backlog.json` 中剩余 41 个主题按方向分组：
+crypto 13（小 e、费马、Coppersmith、ECDSA 格、OTP、AES-ECB…）、
+web 8（JWT、SSTI、原型链、PHP filter chain、pickle、反序列化、SQLi、SSRF…）、
+forensics 4、blockchain 3、misc 4、reverse 3、pwn 3、mobile/hardware/osint/ai 各 1。
+每批仍按"脚本 + 自检 + 卡片 + 测试"四件套交付，并复用本批的验收口径。

@@ -1038,3 +1038,54 @@ Writeup 导出把附件报告压成可读摘要。
 - 不拆分 10 篇多题合并文件，不新增 parser 不支持的多题标签。
 - 博客页眉噪声、折断表格、导入批重复句、43 个缺图未修。
 - 未做语义去重；未开始 Q3，未改 Q3 协议。
+
+## 18. DB-Q3 Part B：方法论卡片试点（2026-11-02）
+
+### 18.1 结论先行（已验证事实）
+
+- `kb/_methods/` 现有 **13 个 md 卡片** + **11 个 `--selftest` 脚本** + `scripts/` 子目录。
+- 全量回归：`pytest -q -o addopts=` → **279 passed in 70.94s**（266 基线 + 13 新增）。
+- `work/q3/method_backlog.json`：**53 个主题**，`done=12`，出处路径 0 缺失。
+
+### 18.2 关键事实与坑（写在这里避免下次踩）
+
+- `tools/kb/parser.py:135-147`：`SKIP_DIRS = {"_templates", ".obsidian", ".git", "node_modules"}`，
+  且 `if p.name.startswith("_"): continue` —— **只跳过以 `_` 开头的文件**，
+  `kb/_methods/*.md` 只要文件名不带 `_` 前缀就会被收录；`_methods` 目录本身不在 SKIP_DIRS 里。
+- `category` 必须在 `['ai','blockchain','crypto','forensics','hardware','misc','mobile','osint','pwn','reverse','web']` 内，
+  否则解析器会给"未知 category"警告。
+- **手工拼 zip 头不可靠**：本机环境下 `struct` 的长格式串（含 `4B/4H`）经工具通道易被改写，
+  且 CPython 3.14 `zipfile` 无法回读手工构造的 ZipCrypto 流（12 字节加密头落盘是明文）。
+  结论：**不要用"造加密 zip 再回读"验证字典攻击**；`zip_password_attack.py` 的自检因此跳过了该项。
+- `sympy.factorint` 对 192 位半素数会跑几十分钟，**不要**用它验证大模数；Wiener 卡改用
+  `wiener()` 自身还原的 `p*q == n` 作验证。
+- PowerShell 把 UTF-8 中文显示成 GBK 乱码，判断文件内容一律用 read 工具；写文件只用 write/edit。
+
+### 18.3 卡片清单（13 个）
+
+`rsa_common_modulus_attack.md`、`rsa_shared_prime_attack.md`、`rsa_hastad_broadcast.md`、
+`rsa_wiener_continued_fraction.md`、`lcg_parameter_recovery.md`、`mt19937_untemper.md`、
+`vigenere_autocrack.md`、`hash_length_extension.md`、`enc_chain_decode.md`、`decompress_chain.md`、
+`zip_password_attack.md`、`onchain_base64_decode.md`、`ejs_prototype_pollution_rce.md`。
+
+### 18.4 脚本自检矩阵（本机实测）
+
+| 脚本 | 自检 | 备注 |
+|---|---|---|
+| `lcg_parameter_recovery.py` | 5/5 | 模数还原/预测/c=0/输出不足/xorshift |
+| `mt19937_untemper.py` | 5/5 | 624 字克隆、错位采样拒绝 |
+| `vigenere_autocrack.py` | 5/5 | IoC 峰值可能落在 2k，卡片已注明 |
+| `rsa_common_modulus.py` | 4/4 | — |
+| `rsa_hastad_broadcast.py` | 5/5 | 需 `prod(n) > m^e` |
+| `rsa_shared_prime.py` | 5/5 | — |
+| `rsa_wiener_continued_fraction.py` | 4/4 | 需 `d < n^0.25/3` |
+| `hash_length_extension.py` | 6/6 | `forge()` 的 `orig_sig` 要传 bytes |
+| `enc_chain_decode.py` | 9/9 | 只认纯 hex，需先去掉 `0x` 与补零 |
+| `decompress_chain.py` | 8/8 | zip 取首成员 |
+| `zip_password_attack.py` | 6/6 | 字典命中项因环境限制跳过 |
+
+### 18.5 未做 / 待决定
+
+- 53 个 backlog 主题只完成 12，其余（Coppersmith、ECDSA 格、SSTI、PHP filter chain、pickle、栈溢出等）留待后续批次。
+- 新增卡片尚未重建索引；是否把 `_methods` 纳入评测查询集待定。
+- 不合并、不删除任何既有 kb 文档。

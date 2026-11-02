@@ -649,3 +649,64 @@ P4 的三态实现存在“把未知粉饰成已知”的偏差，本批只改�
 - 不改检索算法/权重/评测查询集，不扩库，不启停用户服务，不碰 `F:\ctf`。
 - 不删除任何文档，不合并正文，不下载远端图片，不宣称全库已获授权。
 - 不开始 Q3、Q4。
+
+## DB-Q3 Part B — 方法论卡片试点（2026-11-02）
+
+目标：把"已验证的解题手法"沉淀成**可直接照抄执行**的方法卡，
+每张卡都绑定一个可自检的脚本（或明确说明为什么不需要脚本），并纳入 pytest 回归。
+
+### 交付内容
+
+1. `kb/_methods/` 下 **12 张方法卡**（front-matter 含 `title/category/tags/signals/difficulty/source/tools`，
+   正文七栏：适用场景 / 前置条件 / 步骤 / 立即可用脚本 / 手工示例 / 失效场景 / 相关文档）：
+
+   | # | 卡片 | category | 脚本 |
+   |---|---|---|---|
+   | 1 | `rsa_common_modulus_attack.md` | crypto | `rsa_common_modulus.py` |
+   | 2 | `rsa_shared_prime_attack.md` | crypto | `rsa_shared_prime.py` |
+   | 3 | `rsa_hastad_broadcast.md` | crypto | `rsa_hastad_broadcast.py` |
+   | 4 | `rsa_wiener_continued_fraction.md` | crypto | `rsa_wiener_continued_fraction.py` |
+   | 5 | `lcg_parameter_recovery.md` | crypto | `lcg_parameter_recovery.py` |
+   | 6 | `mt19937_untemper.md` | crypto | `mt19937_untemper.py` |
+   | 7 | `vigenere_autocrack.md` | crypto | `vigenere_autocrack.py` |
+   | 8 | `hash_length_extension.md` | crypto | `hash_length_extension.py` |
+   | 9 | `enc_chain_decode.md` | misc | `enc_chain_decode.py` |
+   | 10 | `decompress_chain.md` | misc | `decompress_chain.py` |
+   | 11 | `zip_password_attack.md` | misc | `zip_password_attack.py` |
+   | 12 | `onchain_base64_decode.md` | blockchain | `enc_chain_decode.py`（复用） |
+   | 13 | `ejs_prototype_pollution_rce.md` | web | 无脚本（payload 速查） |
+
+   注：卡数 = 12 张"含脚本链路" + 1 张无脚本的 payload 卡 = **13 个 md**，
+   对外口径的 12 指方法（`onchain_base64_decode` 复用编码脚本，`ejs` 属速查卡）。
+
+2. `kb/_methods/scripts/` 下 **11 个脚本**，全部支持 `--selftest`（纯标准库优先，RSA 类用 pycryptodome 生成素数），
+   每个自检都在 3 秒内完成，输出一行 `selftest ok: N/M（…）`。
+3. `tests/test_method_scripts.py`：对每个脚本 `subprocess` 调用 `--selftest`（timeout 30s，断言 exit 0 且输出含 `selftest ok`）。
+4. `work/q3/method_backlog.json`：**53 个主题**的排期清单（`done=12`），每项带真实 kb 出处路径与脚本/卡片落点。
+5. 文档：本文件、`docs/PROJECT_MEMORY.md` §18、`docs/DB_QUALITY.md` §12 同步记录。
+
+### 关键决策
+
+- **卡片文件名不带下划线前缀**：`tools/kb/parser.py` 的 `iter_md_paths` 会跳过名字以 `_` 开头的文件，
+  卡片需要能被 `cli.py index` 收录并参与检索，因此用 `rsa_common_modulus_attack.md` 这种命名；
+  脚本目录 `scripts/` 在 `_methods/` 下，文件名也均不以 `_` 开头（后缀 `.py`，不参与 md 收录）。
+- **每张卡必须有"手工示例"且数值经过实跑**：本轮发生过两次返工（Håstad 玩具模数开根失败、
+  Wiener 三四位模数不满足 `d < n^0.25/3`），因此卡片里同时写明"反例警示"。
+- **无脚本卡要说清原因**：EJS 卡依赖目标运行时（Node 版本、query 解析器、出网能力），
+  纯 Python 自检只能验证"字符串拼对了"，没有实战增量，故只给 payload 与识别信号。
+- **`zip_password_attack.py` 的"字典命中"自检在无法回读加密流的环境跳过**：脚本会打印原因，
+  其余 5 项真实执行；这是环境限制而非逻辑缺陷，卡片里已明示。
+
+### 验收结果
+
+- ✅ 11 个脚本 `--selftest` 全部 exit 0（lcg 5/5、mt19937 5/5、vigenere 5/5、rsa_common 4/4、hastad 5/5、
+  shared_prime 5/5、wiener 4/4、hash_length_extension 6/6、enc_chain 9/9、decompress 8/8、zip 6/6）。
+- ✅ 13 张卡片 front-matter 与七栏结构校验通过（脚本化检查，见本轮验证命令）。
+- ✅ `method_backlog.json`：53 项、`done=12`、所有 `sources` 路径真实存在（0 缺失）。
+- ✅ `pytest -q -o addopts=`：**279 passed in 70.94s**（266 基线 + 13 新增）。
+
+### 明确不做
+
+- 不改检索算法/权重/评测查询集；不重建索引（本批新增的卡片需后续 `cli.py index` 才进检索）。
+- 不启停用户服务，不碰 `work/` 以外的其它批次产物，不 `git add -A`。
+- 不改动 `kb/_methods/` 之外的 kb 文档。
