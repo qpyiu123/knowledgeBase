@@ -24,6 +24,7 @@ import hashlib
 import json
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -161,9 +162,20 @@ def repair_entry(kb_dir: Path, entry: dict[str, Any], *,
         return result
 
     tmp = path.with_name(path.name + ".repair-tmp")
+    err: OSError | None = None
     try:
         tmp.write_bytes(new_raw)
-        os.replace(tmp, path)
+        # Windows 下目标文件可能被杀软/索引器瞬时占用导致 WinError 5，重试几次再放弃
+        for attempt in range(5):
+            try:
+                os.replace(tmp, path)
+                err = None
+                break
+            except OSError as e:
+                err = e
+                time.sleep(0.05 * (attempt + 1))
+        if err is not None:
+            raise err
     except OSError as e:
         try:
             tmp.unlink(missing_ok=True)
