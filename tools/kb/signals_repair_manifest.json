@@ -1,41 +1,8 @@
 {
   "batch": "DB-Q2",
   "version": 1,
-  "description": "21 篇 _imported/ front-matter signals 未加引号的最小修复清单；只改 signals 一行，正文与其它字段逐字不变。",
+  "description": "21 篇 _imported/ front-matter signals 未加引号的最小修复清单；DB-Q3 删除其中 15 篇冗余旧篇后，活跃条目 6 条、退役条目 15 条（保留证据）。只改 signals 一行，正文与其它字段逐字不变。",
   "entries": [
-    {
-      "path": "_imported/crypto/RSA-cmd5!.md",
-      "original_sha256": "6e489a310cf0a10be3c6f7e4458a4a9a79e7af928b6339efdfe1ee5c476005f7",
-      "fixed_sha256": "3f228c7dafbbf712da2b07e49de21b18a7acc432b935ba82e039caa8dd849241",
-      "body_sha256": "f44ecd45832f32401f20c31177204842610702eb0f9ff9ba709dec42a905205d",
-      "signals_original": "signals: [RSA? cmd5!]",
-      "signals_fixed": "signals: [\"RSA? cmd5!\"]",
-      "signals_expected": [
-        "RSA? cmd5!"
-      ]
-    },
-    {
-      "path": "_imported/misc/[Misc]-TAS概论大作业.md",
-      "original_sha256": "341e70422ba058a2860d565fda1e3789edd60639346ca7539cd3a1a22c9d4a67",
-      "fixed_sha256": "28cdb95ed65314dfd17a874db41dff7439355fe38897f5018acacee1a5444496",
-      "body_sha256": "d55dcd796d188c3a912befbf609f60d63a0684303e8c300081f7759f2df4d82d",
-      "signals_original": "signals: [[Misc] TAS概论大作业]",
-      "signals_fixed": "signals: [\"[Misc] TAS概论大作业\"]",
-      "signals_expected": [
-        "[Misc] TAS概论大作业"
-      ]
-    },
-    {
-      "path": "_imported/misc/[Misc]-大模型模型虎视眈眈.md",
-      "original_sha256": "311535414b6b3172be832728ececa1202aaebcfee6b6a359c22a1cd781296fe9",
-      "fixed_sha256": "baf6ab1249d217fff7b8dca3f810ec9ae78a07b1f8b44dbf53056eea2830714f",
-      "body_sha256": "963f5ab0d32be06054c487c6625af9ec7c98018df7ed0b06e89403c9c9634b0f",
-      "signals_original": "signals: [[Misc] 大模型模型虎视眈眈]",
-      "signals_fixed": "signals: [\"[Misc] 大模型模型虎视眈眈\"]",
-      "signals_expected": [
-        "[Misc] 大模型模型虎视眈眈"
-      ]
-    },
     {
       "path": "_imported/misc/[Misc]-新穷铁道.md",
       "original_sha256": "ac0a21d0ad9edba5b44a7c426557ec302a451e844fdecf33fa28f11c09c00a43",
@@ -60,88 +27,6 @@
       ]
     },
     {
-      "path": "_imported/misc/[Misc]-熙熙攘攘我们的天才吧.md",
-      "original_sha256": "9827958230a39038a83f9afc9d679a9e14417ff55464c0d5ff4ae311fce79171",
-      "fixed_sha256": "0a7b8f7a47814c77d4df608b5087b82ddd519e72fe350e0cfb9b58552f350dba",
-      "body_sha256": "ac65947a92c009eaa5094424c5d3fbba41f13a6dae8462abfc6bb28ec06d791e",
-      "signals_original": "signals: [[Misc] 熙熙攘攘我们的天才吧, Python]",
-      "signals_fixed": "signals: [\"[Misc] 熙熙攘攘我们的天才吧\", \"Python\"]",
-      "signals_expected": [
-        "[Misc] 熙熙攘攘我们的天才吧",
-        "Python"
-      ]
-    },
-    {
-      "path": "_imported/misc/[Tutorial]-签到（囯内）.md",
-      "original_sha256": "e10bada5ab5b4bbac8c9a26f30250011496e761adbadbb67013915f50bb8b498",
-      "fixed_sha256": "c407a2309da8522dec4e5041a209cf54c967b4d5bc84b47d261b21aef69ac504",
-      "body_sha256": "7526413545c0510a77a3580ae348b02df42fc9e9bead6e33753433b1cc71efd0",
-      "signals_original": "signals: [[Tutorial] 签到（囯内）, Python]",
-      "signals_fixed": "signals: [\"[Tutorial] 签到（囯内）\", \"Python\"]",
-      "signals_expected": [
-        "[Tutorial] 签到（囯内）",
-        "Python"
-      ]
-    },
-    {
-      "path": "_imported/pwn/0-二进制漏洞审计入门指北.md",
-      "original_sha256": "39e4823f31600dead0db9c6aac8ee0405a54f2ce735277e30ac6163afa94250d",
-      "fixed_sha256": "4a46ad9e46ae64c9b3a185610e4baf71df5515d6df1c62d427aa800a76868957",
-      "body_sha256": "7431f8854a1975619a4d9356f7e0b7439d57ae59a5d891fe4f16b2f22b6f712c",
-      "signals_original": "signals: [**0 二进制漏洞审计入门指北**]",
-      "signals_fixed": "signals: [\"**0 二进制漏洞审计入门指北**\"]",
-      "signals_expected": [
-        "**0 二进制漏洞审计入门指北**"
-      ]
-    },
-    {
-      "path": "_imported/pwn/[Algorithm]-不经意的逆转.md",
-      "original_sha256": "b6d13f0a16cd6acdc2981c2238cb5d1e423a15b411de8ce05c822634961da03d",
-      "fixed_sha256": "61b94d213046e9136f280213a043b6067f17d62cef9afc9368a664364426fcb7",
-      "body_sha256": "eab43d2eabd14ee39b6006879afe7afb0e4a29f2d32f5f6c1ceebf1ba0e04ec1",
-      "signals_original": "signals: [[Algorithm] 不经意的逆转]",
-      "signals_fixed": "signals: [\"[Algorithm] 不经意的逆转\"]",
-      "signals_expected": [
-        "[Algorithm] 不经意的逆转"
-      ]
-    },
-    {
-      "path": "_imported/pwn/[Algorithm]-神秘计算器.md",
-      "original_sha256": "4c40fa4b4caa65802a77859719e8ee733e5c6532588fac7aee57858472e01246",
-      "fixed_sha256": "27b3c0827e4947576b57fe485032dabfc4b60436d420ad77fdcfbc1db18f10a9",
-      "body_sha256": "1adbf68a8c5868dd55324340f885f187d5ae86be570ae3b9db0982c82cb10de4",
-      "signals_original": "signals: [[Algorithm] 神秘计算器]",
-      "signals_fixed": "signals: [\"[Algorithm] 神秘计算器\"]",
-      "signals_expected": [
-        "[Algorithm] 神秘计算器"
-      ]
-    },
-    {
-      "path": "_imported/pwn/[Algorithm]-鉴定网络热门烂梗.md",
-      "original_sha256": "23e2f5ef1fc5faa91380890eacc8b8315c8a351be43890b4172c17db6bb5daf5",
-      "fixed_sha256": "eefc40cd456a0f94f240e3df75bdaf1ebb116ee24bf9b4c7589fafbfe2124821",
-      "body_sha256": "8ab4d81ac8258694205af1f3f274dec5d9197edf0fd814c41ee16ffb6e15c39d",
-      "signals_original": "signals: [[Algorithm] 鉴定网络热门烂梗, Python]",
-      "signals_fixed": "signals: [\"[Algorithm] 鉴定网络热门烂梗\", \"Python\"]",
-      "signals_expected": [
-        "[Algorithm] 鉴定网络热门烂梗",
-        "Python"
-      ]
-    },
-    {
-      "path": "_imported/pwn/[Algorithm]-随机数生成器.md",
-      "original_sha256": "abe212b1a0b7474766a21b22dc5410efc97a333e202cf1a3ba1161797d7a10d2",
-      "fixed_sha256": "8cc6ccea8300d7c2a4eabda4371ee48c7be4344c251c1825b28db32ee6bdac8b",
-      "body_sha256": "6acff5e82501af4133120105c97c840ea246beb62b602e54bd2857ebd388548e",
-      "signals_original": "signals: [[Algorithm] 随机数生成器, Python, Go]",
-      "signals_fixed": "signals: [\"[Algorithm] 随机数生成器\", \"Python\", \"Go\"]",
-      "signals_expected": [
-        "[Algorithm] 随机数生成器",
-        "Python",
-        "Go"
-      ]
-    },
-    {
       "path": "_imported/pwn/[Binary]-从零开始学Python.md",
       "original_sha256": "56c88eba5ea9f3eded8630ca550f231d8cf8f5911c8c44ecc6b9ca5bed61211e",
       "fixed_sha256": "6619de1fc1945aeb5d1a0aa9a9f3700ead7d3b1413bbee4d687af35733bd7e82",
@@ -151,30 +36,6 @@
       "signals_expected": [
         "[Binary] 从零开始学Python",
         "Python"
-      ]
-    },
-    {
-      "path": "_imported/pwn/[Binary]-大整数类.md",
-      "original_sha256": "0da0a6445414d1b12a4c39242317f51a0705574edd9559f0da69cc13b687d665",
-      "fixed_sha256": "d957e315d395c1301dc5b2b3b371831e308f49da4791bc3bce4d753d58fb5df8",
-      "body_sha256": "6b5b06e26c87abc933140dc6d85a6b3f3d20bd881ea233b3a89b212f115c9273",
-      "signals_original": "signals: [[Binary] 大整数类, SageMath]",
-      "signals_fixed": "signals: [\"[Binary] 大整数类\", \"SageMath\"]",
-      "signals_expected": [
-        "[Binary] 大整数类",
-        "SageMath"
-      ]
-    },
-    {
-      "path": "_imported/pwn/[Binary]-完美的代码.md",
-      "original_sha256": "dfd1a791b0e581ec48dc032ca9ca553b3e5cab5417dc62b6af453b23f68b736b",
-      "fixed_sha256": "bf51ab1f795676dbbb02fd90b760203fa0b62ff9d1e8c6dbf3d0a9b3bf98a4cf",
-      "body_sha256": "d45ef77f39bb946d65f3d1a4fa48744eaf2ed6b79376c8395ba452395d2f1535",
-      "signals_original": "signals: [[Binary] 完美的代码, Rust]",
-      "signals_fixed": "signals: [\"[Binary] 完美的代码\", \"Rust\"]",
-      "signals_expected": [
-        "[Binary] 完美的代码",
-        "Rust"
       ]
     },
     {
@@ -190,17 +51,6 @@
       ]
     },
     {
-      "path": "_imported/reverse/jun...junkcode.md",
-      "original_sha256": "8dcda0f194fc9f2fcc75b2494a7ab51c8ad0c0a00c50d45b07ad20e12a3c8e62",
-      "fixed_sha256": "ede9db988ebe1e6e541343d9525ea44d2faf7b21ffd45efd9be359af23104ef6",
-      "body_sha256": "2a2941ab87490a35c772dd3e2d4514e7d3fe3edc6c0cd76bca7654fb8b89ddec",
-      "signals_original": "signals: [jun...junkcode?]",
-      "signals_fixed": "signals: [\"jun...junkcode?\"]",
-      "signals_expected": [
-        "jun...junkcode?"
-      ]
-    },
-    {
       "path": "_imported/web/[Web]-ICS笑传之抄抄榜.md",
       "original_sha256": "3d1bf538eaa13d9b25b5ae2577c236f9d5db0f6c1fc0cf6d3dd1a6daa08555ca",
       "fixed_sha256": "14036487a0221cf3a95a6e2336fc7ca4d586ffd67d5c7d5d0b2d83d533857546",
@@ -209,17 +59,6 @@
       "signals_fixed": "signals: [\"[Web] ICS笑传之抄抄榜\"]",
       "signals_expected": [
         "[Web] ICS笑传之抄抄榜"
-      ]
-    },
-    {
-      "path": "_imported/web/[Web]-好评返红包.md",
-      "original_sha256": "198fb43a2d1ae4ab3b491a1f382c25b8dedfa2e3d681d85e8b02df5abae73d2c",
-      "fixed_sha256": "823d9b03f76ea3c2a9e3441a3e880c4a5c532616dce6713849d2bf095623fcee",
-      "body_sha256": "f6f291064bb58934fa2951b53c1fedc9ad163f11adaefa076ee9935945ef5551",
-      "signals_original": "signals: [[Web] 好评返红包]",
-      "signals_fixed": "signals: [\"[Web] 好评返红包\"]",
-      "signals_expected": [
-        "[Web] 好评返红包"
       ]
     },
     {
@@ -232,6 +71,197 @@
       "signals_expected": [
         "[Web] 概率题目概率过"
       ]
+    }
+  ],
+  "retired_entries": [
+    {
+      "path": "_imported/crypto/RSA-cmd5!.md",
+      "original_sha256": "6e489a310cf0a10be3c6f7e4458a4a9a79e7af928b6339efdfe1ee5c476005f7",
+      "fixed_sha256": "3f228c7dafbbf712da2b07e49de21b18a7acc432b935ba82e039caa8dd849241",
+      "body_sha256": "f44ecd45832f32401f20c31177204842610702eb0f9ff9ba709dec42a905205d",
+      "signals_original": "signals: [RSA? cmd5!]",
+      "signals_fixed": "signals: [\"RSA? cmd5!\"]",
+      "signals_expected": [
+        "RSA? cmd5!"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/misc/[Misc]-TAS概论大作业.md",
+      "original_sha256": "341e70422ba058a2860d565fda1e3789edd60639346ca7539cd3a1a22c9d4a67",
+      "fixed_sha256": "28cdb95ed65314dfd17a874db41dff7439355fe38897f5018acacee1a5444496",
+      "body_sha256": "d55dcd796d188c3a912befbf609f60d63a0684303e8c300081f7759f2df4d82d",
+      "signals_original": "signals: [[Misc] TAS概论大作业]",
+      "signals_fixed": "signals: [\"[Misc] TAS概论大作业\"]",
+      "signals_expected": [
+        "[Misc] TAS概论大作业"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/misc/[Misc]-大模型模型虎视眈眈.md",
+      "original_sha256": "311535414b6b3172be832728ececa1202aaebcfee6b6a359c22a1cd781296fe9",
+      "fixed_sha256": "baf6ab1249d217fff7b8dca3f810ec9ae78a07b1f8b44dbf53056eea2830714f",
+      "body_sha256": "963f5ab0d32be06054c487c6625af9ec7c98018df7ed0b06e89403c9c9634b0f",
+      "signals_original": "signals: [[Misc] 大模型模型虎视眈眈]",
+      "signals_fixed": "signals: [\"[Misc] 大模型模型虎视眈眈\"]",
+      "signals_expected": [
+        "[Misc] 大模型模型虎视眈眈"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/misc/[Misc]-熙熙攘攘我们的天才吧.md",
+      "original_sha256": "9827958230a39038a83f9afc9d679a9e14417ff55464c0d5ff4ae311fce79171",
+      "fixed_sha256": "0a7b8f7a47814c77d4df608b5087b82ddd519e72fe350e0cfb9b58552f350dba",
+      "body_sha256": "ac65947a92c009eaa5094424c5d3fbba41f13a6dae8462abfc6bb28ec06d791e",
+      "signals_original": "signals: [[Misc] 熙熙攘攘我们的天才吧, Python]",
+      "signals_fixed": "signals: [\"[Misc] 熙熙攘攘我们的天才吧\", \"Python\"]",
+      "signals_expected": [
+        "[Misc] 熙熙攘攘我们的天才吧",
+        "Python"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/misc/[Tutorial]-签到（囯内）.md",
+      "original_sha256": "e10bada5ab5b4bbac8c9a26f30250011496e761adbadbb67013915f50bb8b498",
+      "fixed_sha256": "c407a2309da8522dec4e5041a209cf54c967b4d5bc84b47d261b21aef69ac504",
+      "body_sha256": "7526413545c0510a77a3580ae348b02df42fc9e9bead6e33753433b1cc71efd0",
+      "signals_original": "signals: [[Tutorial] 签到（囯内）, Python]",
+      "signals_fixed": "signals: [\"[Tutorial] 签到（囯内）\", \"Python\"]",
+      "signals_expected": [
+        "[Tutorial] 签到（囯内）",
+        "Python"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/pwn/0-二进制漏洞审计入门指北.md",
+      "original_sha256": "39e4823f31600dead0db9c6aac8ee0405a54f2ce735277e30ac6163afa94250d",
+      "fixed_sha256": "4a46ad9e46ae64c9b3a185610e4baf71df5515d6df1c62d427aa800a76868957",
+      "body_sha256": "7431f8854a1975619a4d9356f7e0b7439d57ae59a5d891fe4f16b2f22b6f712c",
+      "signals_original": "signals: [**0 二进制漏洞审计入门指北**]",
+      "signals_fixed": "signals: [\"**0 二进制漏洞审计入门指北**\"]",
+      "signals_expected": [
+        "**0 二进制漏洞审计入门指北**"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/pwn/[Algorithm]-不经意的逆转.md",
+      "original_sha256": "b6d13f0a16cd6acdc2981c2238cb5d1e423a15b411de8ce05c822634961da03d",
+      "fixed_sha256": "61b94d213046e9136f280213a043b6067f17d62cef9afc9368a664364426fcb7",
+      "body_sha256": "eab43d2eabd14ee39b6006879afe7afb0e4a29f2d32f5f6c1ceebf1ba0e04ec1",
+      "signals_original": "signals: [[Algorithm] 不经意的逆转]",
+      "signals_fixed": "signals: [\"[Algorithm] 不经意的逆转\"]",
+      "signals_expected": [
+        "[Algorithm] 不经意的逆转"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/pwn/[Algorithm]-神秘计算器.md",
+      "original_sha256": "4c40fa4b4caa65802a77859719e8ee733e5c6532588fac7aee57858472e01246",
+      "fixed_sha256": "27b3c0827e4947576b57fe485032dabfc4b60436d420ad77fdcfbc1db18f10a9",
+      "body_sha256": "1adbf68a8c5868dd55324340f885f187d5ae86be570ae3b9db0982c82cb10de4",
+      "signals_original": "signals: [[Algorithm] 神秘计算器]",
+      "signals_fixed": "signals: [\"[Algorithm] 神秘计算器\"]",
+      "signals_expected": [
+        "[Algorithm] 神秘计算器"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/pwn/[Algorithm]-鉴定网络热门烂梗.md",
+      "original_sha256": "23e2f5ef1fc5faa91380890eacc8b8315c8a351be43890b4172c17db6bb5daf5",
+      "fixed_sha256": "eefc40cd456a0f94f240e3df75bdaf1ebb116ee24bf9b4c7589fafbfe2124821",
+      "body_sha256": "8ab4d81ac8258694205af1f3f274dec5d9197edf0fd814c41ee16ffb6e15c39d",
+      "signals_original": "signals: [[Algorithm] 鉴定网络热门烂梗, Python]",
+      "signals_fixed": "signals: [\"[Algorithm] 鉴定网络热门烂梗\", \"Python\"]",
+      "signals_expected": [
+        "[Algorithm] 鉴定网络热门烂梗",
+        "Python"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/pwn/[Algorithm]-随机数生成器.md",
+      "original_sha256": "abe212b1a0b7474766a21b22dc5410efc97a333e202cf1a3ba1161797d7a10d2",
+      "fixed_sha256": "8cc6ccea8300d7c2a4eabda4371ee48c7be4344c251c1825b28db32ee6bdac8b",
+      "body_sha256": "6acff5e82501af4133120105c97c840ea246beb62b602e54bd2857ebd388548e",
+      "signals_original": "signals: [[Algorithm] 随机数生成器, Python, Go]",
+      "signals_fixed": "signals: [\"[Algorithm] 随机数生成器\", \"Python\", \"Go\"]",
+      "signals_expected": [
+        "[Algorithm] 随机数生成器",
+        "Python",
+        "Go"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/pwn/[Binary]-大整数类.md",
+      "original_sha256": "0da0a6445414d1b12a4c39242317f51a0705574edd9559f0da69cc13b687d665",
+      "fixed_sha256": "d957e315d395c1301dc5b2b3b371831e308f49da4791bc3bce4d753d58fb5df8",
+      "body_sha256": "6b5b06e26c87abc933140dc6d85a6b3f3d20bd881ea233b3a89b212f115c9273",
+      "signals_original": "signals: [[Binary] 大整数类, SageMath]",
+      "signals_fixed": "signals: [\"[Binary] 大整数类\", \"SageMath\"]",
+      "signals_expected": [
+        "[Binary] 大整数类",
+        "SageMath"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/pwn/[Binary]-完美的代码.md",
+      "original_sha256": "dfd1a791b0e581ec48dc032ca9ca553b3e5cab5417dc62b6af453b23f68b736b",
+      "fixed_sha256": "bf51ab1f795676dbbb02fd90b760203fa0b62ff9d1e8c6dbf3d0a9b3bf98a4cf",
+      "body_sha256": "d45ef77f39bb946d65f3d1a4fa48744eaf2ed6b79376c8395ba452395d2f1535",
+      "signals_original": "signals: [[Binary] 完美的代码, Rust]",
+      "signals_fixed": "signals: [\"[Binary] 完美的代码\", \"Rust\"]",
+      "signals_expected": [
+        "[Binary] 完美的代码",
+        "Rust"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/reverse/jun...junkcode.md",
+      "original_sha256": "8dcda0f194fc9f2fcc75b2494a7ab51c8ad0c0a00c50d45b07ad20e12a3c8e62",
+      "fixed_sha256": "ede9db988ebe1e6e541343d9525ea44d2faf7b21ffd45efd9be359af23104ef6",
+      "body_sha256": "2a2941ab87490a35c772dd3e2d4514e7d3fe3edc6c0cd76bca7654fb8b89ddec",
+      "signals_original": "signals: [jun...junkcode?]",
+      "signals_fixed": "signals: [\"jun...junkcode?\"]",
+      "signals_expected": [
+        "jun...junkcode?"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
+    },
+    {
+      "path": "_imported/web/[Web]-好评返红包.md",
+      "original_sha256": "198fb43a2d1ae4ab3b491a1f382c25b8dedfa2e3d681d85e8b02df5abae73d2c",
+      "fixed_sha256": "823d9b03f76ea3c2a9e3441a3e880c4a5c532616dce6713849d2bf095623fcee",
+      "body_sha256": "f6f291064bb58934fa2951b53c1fedc9ad163f11adaefa076ee9935945ef5551",
+      "signals_original": "signals: [[Web] 好评返红包]",
+      "signals_fixed": "signals: [\"[Web] 好评返红包\"]",
+      "signals_expected": [
+        "[Web] 好评返红包"
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
     },
     {
       "path": "_imported/web/[Web]-验证码.md",
@@ -243,7 +273,10 @@
       "signals_expected": [
         "[Web] 验证码",
         "Python"
-      ]
+      ],
+      "retired_in": "DB-Q3",
+      "retired_reason": "文件作为已证实冗余的旧篇在 DB-Q3 A1/A2 删除"
     }
-  ]
+  ],
+  "updated_by": "DB-Q3"
 }

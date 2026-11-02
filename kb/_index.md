@@ -1,6 +1,6 @@
 # CTF 知识库索引
 
-共 **1844** 条，覆盖 **11** 个方向。
+共 **1856** 条，覆盖 **11** 个方向。
 本文件由 `python tools/gen_index.py` 自动生成，请勿手改。
 
 > 用法：`kb search "题面关键词"` 模糊查；`kb ask "题目描述"` 让本地模型给思路。
@@ -9,11 +9,11 @@
 
 | 方向 | 条目数 | 说明 |
 |---|---|---|
-| [杂项 Misc](#misc) | 405 | |
-| [密码学 Crypto](#crypto) | 260 | |
-| [逆向 Reverse](#reverse) | 263 | |
-| [二进制利用 Pwn](#pwn) | 303 | |
-| [Web](#web) | 493 | |
+| [杂项 Misc](#misc) | 406 | |
+| [密码学 Crypto](#crypto) | 259 | |
+| [逆向 Reverse](#reverse) | 264 | |
+| [二进制利用 Pwn](#pwn) | 307 | |
+| [Web](#web) | 500 | |
 | [取证 Forensics](#forensics) | 62 | |
 | [移动端 Mobile](#mobile) | 14 | |
 | [区块链 Blockchain](#blockchain) | 6 | |
@@ -22,7 +22,7 @@
 | [AI 安全](#ai) | 12 | |
 
 <a id="misc"></a>
-## 杂项 Misc (405)
+## 杂项 Misc (406)
 
 - 🟢 [2021 圣诞拼图活动 Writeup](_des/cards/misc/2021圣诞拼图活动-Writeup.full.md) — _2021 圣诞活动 2021、拼图、A-star、数字华容道_
 - 🟢 [2022 天融信教育杯 CTF 赛事 WP](_des/cards/misc/2022天融信教育杯CTF赛事WP.full.md) — _天融信教育杯 2022 2022、steghide、base64、PHPCMS_
@@ -80,10 +80,14 @@
 - 🟡 [CCF BDCI 2022 三等奖 - 数据湖流批一体性能优化 冀科数字](_des/cards/misc/【三等奖方案】数据湖流批一体性能优化「冀科数字」团队思路.full.md) — _CCF BDCI 2022 (第十届CCF大数据与计算智能大赛) 2022、数据湖、LakeSoul、Spark3.1.2_
 - 🟡 [CCF BDCI 2022 三等奖 - 返乡发展人群预测 保住绿码团队](_des/cards/misc/【三等奖方案】返乡发展人群预测「保住绿码」团队思路.full.md) — _CCF BDCI 2022 (第十届CCF大数据与计算智能大赛) 2022、联通信令、用户返乡、分类预测_
 - 🟡 [CCF BDCI 2022 二等奖 - TPU人群密度估计 ChaMd5-AI](_des/cards/misc/【二等奖方案】基于TPU平台实现人群密度估计赛题「ChaMd5-AI」团队解题思路.full.md) — _CCF BDCI 2022 (第十届CCF大数据与计算智能大赛) 2022、TPU、人群密度估计、FLOPs_
+- 🟡 [CISCN 2024 初赛 / Power Trajectory Diagram](_imported_cats/misc/CISCN 2024 初赛 _ Power Trajectory Diagram__cn-case-ciscn-lunatic-a5ff66e5-seg2.md) — _CISCN 2024 初赛、通风机、misc_
+- 🟡 [CISCN 2024 初赛 / 神秘文件](_imported_cats/misc/CISCN 2024 初赛 _ 神秘文件__cn-case-ciscn-lunatic-a5ff66e5-seg3.md) — _CISCN 2024 初赛、通风机、misc_
 - 🟡 [CISCN 2024 初赛 / 通风机](_imported_cats/misc/CISCN 2024 初赛 _ 通风机__cn-case-ciscn-lunatic-a5ff66e5.md) — _CISCN 2024 初赛、通风机、misc_
 - 🟡 [CTF Agent 校赛斩获 TOP 1：阶段开发成果分享](_des/cards/misc/CTF_Agent_校赛斩获_TOP_1：阶段开发成果分享.full.md) — _CTF Agent 2026、AI Agent、三省六部制、3核心大脑_
 - 🟡 [CVE-2024-0015复现 (DubheCTF DayDream)](_des/cards/misc/CVE-2024-0015复现_(DubheCTF_DayDream).full.md) — _DubheCTF 2024 (复现) 2024、android、dreamservice、intent_
 - 🟡 [Cyber Apocalypse 2023 硬件 CTF 题解](_des/cards/misc/Cyber_Apocalypse_2023_硬件_CTF_题解.full.md) — _Cyber Apocalypse 2023 2023、hardware、逻辑分析仪、Gerber_
+- 🟡 [DASCTF 2024 暑期挑战赛 / EZ_zip](_imported_cats/misc/DASCTF 2024 暑期挑战赛 _ EZ_zip__cn-case-dasctf-lunatic-349725aa-seg3.md) — _DASCTF 2024 暑期挑战赛、png_master、misc_
+- 🟡 [DASCTF 2024 暑期挑战赛 / ServerMeM](_imported_cats/misc/DASCTF 2024 暑期挑战赛 _ ServerMeM__cn-case-dasctf-lunatic-349725aa-seg2.md) — _DASCTF 2024 暑期挑战赛、png_master、misc_
 - 🟡 [DASCTF 2024 暑期挑战赛 / png_master](_imported_cats/misc/DASCTF 2024 暑期挑战赛 _ png_master__cn-case-dasctf-lunatic-349725aa.md) — _DASCTF 2024 暑期挑战赛、png_master、misc_
 - 🟡 [DNS](_imported/misc/DNS.md) — _DNS_
 - 🟡 [DataCon2020优秀解题思路分享：僵尸网络方向第一题（阿里云安全）](_des/cards/misc/DataCon2020优秀解题思路分享：僵尸网络方向第一题（阿里云安全）.full.md) — _DataCon 2020 2020、botnet、honeypot、http-log_
@@ -202,9 +206,10 @@
 - 🟡 [ZFS 文件恢复](_imported/misc/ZFS-文件恢复.md) — _ZFS 文件恢复_
 - 🟡 [ZIP 压缩包技巧（伪加密/明文攻击/CRC 爆破）](misc/zip-archive-tricks.md) — _给了一个加密压缩包、解压要密码但题面没给、同一个 readme 出现两份、压缩包里有 4 字节小文件_
 - 🟡 [ZIP 格式](_imported/misc/ZIP-格式.md) — _ZIP 格式_
+- 🟡 [[Misc] 新穷铁道](_imported/misc/[Misc]-新穷铁道.md) — _[Misc] 新穷铁道_
+- 🟡 [[Misc] 清北问答](_imported/misc/[Misc]-清北问答.md) — _[Misc] 清北问答、Git_
 - 🟡 [cat 绿色破解版](_imported/misc/cat-绿色破解版.md) — _cat 绿色破解版_
 - 🟡 [doyo2024的MISC题目WP合集（简化版）](_imported/misc/doyo2024的MISC题目WP合集（简化版）.md) — _doyo2024的MISC题目WP合集（简化版）_
-- 🟡 [misc](_imported/misc/misc.md) — _misc_
 - 🟡 [n00bz CTF 2024 Writeup](_des/cards/misc/n00bz_CTF_2024_Writeup.full.md) — _n00bzCTF 2024、powershell-xor-3、brainfuck-c-translation、qbasic_
 - 🟡 [pyc文件](_imported/misc/pyc文件.md) — _pyc文件、Python_
 - 🟡 [r00t CTF 2024 / 5num_secret.jpg](_imported_cats/misc/r00t CTF 2024 _ 5num_secret.jpg__official-c0670ef8388253753d6f9e.md) — _r00t CTF 2024、5num_secret.jpg、misc_
@@ -261,6 +266,8 @@
 - 🟡 [山东省技能兴鲁职业技能大赛—铸网 2025 工业和互联网 CTF WriteUp](_des/cards/misc/山东省“技能兴鲁”职业技能大赛—“铸网2025”山东省工业和互联网CTF竞赛WriteUp.full.md) — _技能兴鲁 2025、ICS、force-control-PCZ、modbus-TCP-flow_
 - 🟡 [工控类](_imported/misc/工控类.md) — _工控类_
 - 🟡 [强网拟态 2024 / Find way to read video](_imported_cats/misc/强网拟态 2024 _ Find way to read video__cn-case-qwnt-wm-23e79be3.md) — _强网拟态 2024、Find way to read video、misc_
+- 🟡 [强网拟态 2024 / OnlineRunner](_imported_cats/misc/强网拟态 2024 _ OnlineRunner__cn-case-qwnt-wm-23e79be3-seg2.md) — _强网拟态 2024、Find way to read video、misc_
+- 🟡 [强网拟态 2024 / Serv1ce](_imported_cats/misc/强网拟态 2024 _ Serv1ce__cn-case-qwnt-wm-23e79be3-seg3.md) — _强网拟态 2024、Find way to read video、misc_
 - 🟡 [强网杯青少年专项赛 线上赛 WP](_des/cards/misc/强网杯青少年专项赛(线上赛)WP.full.md) — _强网杯青少年 2024、QR-code-combine、backdoor-user-kill、GIF-multi-frame_
 - 🟡 [我们的快排確有問題](_imported/misc/我们的快排確有問題.md) — _我们的快排確有問題_
 - 🟡 [掌控安全CTF挑战赛 Writeup by Mini-Venom (ChaMd5)](_des/cards/misc/掌控安全CTF挑战赛_writeup_by_Mini-Venom.full.md) — _掌控安全CTF挑战赛(zkaq) 2024、zkaq、Nuclei模板、自定义YAML_
@@ -423,15 +430,9 @@
 - 🔴 [解析2025强网杯谍影重重6.0](_des/cards/misc/解析2025强网杯谍影重重6.0.full.md) — _强网杯 2025 谍影重重6.0 2025、RTP-traffic、G.711-mulaw、audio-1305-streams_
 - 🔴 [阿里云 CTF 2025 Writeup](_des/cards/misc/阿里云CTF2025_Writeup.full.md) — _阿里云CTF 2025、alibaba、BPF、verifier_
 - 🔴 [香港網安奪旗賽HKCERT CTF 2024 Write up（下）](_des/cards/misc/香港網安奪旗賽HKCERT_CTF_2024_Write_up（下）.full.md) — _HKCERT CTF 2024 2024、RSA-LCG、multiprime-rsa、pty-disassembly_
-- ⚪ [[Misc]-TAS概论大作业](_imported/misc/[Misc]-TAS概论大作业.md)
-- ⚪ [[Misc]-大模型模型虎视眈眈](_imported/misc/[Misc]-大模型模型虎视眈眈.md)
-- ⚪ [[Misc]-新穷铁道](_imported/misc/[Misc]-新穷铁道.md)
-- ⚪ [[Misc]-清北问答](_imported/misc/[Misc]-清北问答.md)
-- ⚪ [[Misc]-熙熙攘攘我们的天才吧](_imported/misc/[Misc]-熙熙攘攘我们的天才吧.md)
-- ⚪ [[Tutorial]-签到（囯内）](_imported/misc/[Tutorial]-签到（囯内）.md)
 
 <a id="crypto"></a>
-## 密码学 Crypto (260)
+## 密码学 Crypto (259)
 
 - 🟢 [0xGame 2025/Crypto WriteUp Week1](_des/cards/crypto/0xGame_2025_Crypto_WriteUp_Week1.full.md) — _0xGame 2025、新人向、factordb、Vigenère 标准_
 - 🟢 [2022 第六届强网杯青少赛 Misc & Crypto WriteUp](_des/cards/crypto/2022第六届强网杯青少赛_Misc&Crypto-WriteUp.full.md) — _强网杯青少赛 2022 2022、base64、奇偶分离、异或32_
@@ -467,7 +468,10 @@
 - 🟡 [BLS 多重签名：零的裂变](_imported/crypto/BLS-多重签名：零的裂变.md) — _BLS 多重签名：零的裂变_
 - 🟡 [Base](_imported/crypto/Base.md) — _Base_
 - 🟡 [CBC](_imported/crypto/CBC.md) — _CBC_
+- 🟡 [CISCN 2024 Qual Writeup / crypto](_imported_cats/crypto/CISCN 2024 Qual Writeup _ crypto__cn-blog-ciscn-swizzer-1-seg3.md) — _crypto、中文题解、origin_tag:imported_cats_
 - 🟡 [CISCN 2024 Qual Writeup / crypto](_imported_cats/crypto/CISCN 2024 Qual Writeup _ crypto__cn-blog-ciscn-swizzer-1.md) — _crypto、中文题解、origin_tag:imported_cats_
+- 🟡 [CISCN 2024 Qual Writeup / misc](_imported_cats/crypto/CISCN 2024 Qual Writeup _ misc__cn-blog-ciscn-swizzer-1-seg2.md) — _crypto、中文题解、origin_tag:imported_cats_
+- 🟡 [CISCN 2024 Qual Writeup / reverse](_imported_cats/crypto/CISCN 2024 Qual Writeup _ reverse__cn-blog-ciscn-swizzer-1-seg4.md) — _crypto、中文题解、origin_tag:imported_cats_
 - 🟡 [CRT 同余方程组与 DH 小型子群攻击（Pohlig-Hellman）](crypto/crt-dh-small-subgroup.md) — _给了多组不同的模数、同一明文 mod 多个 n、模数满足 a ≡ b mod 小素数、给出了 p-1 的因子分解_
 - 🟡 [CTF连分数实战详解](_des/cards/crypto/CTF连分数实战详解.full.md) — _公众号文章 2022、crypto、rsa、连分数_
 - 🟡 [CVP](_imported/crypto/CVP.md) — _CVP_
@@ -554,9 +558,6 @@
 - 🟡 [UCATFLAGS 2024 / mylittlepoly](_imported_cats/crypto/UCATFLAGS 2024 _ mylittlepoly__official-7171e42a94a02a4c56d0a2.md) — _UCATFLAGS 2024、mylittlepoly、crypto_
 - 🟡 [Z3](_imported/crypto/Z3.md) — _Z3、Python_
 - 🟡 [b01lers CTF WP - Polaris 战队](_des/cards/crypto/b01lers_CTF-WP-Polaris战队.full.md) — _b01lersCTF 2024、coppersmith、certificate、lop_
-- 🟡 [crypto](_imported/crypto/crypto-2.md) — _crypto_
-- 🟡 [crypto](_imported/crypto/crypto-3.md) — _crypto_
-- 🟡 [crypto](_imported/crypto/crypto.md) — _crypto_
 - 🟡 [m1z0r3CTF 2022 作った問題 & writeup](_des/cards/crypto/m1z0r3CTF2022_作った問題&writeup.full.md) — _m1z0r3CTF 2022、lcg、rsa-chain、multi-prime_
 - 🟡 [pem 类文件解析及 2022 蓝帽杯 crypto 详解](_des/cards/crypto/pem类文件解析及2022蓝帽杯crypto详解.full.md) — _蓝帽杯 2022、pem、rsa、openssl_
 - 🟡 [xor](_imported/crypto/xor.md) — _xor、Python、pwntools_
@@ -692,10 +693,9 @@
 - 🔴 [赛题解析之第九届(2024)全国高校密码数学挑战赛赛题三](_des/cards/crypto/赛题解析之第九届(2024)全国高校密码数学挑战赛赛题三.full.md) — _第九届全国高校密码数学挑战赛 2024、side-channel、CPA、DPA_
 - 🔴 [量子安全 quantum ctf Qlotto Hack the box](_des/cards/crypto/量子安全_quantum_ctf_Qlotto_Hack_the_box.full.md) — _Quantum CTF / Hack The Box QLotto 2025、qiskit、quantum-circuit、Aer-simulator_
 - 🔴 [量子密钥分发协议赛题bb84官方WP - 第十六届信安国赛](_des/cards/crypto/官方WP_-_量子密钥分发协议赛题bb84解析.full.md) — _第十六届全国大学生信息安全竞赛(信安国赛)初赛 + 伽玛实验场 2023、量子密钥分发、BB84协议、偏振编码_
-- ⚪ [RSA-cmd5!](_imported/crypto/RSA-cmd5!.md)
 
 <a id="reverse"></a>
-## 逆向 Reverse (263)
+## 逆向 Reverse (264)
 
 - 🟢 [.NET / C# 逆向（dnSpyEx / ILSpy）与 Unity il2cpp](reverse/dotnet-unity-il2cpp.md) — _文件是 .NET 程序集、有 mscoree.dll 导入或 CLR 头、Unity 游戏里有 GameAssembly.dll 与 global-metadata.dat、反编译能看到完整 C# 源码_
 - 🟢 [2024 极客少年 WP（little re sbox 还原 + BeautifulFlower XOR）](_des/cards/reverse/2024极客少年WP.full.md) — _2024 极客少年 2024、sbox 320 字节查找表、v5 密文 41 字节、sbox.index 逆查+异或 i_
@@ -835,6 +835,8 @@
 - 🟡 [常見加密算法和編碼識別](_imported/reverse/常見加密算法和編碼識別.md) — _常見加密算法和編碼識別_
 - 🟡 [常见加密算法和编码识别](_imported/reverse/常见加密算法和编码识别.md) — _常见加密算法和编码识别_
 - 🟡 [强网杯 2024 / ez_vm](_imported_cats/reverse/强网杯 2024 _ ez_vm__cn-case-qwb-reverse-2b6598cb.md) — _强网杯 2024、ez_vm、reverse_
+- 🟡 [强网杯 2024 / mips](_imported_cats/reverse/强网杯 2024 _ mips__cn-case-qwb-reverse-2b6598cb-seg2.md) — _强网杯 2024、ez_vm、reverse_
+- 🟡 [强网杯 2024 / remem](_imported_cats/reverse/强网杯 2024 _ remem__cn-case-qwb-reverse-2b6598cb-seg3.md) — _强网杯 2024、ez_vm、reverse_
 - 🟡 [控制流平坦化](_imported_cats/reverse/控制流平坦化__ctf-wiki-6b34dde0b51545.md) — _reverse、ctf-wiki、zh-tw_
 - 🟡 [攻防世界 easyjni 精析](_des/cards/reverse/攻防世界easyjni精析.full.md) — _攻防世界 (xctf) 2023、APK、JNI、native_
 - 🟡 [春秋杯Re 2024 赛题解析](_des/cards/reverse/春秋杯Re_2024_赛题解析.full.md) — _春秋杯2024 2024、pygame逆向、UPX壳、TLS反调试_
@@ -959,10 +961,9 @@
 - 🔴 [阿里云CTF2025复现-风清](_des/cards/reverse/阿里云CTF2025复现-风清.full.md) — _阿里云CTF 2025、MIPS、手搓syscall、seccomp_
 - 🔴 [香港網安奪旗賽HKCERT CTF 2025 資格賽逆向方向Writeup](_des/cards/reverse/香港網安奪旗賽HKCERT_CTF_2025_資格賽逆向方向Writeup.full.md) — _HKCERT CTF 2025 資格賽 2025、SM4、custom-SBOX、XXTEA_
 - ⚪ [0CTF 2017 - zer0IIvm 题目分析](_des/cards/reverse/0CTF_2017-zer0IIvm题目分析.full.md) — _0CTF 2017 2017、LLVM、obfuscation、OLLVM_
-- ⚪ [jun...junkcode](_imported/reverse/jun...junkcode.md)
 
 <a id="pwn"></a>
-## 二进制利用 Pwn (303)
+## 二进制利用 Pwn (307)
 
 - 🟢 [AlpacaHack Round 1 (Pwn) Writeup](_des/cards/pwn/AlpacaHack_Round_1_(Pwn)_Writeup.full.md) — _AlpacaHack 2024、abs(INT_MIN)、整数溢出、scanf %d%*c_
 - 🟢 [Buuctf 刷题记录 - hitcontraining uaf](_des/cards/pwn/Buuctf刷题记录-hitcontraining_uaf.full.md) — _hitcontraining 2018、HackNote 菜单、notelist 指针数组、print_note_content 函数指针_
@@ -985,10 +986,14 @@
 - 🟡 [Bad Asm](_imported/pwn/Bad-Asm.md) — _Bad Asm_
 - 🟡 [BraekerCTF 2024 Writeup](_des/cards/pwn/BraekerCTF_2024_Writeup.full.md) — _BraekerCTF 2024、32位 Linux、sys_read shellcode、add al [eax]_
 - 🟡 [Buuctf 刷题记录 - ZJCTF 2019 EasyHeap](_des/cards/pwn/Buuctf刷题记录-ZJCTF_2019_EasyHeap.full.md) — _ZJCTF 2019、heap 菜单 1/2/3/4/4869、magic 全局、0x6020c0_
+- 🟡 [ByteCTF 2024 / babyApk](_imported_cats/pwn/ByteCTF 2024 _ babyApk__cn-case-bytectf-wm-259914b7-seg2.md) — _ByteCTF 2024、ezheap、pwn_
+- 🟡 [ByteCTF 2024 / ezauth](_imported_cats/pwn/ByteCTF 2024 _ ezauth__cn-case-bytectf-wm-259914b7-seg3.md) — _ByteCTF 2024、ezheap、pwn_
 - 🟡 [ByteCTF 2024 / ezheap](_imported_cats/pwn/ByteCTF 2024 _ ezheap__cn-case-bytectf-wm-259914b7.md) — _ByteCTF 2024、ezheap、pwn_
 - 🟡 [C 沙盒逃逸](_imported/pwn/C-沙盒逃逸.md) — _C 沙盒逃逸_
 - 🟡 [CCB CISCN 半决赛 AWDP pwn 题解 (2 道)](_des/cards/pwn/CCB_CISCN_半决赛-AWDP-pwn_题解.full.md) — _CISCN 半决赛 (AWDP) 2024、AWDP、libc 2.35、tcache dup_
 - 🟡 [CISCN 2024 初赛 / EzHeap](_imported_cats/pwn/CISCN 2024 初赛 _ EzHeap__cn-case-starry-0738fd9e-1701481d.md) — _CISCN 2024 初赛、EzHeap、pwn_
+- 🟡 [CISCN 2024 初赛 / gostack](_imported_cats/pwn/CISCN 2024 初赛 _ gostack__cn-case-starry-0738fd9e-1701481d-seg3.md) — _CISCN 2024 初赛、EzHeap、pwn_
+- 🟡 [CISCN 2024 初赛 / orange_cat_diary](_imported_cats/pwn/CISCN 2024 初赛 _ orange_cat_diary__cn-case-starry-0738fd9e-1701481d-seg2.md) — _CISCN 2024 初赛、EzHeap、pwn_
 - 🟡 [CSAW CTF 2023 Writeup](_des/cards/pwn/CSAW_CTF_2023_Writeup.full.md) — _CSAW CTF 2023、unlimited_subway 32位、canary泄、Partial RELRO_
 - 🟡 [Canary 绕过四种打法（泄露 / 爆破 / __stack_chk_fail / TLS）](pwn/stack-canary-bypass.md) — _checksec 显示 Canary found、程序里出现 __stack_chk_fail、fork 服务且每次连接重启、有 puts/printf 输出缓冲区_
 - 🟡 [DAS PWN 出题思路 & CVE-2023-40930 的介绍](_des/cards/pwn/DAS_PWN出题思路&CVE-2023-40930的介绍.full.md) — _DAS 2023、cve-2023-40930、canary-leak、command-injection_
@@ -1044,7 +1049,9 @@
 - 🟡 [Python 沙盒](_imported/pwn/Python-沙盒.md) — _Python 沙盒、Python_
 - 🟡 [ROP 技巧补坑](_imported/pwn/ROP-技巧补坑.md) — _ROP 技巧补坑_
 - 🟡 [Real World CTF 2023 - NonHeavyFTP Writeup](_des/cards/pwn/Real_World_CTF_2023_–_NonHeavyFTP.full.md) — _Real World CTF 2023 2023、ftp、lightftp、race-condition_
+- 🟡 [SCTF 2024 / SycServer2.0](_imported_cats/pwn/SCTF 2024 _ SycServer2.0__cn-case-sctf-wm-0e0ddcc5-seg2.md) — _SCTF 2024、c_or_go、pwn_
 - 🟡 [SCTF 2024 / c_or_go](_imported_cats/pwn/SCTF 2024 _ c_or_go__cn-case-sctf-wm-0e0ddcc5.md) — _SCTF 2024、c_or_go、pwn_
+- 🟡 [SCTF 2024 / ez_cython](_imported_cats/pwn/SCTF 2024 _ ez_cython__cn-case-sctf-wm-0e0ddcc5-seg3.md) — _SCTF 2024、c_or_go、pwn_
 - 🟡 [SECCON Beginners CTF (ctf4b) 作問者 writeup](_des/cards/pwn/SECCON_Beginners_CTF_(ctf4b)_作問者writeup.full.md) — _SECCON Beginners CTF 2023、pycache-pyc、hls-drm、was-stream_
 - 🟡 [SEKAICTF 2024 Writeup – Polaris战队](_des/cards/pwn/SEKAICTF_2024_Writeup_–Polaris战队.full.md) — _SEKAICTF 2024、nolibc、custom-protocol、group-theory_
 - 🟡 [STACK the Flags CTF 2022 - cursed_grimoires](_des/cards/pwn/STACK_the_Flags_CTF_2022.full.md) — _STACK the Flags 2022、house-of-botcake、stdout-leak、fsop_
@@ -1054,6 +1061,8 @@
 - 🟡 [UKFC2024 CISCN 华北赛区 pwn 方向 WP](_des/cards/pwn/UKFC2024_CISCN华北赛区pwn方向WP.full.md) — _UKFC2024 / CISCN 华北 2024、book-manager、tcache-poisoning、free-hook-system_
 - 🟡 [WSL2 Environment](_imported/pwn/WSL2-Environment.md) — _WSL2 Environment、Docker_
 - 🟡 [Windows pwn 入门 —— ASLR/DEP/CFG 保护、栈溢出与 SEH 利用](pwn/windows-pwn-basics.md) — _附件是 exe 或 dll 而不是 elf、题目要求 nc 到一个 windows 服务端口、程序使用 recv 或 fgets 读入并 strcpy 到栈缓冲区、崩溃时异常处理器地址被覆盖_
+- 🟡 [[Binary] 从零开始学Python](_imported/pwn/[Binary]-从零开始学Python.md) — _[Binary] 从零开始学Python、Python_
+- 🟡 [[Binary] 生活在树上](_imported/pwn/[Binary]-生活在树上.md) — _[Binary] 生活在树上、Node_
 - 🟡 [__malloc_hook / __free_hook 与 2.34+ 替代方案](pwn/malloc-hook-tricks.md) — _题目 libc 2.23~2.33、有任意写能力、需要一次 malloc 或 free 就拿到 shell、2.34 后 __free_hook 找不到_
 - 🟡 [fmt&canary](_imported/pwn/fmt&canary.md) — _fmt&canary_
 - 🟡 [fmt&got](_imported/pwn/fmt&got.md) — _fmt&got、pwntools_
@@ -1100,6 +1109,8 @@
 - 🟡 [常见保护](_imported/pwn/常见保护.md) — _常见保护_
 - 🟡 [开始吧](_imported/pwn/开始吧.md) — _开始吧_
 - 🟡 [异构PWN](_imported/pwn/异构PWN.md) — _异构PWN_
+- 🟡 [强网拟态 2024 / QWEN](_imported_cats/pwn/强网拟态 2024 _ QWEN__cn-case-starry-e12a2847-44a4e765-seg2.md) — _强网拟态 2024、signin_revenge、pwn_
+- 🟡 [强网拟态 2024 / signin](_imported_cats/pwn/强网拟态 2024 _ signin__cn-case-starry-e12a2847-44a4e765-seg3.md) — _强网拟态 2024、signin_revenge、pwn_
 - 🟡 [强网拟态 2024 / signin_revenge](_imported_cats/pwn/强网拟态 2024 _ signin_revenge__cn-case-starry-e12a2847-44a4e765.md) — _强网拟态 2024、signin_revenge、pwn_
 - 🟡 [强网杯 S8 初赛 PWN 赛题解析](_des/cards/pwn/强网杯S8初赛_PWN_赛题解析.full.md) — _强网杯 2024、menu-heap、libc-got-overwrite、write-what-where_
 - 🟡 [数据安全大赛 2024 数信杯 东部赛区](_des/cards/pwn/第二届数据安全大赛暨首届“数信杯”东部赛区writeup.full.md) — _数据安全大赛 2024、非栈上格式化字符串、RBP 多级指针改返回地址、%hn 写 short_
@@ -1118,7 +1129,10 @@
 - 🟡 [第八届御网杯 线上下线 pwn Writeup by Mini-Venom](_des/cards/pwn/第八届御网杯_线上下线pwn_writeup_by_Mini-Venom.full.md) — _御网杯 2024、SROP、sigreturn、ret2syscall_
 - 🟡 [绿城杯-WriteUp](_des/cards/pwn/绿城杯-WriteUp.full.md) — _绿城杯 2021、off-by-one、uaf-double-free、tcache-poisoning_
 - 🟡 [网鼎杯 2024 / cardmaster](_imported_cats/pwn/网鼎杯 2024 _ cardmaster__cn-case-starry-0428bd2f-aae7a9f0.md) — _网鼎杯 2024、cardmaster、pwn_
+- 🟡 [网鼎杯2024青龙组官方资格赛wp_网鼎杯wp-CSDN博客 / crypto](_imported_cats/pwn/网鼎杯2024青龙组官方资格赛wp_网鼎杯wp-CSDN博客 _ crypto__cn-blog-csdn-wangding-1-seg3.md) — _pwn、中文题解、栈_
+- 🟡 [网鼎杯2024青龙组官方资格赛wp_网鼎杯wp-CSDN博客 / misc](_imported_cats/pwn/网鼎杯2024青龙组官方资格赛wp_网鼎杯wp-CSDN博客 _ misc__cn-blog-csdn-wangding-1-seg2.md) — _pwn、中文题解、栈_
 - 🟡 [网鼎杯2024青龙组官方资格赛wp_网鼎杯wp-CSDN博客 / pwn](_imported_cats/pwn/网鼎杯2024青龙组官方资格赛wp_网鼎杯wp-CSDN博客 _ pwn__cn-blog-csdn-wangding-1.md) — _pwn、中文题解、栈_
+- 🟡 [网鼎杯2024青龙组官方资格赛wp_网鼎杯wp-CSDN博客 / reverse](_imported_cats/pwn/网鼎杯2024青龙组官方资格赛wp_网鼎杯wp-CSDN博客 _ reverse__cn-blog-csdn-wangding-1-seg4.md) — _pwn、中文题解、栈_
 - 🟡 [虎符-WriteUp](_des/cards/pwn/虎符-WriteUp.full.md) — _虎符 CTF 2021、ChaMd5-Venom、IO_Popen-RCE、Lua-sandbox-escape_
 - 🟡 [虛擬化技術簡介](_imported/pwn/虛擬化技術簡介.md) — _虛擬化技術簡介_
 - 🟡 [西湖论剑 2025 / Vpwn](_imported_cats/pwn/西湖论剑 2025 _ Vpwn__cn-case-starry-ad3f64b9-07a1858a.md) — _西湖论剑 2025、Vpwn、pwn_
@@ -1256,20 +1270,11 @@
 - 🔴 [首届CCF智能汽车大赛(CCF IVC 2025) Mini-Venom(第一名)](_des/cards/pwn/首届CCF智能汽车大赛(CCF_IVC_2025)_Mini-Venom(第一名).full.md) — _CCF智能汽车大赛 2025、Pwn-ROP、libc-2.27、Web-Hash长度扩展_
 - 🔴 [香港網安奪旗賽HKCERT CTF 2025 資格賽PWN方向Writeup](_des/cards/pwn/香港網安奪旗賽HKCERT_CTF_2025_資格賽PWN方向Writeup.full.md) — _HKCERT CTF 2025 資格賽 2025、fmtstr、pwntools、GOT-overwrite_
 - 🔴 [鹏城杯2023 Writeup –Polaris战队](_des/cards/pwn/鹏城杯2023_Writeup_–Polaris战队.full.md) — _鹏城杯 2023 2023、6502-cpu-emu、custom-vm、tcache-dup_
-- ⚪ [0-二进制漏洞审计入门指北](_imported/pwn/0-二进制漏洞审计入门指北.md)
 - ⚪ [2023 ACTF writeup by Arr3stY0u](_des/cards/pwn/2023_ACTF_writeup_by_Arr3stY0u.full.md) — _2023 ACTF 2023、ACTF、QEMU-pwn、qemu-system-x86_64_
-- ⚪ [[Algorithm]-不经意的逆转](_imported/pwn/[Algorithm]-不经意的逆转.md)
-- ⚪ [[Algorithm]-神秘计算器](_imported/pwn/[Algorithm]-神秘计算器.md)
-- ⚪ [[Algorithm]-鉴定网络热门烂梗](_imported/pwn/[Algorithm]-鉴定网络热门烂梗.md)
-- ⚪ [[Algorithm]-随机数生成器](_imported/pwn/[Algorithm]-随机数生成器.md)
-- ⚪ [[Binary]-从零开始学Python](_imported/pwn/[Binary]-从零开始学Python.md)
-- ⚪ [[Binary]-大整数类](_imported/pwn/[Binary]-大整数类.md)
-- ⚪ [[Binary]-完美的代码](_imported/pwn/[Binary]-完美的代码.md)
-- ⚪ [[Binary]-生活在树上](_imported/pwn/[Binary]-生活在树上.md)
 - ⚪ [看雪2023 KCTF年度赛 | 第四题设计思路及解析](_des/cards/pwn/看雪2023_KCTF年度赛_-_第四题设计思路及解析.full.md) — _看雪2023 KCTF年度赛 2023、LLVM PASS PWN、VecPass.so自定义模块、runOnFunction虚函数_
 
 <a id="web"></a>
-## Web (493)
+## Web (500)
 
 - 🟢 [2022 IS 河南工业控制安全部分 Web 题解](_des/cards/web/2022IS河南工业控制安全部分web题解.full.md) — _IS河南工控安全 2022、SQL注入、XXE、JSON弱类型_
 - 🟢 [2022 年春秋杯冬季赛部分 WriteUp (天权信安)](_des/cards/web/2022年春秋杯冬季赛部分WriteUp.full.md) — _2022 春秋杯冬季赛 2022、春秋杯、天权信安、PHP-下划线绕过_
@@ -1504,6 +1509,8 @@
 - 🟡 [[GWCTF 2019]mypassword](_des/wp_summary/web/XSS.md) — _[GWCTF 2019]mypassword、XSS_
 - 🟡 [[HTB] Jarvis Writeup](_des/cards/web/[HTB]_Jarvis_Writeup.full.md) — _Hack The Box - Jarvis 2018、ironwaf_bypass、room_sql_injection、order_by_column_count_
 - 🟡 [[HTB] October Writeup](_des/cards/web/[HTB]_October_Writeup.full.md) — _Hack The Box - October 2017、october_cms、php_cms_upload_bypass、mysql_default_password_
+- 🟡 [[Web] ICS笑传之抄抄榜](_imported/web/[Web]-ICS笑传之抄抄榜.md) — _[Web] ICS笑传之抄抄榜_
+- 🟡 [[Web] 概率题目概率过](_imported/web/[Web]-概率题目概率过.md) — _[Web] 概率题目概率过_
 - 🟡 [bestphp](_imported/web/bestphp.md) — _bestphp_
 - 🟡 [chocolate](_imported/web/chocolate.md) — _chocolate、PHP_
 - 🟡 [ciscn 国赛华东南分区赛 WEB 方向 WriteUp 分享](_des/cards/web/ciscn国赛华东南分区赛WEB方向WriteUp分享.full.md) — _CISCN 2023、java、deserialize、xxe_
@@ -1537,7 +1544,6 @@
 - 🟡 [代码审计](_des/wp_summary/web/代码审计.md) — _代码审计、SSRF、Flask、PHP_
 - 🟡 [任意文件读取](_imported/web/任意文件读取.md) — _任意文件读取_
 - 🟡 [几个Web+JS相关CTF题目小记 - Node原型链污染](_des/cards/web/幾個與_Web_跟_JS_相關的_CTF_題目小記.full.md) — _多个CTF题目精选(JS+Web) 2022、Node.js、原型链污染、prototype_pollution_
-- 🟡 [前言](_des/topics/web/文件上传漏洞.md) — _前言、PHP、Nginx、文件上传漏洞_
 - 🟡 [前言](_des/wp_summary/web/ssti入门知识点.md) — _前言、SSTI、PHP、Smarty_
 - 🟡 [加密对抗靶场enctypt-labs通关](_des/cards/web/加密对抗靶场enctypt-labs通关.full.md) — _encrypt-labs / 加密对抗靶场 2024、encrypt-labs、AES、DES_
 - 🟡 [华为杯第一届中国研究生网络安全创新大赛初赛WriteUp](_des/cards/web/“华为杯”第一届中国研究生网络安全创新大赛初赛WriteUp.full.md) — _华为杯 2022、JWT-HS256-forge、URL-object-bypass、nodemon-restart_
@@ -1547,10 +1553,20 @@
 - 🟡 [小 E 的管理系统](_imported/web/小-E-的管理系统.md) — _小 E 的管理系统_
 - 🟡 [小羊走迷宫](_imported/web/小羊走迷宫.md) — _小羊走迷宫、PHP_
 - 🟡 [巅峰极客 2024 初赛 / GoldenHornKing](_imported_cats/web/巅峰极客 2024 初赛 _ GoldenHornKing__cn-case-dfjk-exp10it-4aa898ce.md) — _巅峰极客 2024 初赛、GoldenHornKing、web_
+- 🟡 [巅峰极客 2024 初赛 / easy_java](_imported_cats/web/巅峰极客 2024 初赛 _ easy_java__cn-case-dfjk-exp10it-4aa898ce-seg3.md) — _巅峰极客 2024 初赛、GoldenHornKing、web_
+- 🟡 [巅峰极客 2024 初赛 / php_online](_imported_cats/web/巅峰极客 2024 初赛 _ php_online__cn-case-dfjk-exp10it-4aa898ce-seg2.md) — _巅峰极客 2024 初赛、GoldenHornKing、web_
 - 🟡 [废弃的网站](_imported/web/废弃的网站.md) — _废弃的网站_
 - 🟡 [强网拟态防御/zerocalc](_des/cards/web/强网拟态防御国际精英挑战赛-WriteUp.full.md) — _强网拟态 2021、notevil patched eval、cookieSession key 可控、cookie pollution_
+- 🟡 [强网杯 2024 / EasyRSA](_imported_cats/web/强网杯 2024 _ EasyRSA__cn-case-qwb-wm-1bd98bdc-seg5.md) — _强网杯 2024、Password Game、web_
 - 🟡 [强网杯 2024 / Password Game](_imported_cats/web/强网杯 2024 _ Password Game__cn-case-qwb-wm-1bd98bdc.md) — _强网杯 2024、Password Game、web_
+- 🟡 [强网杯 2024 / baby_heap](_imported_cats/web/强网杯 2024 _ baby_heap__cn-case-qwb-wm-1bd98bdc-seg3.md) — _强网杯 2024、Password Game、web_
+- 🟡 [强网杯 2024 / mips](_imported_cats/web/强网杯 2024 _ mips__cn-case-qwb-wm-1bd98bdc-seg4.md) — _强网杯 2024、Password Game、web_
+- 🟡 [强网杯 2024 / 谍影重重](_imported_cats/web/强网杯 2024 _ 谍影重重__cn-case-qwb-wm-1bd98bdc-seg2.md) — _强网杯 2024、Password Game、web_
+- 🟡 [强网杯 2025 / Blurred](_imported_cats/web/强网杯 2025 _ Blurred__cn-case-wm2025-f9809b08-4a9f2397-seg5.md) — _强网杯 2025、SecretVault、web_
 - 🟡 [强网杯 2025 / SecretVault](_imported_cats/web/强网杯 2025 _ SecretVault__cn-case-wm2025-f9809b08-4a9f2397.md) — _强网杯 2025、SecretVault、web_
+- 🟡 [强网杯 2025 / flag-market](_imported_cats/web/强网杯 2025 _ flag-market__cn-case-wm2025-f9809b08-4a9f2397-seg2.md) — _强网杯 2025、SecretVault、web_
+- 🟡 [强网杯 2025 / tradre](_imported_cats/web/强网杯 2025 _ tradre__cn-case-wm2025-f9809b08-4a9f2397-seg3.md) — _强网杯 2025、SecretVault、web_
+- 🟡 [强网杯 2025 / 谍影重重6.0](_imported_cats/web/强网杯 2025 _ 谍影重重6.0__cn-case-wm2025-f9809b08-4a9f2397-seg4.md) — _强网杯 2025、SecretVault、web_
 - 🟡 [我真得控制你了](_imported/web/我真得控制你了.md) — _我真得控制你了_
 - 🟡 [搞点哦润吉吃吃🍊](_imported/web/搞点哦润吉吃吃🍊.md) — _搞点哦润吉吃吃🍊、Python_
 - 🟡 [文件上传](_des/wp_summary/web/文件上传.md) — _文件上传、PHP、Apache、目录_
@@ -1757,10 +1773,6 @@
 - 🔴 [软件系统安全赛-Thymeleaf 3.0.15 视图名注入 + PRNG 逆向:完整 RCE 到 Root 提权](_des/cards/web/软件系统安全赛-Thymeleaf_3.0.15_视图名注入_+_PRNG_逆向：完整_RCE_到_Root_提权.full.md) — _软件系统安全赛 2025、Thymeleaf-SSTI、view-name-injection、LFSR-reverse_
 - 🔴 [阿里云CTF 2024 writeup](_des/cards/web/阿里云CTF_2024_writeup.full.md) — _阿里云CTF 2024、Web-Pastbin、并发-Go-routine、Go-Router_
 - ⚪ [0CTF 2023 筆記 (CSP nonce bypass)](_des/cards/web/0CTF_2023_筆記.full.md) — _0CTF/TCTF 2023 2023、CSP-bypass、nonce、CSS-injection_
-- ⚪ [[Web]-ICS笑传之抄抄榜](_imported/web/[Web]-ICS笑传之抄抄榜.md)
-- ⚪ [[Web]-好评返红包](_imported/web/[Web]-好评返红包.md)
-- ⚪ [[Web]-概率题目概率过](_imported/web/[Web]-概率题目概率过.md)
-- ⚪ [[Web]-验证码](_imported/web/[Web]-验证码.md)
 - ⚪ [天穹 - Linux Copy Fail 漏洞 CVE-2026-31431 利用分析](_des/cards/web/【天穹】内核暗渡：Linux_Copy_Fail_漏洞_CVE-2026-31431_利用分析.full.md) — _天穹智能分析 (奇安信) 2026、Linux-kernel、AF_ALG、splice_
 - ⚪ [沙箱逃逸之0ctf2020 chromium_rce writeup](_des/cards/web/沙箱逃逸之0ctf2020_chromium_rce_writeup.full.md) — _0CTF/TCTF 2020 2020、Chromium RCE、V8 typed-array-set、EnsureAttached去除_
 - ⚪ [沙箱逃逸之google ctf 2019 Monochromatic writeup](_des/cards/web/沙箱逃逸之google_ctf_2019_Monochromatic_writeup.full.md) — _Google CTF 2019 2019、Chromium Mojo IPC、Person/Dog/Cat Interface、BeingCreatorInterface_
@@ -1917,17 +1929,17 @@
 - **web_unknown** → 0CTF 2023 筆記 (CSP nonce bypass)、0CTF/TCTF 2022 NFT Market (Solidity 0.8.15 calldata bug)、1337UP LIVE CTF WriteUp、2022 HITCON WriteUp by Mini-Venom (招新)
 - **misc_unknown** → 2020 美亚杯个人赛复盘、2021 圣诞拼图活动 Writeup、2022 天融信教育杯 CTF 赛事 WP、2022 智能网联汽车漏洞挖掘赛 WP by 1024SEC
 - **CTF** → 0CTF 2022 官方密码的简易 WP (官方题解)、2021 年工业信息安全技能大赛 - 线上第二场 WriteUp、2022 美团 MTCTF 初赛 writeup by Arr3stY0u、2022 虎符 CTF - Java 部分
+- **pwn** → 2022 第三届网鼎杯 - 玄武组部分 WriteUp、2022 西湖论剑 网络安全大赛 wp by F61d、2023 上海磐石行动 WP - Polaris 战队、2025 LACTF writeup by Min-Venom（2password 格式化串+state-change+minceraft）
 - **crypto_rsa** → 0CTF 2017 - zer0IIvm 题目分析、0CTF 2022 官方密码的简易 WP (官方题解)、0xGame 2025/Crypto WriteUp Week1、2022 N1CTF WriteUp By EDISEC
 - **pwn_unknown** → 2021 西湖论剑 - TinyNote 详细分析、2022 USTC Hackergame WriteUp 0x03 (Linux VM pwn)、2022 强网杯 final - RDP、2022 柏鹭杯 WP – Polaris 战队
-- **pwn** → 2022 第三届网鼎杯 - 玄武组部分 WriteUp、2022 西湖论剑 网络安全大赛 wp by F61d、2023 上海磐石行动 WP - Polaris 战队、2025 LACTF writeup by Min-Venom（2password 格式化串+state-change+minceraft）
 - **NewStar CTF 2024** → NewStar CTF 2024 / 011vm、NewStar CTF 2024 / AmazingGame、NewStar CTF 2024 / BGM 坏了吗？、NewStar CTF 2024 / C_or_CPP
 - **NewStar CTF 2025** → NewStar CTF 2025 / AI HACKER、NewStar CTF 2025 / Binary Blog、NewStar CTF 2025 / CBC 之舞、NewStar CTF 2025 / DLP
 - **crypto** → 0xGame 2025/Crypto WriteUp Week1、2023 熵密杯 revenge、2024 春秋杯夏季赛 WP（py一下&zwhubuntu 视角：Hijack / ezecc / Signatrue / 2024happy）、2024WMCTF / crypto
 - **PHP** → 0x01 SSRF漏洞介绍、2022 年春秋杯冬季赛部分 WriteUp (天权信安)、2023 NKCTF WriteUp By EDISEC、2023 年"羊城杯"网络安全大赛 Writeup
-- **rce** → 2021 年工业信息安全技能大赛 - 线上第二场 WriteUp、2021 西湖论剑 IOT RW WriteUp、2022 ByteCTF By EDISEC、2022 DSCTF 决赛 WP
-- **misc** → 2025 西湖论剑决赛 misc 全解、CISCN 2024 初赛 / 通风机、CTF学习交流群 第六期writeup大放送、DASCTF 2024 暑期挑战赛 / png_master
-- **Python** → 2025 KCTF 第九题《智斗邪首》设计思路及解析（斐波那契变种+高精度倒数）、2025 强网拟态 FMS - LCG PRNG 状态恢复攻击、2026春节领红包 解题过程 纯手工分析（第八题、第十题未解出、Alt
+- **misc** → 2025 西湖论剑决赛 misc 全解、CISCN 2024 初赛 / Power Trajectory Diagram、CISCN 2024 初赛 / 神秘文件、CISCN 2024 初赛 / 通风机
 - **web** → 2022 羊城杯竞赛 Web 题目解析、2024 春秋杯夏季赛 WP(web)、2024 春秋杯夏季赛 WP（py一下&zwhubuntu 视角：Hijack / ezecc / Signatrue / 2024happy）、2024 春节 解题领红包之 web 题 writeup
+- **rce** → 2021 年工业信息安全技能大赛 - 线上第二场 WriteUp、2021 西湖论剑 IOT RW WriteUp、2022 ByteCTF By EDISEC、2022 DSCTF 决赛 WP
+- **Python** → 2025 KCTF 第九题《智斗邪首》设计思路及解析（斐波那契变种+高精度倒数）、2025 强网拟态 FMS - LCG PRNG 状态恢复攻击、2026春节领红包 解题过程 纯手工分析（第八题、第十题未解出、Alt
 - **RSA** → 2022 工业信息安全技能大赛"望岳杯"锦标赛 WP、2022 柏鹭杯 WP – Polaris 战队、2023 WIDC 世界智能驾驶挑战赛 writeup ChaMd5、2023 上海磐石行动 WP - Polaris 战队
 - **heap_exploit** → 2021 西湖论剑 - TinyNote 详细分析、2022 巅峰极客 WriteUp By EDISEC、2022 浙江省赛 PWN 题解析（看雪 Nameless_a）、2023 ACTF writeup by Arr3stY0u
 - **Web** → 2022 IS 河南工业控制安全部分 Web 题解、2023 idekCTF WriteUp、2025 LitCTF writeup by Mini-Venom（NestJS 爆破 + 多重宇宙日记原型链污染 + 星愿信箱 SSTI）、2025 强网杯 write up By Ginkgo
@@ -1982,6 +1994,7 @@
 - **hook** → 2023 腾讯游戏安全 PC 决赛复现 - Detours Hook + TLS 守护、2025 腾讯游戏安全技术竞赛 - 决赛题解、ACTF flutter 逆向学习、Android 爬虫比赛 第一关解析
 - **php** → 2022 年羊城杯网络安全大赛 Writeup、DASCTF 2022 十月赛 Web 部分 Writeup、The End of AFR? (php://filter 终极玩法)、picoCTF 2025 writeup (Web Exploitation)
 - **tcache** → 2021 西湖论剑 - TinyNote 详细分析、2022 浙江省赛 PWN 题解析（看雪 Nameless_a）、F.Z.N CTF网络安全大赛PWN方向题解、Hitcontraining magicheap 完整三解
+- **强网杯 2024** → web选手入门pwn(31) 强网杯 bph (House of Apple 变种)、web选手入门pwn(31.5) 强网杯bph stack-leak 变种、强网杯 2024 / EasyRSA、强网杯 2024 / Password Game
 - **AES-ECB** → 2024 WIDC writeup by Arr3stY0u、2024 国城杯 writeup by Mini-Venom、2025"领航杯"网安赛项教师组决赛 WP（中）、DataCon2023互联网威胁溯源赛道，冠军战队WP分享
 - **ChaMd5** → Midnight Sun CTF 2023 Writeup by VP-Union (Polaris + ChaMd5 Venom 联合战队)、NUMEN CTF writeup by ChaMd5 (Solidity 智能合约)、SUSTF WriteUp - ChaMd5 Venom、TQLCTF WriteUp - ChaMd5 Venom
 - **Docker** → 2023 年全国网络安全行业职业技能大赛 - 电子数据取证分析师 - 决赛 WP、2024 FIC 第四届全国网络空间取证竞赛 初赛 WP、Docker for Everyone Plus、HackASat Qualifier 2020 - 利用COSMOS和cFS接口读取卫星内存
@@ -2007,6 +2020,7 @@
 - **DASCTF** → 2024 羊城杯 Crypto AK 篇（DASCTF 套题）、DASCTF 2022 5 月出题人挑战赛官方 Write、DASCTF 2022 7 月赋能赛官方 Write Up、DASCTF 2022 十月赛 Web 部分 Writeup
 - **House** → 2023 强网杯 warmup 题解、2024 ByteCTF 大师赛 writeup by Mini-Venom、2024 羊城杯 PWN AK 篇（4 题：pstack / Travel / C++String catch / bigbin HoA2）、Black Hat 2023 Pwn House of minho 0解详解
 - **Linux** → 2023 全国网络安全行业职业技能大赛 - 网络安全管理员 - 决赛 WP、BFS Ekoparty 2022 Linux Kernel Exploitation Challenge、BraekerCTF 2024 Writeup、Copy Fail 深度研究：Linux 页缓存漏洞的根因、利用与检测
+- **Node** → 2022 西湖论剑 网络安全大赛 wp by F61d、2023 WIDC 世界智能驾驶挑战赛 writeup ChaMd5、2023 西湖论剑 web 5 题 WP、JS逆向
 - **OSINT** → Apiculture 2 - API 渗透测试 write-up、DIVER OSINT CTF 2024 writeup、DIVER OSINT CTF 2025 Writeup、HECTF-2023 WriteUp
 - **Spring** → 2022 DSCTF 决赛 WP、2022 虎符 CTF - Java 部分、2023 安洵杯 WriteUp By Mini-Venom、2023 年第八届上海市大学生网络安全大赛 Writeup
 - **Wireshark** → 2024 CISCN x 长城杯 威胁检测与流量分析 WP（zeroshell + WinFT）、2025 年广西网络与信息安全职业技能竞赛 WriteUP、WEB流量分析、Wireshark
@@ -2021,7 +2035,6 @@
 - **CISCN** → 2025 年第十九届全国大学生信息安全竞赛（CISCN）暨第三届长城杯网数智安全大赛—初赛 WriteUp、CCB CISCN 半决赛 AWDP pwn 题解 (2 道)、CISCN 2026 初赛-半决赛 Easy_rw 系列 WriteUp By EDISEC、CISCN 华东北 2024 比赛题解
 - **ELF** → CTF逆向工程深度解析: engineTest – 逻辑门电路引擎的完整破解、CubeCTF 2025 WriteUp、DataCon2020优秀解题思路分享：僵尸网络方向第一题（阿里云安全）、FE-CTF 2022: Cyber Demon – Hug Me, Squeeze Me
 - **MISC** → HDCTF 2023 WP、HECTF-2023 WriteUp、MISC｜西湖论剑 2022 官方 Write Up、NepnepxCATCTF 部分 WriteUp (MISC 6 题速查)
-- **Node** → 2022 西湖论剑 网络安全大赛 wp by F61d、2023 WIDC 世界智能驾驶挑战赛 writeup ChaMd5、2023 西湖论剑 web 5 题 WP、JS逆向
 - **ORW** → 2021 西湖论剑 - TinyNote 详细分析、2022 浙江省赛 PWN 题解析（看雪 Nameless_a）、2023 年"羊城杯"网络安全大赛 Writeup、2024 鹏程杯 writeup by Mini-Venom（cool_book 沙箱 ORW）
 - **Venom** → Midnight Sun CTF 2023 Writeup by VP-Union (Polaris + ChaMd5 Venom 联合战队)、SUSTF WriteUp - ChaMd5 Venom、TQLCTF WriteUp - ChaMd5 Venom、WMCTF WriteUp (ChaMd5 Venom)
 - **XXE** → 2022 IS 河南工业控制安全部分 Web 题解、2022 未知之境 腾讯网络安全 T-Star 高校挑战赛 WriteUp、2022 柏鹭杯 WP – Polaris 战队、2023数字中国·数据安全产业人才能力挑战赛初赛官方WP
@@ -2031,6 +2044,7 @@
 - **jwt** → 2023 NKCTF WriteUp By EDISEC、2024 强网拟态 Nepnep WP、2025 湾区杯网络安全竞赛 WriteUP（SM4 国密 + 沙箱逃逸 + JWT 爆破 + Quaternion BSGS + AES Sbox 逆推）、2026 NCTF Writeup by Mini-Venom（Blind SSTI + 连分数 Wiener 攻击）
 - **nmap** → 2022 蓝帽杯 SUID 提权 总结篇、AWD 比赛入门攻略总结、DownUnderCTF 2024——取证方向题解、HTB Office实战式打靶过程
 - **r00t CTF 2024** → r00t CTF 2024 / **石头剪刀布：**、r00t CTF 2024 / 5num_secret.jpg、r00t CTF 2024 / PWN、r00t CTF 2024 / Web
+- **中文题解** → 2024WMCTF / crypto、2024网鼎杯 / crypto、CISCN 2024 Qual Writeup / crypto、CISCN 2024 Qual Writeup / misc
 - **CCF BDCI 2022 (第十届CCF大数据与计算智能大赛) 2022** → CCF BDCI 2022 三等奖 - TPU 人群密度估计 innovation 团队、CCF BDCI 2022 三等奖 - TPU 人群密度估计 加速器团队、CCF BDCI 2022 三等奖 - 数据湖流批一体性能优化 冀科数字、CCF BDCI 2022 三等奖 - 返乡发展人群预测 保住绿码团队
 - **HITCON** → 2022 HITCON WriteUp by Mini-Venom (招新)、HITCON 2023 x DEVCORE Wargame: My todolist Write-up、HITCON CTF 2016 Secret Holder - Unsafe Unlink PWN、HITCON CTF 2022 web2pdf Writeup
 - **IoT** → 2021 西湖论剑 IOT RW WriteUp、Faraday CTF 2022 Write-up: Reverse Engineering and Exploiting an IoT bug、RWCTF 5th ShellFind Write-up、RWCTF 5th ShellFind 复现
@@ -2069,7 +2083,8 @@
 - **glibc-2.35** → DEFCON Quals 2023 Writeup と CTF のリハビリ、STACK the Flags CTF 2022 - cursed_grimoires、ciscn 国赛华东南分区赛 PWN 方向 WriteUp 分享、justCTF 2023 Writeup by VP-Union
 - **rsa** → CTF连分数实战详解、Coppersmith's Attack、Firebird Internal CTF 2023 Writeup、GDG Algiers CTF两道矩阵题wp
 - **反序列化** → PHP unserialize：恢复值与对象行为（reference）、Python pickle 反序列化 & pyjail 逃逸、Python pickle 反序列化浅析、从TCTF的3rm1学习java动态代理
-- **强网杯 2024** → web选手入门pwn(31) 强网杯 bph (House of Apple 变种)、web选手入门pwn(31.5) 强网杯bph stack-leak 变种、强网杯 2024 / Password Game、强网杯 2024 / ez_vm
+- **强网拟态 2024** → 2024 强网拟态 CFB_chall、2024 强网拟态 Nepnep WP、强网拟态 2024 / Find way to read video、强网拟态 2024 / OnlineRunner
+- **强网杯 2025** → 2025 强网杯 ezran - MT19937 状态恢复攻击、2025 强网杯 write up By Ginkgo、强网杯 2025 / Blurred、强网杯 2025 / SecretVault
 - **看雪2023 KCTF年度赛 2023** → 看雪2023 KCTF年度赛 | 第7题·智能联盟计划-设计思路及解析、看雪2023 KCTF年度赛 | 第8题·AI核心地带-设计思路及解析、看雪2023 KCTF年度赛 | 第9题·突破防线-设计思路及解析、看雪2023 KCTF年度赛 | 第三题设计思路及解析
 - **APK** → Android APK 逆向分析：多组件协同漏洞利用链详解、Buuctf 解题思路、ByteCTF 逆向解析 - babyapk、CVE-2024-0015复现 (DubheCTF DayDream)
 - **AWD** → 2022 台州市赛线上 AWD 赛后小记、2025 广西网络与信息安全职业技能竞赛决赛 AWD Web 复盘（断网惨痛教训+ThinkPHP+upload+jwt）、2025 磐石行动 - 线下 AWD PWN、AWD 比赛入门攻略总结
@@ -2101,6 +2116,7 @@
 - **看雪2022 KCTF春季赛 2022** → 看雪2022 KCTF 春季赛 | 第12题设计思路及解析、看雪2022 KCTF 春季赛 | 第三题设计思路及解析、看雪2022 KCTF 春季赛 | 第二题设计思路及解析（含视频）、看雪2022 KCTF 春季赛 | 第五题设计思路及解析
 - **Apache** → AliCTF 2026 SU WP - Fileury、AliyunCTF 2025 Jtools Fury 反序列化利用分析、JerseyCTF Writeup (Web + Pwn + Misc + Forensics + Reverse + Crypto)、Payload 速查表
 - **Burp** → 2023 鹏城杯 WP、SQL 注入、sqlupload、武功秘籍
+- **CISCN 2024 初赛** → CISCN 2024 初赛 / EzHeap、CISCN 2024 初赛 / Power Trajectory Diagram、CISCN 2024 初赛 / gostack、CISCN 2024 初赛 / orange_cat_diary
 - **CVE** → 2022 强网杯 final - RDP、CCF BDCI 2022 三等奖 - AI漏洞分类 终于交上了战队、CCF BDCI 2022 三等奖 - AI漏洞数据分类 susy战队、Copy Fail 深度研究：Linux 页缓存漏洞的根因、利用与检测
 - **D3CTF** → 2023 D^3CTF writeup by 万年三等奖、D3CTF 2023 REVERSE、D3CTF 2023 Writeup - Polaris 战队、D3CTF 2024 Writeup - Polaris 战队
 - **DNS** → 2023 红明谷杯 5 题 WP、DNS、DataCon2024解题报告WriteUp—网络基础设施安全赛道、Flare-ON 9th 之第八题BackDoor
@@ -2108,8 +2124,4 @@
 - **ECDSA** → 2023 N1CTF、N1CTF 2023 Writeup by Never Stop Exploiting (HHD ECDSA lattice + messages 块矩阵 LLL)、PARADIGM CTF 2022 题目分析 (3) - Lockbox2 (5 stage calls + ECDSA)、PARADIGM CTF 2022 题目分析 (5) - Vanity (ECDSA 签名 + 16 字节 0x00)
 - **Frida hook** → CTF 自毁程序密码 Android 逆向、N1CTF 2024 ezapk 解题思路 (Android + JNI Frida hook)、吾爱破解 2026 春节所有题 WP、看雪2022 KCTF 春季赛 | 第八题设计思路及解析
 - **LSB** → 2026 数字中国创新大赛初赛 wp 之图片隐写一（LSB 多通道爆破）、Y 老师的密码学 · 第一篇 (狼组)、【WP】第七届"湖湘杯" leaker 设计思路与解析、图片隐写
-- **Nginx** → PHP 代码审计、PHP 代碼審計、Payload 速查表、Writeup
 - **Quals** → ASIS CTF Quals 2022、ASIS CTF Quals 2022 WP (狼组版)、DEFCON Quals 2023 Writeup と CTF のリハビリ、DEFCON33-Quals nfuncs angr、unicorn 快速自动化逆向
-- **WASM** → 2026春节领红包 解题过程 纯手工分析（第八题、第十题未解出、TetCTF 2024 Writeup、京麒CTF 2024初赛Writeup、吾爱破解 2026 春节所有题 WP
-- **WMCTF** → 2022 WMCTF WP、WMCTF 2023 writeup by Mini-Venom、WMCTF 2024 Writeup、WMCTF 2025 WP (XMCVE-Polaris, 星盟安全团队)
-- **base64-decode** → RWCTF 5th ShellFind Write-up、RWCTF 5th ShellFind 复现、RWCTF 5th Shellfind 复现、RealWorld CTF 5th Writeup by r3kapig

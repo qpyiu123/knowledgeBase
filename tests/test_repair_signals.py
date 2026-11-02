@@ -2,6 +2,7 @@
 
 覆盖：
   * 清单里 21 篇的真实文件现已能解析，``source`` 非空，``signals`` 语义正确；
+  * DB-Q3 删除 15 篇冗余旧篇后，清单保留 6 条活跃条目与 15 条退役证据；
   * 修复只改 ``signals`` 一行，其它字段与正文逐字不变（可用原哈希反向证明）；
   * 工具支持 dry-run、写入前校验原文件哈希、重复运行幂等；
   * 原文件确实曾因未加引号而 YAML 解析失败（历史事实，不回写成“缺 source”）。
@@ -28,10 +29,17 @@ def manifest() -> dict:
     return rs.load_manifest(MANIFEST)
 
 
-def test_manifest_covers_21_imported_docs() -> None:
+def test_manifest_active_and_retired_cover_21_imported_docs() -> None:
     data = manifest()
-    assert len(data["entries"]) == 21
-    assert all(e["path"].startswith("_imported/") for e in data["entries"])
+    active = data["entries"]
+    retired = data.get("retired_entries", [])
+    assert len(active) == 6
+    assert len(retired) == 15
+    assert len(active) + len(retired) == 21
+    assert all(e["path"].startswith("_imported/") for e in active + retired)
+    kb = ROOT / "kb"
+    assert all((kb / e["path"]).is_file() for e in active)
+    assert all(not (kb / e["path"]).exists() for e in retired)
 
 
 def test_current_files_parse_and_keep_body() -> None:

@@ -8,7 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from kb.config import Config  # noqa: E402
-from kb.parser import iter_docs  # noqa: E402
+from kb.parser import iter_md_paths, load_doc  # noqa: E402
 
 CAT_TITLES = {
     "misc": "杂项 Misc",
@@ -27,7 +27,12 @@ DIFF_ORDER = {"easy": 0, "medium": 1, "hard": 2, "": 3}
 
 
 def build(cfg: Config) -> str:
-    docs = list(iter_docs(cfg.kb_dir))
+    docs = []
+    for path in iter_md_paths(cfg.kb_dir):
+        try:
+            docs.append(load_doc(path, cfg.kb_dir))
+        except OSError as e:
+            print(f"跳过不可读文件: {path} ({e})", file=sys.stderr)
     by_cat: dict[str, list] = defaultdict(list)
     signals: defaultdict[str, list[str]] = defaultdict(list)
     for d in docs:

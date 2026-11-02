@@ -175,10 +175,15 @@ def cmd_hint(cfg: Config, args) -> int:
 
 def cmd_graph(cfg: Config, args) -> int:
     from kb.graph import BOOSTING, RELATION_KINDS, Graph
-    from kb.parser import iter_docs
+    from kb.parser import iter_md_paths, load_doc
 
     if args.build or not (cfg.index_dir / "graph.db").exists():
-        docs = list(iter_docs(cfg.kb_dir))
+        docs = []
+        for path in iter_md_paths(cfg.kb_dir):
+            try:
+                docs.append(load_doc(path, cfg.kb_dir))
+            except OSError as e:
+                print(f"跳过不可读文件: {path} ({e})", file=sys.stderr)
         g = Graph(cfg.index_dir / "graph.db")
         res = g.rebuild(docs)
         print(f"图谱已建立: {res['nodes']} 节点, {res['edges']} 边")
