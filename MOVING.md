@@ -1,12 +1,13 @@
 # 迁移到其它盘 / 目录
 
-本项目**整体可移动**，直接复制整个 `knowledgeBase` 目录即可，不需要重装依赖。
+查询环境随项目目录移动。使用 `runtime/python-portable` 时，不依赖原电脑安装的 Python。
+移动时保留应用源码、网页 dist、kb、index、config.toml 和 runtime；语义查询还需要项目内已有的 BGE 编码模型。
 
 ## 需要一起搬的东西
 
 | 路径 | 大小 | 是否必需 | 说明 |
 |---|---|---|---|
-| `knowledgeBase/` | ~13.3 GB | ✅ | 主体，含 kb / index / models / .venv |
+| `knowledgeBase/` | 按当前目录计 | ✅ | 主体，含 kb / index / runtime；.venv 为开发环境，可保留 |
 | `knowledgeBase/../tools/` | ~80 MB | ⭕ | 便携取证工具（exiftool / foremost / binwalk） |
 
 `tools/` 是 `knowledgeBase` 的**同级目录**。目录布局应该长这样：
@@ -28,10 +29,12 @@
 
 ```powershell
 cd <新路径>/knowledgeBase
-.\.venv\Scripts\python.exe tools\cli.py doctor
+.\start.ps1 -CheckEnvironment
+.\start.ps1 -NoModel
 ```
 
-期望输出里 `根目录` 指向新路径，且 `FTS 索引` / `向量索引` 都是 `[OK]`。
+环境检查中的 executable、prefix、base_prefix 应指向新目录。网页能搜索、读文档和保存题目记录。
+需要切换解释器时使用 `-PythonExe`、当前终端的 `KB_PYTHON`，或 config.toml 的 `[runtime].python`。
 
 ## 路径是怎么定位的（无需手动改配置）
 
@@ -58,7 +61,10 @@ cd <新路径>/knowledgeBase
 $env:KB_TOOLS_DIR = "D:\my-tools"
 ```
 
-## venv 的注意事项
+## 便携 Python 与开发环境
+
+`runtime/python-portable` 是独立 Python 3.13.17，运行依赖也在其中。搬项目时保留完整目录，不要只复制 python.exe。
+默认自动选用它；`start.ps1 -CheckEnvironment -PythonExe '.venv/Scripts/python.exe'` 可以检查旧开发环境。
 
 虚拟环境依赖创建它的 Python。R0 接手时的旧环境指向已缺失的 `C:/Python314`，
 已保留到 `backup/.venv-before-r0-20261105`。开发环境现用 Python 3.12。
@@ -67,7 +73,7 @@ $env:KB_TOOLS_DIR = "D:\my-tools"
 ```powershell
 cd <新路径>/knowledgeBase
 py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --cache-dir .cache/pip -r requirements-dev.txt
+.\.venv\Scripts\python.exe -X utf8 -m pip install --cache-dir .cache/pip -r requirements-dev.txt
 ```
 
 这组依赖用于离线查询、方法脚本和回归测试，不安装或下载生成模型。

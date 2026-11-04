@@ -4,6 +4,11 @@ kb_dir = "kb"
 index_dir = "index"
 models_dir = "models"
 
+[runtime]
+# auto：先用 runtime/python-portable/python.exe，再用项目 .venv。
+# 可填项目相对路径或完整路径；-PythonExe、KB_PYTHON 可临时覆盖。
+python = "auto"
+
 [search]
 top_k = 8
 rrf_k = 60

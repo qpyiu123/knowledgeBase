@@ -31,6 +31,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
+PYTHON_INFO = {"executable": sys.executable, "version": sys.version.split()[0], "pid": os.getpid()}
 sys.path.insert(0, str(ROOT / "tools"))
 
 from agent.buildinfo import BUILD_ID, config_id  # noqa: E402
@@ -60,6 +61,7 @@ def _cfg(section: str, key: str, default):
 
 HOST = os.environ.get("AGENT_HOST", "127.0.0.1")
 PORT = int(os.environ.get("AGENT_PORT", "8765"))
+GENERATION_DISABLED = os.environ.get("AGENT_DISABLE_GENERATION") == "1"
 
 OLLAMA = (os.environ.get("AGENT_OLLAMA")
           or str(_cfg("ollama", "host", "http://127.0.0.1:11434"))).rstrip("/")
@@ -1158,6 +1160,13 @@ class Handler(BaseHTTPRequestHandler):
     def _health(self):
         import requests
         index = _index_status()
+        if GENERATION_DISABLED:
+            self._json({"ok": False, "model_ok": False, "index_ok": index["ok"],
+                        "runtime": PYTHON_INFO, "generation_enabled": False,
+                        "build": BUILD_ID, "config": CONFIG_ID, "model": MODEL,
+                        "models": [], "index": index, "docs": index.get("docs", 0),
+                        "error": "模型解释已关闭", "attachment": {"max_bytes": _attachment_max_bytes()}})
+            return
         try:
             r = requests.get(f"{OLLAMA}/api/tags", timeout=4)
             r.raise_for_status()
@@ -1167,6 +1176,7 @@ class Handler(BaseHTTPRequestHandler):
                 "ok": model_ok,
                 "model_ok": model_ok,
                 "index_ok": index["ok"],
+                "runtime": PYTHON_INFO,
                 "build": BUILD_ID,
                 "config": CONFIG_ID,
                 "model": model,
@@ -1184,6 +1194,7 @@ class Handler(BaseHTTPRequestHandler):
                 "ok": False,
                 "model_ok": False,
                 "index_ok": index["ok"],
+                "runtime": PYTHON_INFO,
                 "build": BUILD_ID,
                 "config": CONFIG_ID,
                 "model": MODEL,
@@ -1257,6 +1268,9 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if u.path == "/api/ask":
+            if GENERATION_DISABLED:
+                self._json({"error": "模型解释已关闭，请去掉 -NoModel 后重新启动本项目服务"}, 503)
+                return
             try:
                 q = _check_query(req.get("q", ""))
                 paths = req.get("paths")
@@ -1363,4 +1377,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8')
     raise SystemExit(main())

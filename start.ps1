@@ -7,6 +7,9 @@
 #   .\start.ps1 -Reindex     重建索引（FTS + 向量，前台显示进度）
 #   .\start.ps1 -NoBrowser   不自动开浏览器
 #   .\start.ps1 -CpuOnly     强制 CPU 推理（显存被别的程序占了时用）
+#   .\start.ps1 -NoModel     只启动查询界面
+#   .\start.ps1 -PythonExe <路径>  临时选择 Python（也可使用 KB_PYTHON / config.toml）
+#   .\start.ps1 -CheckEnvironment  检查实际 Python 与依赖，不启动服务
 #
 # 说明：本脚本自己拉起 ollama serve 和 Web 服务，都写到 logs/ 下。
 #      pid 文件记录的是按端口反查到的“真实监听进程”，不是 Start-Process 外壳；
@@ -19,14 +22,32 @@ param(
     [switch]$Reindex,
     [switch]$NoBrowser,
     [switch]$CpuOnly,
+    [switch]$NoModel,
+    [switch]$CheckEnvironment,
+    [string]$PythonExe = '',
+    [string]$LogDirectory = '',
     [int]$Port = 8765,
     [int]$OllamaPort = 11434
 )
 
 $ErrorActionPreference = 'Stop'
 $Root  = $PSScriptRoot
-$Venv  = Join-Path $Root '.venv\Scripts\python.exe'
+. (Join-Path $Root 'tools\python-runtime.ps1')
+$RuntimeChoice = $null
+$Venv = ''
+if (-not $Stop) {
+    try {
+        $RuntimeChoice = Resolve-KbPython -Root $Root -PythonExe $PythonExe
+        $Venv = $RuntimeChoice.Path
+    } catch {
+        if ($Status) { Write-Warning $_.Exception.Message }
+        else { throw }
+    }
+}
 $LogD  = Join-Path $Root 'logs'
+if ($LogDirectory) {
+    $LogD = if ([IO.Path]::IsPathRooted($LogDirectory)) { $LogDirectory } else { Join-Path $Root $LogDirectory }
+}
 $Srv   = Join-Path $Root 'tools\agent\server.py'
 $OlExe = Join-Path $Root 'models\ollama-server\ollama.exe'
 $OlLib = Join-Path $Root 'models\ollama-server\lib\ollama'
@@ -40,6 +61,13 @@ function Say($m, $c = 'Gray') { Write-Host $m -ForegroundColor $c }
 function Ok  ($m) { Say "  [OK]   $m" 'Green' }
 function Warn($m) { Say "  [警告] $m" 'Yellow' }
 function Bad ($m) { Say "  [失败] $m" 'Red' }
+
+if ($CheckEnvironment) {
+    $report = Test-KbPython -Root $Root -PythonExe $Venv
+    $report | Add-Member -NotePropertyName selected_by -NotePropertyValue $RuntimeChoice.Source
+    $report | ConvertTo-Json -Depth 6
+    return
+}
 
 # ---------------------------------------------------------------- 工具函数
 function Get-PortPid([int]$p) {
@@ -208,6 +236,12 @@ function Show-WebStatus {
             if (-not $h) {
                 Warn "端口 :$Port 已监听，但 /api/health 不可用，无法确认后端版本"
                 return
+            }
+            if ($h.runtime) {
+                Ok ("运行环境: Python {0} / {1}" -f $h.runtime.version, $h.runtime.executable)
+                if ($Venv -and $h.runtime.executable -and $h.runtime.executable -ne $Venv) {
+                    Warn ("本次选择 {0}；当前服务仍使用原环境，请重启本项目服务后切换" -f $Venv)
+                }
             }
             $running = ''
             if ($null -ne $h.build) { $running = "$($h.build)".Trim() }
@@ -459,20 +493,21 @@ if ($Stop) {
     Say '' ; Say '=== 停止服务 ===' 'Cyan'
     # 先按真实监听者关闭，再核对 pid 文件里可能残留的外壳进程。
     Stop-Listening $Port 'Web 界面' | Out-Null
-    Stop-Listening $OllamaPort 'Ollama' | Out-Null
+    if (-not $NoModel) { Stop-Listening $OllamaPort 'Ollama' | Out-Null }
     Stop-PidFile (Join-Path $LogD 'web.pid') 'Web 界面'
-    Stop-PidFile (Join-Path $LogD 'ollama.pid') 'Ollama'
+    if (-not $NoModel) { Stop-PidFile (Join-Path $LogD 'ollama.pid') 'Ollama' }
     Say ''
-    Ok '全部停止'
+    if ($NoModel) { Ok '查询服务已停止' } else { Ok '全部停止' }
     return
 }
 
 if ($Reindex) {
     Say '' ; Say '=== 重建索引 ===' 'Cyan'
     if (-not (Test-Path $Venv)) {
-        Bad "找不到 venv: $Venv"
+        Bad "找不到 Python: $Venv"
         return
     }
+    $null = Test-KbPython -Root $Root -PythonExe $Venv
     if (-not (Test-Path $CliScript)) {
         Bad "找不到 $CliScript"
         return
@@ -502,11 +537,12 @@ Say ''
 Say '=== 1. 检查环境 ===' 'Cyan'
 
 if (-not (Test-Path $Venv)) {
-    Bad "找不到 venv: $Venv"
-    Say '  请先在本目录创建虚拟环境：C:\Python314\python.exe -m venv .venv'
+    Bad "找不到 Python: $Venv"
+    Say '  请准备便携环境，或用 -PythonExe 指定已有解释器'
     return
 }
-Ok 'Python 环境'
+$null = Test-KbPython -Root $Root -PythonExe $Venv
+Ok ("Python: {0}（{1}）" -f $Venv, $RuntimeChoice.Source)
 
 if (-not (Test-Path $Srv)) { Bad "找不到 $Srv"; return }
 Ok 'Web 服务脚本'
@@ -549,7 +585,9 @@ Say ''
 Say '=== 2. Ollama 模型服务 ===' 'Cyan'
 
 $olPid = Get-PortPid $OllamaPort
-if ($olPid) {
+if ($NoModel) {
+    Ok '仅启动查询界面，不启动生成模型服务'
+} elseif ($olPid) {
     Show-ModelStatus
 } else {
     if (-not (Test-Path $OlExe)) {
@@ -603,6 +641,7 @@ if ($webPid) {
 } else {
     $env:AGENT_PORT = "$Port"
     $env:AGENT_HOST = '127.0.0.1'
+    $env:AGENT_DISABLE_GENERATION = if ($NoModel) { '1' } else { '0' }
     # 模型/host/context 由 config.toml 决定；这里不再硬编码模型名。
     # AGENT_MODEL / AGENT_OLLAMA 只有在用户显式设置时才覆盖配置。
     if ($CpuOnly) { $env:AGENT_OLLAMA = "http://127.0.0.1:$OllamaPort" }
@@ -610,7 +649,7 @@ if ($webPid) {
     try {
         Push-Location $Root
         try {
-            $sp = Start-Process -FilePath $Venv -ArgumentList @($Srv) `
+            $sp = Start-Process -FilePath $Venv -ArgumentList @(('"{0}"' -f $Srv)) `
                   -WorkingDirectory $Root `
                   -RedirectStandardOutput (Join-Path $LogD 'web.log') `
                   -RedirectStandardError  (Join-Path $LogD 'web.err.log') `
@@ -666,4 +705,5 @@ Say '  .\start.ps1 -Start    启动服务（等同直接运行 .\start.ps1）' '
 Say '  .\start.ps1 -Status   查看三层状态' 'DarkGray'
 Say '  .\start.ps1 -Reindex  重建索引' 'DarkGray'
 Say '  .\start.ps1 -Stop     停止全部服务' 'DarkGray'
+Say '  .\start.ps1 -Stop -NoModel  只停止查询服务' 'DarkGray'
 Say ''

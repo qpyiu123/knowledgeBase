@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-05",
+  "platform": "Windows x64",
+  "python": "3.13.17",
+  "runtime_path": "runtime/python-portable",
+  "python_archive": "python-3.13.17-embed-amd64.zip",
+  "python_source": "https://www.python.org/ftp/python/3.13.17/python-3.13.17-embed-amd64.zip",
+  "source_kind": "旧项目已有的官方嵌入归档",
+  "dependencies": {
+    "numpy": "2.2.6",
+    "yaml": "6.0.2",
+    "requests": "2.28.1",
+    "onnxruntime": "1.31.1",
+    "tokenizers": "0.23.3",
+    "sqlite_vec": "0.1.9",
+    "sympy": "1.13.1",
+    "Crypto": "3.21.0"
+  },
+  "path_configuration": [
+    "python313.zip",
+    ".",
+    "Lib/site-packages",
+    "../../tools",
+    "import site"
+  ],
+  "runtime_committed_to_git": false
+}

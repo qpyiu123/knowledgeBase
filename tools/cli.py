@@ -46,7 +46,6 @@ if os.name == "nt":
         ctypes.windll.kernel32.SetConsoleOutputCP(65001)
     except Exception:
         pass
-    os.system("")
 
 
 class C:

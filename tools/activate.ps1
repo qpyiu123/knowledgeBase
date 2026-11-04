@@ -1,11 +1,12 @@
-# 在当前 PowerShell 会话里启用 kb 命令（点号调用：. .\tools\activate.ps1）
+﻿# 在当前 PowerShell 会话里启用 kb 命令（点号调用：. .\tools\activate.ps1）
 $script:KB_ROOT = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$env:Path = "$script:KB_ROOT\.venv\Scripts;" + $env:Path
+. (Join-Path $PSScriptRoot 'python-runtime.ps1')
+$script:KB_PYTHON_EXE = (Resolve-KbPython -Root $script:KB_ROOT).Path
 $env:PYTHONUTF8 = "1"
 $env:PYTHONIOENCODING = "utf-8"
 
 function kb {
-    python "$script:KB_ROOT\tools\cli.py" @args
+    & $script:KB_PYTHON_EXE "$script:KB_ROOT\tools\cli.py" @args
 }
 
 function kb-search { kb search @args }

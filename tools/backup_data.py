@@ -6,6 +6,7 @@ import json
 import shutil
 import sqlite3
 import stat
+import sys
 import tempfile
 from datetime import datetime
 from pathlib import Path, PurePosixPath
@@ -112,4 +113,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8')
     raise SystemExit(main())

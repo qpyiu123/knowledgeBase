@@ -1,0 +1,9 @@
+# Windows x64 / 独立 Python 3.13，沿用旧项目已下载的 NumPy、PyYAML。
+numpy==2.2.6
+PyYAML==6.0.2
+requests==2.28.1
+onnxruntime==1.31.1
+tokenizers==0.23.3
+sqlite-vec==0.1.9
+sympy==1.13.1
+pycryptodome==3.21.0

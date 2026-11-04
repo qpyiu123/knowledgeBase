@@ -1,26 +1,54 @@
 # CTF 知识库
 
-一个**本机能跑**的 CTF 解题知识库：覆盖 11 个赛道、1567 篇条目，支持**中文模糊检索**，并配套**本地小模型**做检索增强问答（RAG）。
+离线查询编程文档、CTF 方法、题型和配套代码。关键词结果先显示，语义检索与模型解释按需使用。
 
-针对本机硬件（RTX 3050 Ti Laptop **4GB 显存** / i5-12500H / 31GB 内存）专门调优。
+2026-11-05：索引 1915 篇，包含 54 张方法卡；项目内提供独立 Python 3.13.17，也可切换到自己的 Python 环境。
 
 ---
 
 ## 一键启动（推荐）
 
 ```powershell
-.\start.ps1
+.\start.ps1 -NoModel
 ```
 
-自动拉起 Ollama 和 Web 搜索界面，然后打开浏览器。
+使用项目内 Python 启动查询界面并打开浏览器，不启动生成模型。正常运行无需安装系统 Python。
 
 ```powershell
 .\start.ps1 -Status     # 看状态
-.\start.ps1 -Stop       # 全部停止
+.\start.ps1 -Stop -NoModel  # 停止查询服务
+.\start.ps1             # 同时启动原有 Ollama 服务
 ```
 
 界面是**搜索引擎样式**：输入题面特征 → 出结果卡片 → 卡片可「看全文」「问模型」。
 地址 http://127.0.0.1:8765/
+
+## Python 环境选择
+
+```powershell
+.\start.ps1 -CheckEnvironment                    # 查看实际路径、版本与依赖
+.\start.ps1 -NoModel -PythonExe '.venv/Scripts/python.exe'
+$env:KB_PYTHON = 'D:/my-python/python.exe'         # 仅当前终端生效
+```
+
+选择顺序：`-PythonExe` → `KB_PYTHON` → `config.toml` 的 `[runtime].python` → 自动选择。
+自动模式优先 `runtime/python-portable/python.exe`，其次项目 `.venv`。配置路径相对项目目录解析；指定的环境有错时会提示具体原因。
+
+长期使用某个环境时，修改 `config.toml` 已有的 `[runtime]`：
+
+```toml
+[runtime]
+python = "auto"  # 也可填 ".venv/Scripts/python.exe" 或完整路径
+```
+
+便携运行文件不提交 Git。从源码准备环境时，复用已有的官方嵌入 ZIP 和兼容 wheel：
+
+```powershell
+.\.venv/Scripts/python.exe tools/prepare_portable_python.py --archive <Python-3.13-embed-amd64.zip> --wheel-dir <已有wheel目录> --install-deps
+```
+
+该命令只向项目 `runtime/` 安装运行依赖，不下载模型，不改全局 Python。已有完整 wheel 时加 `--offline`。
+移动硬盘使用方法见 [迁移说明](MOVING.md)，准备与验收记录见 [R1.3 运行环境记录](docs/R1.3-运行环境记录.md)。
 
 ---
 

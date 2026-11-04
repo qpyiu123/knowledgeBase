@@ -11,9 +11,10 @@ from pathlib import Path
 
 import yaml
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
 from kb.parser import VALID_CATEGORIES, split_front_matter
 
-ROOT = Path(__file__).resolve().parents[1]
 FIELDS = ("title", "category", "tags", "signals", "difficulty", "source", "tools", "updated")
 SCRIPT_RE = re.compile(r"kb[/\\]_methods[/\\]scripts[/\\]([\w-]+\.py)")
 
@@ -118,4 +119,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8')
     raise SystemExit(main())

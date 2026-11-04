@@ -6,9 +6,8 @@ import webbrowser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PY = ROOT / ".venv" / "Scripts" / "python.exe"
-if not PY.exists():
-    PY = Path(sys.executable)
+sys.path.insert(0, str(ROOT / 'tools'))
+from python_runtime import resolve_python
 
 PORT = 8765
 URL = f"http://127.0.0.1:{PORT}"
@@ -22,19 +21,21 @@ def port_in_use(port: int) -> bool:
 
 
 def main() -> int:
+    python, selected_by = resolve_python()
     if port_in_use(PORT):
         print(f"端口 {PORT} 已被占用，直接打开 {URL}")
         webbrowser.open(URL)
         return 0
 
-    print(f"启动 CTF Agent UI ...")
+    print(f"启动 CTF Agent UI，Python: {python}（{selected_by}）")
     log_dir = ROOT / "work"
     log_dir.mkdir(parents=True, exist_ok=True)
     proc = subprocess.Popen(
-        [str(PY), str(ROOT / "tools" / "agent" / "server.py")],
+        [str(python), str(ROOT / "tools" / "agent" / "server.py")],
         cwd=str(ROOT),
         stdout=open(log_dir / "agent.out.log", "w", encoding="utf-8"),
         stderr=open(log_dir / "agent.err.log", "w", encoding="utf-8"),
+        creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0,
     )
 
     for _ in range(40):

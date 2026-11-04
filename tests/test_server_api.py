@@ -285,6 +285,23 @@ def test_search_includes_applicability_status(env):
     assert body["applicability"] == {"known": 0, "unknown": 1, "unsatisfied": 0}
 
 
+def test_no_model_health_does_not_probe_service_and_ask_is_disabled(env, monkeypatch):
+    monkeypatch.setattr(server, 'GENERATION_DISABLED', True)
+    def forbidden(*args, **kwargs):
+        raise AssertionError('仅查询模式不应访问生成模型服务')
+    monkeypatch.setattr('requests.get', forbidden)
+    monkeypatch.setattr('requests.post', forbidden)
+    status, text, _ = call(env, 'GET', '/api/health')
+    body = json.loads(text)
+    assert status == 200
+    assert body['generation_enabled'] is False
+    assert body['index_ok'] is True
+    assert body['runtime']['version']
+    status, text, _ = call(env, 'POST', '/api/ask', {'q': 'test', 'paths': ['crypto/rsa.md']})
+    assert status == 503
+    assert '模型解释已关闭' in json.loads(text)['error']
+
+
 def test_search_forwards_fts_without_changing_existing_defaults(env):
     status, text, _ = call(env, "POST", "/api/search", {"q": "RSA", "retrieval": "fts"})
     assert status == 200

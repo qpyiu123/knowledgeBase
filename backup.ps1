@@ -1,9 +1,9 @@
 ﻿# 备份全部知识库、索引、工作区、反馈和上传附件；保留已有备份。
 # 恢复：.\backup.ps1 -Restore backup\ctf_kb_xxx.zip -Destination work\restore-check
-param([string]$Restore, [string]$Destination)
+param([string]$Restore, [string]$Destination, [string]$PythonExe = '')
 $ErrorActionPreference = 'Stop'
-$python = Join-Path $PSScriptRoot '.venv\Scripts\python.exe'
-if (-not (Test-Path -LiteralPath $python)) { throw '找不到项目 Python 环境，请先恢复 .venv' }
+. (Join-Path $PSScriptRoot 'tools\python-runtime.ps1')
+$python = (Resolve-KbPython -Root $PSScriptRoot -PythonExe $PythonExe).Path
 $arguments = @((Join-Path $PSScriptRoot 'tools\backup_data.py'), '--root', $PSScriptRoot)
 if ($Restore) {
     if (-not $Destination) { throw '请用 -Destination 指定一个新的空目录' }

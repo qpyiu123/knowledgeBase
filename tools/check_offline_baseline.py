@@ -3,15 +3,16 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import threading
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
 from urllib.request import Request, urlopen
 
-from agent import server
-
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'tools'))
+from agent import server
 
 
 def main() -> int:
