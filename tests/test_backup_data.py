@@ -11,6 +11,7 @@ def test_roundtrip_includes_methods_and_attachments(tmp_path: Path):
     root = tmp_path / 'app'
     root.mkdir()
     originals = {'kb/_methods/test.md': b'card', 'kb/_methods/scripts/test.py': b'code',
+                 'licenses/reference.txt': b'license',
                  'work/attachments/a/upload.bin': bytes(range(256)),
                  'work/workspaces/a.json': b'{"id":"a"}', 'work/feedback/f.jsonl': b'{}',
                  'config.toml': b'[kb]'}

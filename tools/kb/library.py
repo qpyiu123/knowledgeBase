@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import ast
 import re
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -90,3 +91,47 @@ def document_info(root: Path, name: str, body: str) -> dict:
         kind = 'tutorial'
     return {"scripts": scripts, "sources": sources, "kind": kind,
             "kind_label": {'method': '方法卡', 'writeup': '题解', 'api': 'API 参考', 'tutorial': '教程'}[kind]}
+
+
+class LibraryCatalog:
+    """从已有 FTS 清单读取方法卡的明确来源关系；索引更新后刷新内存缓存。"""
+
+    def __init__(self, root: Path, index: Path):
+        self.root, self.index = root, index
+        self._stamp = None
+        self._related = {}
+
+    def _refresh(self):
+        if not self.index.is_file():
+            return
+        stat = self.index.stat()
+        stamp = (stat.st_mtime_ns, stat.st_size)
+        if self._stamp == stamp:
+            return
+        related = {}
+        with sqlite3.connect(self.index) as connection:
+            rows = connection.execute("SELECT path, title FROM docs WHERE path GLOB '_methods/*'").fetchall()
+        for path, title in rows:
+            file = (self.root / path).resolve()
+            if not file.is_relative_to(self.root.resolve()) or not file.is_file():
+                continue
+            info = document_info(self.root, path, file.read_text(encoding='utf-8-sig'))
+            for source in info['sources']:
+                if source['external']:
+                    continue
+                entry = related.setdefault(source['path'], {'methods': [], 'scripts': []})
+                entry['methods'].append({'path': path, 'title': title})
+                entry['scripts'].extend(info['scripts'])
+        self._related, self._stamp = related, stamp
+
+    def info(self, path: str, body: str) -> dict:
+        result = document_info(self.root, path, body)
+        self._refresh()
+        related = self._related.get(path, {})
+        result['methods'] = related.get('methods', [])
+        have = {item['path'] for item in result['scripts']}
+        for item in related.get('scripts', []):
+            if item['path'] not in have:
+                result['scripts'].append(item)
+                have.add(item['path'])
+        return result

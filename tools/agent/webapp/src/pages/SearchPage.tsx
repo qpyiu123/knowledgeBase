@@ -647,6 +647,11 @@ export default function SearchPage({
                       ))}
                     </Group>
                   ) : null}
+                  {h.methods?.length ? <Group gap="xs" my="xs">
+                    <Text size="xs" c="dimmed">相关方法</Text>
+                    {h.methods.map((method) => <Button key={method.path} size="compact-xs"
+                      variant="subtle" onClick={() => onOpenDoc(method.path, method.title)}>{method.title}</Button>)}
+                  </Group> : null}
                   {h.scripts?.length ? (
                     <Group gap="xs" my="xs">
                       {h.scripts.map((script) => (

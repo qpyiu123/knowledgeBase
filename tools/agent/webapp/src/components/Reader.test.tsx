@@ -11,6 +11,7 @@ beforeEach(() => {
     path: '_methods/test.md', body: '## 使用方法\n这是一段方法说明。',
     scripts: [{ path: '_methods/scripts/test.py', title: 'test.py' }],
     sources: [{ path: 'misc/original.md', external: false }],
+    methods: [{ path: '_methods/related.md', title: '关联的方法卡' }],
   });
   vi.mocked(api.code).mockReset().mockResolvedValue({
     path: '_methods/scripts/test.py', body: 'print("read only")', language: 'python',
@@ -19,6 +20,11 @@ beforeEach(() => {
 });
 
 describe('Reader 只读代码', () => {
+  it('opens a method explicitly linked from the source document', async () => {
+    render(<MantineProvider><Reader target={{ path: 'misc/original.md' }} onClose={() => {}} /></MantineProvider>);
+    fireEvent.click(await screen.findByRole('button', { name: '关联的方法卡' }));
+    await waitFor(() => expect(api.doc).toHaveBeenLastCalledWith('_methods/related.md'));
+  });
   it('opens a related script and copies its complete source', async () => {
     const copy = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: copy } });

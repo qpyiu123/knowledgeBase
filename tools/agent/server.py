@@ -618,6 +618,12 @@ def _hit_snippet(h, q: str) -> str:
     return _snip(h.doc_path, h.category, h.title)
 
 
+def _document_info(kb, path: str, body: str) -> dict:
+    from kb.library import document_info
+    catalog = getattr(kb, "library", None)
+    return catalog.info(path, body) if catalog is not None else document_info(kb.cfg.kb_dir, path, body)
+
+
 def _hit_item(h, q: str, context_paths=None) -> dict:
     from kb.applicability import evaluate_conditions
     from kb.explain import doc_type, doc_type_label, match_info
@@ -644,11 +650,10 @@ def _hit_item(h, q: str, context_paths=None) -> dict:
                                  "trace": {"rules": 0, "requires": 0}}
     if gv:
         item["graph_via"] = gv
-    from kb.library import document_info
     path, error = _resolve_kb_file(get_kb(), h.doc_path)
     if not error:
         try:
-            item.update(document_info(get_kb().cfg.kb_dir, h.doc_path, path.read_text(encoding="utf-8")))
+            item.update(_document_info(get_kb(), h.doc_path, path.read_text(encoding="utf-8")))
         except OSError:
             pass
     return item
@@ -710,8 +715,7 @@ def api_doc(path: str) -> dict:
         body = p.read_text(encoding="utf-8", errors="replace")
     except OSError as e:
         return {"body": "", "error": f"文件不可读: {e}"}
-    from kb.library import document_info
-    return {"path": path, "body": body, **document_info(kb.cfg.kb_dir, path, body)}
+    return {"path": path, "body": body, **_document_info(kb, path, body)}
 
 
 def api_code(path: str) -> dict:

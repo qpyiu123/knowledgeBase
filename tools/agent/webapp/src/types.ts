@@ -7,6 +7,7 @@ export type DocumentResp = {
   error?: string;
   scripts?: LibraryLink[];
   sources?: LibraryLink[];
+  methods?: LibraryLink[];
   kind_label?: string;
 };
 export type CodeResp = {
@@ -61,6 +62,7 @@ export type Hit = {
   graph_via?: string;
   scripts?: LibraryLink[];
   sources?: LibraryLink[];
+  methods?: LibraryLink[];
   kind_label?: string;
 };
 

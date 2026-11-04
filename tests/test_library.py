@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import pytest
 
 from kb.fts import FtsIndex
-from kb.library import document_info, read_code
+from kb.library import LibraryCatalog, document_info, read_code
 from kb.parser import Doc
 from kb.rag import KB
 
@@ -56,3 +56,25 @@ def test_code_is_read_and_statically_described_without_execution(tmp_path: Path)
 def test_code_scope_is_limited(tmp_path: Path, name: str):
     with pytest.raises(ValueError):
         read_code(tmp_path, name)
+
+
+def test_source_document_offers_method_code_from_existing_index(tmp_path: Path):
+    source = tmp_path / 'misc/original.md'
+    source.parent.mkdir()
+    source.write_text('原文')
+    method = tmp_path / '_methods/example.md'
+    method.parent.mkdir()
+    body = '---\nsource: kb/misc/original.md\n---\n`kb/_methods/scripts/example.py`'
+    method.write_text(body, encoding='utf-8')
+    code = tmp_path / '_methods/scripts/example.py'
+    code.parent.mkdir()
+    code.write_text('print("read only")')
+    index = FtsIndex(tmp_path / 'fts.db')
+    index.rebuild([Doc(path='_methods/example.md', title='相关方法', category='misc', body=body)])
+    catalog = LibraryCatalog(tmp_path, tmp_path / 'fts.db')
+    result = catalog.info('misc/original.md', '原文')
+    assert result['methods'] == [{'path': '_methods/example.md', 'title': '相关方法'}]
+    assert result['scripts'][0]['path'] == '_methods/scripts/example.py'
+    stamp = catalog._stamp
+    assert catalog.info('misc/original.md', '原文')['scripts'] == result['scripts']
+    assert catalog._stamp == stamp

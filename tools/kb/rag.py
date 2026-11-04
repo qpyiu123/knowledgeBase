@@ -54,6 +54,8 @@ class KB:
         self.vec = VectorIndex(cfg.index_dir / "vectors.db", self.embedder)
         self._llm: BaseBackend | None = None
         self._graph = None
+        from .library import LibraryCatalog
+        self.library = LibraryCatalog(cfg.kb_dir, cfg.index_dir / "fts.db")
 
     # ---------- 图谱 ----------
     def graph(self):

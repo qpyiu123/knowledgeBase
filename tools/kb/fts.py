@@ -193,6 +193,11 @@ class FtsIndex:
         conn = sqlite3.connect(self.db_path)
         try:
             rows = self._fts_rows(conn, match, top_k, category)
+            literal = self._exact_query(query)
+            if literal:
+                exact = self._exact_rows(conn, literal, top_k, category)
+                exact_paths = {row[0] for row in exact}
+                rows = (exact + [row for row in rows if row[0] not in exact_paths])[:top_k]
             if not rows and tokens:
                 # 兜底 1：严格 AND
                 match_and = self.build_match(tokens, "and")
@@ -213,6 +218,41 @@ class FtsIndex:
             return hits
         finally:
             conn.close()
+
+    @staticmethod
+    def _exact_query(query: str) -> str:
+        query = query.strip()
+        if len(query) > 160:
+            return ""
+        if len(query) > 2 and query[0] == query[-1] and query[0] in ('"', "'"):
+            return query[1:-1]
+        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.]*", query) and (
+                '.' in query or '_' in query or (query.lower() != query and query.upper() != query)):
+            return query
+        return ""
+
+    def _exact_rows(self, conn: sqlite3.Connection, literal: str, limit: int,
+                    category: str | None):
+        # 保留标点完整匹配；函数签名小节优先于其他小节里偶然出现的代码。
+        rows = conn.execute(
+            "SELECT d.path, d.title, d.category, c.origin FROM chunks c "
+            "JOIN docs d ON d.path=c.path WHERE instr(lower(c.origin),lower(?))>0 "
+            + ("AND d.category=? " if category else "")
+            + "ORDER BY CASE WHEN instr(lower(c.origin),lower(?))>0 THEN 0 ELSE 1 END, "
+              "length(c.origin), d.path",
+            [literal, *([category] if category else []), '\n## ' + literal],
+        ).fetchall()
+        token = bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.]*", literal))
+        pattern = re.compile(r"(?<![\w.])" + re.escape(literal) + r"(?![\w.])", re.I) if token else None
+        result, seen = [], set()
+        for path, title, cat, origin in rows:
+            if path in seen or (pattern and not pattern.search(origin)):
+                continue
+            seen.add(path)
+            result.append((path, title, cat, -2.0, origin))
+            if len(result) == limit:
+                break
+        return result
 
     def _fts_rows(self, conn: sqlite3.Connection, match: str, limit: int,
                   category: str | None = None):

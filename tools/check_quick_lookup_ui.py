@@ -47,6 +47,7 @@ def main() -> int:
                 dialog.get_by_role('button', name='复制代码', exact=True).click()
                 dialog.get_by_role('button', name='已复制', exact=True).wait_for()
                 copied = page.evaluate('navigator.clipboard.readText()')
+                code_copied_ms = round((time.perf_counter() - t0) * 1000, 1)
                 expected = (ROOT / 'kb/_methods/scripts/ssti_generic.py').read_text(encoding='utf-8-sig')
                 # Windows 剪贴板将换行转换为 CRLF，逐字符核对统一后的文本。
                 assert copied.replace('\r\n', '\n') == expected
@@ -54,11 +55,20 @@ def main() -> int:
                 dialog.get_by_role('button', name='返回原文档').click()
                 dialog.get_by_role('button', name='ssti-template-injection.md', exact=True).click()
                 dialog.get_by_text('模板引擎', exact=False).first.wait_for()
+                # 从原文可直接找到引用它的方法卡和配套脚本。
+                dialog.get_by_role('button', name='查看代码 ssti_generic.py', exact=True).wait_for()
+                page.screenshot(path=str(shots / 'source-code-links.png'), full_page=True)
+                # 同一应用读取完整官方文档，不依赖原 D 盘来源目录。
+                page.goto(f'http://127.0.0.1:{httpd.server_port}/#doc=_reference/python39/base64.md', wait_until='networkidle')
+                page.reload(wait_until='networkidle')
+                page.get_by_role('dialog').get_by_text('base64.b64decode(s, altchars=None, validate=False)', exact=True).first.wait_for()
+                page.screenshot(path=str(shots / 'api-reference.png'), full_page=True)
                 context.close()
                 browser.close()
             result = {'ok': True, 'retrieval_requests': searches, 'generation_calls': 0,
                       'first_screen_ms': first_screen_ms, 'copied_characters': len(copied),
-                      'source_navigation': True, 'clipboard_crlf': '\r\n' in copied}
+                      'code_copied_ms': code_copied_ms, 'clicks_to_copy': 4,
+                      'source_navigation': True, 'api_reference': True, 'clipboard_crlf': '\r\n' in copied}
             (ROOT / 'work/r1/ui-result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
             print(json.dumps(result, ensure_ascii=False))
         finally:

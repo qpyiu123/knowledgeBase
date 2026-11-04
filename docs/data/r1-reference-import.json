@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-05",
+  "license_source": "https://docs.python.org/3.9/license.html",
+  "items": [
+    {
+      "path": "kb/_reference/python39/base64.md",
+      "title": "Python 3.9 base64：Base64 与 Base32 编解码",
+      "source": "https://docs.python.org/zh-cn/3.9/library/base64.html",
+      "version": "Python 3.9",
+      "original_file": "python39-base64.zh.md",
+      "original_sha256": "7bb2b52497a2655a5960fead24d284e6f67bff7589568c59c310033a6d6d9c77",
+      "original_text_sha256": "0b1f7fd726f44cbaef140c66d6ae2732b843731734a2299004ea6ee4a9432ead",
+      "changes": [
+        "增加资料字段",
+        "函数签名单列为小节，保留正文与代码"
+      ],
+      "license_file": "licenses/python-3.9-license.html"
+    },
+    {
+      "path": "kb/_reference/python39/json.md",
+      "title": "Python 3.9 json：JSON 解析",
+      "source": "https://docs.python.org/zh-cn/3.9/library/json.html",
+      "version": "Python 3.9",
+      "original_file": "python39-json.zh.md",
+      "original_sha256": "b2ff2f814b4fb6ba7e4f80ca10bb16a70a0de580b0a1a5da844c01963c375226",
+      "original_text_sha256": "d351a58fce3bb074adcb0ce9a9a16703ffba59aa44f44493fe003dd680923713",
+      "changes": [
+        "增加资料字段",
+        "函数签名单列为小节，保留正文与代码"
+      ],
+      "license_file": "licenses/python-3.9-license.html"
+    },
+    {
+      "path": "kb/_reference/python39/re.md",
+      "title": "Python 3.9 re：正则表达式",
+      "source": "https://docs.python.org/zh-cn/3.9/library/re.html",
+      "version": "Python 3.9",
+      "original_file": "python39-re.zh.md",
+      "original_sha256": "fdd2e4972a3315a51e76c8ce80d9f0e6eae20543f6bd133ba497b314be1831aa",
+      "original_text_sha256": "c1416ada6f92fec41648e78bb8bcd67ba5e4c5ec7eb371e071a2cdecc9fd808f",
+      "changes": [
+        "增加资料字段",
+        "函数签名单列为小节，保留正文与代码"
+      ],
+      "license_file": "licenses/python-3.9-license.html"
+    }
+  ]
+}

@@ -137,5 +137,26 @@ def test_tokenize_skips_single_digit_payload():
     assert "rsa" in toks
 
 
+def test_complete_symbol_prioritizes_function_section(tmp_path: Path):
+    f = FtsIndex(tmp_path / 'fts.db')
+    f.rebuild([
+        Doc(path='misc/api.md', title='API 文档', category='misc', body='## base64.b64decode(s)\n返回 bytes。'),
+        Doc(path='misc/other.md', title='base64 b64decode 速记', category='misc', body='base64 和 b64decode 分别出现。'),
+        Doc(path='misc/wrong.md', title='b64decode', category='misc', body='base64.b64decode_extra(s)'),
+    ])
+    hits = f.search('base64.b64decode')
+    assert hits[0].doc_path == 'misc/api.md'
+    assert hits[0].section == 'base64.b64decode(s)'
+
+
+def test_quoted_error_text_keeps_punctuation(tmp_path: Path):
+    f = FtsIndex(tmp_path / 'fts.db')
+    f.rebuild([
+        Doc(path='misc/exact.md', title='排错记录', category='misc', body='Error: bad token at line 2'),
+        Doc(path='misc/other.md', title='Error bad token', category='misc', body='token appears at line 3'),
+    ])
+    assert f.search('"Error: bad token at line 2"')[0].doc_path == 'misc/exact.md'
+
+
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-q"]))

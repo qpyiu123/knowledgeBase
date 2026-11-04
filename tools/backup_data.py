@@ -12,7 +12,7 @@ from pathlib import Path, PurePosixPath
 from zipfile import ZIP_DEFLATED, ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
-DIRECTORIES = ("kb", "index", "work/workspaces", "work/feedback", "work/attachments")
+DIRECTORIES = ("kb", "index", "licenses", "work/workspaces", "work/feedback", "work/attachments")
 
 
 def allowed(name: str) -> bool:

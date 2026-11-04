@@ -158,6 +158,11 @@ export default function Reader({
                           variant="light" onClick={() => setActive(script)}>查看代码 {script.title}</Button>)}
                       </Group>
                     ) : null}
+                    {info?.methods?.length ? <Group gap="xs">
+                      <Text size="sm" c="dimmed">相关方法</Text>
+                      {info.methods.map((method) => <Button key={method.path} size="compact-sm"
+                        variant="subtle" onClick={() => setActive(method)}>{method.title}</Button>)}
+                    </Group> : null}
                     {info?.sources?.length ? (
                       <Group gap="xs">
                         <Text size="sm" c="dimmed">来源</Text>
