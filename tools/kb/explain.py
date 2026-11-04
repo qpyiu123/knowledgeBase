@@ -14,12 +14,14 @@ _META_PREFIXES = ("标签:", "识别信号:")
 
 
 def doc_type(path: str) -> str:
-    """专题文档 vs 比赛卡片。P1 只分这两类，其余归入专题。"""
+    """方法卡、比赛卡片与专题文档。"""
+    if path.startswith("_methods/"):
+        return "method"
     return "card" if path.startswith("_des/cards/") else "topic"
 
 
 def doc_type_label(path: str) -> str:
-    return "比赛卡片" if doc_type(path) == "card" else "专题文档"
+    return {"method": "方法卡", "card": "比赛卡片", "topic": "专题文档"}[doc_type(path)]
 
 
 def strip_chunk_prefix(text: str) -> str:

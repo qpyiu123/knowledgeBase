@@ -93,7 +93,7 @@ MAX_NOTE_CHARS = 500
 MAX_WORKSPACE_CONTEXT_CHARS = 1200   # 工作区事实/失败尝试编译进系统提示的上限
 MAX_WORKSPACE_ATTEMPTS = 10
 FEEDBACK_VERDICTS = {"useful", "useless", "adopted"}
-DOC_TYPES = {"topic", "card"}
+DOC_TYPES = {"topic", "card", "method"}
 # 附件侦察：请求体上限与文件名长度；硬上限防止配置写出离谱值。
 MAX_ATTACHMENT_NAME = 240
 ATTACHMENT_HARD_MAX = 64 * 1024 * 1024
@@ -166,7 +166,7 @@ def _check_doc_type(raw):
     if raw in (None, "", "all"):
         return None
     if not isinstance(raw, str) or raw not in DOC_TYPES:
-        raise BadRequest("doc_type 只能是 topic 或 card")
+        raise BadRequest("doc_type 只能是 topic、card 或 method")
     return raw
 
 
@@ -644,6 +644,13 @@ def _hit_item(h, q: str, context_paths=None) -> dict:
                                  "trace": {"rules": 0, "requires": 0}}
     if gv:
         item["graph_via"] = gv
+    from kb.library import document_info
+    path, error = _resolve_kb_file(get_kb(), h.doc_path)
+    if not error:
+        try:
+            item.update(document_info(get_kb().cfg.kb_dir, h.doc_path, path.read_text(encoding="utf-8")))
+        except OSError:
+            pass
     return item
 
 
@@ -655,13 +662,16 @@ def api_search(req: dict) -> dict:
     cat = _check_category(req.get("category"))
     dtype_filter = _check_doc_type(req.get("doc_type"))
     k = _check_top_k(req.get("top_k"))
+    retrieval = req.get("retrieval", "hybrid")
+    if retrieval not in ("fts", "hybrid"):
+        raise BadRequest("retrieval 只能是 fts 或 hybrid")
     counts = {"topic": 0, "card": 0}
     if not q:
         return {"hits": [], "graph": [], "ms": 0, "query": "",
                 "category": cat, "doc_type": dtype_filter, "counts": counts}
     kb = get_kb()
     t0 = time.time()
-    hits = kb.search(q, top_k=k, category=cat, doc_type=dtype_filter)
+    hits = kb.search(q, top_k=k, category=cat, doc_type=dtype_filter, retrieval=retrieval)
     ms = round((time.time() - t0) * 1000, 1)
 
     context = [h.doc_path for h in hits]
@@ -688,7 +698,7 @@ def api_search(req: dict) -> dict:
 
     return {"hits": out, "graph": graph, "ms": ms,
             "query": q, "category": cat, "doc_type": dtype_filter,
-            "counts": counts, "applicability": applic}
+            "counts": counts, "applicability": applic, "retrieval": retrieval}
 
 
 def api_doc(path: str) -> dict:
@@ -700,7 +710,13 @@ def api_doc(path: str) -> dict:
         body = p.read_text(encoding="utf-8", errors="replace")
     except OSError as e:
         return {"body": "", "error": f"文件不可读: {e}"}
-    return {"path": path, "body": body}
+    from kb.library import document_info
+    return {"path": path, "body": body, **document_info(kb.cfg.kb_dir, path, body)}
+
+
+def api_code(path: str) -> dict:
+    from kb.library import read_code
+    return read_code(get_kb().cfg.kb_dir, path)
 
 
 ASK_SYSTEM = (
@@ -959,6 +975,14 @@ class Handler(BaseHTTPRequestHandler):
         elif u.path == "/api/doc":
             qs = parse_qs(u.query)
             self._json(api_doc((qs.get("path") or [""])[0]))
+        elif u.path == "/api/code":
+            qs = parse_qs(u.query)
+            try:
+                self._json(api_code((qs.get("path") or [""])[0]))
+            except FileNotFoundError as exc:
+                self._json({"error": str(exc)}, 404)
+            except (ValueError, OSError) as exc:
+                self._json({"error": str(exc)}, 400)
         elif u.path == "/api/workspaces":
             self._workspace_list()
         elif u.path.startswith("/api/workspaces/"):

@@ -71,7 +71,8 @@ class KB:
     # ---------- 检索 ----------
     def search(self, query: str, top_k: int | None = None, category: str | None = None,
                mode: str = "or", expand: bool = True,
-               hops: int = 1, doc_type: str | None = None) -> list[FusedHit]:
+               hops: int = 1, doc_type: str | None = None,
+               retrieval: str = "hybrid") -> list[FusedHit]:
         from .explain import doc_type as type_of
 
         k = int(top_k or self.cfg.get("search", "top_k", 8))
@@ -84,7 +85,10 @@ class KB:
         fts_fetch = max(k * 4, 60)
         vec_fetch = max(k * 6, 80)
         fts_hits = self.fts.search(query, top_k=fts_fetch, category=category, mode=mode)
-        vec_hits = self.vec.search(query, top_k=vec_fetch, category=category)
+        if retrieval not in ("fts", "hybrid"):
+            raise ValueError("检索方式只能是 fts 或 hybrid")
+        vec_hits = (self.vec.search(query, top_k=vec_fetch, category=category)
+                    if retrieval == "hybrid" else [])
         if not vec_hits:
             base = fuse_single_source(fts_hits, fuse_k)
         else:

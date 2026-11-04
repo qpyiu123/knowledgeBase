@@ -1,4 +1,22 @@
-export type DocType = 'topic' | 'card';
+export type DocType = 'topic' | 'card' | 'method';
+
+export type LibraryLink = { path: string; title?: string; external?: boolean };
+export type DocumentResp = {
+  path: string;
+  body: string;
+  error?: string;
+  scripts?: LibraryLink[];
+  sources?: LibraryLink[];
+  kind_label?: string;
+};
+export type CodeResp = {
+  path: string;
+  body: string;
+  language: string;
+  dependencies: string[];
+  arguments: string[];
+  summary: string;
+};
 
 export type MatchInfo = {
   sources: string[];
@@ -41,6 +59,9 @@ export type Hit = {
   match?: MatchInfo;
   applicability?: Applicability;
   graph_via?: string;
+  scripts?: LibraryLink[];
+  sources?: LibraryLink[];
+  kind_label?: string;
 };
 
 export type SearchResp = {
@@ -50,7 +71,7 @@ export type SearchResp = {
   query?: string;
   category?: string | null;
   doc_type?: DocType | null;
-  counts?: { topic: number; card: number };
+  counts?: { topic: number; card: number; method?: number };
   applicability?: { known: number; unknown: number; unsatisfied: number };
   error?: string;
 };

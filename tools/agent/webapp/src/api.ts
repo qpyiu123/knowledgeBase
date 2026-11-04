@@ -1,5 +1,7 @@
 import type {
   AttachmentReport,
+  CodeResp,
+  DocumentResp,
   Health,
   SearchResp,
   Stats,
@@ -61,18 +63,22 @@ export const api = {
   health: () => getJSON<Health>('/api/health'),
   stats: () => getJSON<Stats>('/api/stats'),
   doc: (path: string) =>
-    getJSON<{ path: string; body: string; error?: string }>(
+    getJSON<DocumentResp>(
       '/api/doc?path=' + encodeURIComponent(path),
     ),
-  search: (q: string, top_k = 10, category?: string | null, doc_type?: string | null) =>
+  code: (path: string) => getJSON<CodeResp>('/api/code?path=' + encodeURIComponent(path)),
+  search: (q: string, top_k = 10, category?: string | null, doc_type?: string | null,
+           retrieval: 'fts' | 'hybrid' = 'hybrid', signal?: AbortSignal) =>
     getJSON<SearchResp>('/api/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal,
       body: JSON.stringify({
         q,
         top_k,
         category: category || null,
         doc_type: doc_type || null,
+        retrieval,
       }),
     }),
   feedback: (

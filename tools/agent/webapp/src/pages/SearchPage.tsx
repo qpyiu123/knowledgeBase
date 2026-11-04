@@ -3,6 +3,7 @@ import {
   Badge,
   Button,
   Card,
+  Checkbox,
   Center,
   Divider,
   Group,
@@ -41,7 +42,7 @@ const MODES = [
 ];
 
 const MODE_DESC: Record<string, string> = {
-  direct: '按关键词和语义查找资料，只看知识库。',
+  direct: '先查关键词，可选择补充语义相近的资料。',
   ask: '先检索相关资料，再让本地模型给出思路和脚本。',
 };
 
@@ -104,7 +105,11 @@ export default function SearchPage({
   const [error, setError] = useState('');
   const [hits, setHits] = useState<Hit[]>([]);
   const [graph, setGraph] = useState<Hit[]>([]);
-  const [counts, setCounts] = useState<{ topic: number; card: number } | null>(null);
+  const [counts, setCounts] = useState<{ topic: number; card: number; method?: number } | null>(null);
+  const [semantic, setSemantic] = useState(false);
+  const [supplementing, setSupplementing] = useState(false);
+  const searchRequest = useRef(0);
+  const searchAbort = useRef<AbortController | null>(null);
   const [resultQuery, setResultQuery] = useState('');
   const [feedback, setFeedback] = useState<Record<string, string>>({});
   const [savedToWorkspace, setSavedToWorkspace] = useState<Record<string, boolean>>({});
@@ -136,6 +141,11 @@ export default function SearchPage({
   const runSearch = useCallback(async (override?: string) => {
     const text = (override ?? q).trim();
     if (!text) return;
+    const request = ++searchRequest.current;
+    searchAbort.current?.abort();
+    const searchController = new AbortController();
+    searchAbort.current = searchController;
+    setSupplementing(false);
     setQ(text);
     setBusy(true);
     setError('');
@@ -151,24 +161,64 @@ export default function SearchPage({
         10,
         category,
         docType === 'all' ? null : docType,
+        'fts',
+        searchController.signal,
       );
+      if (request !== searchRequest.current) return;
       if (r.error) setError(r.error);
       setHits(r.hits || []);
       setGraph(r.graph || []);
       setCounts(r.counts || null);
       setResultQuery(text);
       setMs(r.ms ?? null);
-    } catch (e) {
-      setError(String((e as Error).message || e));
-    } finally {
       setBusy(false);
       setPhase('');
+      if (semantic) {
+        setSupplementing(true);
+        try {
+          const extra = await api.search(text, 10, category,
+            docType === 'all' ? null : docType, 'hybrid', searchController.signal);
+          if (request !== searchRequest.current) return;
+          if (extra.error) throw new Error(extra.error);
+          const have = new Set((r.hits || []).map((h) => h.path));
+          const combined = [...(r.hits || []), ...(extra.hits || []).filter((h) => !have.has(h.path))];
+          setHits(combined);
+          setCounts(combined.reduce((total, hit) => {
+            const type = hit.doc_type || 'topic';
+            total[type] = (total[type] || 0) + 1;
+            return total;
+          }, { topic: 0, card: 0, method: 0 }));
+          setGraph(extra.graph || []);
+        } catch (e) {
+          if (request === searchRequest.current && (e as Error).name !== 'AbortError') {
+            setError(`语义补充失败：${String((e as Error).message || e)}。关键词结果已保留。`);
+          }
+        }
+      }
+    } catch (e) {
+      if (request === searchRequest.current && (e as Error).name !== 'AbortError') {
+        setError(String((e as Error).message || e));
+      }
+    } finally {
+      if (request === searchRequest.current) {
+        setBusy(false);
+        setPhase('');
+        setSupplementing(false);
+      }
     }
-  }, [q, category, docType]);
+  }, [q, category, docType, semantic]);
+
+  useEffect(() => () => {
+    ++searchRequest.current;
+    searchAbort.current?.abort();
+  }, []);
 
   const runAsk = useCallback(async (override?: string) => {
     const text = (override ?? q).trim();
     if (!text) return;
+    ++searchRequest.current;
+    searchAbort.current?.abort();
+    setSupplementing(false);
     setQ(text);
     setBusy(true);
     setError('');
@@ -379,9 +429,14 @@ export default function SearchPage({
                     { label: '全部', value: 'all' },
                     { label: '专题', value: 'topic' },
                     { label: '比赛卡片', value: 'card' },
+                    { label: '方法卡', value: 'method' },
                   ]}
                 />
               </div>
+              {mode === 'direct' && (
+                <Checkbox label="补充语义相近资料" checked={semantic}
+                  onChange={(event) => setSemantic(event.currentTarget.checked)} />
+              )}
             </Group>
             <Group gap={8}>
               {busy && mode === 'ask' ? (
@@ -422,11 +477,11 @@ export default function SearchPage({
         onSelectWorkspace={onSelectWorkspace}
       />
 
-      {busy && (
+      {(busy || supplementing) && (
         <Group gap="xs">
           <Loader size={16} />
           <Text size="sm" c="dimmed">
-            {phase}
+            {supplementing ? '正在补充语义资料，关键词结果可先阅读…' : phase}
             {elapsed > 0 && mode === 'ask' ? ` · ${elapsed.toFixed(1)} 秒` : ''}
           </Text>
         </Group>
@@ -513,9 +568,10 @@ export default function SearchPage({
               </Text>
             </Title>
             <Group gap="sm">
-              {counts && (counts.topic + counts.card > 0) && (
+              {counts && (counts.topic + counts.card + (counts.method || 0) > 0) && (
                 <Text size="xs" c="dimmed">
                   专题 {counts.topic} · 比赛卡片 {counts.card}
+                  {counts.method ? ` · 方法卡 ${counts.method}` : ''}
                 </Text>
               )}
               {ms != null && (
@@ -539,7 +595,7 @@ export default function SearchPage({
                       variant="outline"
                       color={h.doc_type === 'card' ? 'grape' : 'teal'}
                     >
-                      {h.doc_type_label || (h.doc_type === 'card' ? '比赛卡片' : '专题文档')}
+                      {h.kind_label || h.doc_type_label || (h.doc_type === 'card' ? '比赛卡片' : '专题文档')}
                     </Badge>
                     {h.graph_via && (
                       <Badge size="xs" variant="outline">
@@ -579,6 +635,26 @@ export default function SearchPage({
                       {snip.length > 260 ? snip.slice(0, 260) + '…' : snip}
                     </p>
                   )}
+                  {h.sources?.length ? (
+                    <Group gap="xs" my="xs">
+                      <Text size="xs" c="dimmed">来源</Text>
+                      {h.sources.map((source) => source.external ? (
+                        <Button key={source.path} component="a" href={source.path} target="_blank"
+                          rel="noopener noreferrer" variant="subtle" size="compact-xs">查看来源</Button>
+                      ) : (
+                        <Button key={source.path} variant="subtle" size="compact-xs"
+                          onClick={() => onOpenDoc(source.path)}>{source.path.split('/').pop()}</Button>
+                      ))}
+                    </Group>
+                  ) : null}
+                  {h.scripts?.length ? (
+                    <Group gap="xs" my="xs">
+                      {h.scripts.map((script) => (
+                        <Button key={script.path} variant="light" size="compact-xs"
+                          onClick={() => onOpenDoc(script.path, script.title)}>代码 {script.title}</Button>
+                      ))}
+                    </Group>
+                  ) : null}
                   {(h.match?.labels?.length || h.match?.terms?.length || h.section) && (
                     <div className="hit-why">
                       {h.match?.labels?.length ? (

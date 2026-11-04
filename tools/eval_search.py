@@ -48,7 +48,8 @@ MAX_RECALL_DROP = 0.01
 
 
 def _doc_type(path: str) -> str:
-    return "card" if path.startswith("_des/cards/") else "topic"
+    from kb.explain import doc_type
+    return doc_type(path)
 
 
 def _dedupe_docs(hits):

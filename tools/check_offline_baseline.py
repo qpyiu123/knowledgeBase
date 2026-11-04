@@ -32,10 +32,13 @@ def main() -> int:
         try:
             with urlopen(base, timeout=10) as response:
                 assert response.status == 200 and b'<html' in response.read().lower()
-            hits = call('/api/search', {"q": "用户名欢迎语 7*7 回显 49", "top_k": 10})['hits']
+            hits = call('/api/search', {"q": "用户名欢迎语 7*7 回显 49", "top_k": 10, "retrieval": "fts"})['hits']
             assert any(h['path'] == '_methods/ssti_generic.md' for h in hits), hits
             doc = call('/api/doc?path=_methods/ssti_generic.md')
             assert '前置条件' in doc['body']
+            assert doc['scripts'][0]['path'] == '_methods/scripts/ssti_generic.py'
+            code = call('/api/code?path=_methods/scripts/ssti_generic.py')
+            assert '--selftest' in code['arguments']
             created = call('/api/workspaces', {"title": "R0 离线检查"})
             wid = created['workspace']['id']
             call(f'/api/workspaces/{wid}/entries', {"kind": "fact", "text": "7*7 回显 49"})

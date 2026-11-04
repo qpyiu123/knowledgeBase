@@ -50,7 +50,7 @@ class FakeKB:
 
     def search(self, q, top_k=None, category=None, doc_type=None, **_):
         self.calls.append({"q": q, "top_k": top_k, "category": category,
-                           "doc_type": doc_type})
+                           "doc_type": doc_type, "retrieval": _.get("retrieval")})
         hits = [self.topic, self.card]
         if doc_type:
             hits = [h for h in hits
@@ -283,6 +283,31 @@ def test_search_includes_applicability_status(env):
     # P5 next_1：mock 命中 crypto/rsa.md 有 front matter，但没有登记任何规则，
     # 不再把“没规则”当成“没前提”，因此从 known 变为 unknown。
     assert body["applicability"] == {"known": 0, "unknown": 1, "unsatisfied": 0}
+
+
+def test_search_forwards_fts_without_changing_existing_defaults(env):
+    status, text, _ = call(env, "POST", "/api/search", {"q": "RSA", "retrieval": "fts"})
+    assert status == 200
+    assert json.loads(text)["retrieval"] == "fts"
+    assert env["kb"].calls[-1]["retrieval"] == "fts"
+
+
+def test_search_rejects_unknown_retrieval(env):
+    status, text, _ = call(env, "POST", "/api/search", {"q": "RSA", "retrieval": "remote"})
+    assert status == 400
+    assert "retrieval" in json.loads(text)["error"]
+
+
+def test_code_endpoint_reads_without_running(env):
+    code = env["kb"].cfg.kb_dir / "_methods/scripts/example.py"
+    code.parent.mkdir(parents=True)
+    code.write_text('raise RuntimeError("read only")', encoding="utf-8")
+    status, text, _ = call(env, "GET", "/api/code?path=_methods/scripts/example.py")
+    assert status == 200
+    assert json.loads(text)["body"] == 'raise RuntimeError("read only")'
+    status, text, _ = call(env, "GET", "/api/code?path=../../secret.txt")
+    assert status == 400
+    assert "body" not in json.loads(text)
 
 
 def test_search_doc_type_filter(env):

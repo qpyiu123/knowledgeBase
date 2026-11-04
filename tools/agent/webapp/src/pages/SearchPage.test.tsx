@@ -84,6 +84,47 @@ beforeEach(() => {
 });
 
 describe('SearchPage 显式参数', () => {
+  it('uses only keywords by default', async () => {
+    renderPage();
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+    await waitFor(() => expect(searchMock).toHaveBeenCalledTimes(1));
+    expect(searchMock.mock.calls[0][4]).toBe('fts');
+  });
+
+  it('shows keyword hits while semantic search is pending and keeps them on error', async () => {
+    let rejectExtra!: (e: Error) => void;
+    searchMock.mockResolvedValueOnce({ hits: [HIT], ms: 2 })
+      .mockImplementationOnce(() => new Promise((_resolve, reject) => { rejectExtra = reject; }));
+    renderPage();
+    fireEvent.click(screen.getByRole('checkbox', { name: '补充语义相近资料' }));
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+    await screen.findByRole('button', { name: HIT.title });
+    await waitFor(() => expect(searchMock).toHaveBeenCalledTimes(2));
+    expect(searchMock.mock.calls[1][4]).toBe('hybrid');
+    rejectExtra(new Error('编码器不可用'));
+    await screen.findByText(/语义补充失败：编码器不可用/);
+    expect(screen.getByRole('button', { name: HIT.title })).toBeTruthy();
+  });
+
+  it('ignores semantic results from an older query', async () => {
+    let finishOld!: (value: { hits: Hit[] }) => void;
+    const current = { ...HIT, title: '新的查询结果', path: 'misc/new.md' };
+    searchMock.mockResolvedValueOnce({ hits: [HIT] })
+      .mockImplementationOnce(() => new Promise((resolve) => { finishOld = resolve; }))
+      .mockResolvedValueOnce({ hits: [current] })
+      .mockResolvedValueOnce({ hits: [] });
+    renderPage();
+    fireEvent.click(screen.getByRole('checkbox', { name: '补充语义相近资料' }));
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+    await screen.findByRole('button', { name: HIT.title });
+    fireEvent.change(screen.getByLabelText('搜索内容'), { target: { value: '新的查询' } });
+    fireEvent.click(screen.getByRole('button', { name: '查找' }));
+    await screen.findByRole('button', { name: current.title });
+    finishOld({ hits: [{ ...HIT, title: '过期语义结果', path: 'misc/old.md' }] });
+    await waitFor(() => expect(screen.queryByText('过期语义结果')).toBeNull());
+    expect(screen.getByRole('button', { name: current.title })).toBeTruthy();
+  });
+
   it('starter card searches with its own text, not stale state', async () => {
     renderPage();
     fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
