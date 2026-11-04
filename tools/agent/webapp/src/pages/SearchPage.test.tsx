@@ -89,6 +89,7 @@ describe('SearchPage 显式参数', () => {
     fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
     await waitFor(() => expect(searchMock).toHaveBeenCalledTimes(1));
     expect(searchMock.mock.calls[0][4]).toBe('fts');
+    expect(searchMock.mock.calls[0][6]).toBe(false);
   });
 
   it('shows keyword hits while semantic search is pending and keeps them on error', async () => {
@@ -233,7 +234,8 @@ describe('SearchPage 显式参数', () => {
           applicability: {
             status: 'unknown',
             status_label: '未知',
-            hint: '缺少前提：已知同一 n 下的两组密文（unknown）',
+            conditions: [{ id: 'same-n', label: '共用同一个 n', status: 'unknown', status_label: '未知',
+              evidence: '查询未提供明确事实', check: '比较两组 n' }],
           },
         },
       ],
@@ -241,10 +243,13 @@ describe('SearchPage 显式参数', () => {
     });
 
     renderPage();
+    fireEvent.click(screen.getByRole('checkbox', { name: '显示条件关联' }));
     fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
 
-    await screen.findByText('前提：未知');
-    await screen.findByText(/缺少前提：已知同一 n 下的两组密文/);
+    fireEvent.click(await screen.findByText('条件与下一步 · 未知'));
+    await screen.findByText('未知：共用同一个 n');
+    await screen.findByText('核对：比较两组 n');
+    expect(searchMock.mock.calls[0][6]).toBe(true);
   });
 
   it('records useful feedback for a result', async () => {

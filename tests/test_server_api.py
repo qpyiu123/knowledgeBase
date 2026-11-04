@@ -478,9 +478,33 @@ def test_ask_prompt_includes_rule_based_applicability_hint(env, monkeypatch):
 
     assert status == 200
     assert "适用前提检查" in user
-    assert "缺少前提" in user
+    assert "尚未登记条件" in user
+    assert "阅读依赖" in user
     assert "unknown" in user
     assert "不要假设它成立" in user
+
+
+def test_search_conditions_are_optional_and_preserve_hit_order(env, monkeypatch):
+    import kb.applicability as applicability
+    original = applicability.evaluate_conditions
+    calls = []
+    def record(*args, **kwargs):
+        calls.append(args[1])
+        return original(*args, **kwargs)
+    monkeypatch.setattr(applicability, 'evaluate_conditions', record)
+    status, text, _ = call(env, 'POST', '/api/search', {'q': 'RSA', 'retrieval': 'fts', 'with_conditions': False})
+    assert status == 200
+    off = json.loads(text)
+    assert not calls
+    assert all('applicability' not in h for h in off['hits'] + off['graph'])
+    status, text, _ = call(env, 'POST', '/api/search', {'q': 'RSA', 'retrieval': 'fts', 'with_conditions': True})
+    on = json.loads(text)
+    assert status == 200
+    assert calls
+    assert [h['path'] for h in off['hits']] == [h['path'] for h in on['hits']]
+    assert off['query'] == on['query'] == 'RSA'
+    status, _, _ = call(env, 'POST', '/api/search', {'q': 'RSA', 'with_conditions': 'false'})
+    assert status == 400
 
 
 def _ask_capture(monkeypatch):

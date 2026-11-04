@@ -30,6 +30,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Md from '../components/Md';
 import AttachmentPanel from '../components/AttachmentPanel';
+import ConditionDetails from '../components/ConditionDetails';
 import WorkspacePicker, {
   type PickedWorkspace,
 } from '../components/WorkspacePicker';
@@ -107,6 +108,7 @@ export default function SearchPage({
   const [graph, setGraph] = useState<Hit[]>([]);
   const [counts, setCounts] = useState<{ topic: number; card: number; method?: number } | null>(null);
   const [semantic, setSemantic] = useState(false);
+  const [withConditions, setWithConditions] = useState(false);
   const [supplementing, setSupplementing] = useState(false);
   const searchRequest = useRef(0);
   const searchAbort = useRef<AbortController | null>(null);
@@ -163,6 +165,7 @@ export default function SearchPage({
         docType === 'all' ? null : docType,
         'fts',
         searchController.signal,
+        withConditions,
       );
       if (request !== searchRequest.current) return;
       if (r.error) setError(r.error);
@@ -177,7 +180,7 @@ export default function SearchPage({
         setSupplementing(true);
         try {
           const extra = await api.search(text, 10, category,
-            docType === 'all' ? null : docType, 'hybrid', searchController.signal);
+            docType === 'all' ? null : docType, 'hybrid', searchController.signal, withConditions);
           if (request !== searchRequest.current) return;
           if (extra.error) throw new Error(extra.error);
           const have = new Set((r.hits || []).map((h) => h.path));
@@ -206,7 +209,7 @@ export default function SearchPage({
         setSupplementing(false);
       }
     }
-  }, [q, category, docType, semantic]);
+  }, [q, category, docType, semantic, withConditions]);
 
   useEffect(() => () => {
     ++searchRequest.current;
@@ -437,6 +440,8 @@ export default function SearchPage({
                 <Checkbox label="补充语义相近资料" checked={semantic}
                   onChange={(event) => setSemantic(event.currentTarget.checked)} />
               )}
+              {mode === 'direct' && <Checkbox label="显示条件关联" checked={withConditions}
+                onChange={(event) => setWithConditions(event.currentTarget.checked)} />}
             </Group>
             <Group gap={8}>
               {busy && mode === 'ask' ? (
@@ -602,21 +607,6 @@ export default function SearchPage({
                         图谱 · {h.graph_via}
                       </Badge>
                     )}
-                    {h.applicability && (
-                      <Badge
-                        size="xs"
-                        variant="outline"
-                        color={
-                          h.applicability.status === 'unsatisfied'
-                            ? 'red'
-                            : h.applicability.status === 'unknown'
-                              ? 'yellow'
-                              : 'teal'
-                        }
-                      >
-                        前提：{h.applicability.status_label}
-                      </Badge>
-                    )}
                     {h.score ? (
                       <Badge size="xs" variant="default">
                         {Number(h.score).toFixed(4)}
@@ -679,14 +669,7 @@ export default function SearchPage({
                       ) : null}
                     </div>
                   )}
-                  {h.applicability?.hint ? (
-                    <Text
-                      size="xs"
-                      c={h.applicability.status === 'unsatisfied' ? 'red' : 'yellow'}
-                    >
-                      适用前提：{h.applicability.hint}
-                    </Text>
-                  ) : null}
+                  <ConditionDetails app={h.applicability} onOpenDoc={onOpenDoc} />
                   <Group justify="space-between" mt={10} wrap="wrap" gap={8}>
                     <span className="hit-path">{h.path}</span>
                     <Group gap={4}>

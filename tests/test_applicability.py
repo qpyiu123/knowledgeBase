@@ -1,6 +1,6 @@
 """适用条件三态（known / unknown / unsatisfied）的离线测试。
 
-判定完全由 `requires` front matter 与 `applicability_rules.json` 完成，
+技术前提由条件指南和规则判定，requires 单列为阅读依赖，
 不调用模型、不访问网络。
 """
 from __future__ import annotations
@@ -49,31 +49,23 @@ def test_requires_is_unknown_without_context_or_named_query(kb: Path):
     out = evaluate_conditions(kb, "a.md", "这题怎么打", [])
     assert out["status"] == STATUS_UNKNOWN
     assert out["trace"] == {"rules": 0, "requires": 1}
-    cond = out["conditions"][0]
-    assert cond["id"] == "requires:b.md"
-    assert cond["status"] == STATUS_UNKNOWN
-    assert "基础 B" in cond["label"]
-    assert "缺少前提" in out["hint"]
-    assert "unknown" in out["hint"]
-    assert "kb/b.md" in out["hint"]
+    assert out['conditions'] == []
+    assert out['reading'] == [{'path': 'b.md', 'title': '基础 B', 'present': False, 'missing': False}]
 
 
 def test_requires_stays_unknown_when_context_only_mentions_it(kb: Path):
     # next_2：检索命中前提资料 ≠ 前提已满足，只能给 unknown。
     out = evaluate_conditions(kb, "a.md", "这题怎么打", ["b.md"])
     assert out["status"] == STATUS_UNKNOWN
-    cond = out["conditions"][0]
-    assert cond["status"] == STATUS_UNKNOWN
-    assert "在本批命中中出现过" in cond["evidence"]
-    assert "由你确认" in cond["evidence"]
-    assert "kb/b.md" in cond["evidence"]
+    assert out['conditions'] == []
+    assert out['reading'][0]['present'] is True
 
 
-def test_requires_becomes_known_when_query_names_target(kb: Path):
+def test_requires_does_not_prove_conditions_when_query_names_target(kb: Path):
     out = evaluate_conditions(kb, "a.md", "先看基础 B 再打", [])
-    assert out["status"] == STATUS_KNOWN
-    assert out["conditions"][0]["status"] == STATUS_KNOWN
-    assert "点名" in out["conditions"][0]["evidence"]
+    assert out["status"] == STATUS_UNKNOWN
+    assert out['conditions'] == []
+    assert out['reading'][0]['title'] == '基础 B'
 
 
 def test_document_without_rules_is_unknown(kb: Path):
@@ -81,24 +73,23 @@ def test_document_without_rules_is_unknown(kb: Path):
     out = evaluate_conditions(kb, "crypto/c.md", "任意查询", [])
     assert out["status"] == STATUS_UNKNOWN
     assert out["conditions"] == []
-    assert out["label"] == "尚未评估，无已知前提线索"
+    assert out["label"] == "尚未登记条件"
     assert "没有登记适用条件" in out["hint"]
-    assert "人工补规则" in out["hint"]
     assert out["trace"] == {"rules": 0, "requires": 0}
 
 
-def test_non_document_without_front_matter_stays_known(kb: Path):
+def test_non_document_without_front_matter_is_unknown(kb: Path):
     (kb / "note.md").write_text("随手记，不是资料条目\n", encoding="utf-8")
     out = evaluate_conditions(kb, "note.md", "任意查询", [])
-    assert out["status"] == STATUS_KNOWN
-    assert out["label"] == "无额外适用前提"
-    assert out["hint"] == ""
+    assert out["status"] == STATUS_UNKNOWN
+    assert out["label"] == "尚未登记条件"
+    assert out["conditions"] == []
     assert out["trace"] == {"rules": 0, "requires": 0}
 
 
 def test_keyword_rule_known_unknown_and_negative(kb: Path):
     rel = "crypto/rsa-common-modulus-attack.md"
-    known = evaluate_conditions(kb, rel, "同一个 n，两组密文", [])
+    known = evaluate_conditions(kb, rel, "同一个 n，同一明文，两个指数互素", [])
     assert known["status"] == STATUS_KNOWN
     assert any(c["id"] == "rsa-same-modulus" for c in known["conditions"])
 
@@ -109,7 +100,7 @@ def test_keyword_rule_known_unknown_and_negative(kb: Path):
     bad = evaluate_conditions(kb, rel, "这题是不同 n", [])
     assert bad["status"] == STATUS_UNSATISFIED
     assert "不满足" in bad["hint"]
-    assert "不同n" in bad["hint"]
+    assert "不同 n" in bad["hint"]
 
 
 def test_keyword_rule_conflicting_evidence_is_unknown(kb: Path):
@@ -194,20 +185,20 @@ def test_evaluate_paths_summarizes_unknown(kb: Path):
     (kb / "note.md").write_text("随手记\n", encoding="utf-8")
     out = evaluate_paths(kb, ["a.md", "note.md"], "这题怎么打")
     assert out["status"] == STATUS_UNKNOWN
-    assert out["unknown"] == 1
+    assert out["unknown"] == 2
     assert out["unsatisfied"] == 0
-    assert any("缺少前提" in line for line in out["hint"].splitlines())
+    assert '阅读依赖：\n- 基础 B' in out['hint']
 
     # next_1：有 front matter 但没有规则，也要在汇总里显式标 unknown。
     no_rule = evaluate_paths(kb, ["crypto/c.md", "note.md"], "这题怎么打")
     assert no_rule["status"] == STATUS_UNKNOWN
-    assert no_rule["unknown"] == 1
-    assert any("尚未评估" in line for line in no_rule["hint"].splitlines())
+    assert no_rule["unknown"] == 2
+    assert any("尚未登记条件" in line for line in no_rule["hint"].splitlines())
 
     known = evaluate_paths(kb, ["note.md"], "这题怎么打")
-    assert known["status"] == STATUS_KNOWN
-    assert known["unknown"] == 0
-    assert known["hint"] == "所有可判定前提均已知，或该资料没有额外前提。"
+    assert known["status"] == STATUS_UNKNOWN
+    assert known["unknown"] == 1
+    assert 'unknown' in known['hint']
 
 
 def test_resolve_target_rejects_ambiguous_and_missing(kb: Path):

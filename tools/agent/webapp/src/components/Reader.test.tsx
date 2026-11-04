@@ -20,6 +20,15 @@ beforeEach(() => {
 });
 
 describe('Reader 只读代码', () => {
+  it('opens the source section without sending the fragment to the document API', async () => {
+    const scroll = vi.fn();
+    HTMLElement.prototype.scrollIntoView = scroll;
+    render(<MantineProvider><Reader target={{ path: 'misc/original.md#使用方法' }} onClose={() => {}} /></MantineProvider>);
+    await screen.findByText('这是一段方法说明。');
+    await waitFor(() => expect(scroll).toHaveBeenCalled());
+    expect(api.doc).toHaveBeenCalledWith('misc/original.md');
+    expect(api.code).not.toHaveBeenCalled();
+  });
   it('opens a method explicitly linked from the source document', async () => {
     render(<MantineProvider><Reader target={{ path: 'misc/original.md' }} onClose={() => {}} /></MantineProvider>);
     fireEvent.click(await screen.findByRole('button', { name: '关联的方法卡' }));

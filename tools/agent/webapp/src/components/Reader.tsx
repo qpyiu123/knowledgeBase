@@ -24,7 +24,9 @@ export default function Reader({
   const [heads, setHeads] = useState<{ id: string; text: string; lv: number }[]>([]);
   const docRef = useRef<HTMLDivElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
-  const isCode = !!active && !active.path.endsWith('.md');
+  const activePath = active?.path.split('#')[0] || '';
+  const fragment = active?.path.split('#')[1] || '';
+  const isCode = !!active && !activePath.endsWith('.md');
 
   useEffect(() => setActive(target), [target]);
 
@@ -39,7 +41,7 @@ export default function Reader({
     setCode(null);
     setCopied(false);
     setCopyError('');
-    const request = isCode ? api.code(active.path) : api.doc(active.path);
+    const request = isCode ? api.code(activePath) : api.doc(activePath);
     request
       .then((r) => {
         if (!alive) return;
@@ -59,7 +61,7 @@ export default function Reader({
     return () => {
       alive = false;
     };
-  }, [active, isCode]);
+  }, [active, activePath, isCode]);
 
   // 渲染完收集标题做目录
   useEffect(() => {
@@ -74,7 +76,9 @@ export default function Reader({
           lv: Number(el.tagName[1]),
         })),
     );
-  }, [body]);
+    const heading = Array.from(els).find((el) => el.id === fragment);
+    heading?.scrollIntoView?.({ block: 'start' });
+  }, [body, loading, fragment]);
 
   const firstH1 = useMemo(() => heads.find((h) => h.lv === 1)?.text, [heads]);
   const raw = firstH1 || active?.title || active?.path || '';

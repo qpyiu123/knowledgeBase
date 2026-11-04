@@ -33,18 +33,28 @@ export type ApplicabilityCondition = {
   status: 'known' | 'unknown' | 'unsatisfied';
   status_label: string;
   evidence?: string;
+  check?: string;
   need?: string[];
   source?: string;
   trace?: 'rule' | 'requires';
 };
 
 export type Applicability = {
+  error?: string;
   status: 'known' | 'unknown' | 'unsatisfied';
   status_label: string;
   label?: string;
   conditions?: ApplicabilityCondition[];
   hint?: string;
   trace?: { rules: number; requires: number };
+  reading?: { path: string | null; title: string; present: boolean; missing: boolean }[];
+  guide?: {
+    id: string;
+    title: string;
+    source: { path: string; section: string; quote: string };
+    next_check: string;
+    contrasts: { path: string; title: string; difference: string }[];
+  };
 };
 
 export type Hit = {

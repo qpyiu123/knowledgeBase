@@ -626,7 +626,7 @@ def _document_info(kb, path: str, body: str) -> dict:
     return catalog.info(path, body) if catalog is not None else document_info(kb.cfg.kb_dir, path, body)
 
 
-def _hit_item(h, q: str, context_paths=None) -> dict:
+def _hit_item(h, q: str, context_paths=None, with_conditions=True) -> dict:
     from kb.applicability import evaluate_conditions
     from kb.explain import doc_type, doc_type_label, match_info
 
@@ -643,13 +643,15 @@ def _hit_item(h, q: str, context_paths=None) -> dict:
         "doc_type_label": doc_type_label(h.doc_path),
         "match": match_info(h, q),
     }
-    try:
-        item["applicability"] = evaluate_conditions(
-            get_kb().cfg.kb_dir, h.doc_path, q, context_paths or [])
-    except Exception as e:  # noqa: BLE001  # 解释失败不影响检索结果
-        item["applicability"] = {"status": "unknown", "status_label": "未知",
-                                 "conditions": [], "hint": f"适用条件判定失败: {e}",
-                                 "trace": {"rules": 0, "requires": 0}}
+    if with_conditions:
+        try:
+            item["applicability"] = evaluate_conditions(
+                get_kb().cfg.kb_dir, h.doc_path, q, context_paths or [])
+        except Exception as e:  # noqa: BLE001  # 解释失败不影响检索结果
+            item["applicability"] = {"status": "unknown", "status_label": "未知",
+                                     "conditions": [], "hint": f"适用条件判定失败: {e}",
+                                     "error": f"条件检查失败：{e}",
+                                     "trace": {"rules": 0, "requires": 0}}
     if gv:
         item["graph_via"] = gv
     path, error = _resolve_kb_file(get_kb(), h.doc_path)
@@ -670,12 +672,16 @@ def api_search(req: dict) -> dict:
     dtype_filter = _check_doc_type(req.get("doc_type"))
     k = _check_top_k(req.get("top_k"))
     retrieval = req.get("retrieval", "hybrid")
+    with_conditions = req.get("with_conditions", True)
+    if not isinstance(with_conditions, bool):
+        raise BadRequest("with_conditions 必须为 true 或 false")
     if retrieval not in ("fts", "hybrid"):
         raise BadRequest("retrieval 只能是 fts 或 hybrid")
     counts = {"topic": 0, "card": 0}
     if not q:
         return {"hits": [], "graph": [], "ms": 0, "query": "",
-                "category": cat, "doc_type": dtype_filter, "counts": counts}
+                "category": cat, "doc_type": dtype_filter, "counts": counts,
+                "retrieval": retrieval, "with_conditions": with_conditions}
     kb = get_kb()
     t0 = time.time()
     hits = kb.search(q, top_k=k, category=cat, doc_type=dtype_filter, retrieval=retrieval)
@@ -684,7 +690,7 @@ def api_search(req: dict) -> dict:
     context = [h.doc_path for h in hits]
     out, graph = [], []
     for h in hits:
-        item = _hit_item(h, q, context)
+        item = _hit_item(h, q, context, with_conditions)
         # 图谱补进来的条目放到 graph 里，主结果只留词面/向量命中的
         if item.get("graph_via"):
             graph.append(item)
@@ -703,9 +709,10 @@ def api_search(req: dict) -> dict:
         if status in applic:
             applic[status] += 1
 
-    return {"hits": out, "graph": graph, "ms": ms,
+    return {"hits": out, "graph": graph, "ms": round((time.time() - t0) * 1000, 1), "search_ms": ms,
             "query": q, "category": cat, "doc_type": dtype_filter,
-            "counts": counts, "applicability": applic, "retrieval": retrieval}
+            "counts": counts, "applicability": applic, "retrieval": retrieval,
+            "with_conditions": with_conditions}
 
 
 def api_doc(path: str) -> dict:

@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "guides": [
+    {
+      "id": "rsa-common",
+      "title": "RSA 共模：指数互素路径",
+      "paths": [
+        "crypto/rsa-common-modulus-attack.md",
+        "_methods/rsa_common_modulus_attack.md"
+      ],
+      "source": {
+        "path": "crypto/rsa-common-modulus-attack.md",
+        "section": "二、原理",
+        "quote": "a*e1 + b*e2 = gcd(e1, e2) = 1"
+      },
+      "conditions": [
+        {
+          "id": "rsa-same-modulus",
+          "label": "两组密文共用同一个 n",
+          "kind": "same-n",
+          "positive": [
+            "同(?:一个|一)模数",
+            "同(?:一个|一)n",
+            "n(?:相同|一致)",
+            "n1=n2"
+          ],
+          "negative": [
+            "不同(?:的)?(?:n|模数)",
+            "n(?:不相同|不同)",
+            "n1(?:!=|≠)n2"
+          ],
+          "check": "逐组比较 n；只有两组密文还不足以确定共模。"
+        },
+        {
+          "id": "same-message",
+          "label": "加密时使用相同的整数明文 m",
+          "positive": [
+            "同一(?:条)?明文",
+            "明文(?:m)?相同",
+            "m1=m2"
+          ],
+          "negative": [
+            "明文(?:m)?不同",
+            "不同明文",
+            "每次随机填充",
+            "m1(?:!=|≠)m2"
+          ],
+          "check": "检查 m 的构造，确认两次加密前的整数相同。"
+        },
+        {
+          "id": "coprime-e",
+          "label": "gcd(e1,e2)=1",
+          "kind": "coprime-e",
+          "positive": [
+            "gcd\\(e1[,，]e2\\)=1(?![0-9])",
+            "(?:两个)?指数互素",
+            "e1(?:和|与)e2互素"
+          ],
+          "negative": [
+            "指数不互素",
+            "gcd\\(e1[,，]e2\\)(?:>|!=|≠)1"
+          ],
+          "check": "计算 gcd(e1,e2)。若大于 1，回原文查看开根变体。"
+        }
+      ],
+      "next_check": "用扩展欧几里得求系数，处理负指数的模逆，再将候选明文代回两组密文验证。",
+      "contrasts": [
+        {
+          "path": "crypto/rsa-broadcast-attack.md",
+          "title": "对照广播攻击",
+          "difference": "广播使用多个不同 n 和相同 e；先比较参数结构。"
+        },
+        {
+          "path": "crypto/rsa-small-e-attack.md",
+          "title": "对照单密文开根",
+          "difference": "只有一组密文时，先检查整数开根是否精确。"
+        }
+      ]
+    },
+    {
+      "id": "rsa-broadcast",
+      "title": "RSA 低指数广播：标准 CRT 路径",
+      "paths": [
+        "crypto/rsa-broadcast-attack.md",
+        "_methods/rsa_hastad_broadcast.md"
+      ],
+      "source": {
+        "path": "crypto/rsa-broadcast-attack.md",
+        "section": "三、解题步骤",
+        "quote": "len(cs) >= e"
+      },
+      "conditions": [
+        {
+          "id": "different-n",
+          "label": "使用多个不同的 n",
+          "kind": "different-n",
+          "positive": [
+            "多个不同n",
+            "不同(?:的)?模数",
+            "不同n",
+            "n1(?:!=|≠)n2"
+          ],
+          "negative": [
+            "同一个n",
+            "同一个模数",
+            "n相同",
+            "n1=n2"
+          ],
+          "check": "比较各组 n，重复的模数不算新的广播样本。"
+        },
+        {
+          "id": "same-e",
+          "label": "每组使用相同的 e",
+          "kind": "same-e",
+          "positive": [
+            "e相同",
+            "相同(?:的)?e",
+            "同一个e",
+            "同一指数",
+            "e1=e2"
+          ],
+          "negative": [
+            "e不同",
+            "不同(?:的)?e",
+            "指数不同",
+            "e1(?:!=|≠)e2"
+          ],
+          "check": "逐组比较 e；本条只检查相同指数的标准路径。"
+        },
+        {
+          "id": "same-message",
+          "label": "各组加密前的整数明文 m 相同",
+          "positive": [
+            "同一(?:条)?明文",
+            "明文(?:m)?相同",
+            "m1=m2"
+          ],
+          "negative": [
+            "明文(?:m)?不同",
+            "不同明文",
+            "每次随机填充",
+            "m1(?:!=|≠)m2"
+          ],
+          "check": "检查明文与填充，原始 flag 相同也要核对编码后的 m。"
+        },
+        {
+          "id": "pairwise-n",
+          "label": "各 n 两两互素",
+          "positive": [
+            "(?:模数|各n|n_i)两两互素",
+            "各n互素"
+          ],
+          "negative": [
+            "共享素数",
+            "共享因子",
+            "(?:模数|各n|n_i)不互素",
+            "gcd\\(n1[,，]n2\\)(?:>|!=|≠)1"
+          ],
+          "check": "两两计算 gcd；发现共享因子时先查看共享素数分解。"
+        },
+        {
+          "id": "enough-pairs",
+          "label": "密文组数至少为 e",
+          "kind": "count",
+          "positive": [
+            "组数>=e",
+            "组数不少于e",
+            "密文组数至少为e"
+          ],
+          "negative": [
+            "组数<e",
+            "组数不足e"
+          ],
+          "check": "核对 e 与有效密文组数，例如 e=3 时本条标准路径需要至少三组。"
+        }
+      ],
+      "next_check": "先做两两 gcd，再用 CRT 合并并检查整数 e 次根是否精确，最后逐组重加密验证。",
+      "contrasts": [
+        {
+          "path": "crypto/rsa-common-modulus-attack.md",
+          "title": "对照共模攻击",
+          "difference": "共模复用同一个 n，通常使用不同的 e。"
+        },
+        {
+          "path": "_methods/rsa_shared_prime_attack.md",
+          "title": "共享因子检查",
+          "difference": "模数不互素时，先用 gcd 分解，不走本条标准 CRT 路径。"
+        }
+      ]
+    },
+    {
+      "id": "rsa-direct-root",
+      "title": "RSA 单密文直接开根：k=0 路径",
+      "paths": [
+        "crypto/rsa-small-e-attack.md",
+        "_methods/rsa_small_e_attack.md"
+      ],
+      "source": {
+        "path": "crypto/rsa-small-e-attack.md",
+        "section": "二、原理",
+        "quote": "m^e < n"
+      },
+      "conditions": [
+        {
+          "id": "exponent",
+          "label": "已知公钥指数 e（至少为 2）",
+          "kind": "exponent",
+          "positive": [],
+          "negative": [],
+          "check": "从原题抄下 e；仅知道方法名称时先补参数。"
+        },
+        {
+          "id": "unreduced-power",
+          "label": "c 是整数 m 的精确 e 次幂",
+          "positive": [
+            "m\\^e<n",
+            "未发生模约减",
+            "没有模约减",
+            "(?:整数|e次|三次|立方)根精确",
+            "c是完全e次幂"
+          ],
+          "negative": [
+            "m\\^e>=n",
+            "发生过模约减",
+            "整数根不精确",
+            "开根不精确",
+            "不是完全e次幂"
+          ],
+          "check": "先求 c 的整数 e 次根并检查精确标志；c<n 本身不能确定这一点。"
+        }
+      ],
+      "next_check": "将整数根作为候选，用 pow(m,e,n)==c 复核。若不精确，回原文检查有界枚举 k 或已知高位路径。",
+      "contrasts": [
+        {
+          "path": "crypto/rsa-broadcast-attack.md",
+          "title": "对照广播攻击",
+          "difference": "多组不同 n、相同 e、相同明文时，还可检查广播的条件。"
+        },
+        {
+          "path": "crypto/rsa-common-modulus-attack.md",
+          "title": "对照共模攻击",
+          "difference": "同一个 n 配多组不同 e 时，比较共模的指数条件。"
+        }
+      ]
+    }
+  ]
+}

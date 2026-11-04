@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-05",
+  "python": "3.13.17",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "queries": 30,
+  "kb_init_ms": 35.0,
+  "first_query_A_ms": 96.18,
+  "cold_definition": "新进程首查；操作系统文件缓存未清空",
+  "first_pass_median_ms": {
+    "A": 33.3,
+    "AB": 39.85
+  },
+  "repeat_median_ms": {
+    "A": 34.57,
+    "AB": 40.98
+  },
+  "repeat_max_ms": {
+    "A": 44.19,
+    "AB": 61.34
+  },
+  "peak_working_set_mib": 49.7,
+  "same_order": 30,
+  "direct_at_5": 30,
+  "reachable_A_at_5": 30,
+  "reachable_AB_at_5": 30,
+  "wrong_status": 0,
+  "condition_errors": 0,
+  "no_registered_guide": 1,
+  "unknown_conditions": 26,
+  "index_unchanged": true,
+  "generation_calls": 0,
+  "frontend_tests": 46,
+  "python_tests": 407,
+  "ui": {
+    "ok": true,
+    "cases": [
+      {
+        "case": "unknown",
+        "status": "未知"
+      },
+      {
+        "case": "excluded",
+        "status": "不满足"
+      }
+    ],
+    "same_result_order": true,
+    "original_query_preserved": true,
+    "source_section_visible": true,
+    "generation_calls": 0,
+    "first_screen_ms": 281.3,
+    "source_open_ms": 453.8,
+    "clicks_to_source": 4,
+    "screenshots": "work\\r2\\shots"
+  },
+  "legacy_regression": {
+    "legacy": {
+      "queries": 22,
+      "top_k": 10,
+      "primary_k": 5,
+      "top1": 0.9091,
+      "mrr": 0.9545,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "mrr@5": 0.9545,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.9545,
+      "hit": 1.0,
+      "recall": 1.0,
+      "avg_latency_ms": 52.8
+    },
+    "expanded": {
+      "queries": 60,
+      "top_k": 10,
+      "primary_k": 5,
+      "top1": 0.8333,
+      "mrr": 0.9139,
+      "hit@5": 1.0,
+      "recall@5": 1.0,
+      "mrr@5": 0.9139,
+      "hit@10": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.9139,
+      "hit": 1.0,
+      "recall": 1.0,
+      "avg_latency_ms": 61.5
+    }
+  }
+}

@@ -2,11 +2,7 @@
 
 判定完全由规则完成，不调用模型：
 
-1. `requires` 图谱关系：命中条目声明的前置文档是否已经在本次上下文里，
-   或用户是否直接点名了它。没有证据就是 **unknown**，不会假装满足。
-2. `applicability_rules.json` 里的确定性规则：关键词（含否定词）与
-   libc 版本区间。查到支持线索是 known，查到否定线索是 unsatisfied，
-   两者都没有是 unknown。
+少量方法按条件指南逐条核对，其余沿用已有规则。requires 只列为阅读依赖。
 
 输出给检索解释、ask 提示和评测复用；本模块不改变检索排序。
 """
@@ -19,6 +15,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from .parser import _as_list, split_front_matter
+from .condition_guides import evaluate_guide, load_guides
 
 STATUS_KNOWN = "known"
 STATUS_UNKNOWN = "unknown"
@@ -84,7 +81,9 @@ def load_rules() -> tuple[dict, ...]:
 
 
 def _read_meta(kb_dir: Path, rel: str) -> dict[str, Any]:
-    p = kb_dir / rel
+    p = (kb_dir / rel).resolve()
+    if not p.is_relative_to(kb_dir.resolve()):
+        return {}
     try:
         text = p.read_text(encoding="utf-8", errors="replace")
     except OSError:
@@ -114,17 +113,21 @@ def resolve_target(kb_dir: Path, target: str) -> str | None:
     t = str(target or "").strip().replace("\\", "/")
     if not t:
         return None
-    exact = kb_dir / t
+    root = kb_dir.resolve()
+    exact = (root / t).resolve()
+    if not exact.is_relative_to(root):
+        return None
     if exact.is_file():
-        return t
-    if not t.endswith(".md") and (kb_dir / (t + ".md")).is_file():
-        return t + ".md"
+        return exact.relative_to(root).as_posix()
+    with_md = Path(str(exact) + '.md')
+    if not t.endswith(".md") and with_md.is_file() and with_md.resolve().is_relative_to(root):
+        return with_md.relative_to(root).as_posix()
     try:
         mtime = kb_dir.stat().st_mtime_ns
     except OSError:
         return None
     matches = _paths_by_name(str(kb_dir), mtime).get(Path(t).name) or ()
-    return matches[0] if len(matches) == 1 else None
+    return matches[0] if len(matches) == 1 and (root / matches[0]).resolve().is_relative_to(root) else None
 
 
 def _rule_status(rule: dict, query: str) -> dict[str, Any]:
@@ -205,8 +208,8 @@ def _version_status(rule: dict, q: str) -> dict[str, Any]:
     }
 
 
-def _requires_conditions(kb_dir: Path, rel: str, query: str,
-                         context_paths: set[str]) -> list[dict[str, Any]]:
+def _reading_dependencies(kb_dir: Path, rel: str,
+                          context_paths: set[str]) -> list[dict[str, Any]]:
     meta = _read_meta(kb_dir, rel)
     targets = _as_list(meta.get("requires"))
     out: list[dict[str, Any]] = []
@@ -216,29 +219,12 @@ def _requires_conditions(kb_dir: Path, rel: str, query: str,
         if target_rel:
             tmeta = _read_meta(kb_dir, target_rel)
             target_title = str(tmeta.get("title") or target_rel)
-        q = _norm(query)
         hit = (target_rel in context_paths) if target_rel else False
-        named = bool(_norm(target_title)) and _norm(target_title) in q
-        if named:
-            status = STATUS_KNOWN
-            evidence = "查询直接点名了该前提"
-        elif hit:
-            # 检索命中只代表资料出现过，不代表选手已经掌握。
-            status = STATUS_UNKNOWN
-            evidence = (f"前提资料《{target_title}》在本批命中中出现过；"
-                        f"是否已掌握由你确认；参见 kb/{target_rel}")
-        else:
-            status = STATUS_UNKNOWN
-            evidence = "本次上下文没有包含该前提资料"
         out.append({
-            "id": f"requires:{target_rel or target}",
-            "label": f"先掌握《{target_title}》",
-            "status": status,
-            "status_label": STATUS_LABEL[status],
-            "evidence": evidence,
-            "need": [target_title],
-            "source": f"kb/{target_rel}" if target_rel else str(target),
-            "trace": "requires",
+            "path": target_rel,
+            "title": target_title,
+            "present": hit,
+            "missing": target_rel is None,
         })
     return out
 
@@ -250,8 +236,12 @@ def evaluate_conditions(kb_dir: str | Path, rel: str, query: str,
     rel = str(rel or "").replace("\\", "/")
     ctx = {str(p).replace("\\", "/") for p in (context_paths or ()) if p}
     conditions: list[dict[str, Any]] = []
+    guide = next((g for g in load_guides() if rel in g['paths']), None)
+    reading = _reading_dependencies(root, rel, ctx)
+    if guide:
+        conditions = evaluate_guide(guide, query)
 
-    for rule in load_rules():
+    for rule in (() if guide else load_rules()):
         paths = [str(p).replace("\\", "/") for p in (rule.get("paths") or [])]
         if rel not in paths:
             continue
@@ -268,28 +258,11 @@ def evaluate_conditions(kb_dir: str | Path, rel: str, query: str,
             "trace": "rule",
         })
 
-    conditions.extend(_requires_conditions(root, rel, query, ctx))
-
     if not conditions:
-        meta = _read_meta(root, rel)
-        title = str(meta.get("title") or "").strip()
-        # 资料型条目（有 front matter 且 title 不是路径回填）只是“没有登记规则”，
-        # 不能等于“没有前提”：状态保持 unknown。
-        # 没有 front matter 的杂项（或 title 就是相对路径）不是资料条目，
-        # 返回 known 才合理。
-        if meta and title and title != rel:
-            return {
-                "status": STATUS_UNKNOWN,
-                "status_label": STATUS_LABEL[STATUS_UNKNOWN],
-                "label": "尚未评估，无已知前提线索",
-                "conditions": [],
-                "hint": ("本条没有登记适用条件，状态未知；"
-                         "确认题面特征后可人工补规则"),
-                "trace": {"rules": 0, "requires": 0},
-            }
-        return {"status": STATUS_KNOWN, "status_label": STATUS_LABEL[STATUS_KNOWN],
-                "label": "无额外适用前提", "conditions": [], "hint": "",
-                "trace": {"rules": 0, "requires": 0}}
+        return {"status": STATUS_UNKNOWN, "status_label": STATUS_LABEL[STATUS_UNKNOWN],
+                "label": "尚未登记条件", "conditions": [],
+                "hint": "本条没有登记适用条件。", "reading": reading,
+                "trace": {"rules": 0, "requires": len(reading)}}
 
     statuses = {c["status"] for c in conditions}
     if STATUS_UNSATISFIED in statuses:
@@ -314,7 +287,7 @@ def evaluate_conditions(kb_dir: str | Path, rel: str, query: str,
 
     trace = {
         "rules": sum(1 for c in conditions if c["trace"] == "rule"),
-        "requires": sum(1 for c in conditions if c["trace"] == "requires"),
+        "requires": len(reading),
     }
     return {
         "status": overall,
@@ -323,6 +296,8 @@ def evaluate_conditions(kb_dir: str | Path, rel: str, query: str,
         "conditions": conditions,
         "hint": "；".join(hints),
         "trace": trace,
+        "reading": reading,
+        **({"guide": {k: guide[k] for k in ('id', 'title', 'source', 'next_check', 'contrasts')}} if guide else {}),
     }
 
 
@@ -338,20 +313,24 @@ def evaluate_paths(kb_dir: str | Path, paths: Iterable[str], query: str) -> dict
     unsatisfied = sum(1 for i in items
                       if i["applicability"]["status"] == STATUS_UNSATISFIED)
     lines = []
+    reading_lines = []
     for i in items:
         app = i["applicability"]
         if not app["conditions"] and app["status"] == STATUS_UNKNOWN:
             lines.append(f"- {i['path']}：{app['label']}（unknown）")
-            continue
         for c in app["conditions"]:
             if c["status"] == STATUS_UNKNOWN:
                 lines.append(f"- {i['path']}：缺少前提：{c['label']}（unknown）")
             elif c["status"] == STATUS_UNSATISFIED:
                 lines.append(f"- {i['path']}：不满足：{c['label']}（unsatisfied）")
+        for r in app.get('reading', []):
+            reading_lines.append(f"- {r['title']}（{r['path'] or '资料缺失'}）")
     if not lines:
-        summary = "所有可判定前提均已知，或该资料没有额外前提。"
+        summary = "查询已给出登记条件的支持线索。"
     else:
         summary = "以下前提尚未确认，回答时不要假设它成立：\n" + "\n".join(lines)
+    if reading_lines:
+        summary += '\n阅读依赖：\n' + '\n'.join(dict.fromkeys(reading_lines))
     return {
         "status": (STATUS_UNSATISFIED if unsatisfied else
                    STATUS_UNKNOWN if unknown else STATUS_KNOWN),

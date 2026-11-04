@@ -68,7 +68,7 @@ export const api = {
     ),
   code: (path: string) => getJSON<CodeResp>('/api/code?path=' + encodeURIComponent(path)),
   search: (q: string, top_k = 10, category?: string | null, doc_type?: string | null,
-           retrieval: 'fts' | 'hybrid' = 'hybrid', signal?: AbortSignal) =>
+           retrieval: 'fts' | 'hybrid' = 'hybrid', signal?: AbortSignal, withConditions = true) =>
     getJSON<SearchResp>('/api/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -79,6 +79,7 @@ export const api = {
         category: category || null,
         doc_type: doc_type || null,
         retrieval,
+        with_conditions: withConditions,
       }),
     }),
   feedback: (

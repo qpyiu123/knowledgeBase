@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ask } from './api';
+import { api, ask } from './api';
 import { extractSSEEvents } from './lib/sse';
 
 function streamFrom(chunks: Uint8Array[]): ReadableStream<Uint8Array> {
@@ -24,6 +24,14 @@ afterEach(() => {
 });
 
 describe('extractSSEEvents', () => {
+  it('sends the original query and an explicit condition option', async () => {
+    const fetch = vi.fn(async () => new Response(JSON.stringify({ hits: [] }), { status: 200 }));
+    vi.stubGlobal('fetch', fetch);
+    await api.search('原查询 n1=15', 5, null, null, 'fts', undefined, false);
+    const body = JSON.parse(String((fetch.mock.calls[0] as unknown as [string, RequestInit])[1].body));
+    expect(body.q).toBe('原查询 n1=15');
+    expect(body.with_conditions).toBe(false);
+  });
   it('keeps a partial event across chunks', () => {
     const first = extractSSEEvents('data: {"t":"tok","v":"你');
     expect(first.events).toHaveLength(0);
