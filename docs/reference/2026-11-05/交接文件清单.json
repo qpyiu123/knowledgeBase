@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-05",
+  "root": "E:\\knowledgeBase",
+  "copied": [
+    "docs\\版本记录.md",
+    "docs\\开发规范.md",
+    "docs\\探索记录.md",
+    "docs\\新会话交接-2026-11-05.md",
+    "docs\\长期开发计划-离线比赛版.md",
+    "AGENTS.md",
+    "docs\\reference\\2026-11-05\\接手基线.json",
+    "docs\\reference\\2026-11-05\\弱模型数据清洗与提炼任务书.md",
+    "docs\\reference\\2026-11-05\\三版项目对比与离线比赛优化建议-2026-11-05.md",
+    "docs\\reference\\2026-11-05\\首批资料质量报告.md",
+    "docs\\reference\\2026-11-05\\项目空间清理记录.md",
+    "docs\\reference\\2026-11-05\\AGENTS.before-2026-11-05.md",
+    "docs\\reference\\2026-11-05\\CTF离线知识库_探索式设计稿_v2.md",
+    "docs\\reference\\2026-11-05\\CTF离线知识库_需求分析与设计建议.md",
+    "docs\\reference\\2026-11-05\\knowledgeBase开发进度分析-2026-11-05.md",
+    "docs\\新会话启动任务.md"
+  ],
+  "updated_existing": [
+    "AGENTS.md",
+    "docs/PROJECT_MEMORY.md",
+    "docs/DEVELOPMENT_PLAN.md",
+    "docs/LONG_TERM_PLAN.md"
+  ],
+  "git_commit": "待新会话审阅后提交",
+  "application_changes": "none"
+}
