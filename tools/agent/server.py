@@ -22,6 +22,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import socket
 import sys
 import threading
 from datetime import datetime, timezone
@@ -1073,14 +1074,6 @@ class Handler(BaseHTTPRequestHandler):
         qs = parse_qs(u.query)
         name = (qs.get("name") or [""])[0]
         workspace = (qs.get("workspace") or [""])[0].strip()
-        if workspace:
-            from agent.workspace import WorkspaceError
-
-            try:
-                _workspace_store().load(workspace)
-            except WorkspaceError as e:
-                self._workspace_error(e)
-                return
         try:
             n = int(self.headers.get("Content-Length", "0") or 0)
         except ValueError:
@@ -1091,6 +1084,22 @@ class Handler(BaseHTTPRequestHandler):
             self._json({"ok": False, "error": "附件为空"}, 400)
             return
         if n > limit:
+            # Windows 关闭仍有未读请求体的连接时可能丢失 413 响应。
+            # 分块丢弃已提交的小附件，不保存，也不解析内容。
+            if n <= ATTACHMENT_HARD_MAX:
+                old_timeout = self.connection.gettimeout()
+                self.connection.settimeout(2)
+                try:
+                    remaining = n
+                    while remaining:
+                        chunk = self.rfile.read(min(remaining, 65536))
+                        if not chunk:
+                            break
+                        remaining -= len(chunk)
+                except (OSError, socket.timeout):
+                    pass
+                finally:
+                    self.connection.settimeout(old_timeout)
             self._json({"ok": False,
                         "error": f"附件过大（上限 {limit} 字节）"}, 413)
             return
@@ -1102,6 +1111,14 @@ class Handler(BaseHTTPRequestHandler):
         if len(raw) != n:
             self._json({"ok": False, "error": "附件读取不完整"}, 400)
             return
+        if workspace:
+            from agent.workspace import WorkspaceError
+
+            try:
+                _workspace_store().load(workspace)
+            except WorkspaceError as e:
+                self._workspace_error(e)
+                return
         try:
             self._json(api_analyze(name, raw, workspace or None))
         except BadRequest as e:

@@ -702,10 +702,11 @@ def test_analyze_rejects_empty_and_long_names(env):
     assert "附件名太长" in json.loads(text)["error"]
 
 
-def test_analyze_rejects_oversize_without_writing(env, monkeypatch):
+@pytest.mark.parametrize("size", [20, 10000, 200000])
+def test_analyze_rejects_oversize_without_writing(env, monkeypatch, size):
     monkeypatch.setenv("AGENT_ATTACHMENT_MAX_BYTES", "8")
     root = env["tmp"] / "attachments"
-    status, text, _ = call_raw(env, "/api/analyze?name=big.bin", b"x" * 20)
+    status, text, _ = call_raw(env, "/api/analyze?name=big.bin", b"x" * size)
 
     assert status == 413
     assert "附件过大" in json.loads(text)["error"]

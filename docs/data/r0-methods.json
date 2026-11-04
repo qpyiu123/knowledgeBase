@@ -1,0 +1,1104 @@
+{
+  "date": "2026-11-05",
+  "cards": 54,
+  "scripts": 52,
+  "items": [
+    {
+      "path": "kb/_methods/aes_ecb_oracle.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/_imported/crypto/AES.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/aes_ecb_oracle.py": [
+          "--selftest",
+          "--demo",
+          "--secret",
+          "--prefix",
+          "--key-hex",
+          "--json"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/ai-ml-extraction.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/ai/model-extraction-membership.md",
+        "kb/ai/prompt-injection.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/ai_ml_extraction.py": [
+          "--probs",
+          "--true-label",
+          "--confidence",
+          "--scan",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/android-apk.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/mobile/apk-static-analysis.md",
+        "kb/mobile/frida-hook.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/android_apk.py": [
+          "--file",
+          "--strings",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/binary_patch.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/reverse/patch-and-keygen.md",
+        "kb/reverse/anti-debugging.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/binary_patch.py": [
+          "--keygen",
+          "--check-serial",
+          "--target",
+          "--length",
+          "--patch",
+          "--file",
+          "--offset",
+          "--mode",
+          "--dis-bytes",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/classical_playfair.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/crypto/classical-cipher.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/classical_playfair.py": [
+          "--selftest",
+          "--key",
+          "--encrypt",
+          "--decrypt",
+          "--crack",
+          "--seed",
+          "--json"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/cyberchef-recipes.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/misc/cyberchef-and-tools.md",
+        "kb/misc/encoding-auto-detect.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/cyberchef_recipes.py": [
+          "--file",
+          "--magic",
+          "--auto",
+          "--recipe",
+          "--xor-brute",
+          "--crib",
+          "--strings",
+          "--min",
+          "--utf16",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/decompress_chain.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/misc/encoding-chain.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/decompress_chain.py": [
+          "--file",
+          "--max-depth",
+          "--out",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/ecdsa_nonce_reuse.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/crypto/ecdsa-nonce-reuse-lattice.md",
+        "kb/crypto/lattice-lll.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/ecdsa_nonce_reuse.py": [
+          "--sigs",
+          "--n",
+          "--curve",
+          "--r",
+          "--s1",
+          "--z1",
+          "--s2",
+          "--z2",
+          "--bias-bits",
+          "--max-k",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/ejs_prototype_pollution_rce.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/web/nodejs-prototype-pollution.md"
+      ],
+      "scripts": {},
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/enc_chain_decode.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/misc/encoding-chain.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/enc_chain_decode.py": [
+          "--data",
+          "--file",
+          "--max-depth",
+          "--stop",
+          "--allow-rot13",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/evm-storage-slot.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/blockchain/evm-storage-slot.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/evm_storage_slot.py": [
+          "--layout",
+          "--dump",
+          "--mapping",
+          "--array",
+          "--index",
+          "--elem-slots",
+          "--string",
+          "--string-bytes",
+          "--data",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/exif-metadata.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/forensics/exif-metadata.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/exif_metadata.py": [
+          "--file",
+          "--keyword",
+          "--gps",
+          "--dms",
+          "--ref",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/file-carving.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/forensics/file-carving.md",
+        "kb/misc/file-repair-and-corruption.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/file_carving.py": [
+          "--image",
+          "--types",
+          "--out",
+          "--min-size",
+          "--list",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/file_upload_bypass.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/web/file-upload-bypass.md",
+        "kb/web/upload-race-and-image-polyglot.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/file_upload_bypass.py": [
+          "--x",
+          "--exts",
+          "--stem",
+          "--ext",
+          "--png",
+          "--polyglot",
+          "--kind",
+          "--php",
+          "--htaccess",
+          "--user-ini",
+          "--race",
+          "--judge",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/hardware-uart.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/hardware/uart-jtag-swd.md",
+        "kb/hardware/logic-analyzer.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/hardware_uart.py": [
+          "--hex",
+          "--file",
+          "--sample-rate",
+          "--baud",
+          "--threshold",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/hash_length_extension.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/crypto/hash-length-extension.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/hash_length_extension.py": [
+          "--algo",
+          "--orig-data",
+          "--orig-sig",
+          "--append",
+          "--secret-len",
+          "--secret-len-range",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/http_smuggling.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/web/http-request-smuggling.md",
+        "kb/web/web-cache-poisoning-deception.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/http_smuggling.py": [
+          "--x",
+          "--build",
+          "--kind",
+          "--smuggled",
+          "--path",
+          "--cl",
+          "--front",
+          "--back",
+          "--te-variants",
+          "--judge",
+          "--cache-probes",
+          "--cache-headers",
+          "--raw",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/java_deser.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/web/java-deserialization.md",
+        "kb/web/jndi-log4shell.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/java_deser.py": [
+          "--x",
+          "--identify",
+          "--payload",
+          "--cmd",
+          "--jar",
+          "--encode-cmd",
+          "--log4j-variants",
+          "--host",
+          "--path",
+          "--choose",
+          "--cc",
+          "--jdk",
+          "--libs",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/jwt_forge.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/web/jwt-forge.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/jwt_forge.py": [
+          "--x",
+          "--decode",
+          "--none",
+          "--variant",
+          "--hs256",
+          "--confuse",
+          "--crack",
+          "--wordlist",
+          "--kid",
+          "--key",
+          "--jku",
+          "--jwk",
+          "--payload",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/lattice_lll.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/crypto/lattice-lll.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/lattice_lll.py": [
+          "--weights",
+          "--target",
+          "--delta",
+          "--reduce-file",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/lcg_parameter_recovery.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/crypto/lcg-predict.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/lcg_parameter_recovery.py": [
+          "--outputs",
+          "--outputs-file",
+          "--predict",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/mt19937_untemper.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/crypto/random-mt19937.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/mt19937_untemper.py": [
+          "--outputs",
+          "--outputs-file",
+          "--predict",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/onchain_base64_decode.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/blockchain/evm-storage-slot.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/enc_chain_decode.py": [
+          "--data",
+          "--file",
+          "--max-depth",
+          "--stop",
+          "--allow-rot13",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/osint-github.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/osint/osint-image-reverse.md",
+        "kb/osint/leaked-data-search.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/osint_github.py": [
+          "--hash-kind",
+          "--hibp",
+          "--distance",
+          "--image",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/otp_many_time_pad.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/crypto/otp-many-time-pad.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/otp_many_time_pad.py": [
+          "--hex",
+          "--files",
+          "--cribs",
+          "--anchor",
+          "--min-printable",
+          "--table",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/php_filter_chain.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/web/php-filter-chain.md",
+        "kb/web/lfi-rfi-and-log-poisoning.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/php_filter_chain.py": [
+          "--x",
+          "--read",
+          "--chain",
+          "--double",
+          "--rot13",
+          "--urlencode",
+          "--decode",
+          "--check",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/pwn_format_string.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/pwn/format-string-arbitrary-write.md",
+        "kb/pwn/format-string-advanced-hhn.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/pwn_format_string.py": [
+          "--x",
+          "--probe",
+          "--write",
+          "--offset",
+          "--count",
+          "--width",
+          "--bytes",
+          "--addr-pack",
+          "--limit",
+          "--hex",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/pwn_ret2libc.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/pwn/ret2libc-offset-leak.md",
+        "kb/pwn/ret2csu.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/pwn_ret2libc.py": [
+          "--x",
+          "--leak",
+          "--sym",
+          "--binsh",
+          "--match",
+          "--base",
+          "--build",
+          "--offset",
+          "--pop-rdi",
+          "--ret",
+          "--got",
+          "--plt",
+          "--back",
+          "--leak-func",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/pwn_shellcode.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/pwn/sandbox-orw-seccomp.md",
+        "kb/pwn/ret2syscall.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/pwn_shellcode.py": [
+          "--x",
+          "--orw",
+          "--openat",
+          "--bufsz",
+          "--srop",
+          "--binsh",
+          "--syscall-ret",
+          "--bss",
+          "--rule",
+          "--check",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/pyc_decompile.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/reverse/pyc-reverse.md",
+        "kb/reverse/static-analysis-ghidra.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/pyc_decompile.py": [
+          "--header",
+          "--walk",
+          "--consts",
+          "--dis",
+          "--unpatch",
+          "--skip",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/pyjail.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/misc/pyjail-escape.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/pyjail.py": [
+          "--cmd",
+          "--ban",
+          "--print",
+          "--json",
+          "--scan",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/python_pickle.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/web/python-pickle-pyjail.md",
+        "kb/misc/pyjail-escape.md",
+        "kb/_imported_cats/misc/Python pickle.loads：加载过程不是普通解析（reference）__fn-python-pickle.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/python_pickle.py": [
+          "--pickle-payload",
+          "--module",
+          "--func",
+          "--arg",
+          "--legacy",
+          "--dis",
+          "--find-index",
+          "--jailcheck",
+          "--code",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/qr-barcode.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/misc/barcode-check-digit.md",
+        "kb/misc/cyberchef-and-tools.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/qr_barcode.py": [
+          "--matrix",
+          "--text",
+          "--pgm",
+          "--modules",
+          "--ean",
+          "--code128",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/rsa_common_modulus_attack.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/crypto/rsa-common-modulus-attack.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/rsa_common_modulus.py": [
+          "--n",
+          "--e1",
+          "--c1",
+          "--e2",
+          "--c2",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/rsa_coppersmith.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/crypto/rsa-coppersmith.md",
+        "kb/crypto/lattice-lll.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/rsa_coppersmith.py": [
+          "--n",
+          "--e",
+          "--c",
+          "--known-high",
+          "--plain-high",
+          "--shift-bits",
+          "--p-low",
+          "--low-bits",
+          "--m",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/rsa_d_modulus.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/crypto/rsa-wiener-attack.md",
+        "kb/_imported/crypto/RSA.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/rsa_d_modulus.py": [
+          "--selftest",
+          "--n",
+          "--e",
+          "--c",
+          "--d",
+          "--phi-multiple",
+          "--json"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/rsa_dp_leak.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/crypto/rsa-wiener-attack.md",
+        "kb/_imported/crypto/RSA.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/rsa_dp_leak.py": [
+          "--selftest",
+          "--n",
+          "--e",
+          "--dp",
+          "--dp-low",
+          "--low-bits",
+          "--json"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/rsa_fermat_factorization.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/crypto/rsa-fermat-factorization.md",
+        "kb/_imported/crypto/RSA.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/rsa_fermat.py": [
+          "--n",
+          "--e",
+          "--c",
+          "--max-iter",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/rsa_hastad_broadcast.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/crypto/rsa-broadcast-attack.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/rsa_hastad_broadcast.py": [
+          "--e",
+          "--pair",
+          "--pairs",
+          "--strip-suffix-hex",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/rsa_padding_oracle.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/_imported/crypto/RSA.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/rsa_padding_oracle.py": [
+          "--selftest",
+          "--demo",
+          "--n",
+          "--e",
+          "--c",
+          "--lsb",
+          "--json"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/rsa_shared_prime_attack.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/crypto/rsa-common-modulus-attack.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/rsa_shared_prime.py": [
+          "--n",
+          "--n-file",
+          "--e",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/rsa_small_e_attack.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/crypto/rsa-small-e-attack.md",
+        "kb/crypto/rsa-broadcast-attack.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/rsa_small_e.py": [
+          "--n",
+          "--e",
+          "--c",
+          "--max-k",
+          "--prefix",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/rsa_wiener_continued_fraction.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/crypto/rsa-wiener-attack.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/rsa_wiener_continued_fraction.py": [
+          "--n",
+          "--e",
+          "--c",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/solana-ctf.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/blockchain/solana-ctf.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/solana_ctf.py": [
+          "--file",
+          "--pda",
+          "--seed-search",
+          "--json",
+          "--verbose",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/solidity-reentrancy.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/blockchain/solidity-reentrancy.md",
+        "kb/blockchain/solidity-integer-overflow.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/solidity_reentrancy.py": [
+          "--file",
+          "--mul",
+          "--sub",
+          "--verbose",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/sql_waf_bypass.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/web/sql-injection-basics.md",
+        "kb/web/sql-injection-waf-bypass.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/sql_waf_bypass.py": [
+          "--x",
+          "--morph",
+          "--probe",
+          "--db",
+          "--check",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/ssrf_internal.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/web/ssrf-internal-access.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/ssrf_internal.py": [
+          "--x",
+          "--ip",
+          "--redis",
+          "--host",
+          "--port",
+          "--write",
+          "--content",
+          "--meta",
+          "--probe",
+          "--check",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/ssti_generic.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/web/ssti-template-injection.md",
+        "kb/web/ssti-blind-and-sandbox-escape.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/ssti_generic.py": [
+          "--engine",
+          "--payload",
+          "--cmd",
+          "--cond",
+          "--style",
+          "--expr",
+          "--detect",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/steg-png-bmp.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/forensics/steganalysis-workflow.md",
+        "kb/misc/file-repair-and-corruption.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/steg_png_bmp.py": [
+          "--file",
+          "--extract-lsb",
+          "--msb",
+          "--channel",
+          "--stride",
+          "--carve-tail",
+          "--zlib-check",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/traffic-pcap.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/forensics/steganalysis-workflow.md",
+        "kb/_imported_cats/misc/File signatures__helloctf-21ca8b99eee52c.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/traffic_pcap.py": [
+          "--file",
+          "--stream",
+          "--hex",
+          "--dns",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/vigenere_autocrack.md",
+      "difficulty": "easy",
+      "sources": [
+        "kb/crypto/classical-cipher.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/vigenere_autocrack.py": [
+          "--cipher",
+          "--max-len",
+          "--key-len",
+          "--key",
+          "--kasiski",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/vm_obfuscation.md",
+      "difficulty": "hard",
+      "sources": [
+        "kb/reverse/vm-protection.md",
+        "kb/reverse/obfuscation-junk.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/vm_obfuscation.py": [
+          "--dis",
+          "--emu",
+          "--hex",
+          "--entry",
+          "--max-steps",
+          "--trace",
+          "--judge",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/xorshift_recovery.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/crypto/lcg-predict.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/xorshift_recovery.py": [
+          "--selftest",
+          "--shifts",
+          "--seed",
+          "--count",
+          "--outs",
+          "--predict",
+          "--brute",
+          "--recover-seed",
+          "--json"
+        ]
+      },
+      "status": "accepted"
+    },
+    {
+      "path": "kb/_methods/zip_password_attack.md",
+      "difficulty": "medium",
+      "sources": [
+        "kb/misc/zip-archive-tricks.md"
+      ],
+      "scripts": {
+        "kb/_methods/scripts/zip_password_attack.py": [
+          "--file",
+          "--wordlist",
+          "--mask",
+          "--known-plaintext",
+          "--plain-file",
+          "--max-tries",
+          "--json",
+          "--selftest"
+        ]
+      },
+      "status": "accepted"
+    }
+  ]
+}

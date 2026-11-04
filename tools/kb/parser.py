@@ -70,15 +70,19 @@ class Doc:
         return d
 
 
-def split_front_matter(text: str) -> tuple[dict[str, Any], str]:
+def split_front_matter(text: str, *, strict: bool = False) -> tuple[dict[str, Any], str]:
     m = FM_RE.match(text)
     if not m:
         return {}, text
     try:
         meta = yaml.safe_load(m.group(1)) or {}
     except yaml.YAMLError:
+        if strict:
+            raise
         return {}, text[m.end():]
     if not isinstance(meta, dict):
+        if strict:
+            raise ValueError("front-matter 必须是字段表")
         meta = {}
     return meta, text[m.end():]
 

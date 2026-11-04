@@ -1,0 +1,17 @@
+{
+  "description": "R0 方法卡特征检查，2026-11-05；不使用完整题名",
+  "queries": [
+    {"id":"r0-ecb","query":"相同明文块 加密后重复 密文块拼接","expected":["_methods/aes_ecb_oracle.md"]},
+    {"id":"r0-signature","query":"两次签名 r 相同 k 重复 私钥","expected":["_methods/ecdsa_nonce_reuse.md"]},
+    {"id":"r0-stack","query":"泄漏 puts 地址 libc 基址 system","expected":["_methods/pwn_ret2libc.md"]},
+    {"id":"r0-template","query":"用户名欢迎语 7*7 回显 49","expected":["_methods/ssti_generic.md"]},
+    {"id":"r0-vm","query":"bytecode pc handler 分发 switch","expected":["_methods/vm_obfuscation.md"]},
+    {"id":"r0-upload","query":"上传图片 后缀 MIME 检查绕过","expected":["_methods/file_upload_bypass.md"]},
+    {"id":"r0-pcap","query":"抓包 HTTP 流量 follow stream","expected":["_methods/traffic-pcap.md"]},
+    {"id":"r0-photo","query":"照片 GPS 坐标 元数据","expected":["_methods/exif-metadata.md"]},
+    {"id":"r0-barcode","query":"13 位数字 末位校验 条码","expected":["_methods/qr-barcode.md"]},
+    {"id":"r0-token","query":"token alg none HS256 RS256","expected":["_methods/jwt_forge.md"]},
+    {"id":"r0-storage","query":"mapping storage keccak 插槽","expected":["_methods/evm-storage-slot.md"]},
+    {"id":"r0-filter","query":"php://filter base64 文件读取","expected":["_methods/php_filter_chain.md"]}
+  ]
+}

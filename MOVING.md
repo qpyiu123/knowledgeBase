@@ -60,27 +60,19 @@ $env:KB_TOOLS_DIR = "D:\my-tools"
 
 ## venv 的注意事项
 
-`.venv/pyvenv.cfg` 里记录的是 **Python 解释器位置**（`C:\Python314`），不是项目路径，
-所以直接复制 venv 到别的盘**仍然可用**（已实测）。
-
-但有两种情况需要重建：
-
-- 换了 Python 版本或 Python 安装位置
-- 从别的电脑复制过来
-
-重建命令：
+虚拟环境依赖创建它的 Python。R0 接手时的旧环境指向已缺失的 `C:/Python314`，
+已保留到 `backup/.venv-before-r0-20261105`。开发环境现用 Python 3.12。
+换机或基础 Python 位置变化后，保留旧环境，再按下面方式重建：
 
 ```powershell
 cd <新路径>/knowledgeBase
-C:\Python314\python.exe -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --cache-dir .cache/pip -r requirements-dev.txt
 ```
 
-> binwalk 需要用源码目录安装，且依赖一个 `imp` 兼容层（Python 3.12+ 已移除该模块）：
-> ```powershell
-> .\.venv\Scripts\python.exe -m pip install ..\tools\binwalk-2.3.1 --no-build-isolation
-> ```
-> `imp.py` 兼容层见 `.venv/Lib/site-packages/imp.py`，重建 venv 后需要重新放一份。
+这组依赖用于离线查询、方法脚本和回归测试，不安装或下载生成模型。
+备份运行 `.\backup.ps1`；恢复使用 `-Restore <压缩包> -Destination <新空目录>`。
+知识库、方法脚本、索引、工作区、反馈及上传附件都会保存，旧备份也会保留。
 
 ## Ollama 模型
 
