@@ -325,6 +325,31 @@ def call_bytes(env, path: str, data: bytes):
         conn.close()
 
 
+def test_api_focus_and_failure_reason_roundtrip(api_env):
+    call(api_env, 'POST', '/api/workspaces', {'title': '卡点', 'id': 'focus'})
+    status, text, _ = call(api_env, 'POST', '/api/workspaces/focus', {
+        'goal': '恢复 m', 'hypotheses': '明文可能相同', 'pending_checks': '比较编码',
+    })
+    assert status == 200
+    assert json.loads(text)['workspace']['hypotheses'] == '明文可能相同'
+    status, text, _ = call(api_env, 'POST', '/api/workspaces/focus/entries', {
+        'kind': 'attempt', 'direction': '共模脚本', 'result': 'failed', 'failure_kind': 'runtime',
+    })
+    assert status == 200
+    entry = json.loads(text)['entry']
+    assert entry['failure_kind'] == 'runtime'
+    status, text, _ = call(api_env, 'POST', '/api/workspaces/focus/entries/' + entry['id'], {'failure_kind': 'condition'})
+    assert status == 200
+    assert json.loads(text)['entry']['failure_kind'] == 'condition'
+    status, text, _ = call(api_env, 'GET', '/api/workspaces/focus/export?format=md&mode=writeup')
+    assert status == 200
+    assert '待验证假设' in text and '失败原因：前提已排除' in text
+    status, _, _ = call(api_env, 'POST', '/api/workspaces/focus', {'goal': {}})
+    assert status == 400
+    status, _, _ = call(api_env, 'POST', '/api/workspaces/focus/entries/' + entry['id'], {'failure_kind': []})
+    assert status == 400
+
+
 def test_api_workspace_crud_and_export(api_env):
     status, text, _ = call(api_env, "POST", "/api/workspaces",
                            {"title": "接口题", "id": "api-case", "category": "misc"})

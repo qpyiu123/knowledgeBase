@@ -543,10 +543,10 @@ def test_ask_includes_workspace_facts_and_failed_attempts(env, monkeypatch):
     assert events[-1]["t"] == "done"
     assert "用户在该题已确认的事实" in system
     assert "题面给了同一个 n" in system
-    assert "已失败的尝试" in system
+    assert "失败原因待确认" in system
     assert "先试共模攻击 → 被 e 相同阻断" in system
     assert "这一步是有效的" not in system
-    assert "避免给出用户已证明无效的思路；可以解释为什么失败。" in system
+    assert "前提已排除的方法不再重复建议；运行出错的尝试先检查环境或脚本。" in system
 
 
 def test_ask_rejects_invalid_workspace_id(env, monkeypatch):

@@ -29,6 +29,7 @@ import { api } from '../api';
 import AttachmentReportView from '../components/AttachmentReport';
 import type {
   AttemptResult,
+  FailureKind,
   Workspace,
   WorkspaceEntry,
   WorkspaceEntryKind,
@@ -54,6 +55,13 @@ const KIND_LABEL: Record<WorkspaceEntryKind, string> = {
   reference: '资料收藏',
 };
 
+const FAILURE_LABEL: Record<FailureKind, string> = {
+  unknown: '原因待确认', runtime: '运行出错', condition: '前提已排除',
+};
+const FOCUS_FIELDS = [
+  ['goal', '当前目标'], ['hypotheses', '待验证假设'], ['pending_checks', '待查项'],
+] as const;
+
 function errorText(e: unknown): string {
   return String((e as Error).message || e);
 }
@@ -75,10 +83,12 @@ export default function WorkspacePage({
   const [newId, setNewId] = useState('');
   const [titleEdit, setTitleEdit] = useState('');
   const [statusEdit, setStatusEdit] = useState<WorkspaceStatus>('open');
+  const [focus, setFocus] = useState({ goal: '', hypotheses: '', pending_checks: '' });
 
   const [kind, setKind] = useState<WorkspaceEntryKind>('fact');
   const [entryText, setEntryText] = useState('');
   const [entryResult, setEntryResult] = useState<AttemptResult>('pending');
+  const [failureKind, setFailureKind] = useState<FailureKind>('unknown');
   const [direction, setDirection] = useState('');
   const [conclusion, setConclusion] = useState('');
   const [refTitle, setRefTitle] = useState('');
@@ -111,6 +121,8 @@ export default function WorkspacePage({
     setWs(r.workspace);
     setTitleEdit(r.workspace.title);
     setStatusEdit(r.workspace.status);
+    setFocus({ goal: r.workspace.goal || '', hypotheses: r.workspace.hypotheses || '',
+      pending_checks: r.workspace.pending_checks || '' });
   }, []);
 
   const refresh = useCallback(async () => {
@@ -170,6 +182,7 @@ export default function WorkspacePage({
       const r = await api.workspaces.update(ws.id, {
         title: titleEdit.trim(),
         status: statusEdit,
+        ...focus,
       });
       setWs(r.workspace);
       onSelect(r.workspace.id, r.workspace.title);
@@ -179,7 +192,7 @@ export default function WorkspacePage({
     } finally {
       setBusy(false);
     }
-  }, [ws, titleEdit, statusEdit, onSelect, loadList]);
+  }, [ws, titleEdit, statusEdit, focus, onSelect, loadList]);
 
   const addEntry = useCallback(async () => {
     if (!ws) {
@@ -194,6 +207,7 @@ export default function WorkspacePage({
       payload.conclusion = conclusion.trim();
       payload.text = entryText.trim();
       payload.result = entryResult;
+      if (entryResult === 'failed') payload.failure_kind = failureKind;
     } else {
       payload.title = refTitle.trim();
       payload.path = refPath.trim();
@@ -209,6 +223,7 @@ export default function WorkspacePage({
       setEntryText('');
       setDirection('');
       setConclusion('');
+      setFailureKind('unknown');
       setRefTitle('');
       setRefPath('');
       setRefAnchor('');
@@ -224,6 +239,7 @@ export default function WorkspacePage({
     kind,
     entryText,
     entryResult,
+    failureKind,
     direction,
     conclusion,
     refTitle,
@@ -234,12 +250,14 @@ export default function WorkspacePage({
   ]);
 
   const changeResult = useCallback(
-    async (entry: WorkspaceEntry, result: string) => {
+    async (entry: WorkspaceEntry, result: string, failure?: FailureKind) => {
       if (!ws) return;
       setBusy(true);
       setError('');
       try {
-        const r = await api.workspaces.updateEntry(ws.id, entry.id, { result });
+        const r = await api.workspaces.updateEntry(ws.id, entry.id, {
+          result, ...(failure ? { failure_kind: failure } : {}),
+        });
         setWs(r.workspace);
       } catch (e) {
         setError(errorText(e));
@@ -439,6 +457,12 @@ export default function WorkspacePage({
                   <Badge variant="outline">{ws.entries.length} 条</Badge>
                 </Group>
               </Group>
+              <Group grow align="stretch" wrap="wrap">
+                {FOCUS_FIELDS.map(([key, label]) => <Textarea key={key} label={label} aria-label={label}
+                  minRows={2} autosize value={focus[key]}
+                  onChange={(e) => { const value = e.currentTarget.value;
+                    setFocus((old) => ({ ...old, [key]: value })); }} />)}
+              </Group>
               <Group align="flex-end" wrap="wrap">
                 <TextInput
                   label="标题"
@@ -547,11 +571,15 @@ export default function WorkspacePage({
                       }))}
                       value={entryResult}
                       onChange={(v) =>
-                        setEntryResult((v as AttemptResult) || 'pending')
+                        { setEntryResult((v as AttemptResult) || 'pending'); setFailureKind('unknown'); }
                       }
                       allowDeselect={false}
                       w={160}
                     />
+                    {entryResult === 'failed' && <Select label="失败原因" aria-label="失败原因"
+                      data={Object.entries(FAILURE_LABEL).map(([value, label]) => ({ value, label }))}
+                      value={failureKind} onChange={(v) => setFailureKind((v as FailureKind) || 'unknown')}
+                      allowDeselect={false} w={170} />}
                   </Group>
                   <Textarea
                     label="结论"
@@ -679,6 +707,12 @@ export default function WorkspacePage({
                             w={140}
                           />
                         )}
+                        {k === 'attempt' && entry.result === 'failed' && <Select
+                          size="xs" mt={6} label="失败原因" aria-label={`失败原因 ${entry.id}`}
+                          data={Object.entries(FAILURE_LABEL).map(([value, label]) => ({ value, label }))}
+                          value={entry.failure_kind || 'unknown'}
+                          onChange={(v) => v && void changeResult(entry, 'failed', v as FailureKind)}
+                          allowDeselect={false} w={170} />}
                         {entry.report && (
                           <Accordion variant="contained" mt="sm">
                             <Accordion.Item value="report">

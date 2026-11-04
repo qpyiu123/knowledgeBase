@@ -30,6 +30,8 @@ SCHEMA_VERSION = 1
 ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 ENTRY_KINDS = ("fact", "attempt", "reference")
 ATTEMPT_RESULTS = ("pending", "success", "failed")
+FAILURE_LABELS = {'unknown': '原因待确认', 'runtime': '运行出错', 'condition': '前提已排除'}
+FOCUS_LABELS = {'goal': '当前目标', 'hypotheses': '待验证假设', 'pending_checks': '待查项'}
 STATUSES = ("open", "solved", "archived")
 
 MAX_TITLE = 120
@@ -164,6 +166,7 @@ def _check_entry(
     direction="",
     conclusion="",
     anchor="",
+    failure_kind="unknown",
 ) -> dict:
     if not isinstance(kind, str) or kind not in ENTRY_KINDS:
         raise WorkspaceError("kind 只能是 fact / attempt / reference")
@@ -179,6 +182,7 @@ def _check_entry(
         raise WorkspaceError("url 只允许 http:// 或 https://")
     if kind == "attempt":
         result = _clean_attempt_result(result)
+        failure_kind = _clean_failure_kind(failure_kind) if result == 'failed' else 'unknown'
         direction = _clean_str(direction, "direction", MAX_DIRECTION)
         conclusion = _clean_str(conclusion, "conclusion", MAX_CONCLUSION)
     else:
@@ -198,9 +202,24 @@ def _check_entry(
         "source": source,
         "direction": direction,
         "conclusion": conclusion,
+        "failure_kind": failure_kind if kind == 'attempt' else None,
         "attachment": _clean_attachment(attachment),
         "report": _clean_report(report) if kind == "reference" else None,
     }
+
+
+def _clean_failure_kind(raw) -> str:
+    if not isinstance(raw, str) or raw not in FAILURE_LABELS:
+        raise WorkspaceError('失败原因只能是 unknown / runtime / condition')
+    return raw
+
+
+def _focus_lines(ws: dict) -> list[str]:
+    lines = []
+    for key, label in FOCUS_LABELS.items():
+        if ws.get(key):
+            lines.extend([f'## {label}', '', str(ws[key]), ''])
+    return lines
 
 
 def _clean_attempt_result(raw) -> str:
@@ -330,6 +349,7 @@ class WorkspaceStore:
             "updated": ts,
             "entries": [],
             "timeline": [],
+            **{key: '' for key in FOCUS_LABELS},
         }
         _event(ws, "create", f"创建工作区「{title}」")
         with _LOCK:
@@ -350,6 +370,8 @@ class WorkspaceStore:
             raise WorkspaceError("工作区文件损坏")
         ws.setdefault("entries", [])
         ws.setdefault("timeline", [])
+        for key in FOCUS_LABELS:
+            ws.setdefault(key, '')
         return ws
 
     def list(self) -> list[dict]:
@@ -368,10 +390,17 @@ class WorkspaceStore:
         out.sort(key=lambda s: str(s.get("updated") or ""), reverse=True)
         return out
 
-    def update(self, workspace_id: str, title=None, status=None, category=None) -> dict:
+    def update(self, workspace_id: str, title=None, status=None, category=None,
+               goal=None, hypotheses=None, pending_checks=None) -> dict:
         with _LOCK:
             ws = self.load(workspace_id)
             changes = []
+            for key, value in (('goal', goal), ('hypotheses', hypotheses), ('pending_checks', pending_checks)):
+                if value is not None:
+                    cleaned = _clean_str(value, FOCUS_LABELS[key], MAX_TEXT)
+                    if cleaned != ws.get(key):
+                        ws[key] = cleaned
+                        changes.append('更新' + FOCUS_LABELS[key])
             if title is not None:
                 new_title = _clean_str(title, "title", MAX_TITLE, required=True)
                 if new_title != ws.get("title"):
@@ -407,10 +436,11 @@ class WorkspaceStore:
         direction="",
         conclusion="",
         anchor="",
+        failure_kind="unknown",
     ) -> tuple[dict, dict]:
         cleaned = _check_entry(kind, text, result, title, path, url,
                                source, attachment, report, direction,
-                               conclusion, anchor)
+                               conclusion, anchor, failure_kind)
         with _LOCK:
             ws = self.load(workspace_id)
             entries = ws.setdefault("entries", [])
@@ -435,6 +465,7 @@ class WorkspaceStore:
         entry_id: str,
         result=None,
         text=None,
+        failure_kind=None,
     ) -> tuple[dict, dict]:
         """更新尝试状态（也允许补充事实/资料备注）。时间线只读，不在此改写。"""
         entry_id = _clean_str(entry_id, "entry_id", 64, required=True)
@@ -447,6 +478,13 @@ class WorkspaceStore:
             if entry is None:
                 raise WorkspaceNotFound("条目不存在")
             changes = []
+            if failure_kind is not None:
+                if entry.get('kind') != 'attempt' or (result or entry.get('result')) != 'failed':
+                    raise WorkspaceError('失败原因只用于无效尝试')
+                new_failure_kind = _clean_failure_kind(failure_kind)
+                if new_failure_kind != entry.get('failure_kind', 'unknown'):
+                    entry['failure_kind'] = new_failure_kind
+                    changes.append('失败原因改为' + FAILURE_LABELS[new_failure_kind])
             if result is not None:
                 if entry.get("kind") != "attempt":
                     raise WorkspaceError("只有尝试条目可以修改状态")
@@ -454,6 +492,8 @@ class WorkspaceStore:
                 if new_result != entry.get("result"):
                     entry["result"] = new_result
                     changes.append(f"状态改为 {new_result}")
+                    if new_result != 'failed':
+                        entry['failure_kind'] = 'unknown'
             if text is not None:
                 new_text = _clean_str(text, "text", MAX_TEXT)
                 if new_text != entry.get("text"):
@@ -501,6 +541,7 @@ class WorkspaceStore:
         lines.append(f"- 更新：{ws.get('updated') or ''}")
         lines.append("")
 
+        lines.extend(_focus_lines(ws))
         groups = (("fact", "事实"), ("attempt", "尝试"), ("reference", "资料收藏"))
         for kind, label in groups:
             items = [e for e in ws.get("entries", []) if e.get("kind") == kind]
@@ -522,6 +563,8 @@ class WorkspaceStore:
                         head += f" 方向：{direction}"
                     if conclusion:
                         head += f"；结论：{conclusion}"
+                    if res == 'failed':
+                        head += '；失败原因：' + FAILURE_LABELS.get(e.get('failure_kind'), '原因待确认')
                     if body:
                         head += f"；备注：{body}"
                     lines.append(head.rstrip())
@@ -573,6 +616,7 @@ class WorkspaceStore:
         lines.append(f"- 工作区：`{ws.get('id')}`")
         lines.append(f"- 记录时间：{ws.get('created') or ''} → {ws.get('updated') or ''}")
         lines.append("")
+        lines.extend(_focus_lines(ws))
 
         lines.append("## 事实")
         if not facts:
@@ -605,6 +649,8 @@ class WorkspaceStore:
                         f"{result_label}（`{result}`）→ {conclusion}"
                         f"（来源 #{e.get('id')}）<!-- entry:{e.get('id')} -->")
                 lines.append(line)
+                if result == 'failed':
+                    lines.append('   - 失败原因：' + FAILURE_LABELS.get(e.get('failure_kind'), '原因待确认'))
                 if note:
                     lines.append(f"   - 备注：{note}")
             lines.append("")

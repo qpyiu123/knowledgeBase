@@ -64,7 +64,7 @@ function summary(ws: Workspace): WorkspaceSummary {
 
 function renderPage(currentId: string, onSelect = vi.fn()) {
   return render(
-    <MantineProvider>
+    <MantineProvider env="test">
       <WorkspacePage currentId={currentId} onSelect={onSelect} />
     </MantineProvider>,
   );
@@ -75,10 +75,62 @@ beforeEach(() => {
   getMock.mockReset();
   createMock.mockReset();
   addEntryMock.mockReset();
+  vi.mocked(wsMock.update).mockReset();
+  vi.mocked(wsMock.updateEntry).mockReset();
   listMock.mockResolvedValue({ workspaces: [] });
 });
 
 describe('WorkspacePage', () => {
+  it('loads and saves goal, hypotheses and pending checks separately', async () => {
+    const ws = makeWorkspace({ goal: '恢复 m', hypotheses: '可能共模', pending_checks: '比较 n' });
+    listMock.mockResolvedValue({ workspaces: [summary(ws)] });
+    getMock.mockResolvedValue({ workspace: ws });
+    vi.mocked(wsMock.update).mockResolvedValue({ ok: true, workspace: ws });
+    renderPage('ws1');
+    await screen.findByDisplayValue('可能共模');
+    fireEvent.change(screen.getByLabelText('当前目标'), { target: { value: '验证 m' } });
+    fireEvent.change(screen.getByLabelText('待查项'), { target: { value: '代回密文' } });
+    fireEvent.click(screen.getByRole('button', { name: '保存' }));
+    await waitFor(() => expect(wsMock.update).toHaveBeenCalledWith('ws1', {
+      title: '示例题', status: 'open', goal: '验证 m', hypotheses: '可能共模', pending_checks: '代回密文',
+    }));
+  });
+
+  it('classifies failed attempts instead of treating every error as an excluded method', async () => {
+    const ws = makeWorkspace();
+    listMock.mockResolvedValue({ workspaces: [summary(ws)] });
+    getMock.mockResolvedValue({ workspace: ws });
+    addEntryMock.mockResolvedValue({ ok: true, workspace: ws,
+      entry: { id: 'a1', created: 'now', kind: 'attempt', text: '' } });
+    renderPage('ws1');
+    await screen.findByText('示例题');
+    fireEvent.click(screen.getByRole('radio', { name: '尝试' }));
+    fireEvent.change(screen.getByLabelText('尝试方向'), { target: { value: '共模脚本' } });
+    fireEvent.click(screen.getByLabelText('尝试状态', { selector: 'input' }));
+    fireEvent.click(await screen.findByRole('option', { name: '无效' }));
+    fireEvent.click(screen.getByLabelText('失败原因', { selector: 'input' }));
+    fireEvent.click(await screen.findByRole('option', { name: '运行出错' }));
+    fireEvent.click(screen.getByRole('button', { name: '添加' }));
+    await waitFor(() => expect(addEntryMock).toHaveBeenCalledWith('ws1', {
+      kind: 'attempt', direction: '共模脚本', conclusion: '', text: '', result: 'failed', failure_kind: 'runtime',
+    }));
+  });
+
+  it('allows correcting the cause of an existing failed attempt', async () => {
+    const ws = makeWorkspace({ entries: [{ id: 'a1', created: 'now', kind: 'attempt', text: '',
+      direction: '广播路径', result: 'failed', failure_kind: 'unknown' }] });
+    listMock.mockResolvedValue({ workspaces: [summary(ws)] });
+    getMock.mockResolvedValue({ workspace: ws });
+    vi.mocked(wsMock.updateEntry).mockResolvedValue({ ok: true, workspace: ws, entry: ws.entries[0] });
+    renderPage('ws1');
+    const reason = await screen.findByLabelText('失败原因 a1', { selector: 'input' });
+    fireEvent.click(reason);
+    await waitFor(() => expect(reason.getAttribute('data-expanded')).toBe('true'));
+    fireEvent.click(await screen.findByRole('option', { name: '前提已排除' }));
+    await waitFor(() => expect(wsMock.updateEntry).toHaveBeenCalledWith('ws1', 'a1', {
+      result: 'failed', failure_kind: 'condition',
+    }));
+  });
   it('creates a user-named workspace and selects it', async () => {
     const created = makeWorkspace({ id: 'ws-new', title: '新题' });
     createMock.mockResolvedValue({ ok: true, workspace: created });

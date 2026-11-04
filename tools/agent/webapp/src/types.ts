@@ -192,6 +192,7 @@ export type AttachmentReport = {
 
 export type WorkspaceEntryKind = 'fact' | 'attempt' | 'reference';
 export type AttemptResult = 'pending' | 'success' | 'failed';
+export type FailureKind = 'unknown' | 'runtime' | 'condition';
 export type WorkspaceStatus = 'open' | 'solved' | 'archived';
 
 export type WorkspaceEntry = {
@@ -202,6 +203,7 @@ export type WorkspaceEntry = {
   result?: AttemptResult | null;
   direction?: string;
   conclusion?: string;
+  failure_kind?: FailureKind | null;
   title?: string;
   path?: string;
   anchor?: string;
@@ -218,6 +220,9 @@ export type TimelineEvent = {
 };
 
 export type Workspace = {
+  goal?: string;
+  hypotheses?: string;
+  pending_checks?: string;
   schema_version: number;
   id: string;
   title: string;

@@ -2,6 +2,7 @@ import type {
   AttachmentReport,
   CodeResp,
   DocumentResp,
+  FailureKind,
   Health,
   SearchResp,
   Stats,
@@ -124,7 +125,8 @@ export const api = {
       }),
     update: (
       id: string,
-      patch: { title?: string; status?: WorkspaceStatus; category?: string | null },
+      patch: { title?: string; status?: WorkspaceStatus; category?: string | null;
+        goal?: string; hypotheses?: string; pending_checks?: string },
     ) =>
       postJSON<{ ok: boolean; workspace: Workspace }>(wsPath(id), patch),
     remove: (id: string) => delJSON<{ ok: boolean }>(wsPath(id)),
@@ -136,6 +138,7 @@ export const api = {
         result?: string;
         direction?: string;
         conclusion?: string;
+        failure_kind?: FailureKind;
         title?: string;
         path?: string;
         anchor?: string;
@@ -152,7 +155,7 @@ export const api = {
     updateEntry: (
       id: string,
       entryId: string,
-      patch: { result?: string; text?: string },
+      patch: { result?: string; text?: string; failure_kind?: FailureKind },
     ) =>
       postJSON<{ ok: boolean; workspace: Workspace; entry: WorkspaceEntry }>(
         wsPath(id) + '/entries/' + encodeURIComponent(entryId),
