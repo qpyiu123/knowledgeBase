@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "id": "2020-wangding-you-raise-me-up",
+      "event": "网鼎杯青龙组",
+      "year": 2020,
+      "title": "you_raise_me_up",
+      "category": "crypto",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=5ee6edd2-4fc9-46c9-b6b1-44e5fa5ca197",
+      "file": "crypto/2020-wangding-you-raise-me-up/attachment.zip",
+      "sha256": "406c466ac4814db3fe3f60ca46ccd42a6f39e2ac5598b4a32b23568d5f839a4a",
+      "kind_contains": "ZIP",
+      "queries": [
+        {"stage": "report", "q": "ZIP 附件只有一个未加密的 Python 脚本，怎么只读查看源码和确认题目参数？"},
+        {"stage": "observed", "category": "crypto", "q": "Python 源码里已知奇数底数和模幂输出，模数是 2 的幂，未知的是指数。先核对哪些条件？"}
+      ],
+      "review": "报告阶段需要能定位 ZIP 成员和只读查看；补充阶段要区分未知指数和未知底数，并考虑模数为 2 的幂的限制。"
+    },
+    {
+      "id": "2020-utctf-basic-re",
+      "event": "UTCTF",
+      "year": 2020,
+      "title": "basic-re",
+      "category": "reverse",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=16a16a0a-0b31-42c2-878f-a02a4fdb44ab",
+      "file": "reverse/2020-utctf-basic-re/attachment",
+      "sha256": "72a30e49df1ed5ee34ff3af32197680b2041a5677e01dc6929f7059532a9bc8f",
+      "kind_contains": "ELF",
+      "queries": [
+        {"stage": "report", "q": "无扩展名附件识别为 Linux ELF，不运行程序，逆向入门先看什么？"},
+        {"stage": "observed", "category": "reverse", "q": "x86-64 ELF 里能看到 scanf、printf、main，静态阅读时怎么从输入定位校验？"}
+      ],
+      "review": "先辨认架构和程序入口；能说明如何沿输入引用定位校验即可，不要求恢复输入。"
+    }
+  ]
+}
