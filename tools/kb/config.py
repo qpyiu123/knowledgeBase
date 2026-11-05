@@ -35,7 +35,8 @@ chunk_chars = 900
 chunk_overlap = 120
 
 [embed]
-model_dir = "models/bge-small-zh-v1.5"
+model_dir = "models/bge-small-zh-v1.5-onnx"
+onnx_dir = "models/bge-small-zh-v1.5-onnx"
 model_id = "BAAI/bge-small-zh-v1.5"
 query_prefix = "为这个句子生成表示以用于检索相关文章："
 batch_size = 32

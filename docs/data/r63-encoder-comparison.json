@@ -1,0 +1,194 @@
+{
+  "date": "2026-11-05",
+  "hardware": "Windows 10, i7-13700K, RTX 4070, 4 threads",
+  "docs": 1917,
+  "labeled_queries": 112,
+  "unlabeled_real_queries": 4,
+  "selected": "BGE-small-zh-v1.5 ONNX int8",
+  "builds": {
+    "bge_cpu": {
+      "chunks": 15926,
+      "dim": 512,
+      "backend": "sqlite-vec",
+      "enabled": true,
+      "seconds": 229.3,
+      "index_bytes": 50704384
+    },
+    "qwen_vulkan": {
+      "chunks": 15926,
+      "dim": 1024,
+      "backend": "sqlite-vec",
+      "enabled": true,
+      "seconds": 241.37,
+      "index_bytes": 84267008
+    }
+  },
+  "runs": {
+    "vulkan_build": {
+      "bge_cold_seconds": 0.577,
+      "qwen_cold_seconds": 2.595,
+      "fts": {
+        "summary": {
+          "search_queries.json": {
+            "n": 22,
+            "top1": 18,
+            "top5": 22,
+            "mrr": 0.9091
+          },
+          "search_queries_expanded.json": {
+            "n": 60,
+            "top1": 54,
+            "top5": 60,
+            "mrr": 0.9472
+          },
+          "r1_quick_lookup.json": {
+            "n": 30,
+            "top1": 22,
+            "top5": 29,
+            "mrr": 0.8344
+          }
+        },
+        "query_latency": {
+          "median_ms": 40.81,
+          "p95_ms": 103.22
+        }
+      },
+      "bge": {
+        "summary": {
+          "search_queries.json": {
+            "n": 22,
+            "top1": 20,
+            "top5": 22,
+            "mrr": 0.9545
+          },
+          "search_queries_expanded.json": {
+            "n": 60,
+            "top1": 50,
+            "top5": 60,
+            "mrr": 0.9167
+          },
+          "r1_quick_lookup.json": {
+            "n": 30,
+            "top1": 23,
+            "top5": 29,
+            "mrr": 0.8556
+          }
+        },
+        "query_latency": {
+          "median_ms": 58.19,
+          "p95_ms": 104.8
+        }
+      },
+      "qwen": {
+        "summary": {
+          "search_queries.json": {
+            "n": 22,
+            "top1": 19,
+            "top5": 22,
+            "mrr": 0.9182
+          },
+          "search_queries_expanded.json": {
+            "n": 60,
+            "top1": 54,
+            "top5": 60,
+            "mrr": 0.95
+          },
+          "r1_quick_lookup.json": {
+            "n": 30,
+            "top1": 22,
+            "top5": 29,
+            "mrr": 0.8333
+          }
+        },
+        "query_latency": {
+          "median_ms": 97.86,
+          "p95_ms": 178.59
+        }
+      }
+    },
+    "cpu_replay": {
+      "bge_cold_seconds": 0.183,
+      "qwen_cold_seconds": 0.907,
+      "bge_process_peak_mib": 126.73,
+      "qwen_process_peak_mib": 1138.74,
+      "fts": {
+        "summary": {
+          "search_queries.json": {
+            "n": 22,
+            "top1": 18,
+            "top5": 22,
+            "mrr": 0.9091
+          },
+          "search_queries_expanded.json": {
+            "n": 60,
+            "top1": 54,
+            "top5": 60,
+            "mrr": 0.9472
+          },
+          "r1_quick_lookup.json": {
+            "n": 30,
+            "top1": 22,
+            "top5": 29,
+            "mrr": 0.8344
+          }
+        },
+        "query_latency": {
+          "median_ms": 31.3,
+          "p95_ms": 77.48
+        }
+      },
+      "bge": {
+        "summary": {
+          "search_queries.json": {
+            "n": 22,
+            "top1": 20,
+            "top5": 22,
+            "mrr": 0.9545
+          },
+          "search_queries_expanded.json": {
+            "n": 60,
+            "top1": 50,
+            "top5": 60,
+            "mrr": 0.9167
+          },
+          "r1_quick_lookup.json": {
+            "n": 30,
+            "top1": 23,
+            "top5": 29,
+            "mrr": 0.8556
+          }
+        },
+        "query_latency": {
+          "median_ms": 59.09,
+          "p95_ms": 103.27
+        }
+      },
+      "qwen": {
+        "summary": {
+          "search_queries.json": {
+            "n": 22,
+            "top1": 19,
+            "top5": 22,
+            "mrr": 0.9182
+          },
+          "search_queries_expanded.json": {
+            "n": 60,
+            "top1": 54,
+            "top5": 60,
+            "mrr": 0.95
+          },
+          "r1_quick_lookup.json": {
+            "n": 30,
+            "top1": 22,
+            "top5": 29,
+            "mrr": 0.8333
+          }
+        },
+        "query_latency": {
+          "median_ms": 170.38,
+          "p95_ms": 266.49
+        }
+      }
+    }
+  }
+}

@@ -41,15 +41,11 @@ class KB:
     def __init__(self, cfg: Config):
         self.cfg = cfg
         self.fts = FtsIndex(cfg.index_dir / "fts.db")
-        import os
         onnx_dir = cfg.resolve(str(cfg.get("embed", "onnx_dir", "models/bge-small-zh-v1.5-onnx")))
         self.embedder = Embedder(
             cfg.resolve(str(cfg.get("embed", "model_dir"))),
             query_prefix=str(cfg.get("embed", "query_prefix", "")),
             onnx_dir=onnx_dir,
-            gguf_fallback=cfg.resolve(str(cfg.get("embed", "gguf_fallback",
-                                                   "models/gguf/bge-small-zh-v1.5-q8_0.gguf"))),
-            allow_numpy=os.environ.get("KB_ALLOW_NUMPY_EMBED") == "1",
         )
         self.vec = VectorIndex(cfg.index_dir / "vectors.db", self.embedder)
         self._llm: BaseBackend | None = None
