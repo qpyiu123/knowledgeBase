@@ -1,0 +1,40 @@
+{
+  "runtime_release": "b11669",
+  "default_model": "qwen35-9b",
+  "artifacts": [
+    {
+      "id": "qwen35-4b",
+      "role": "chat",
+      "path": "models/gguf/Qwen3.5-4B-Q4_K_M.gguf",
+      "url": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/Qwen3.5-4B-Q4_K_M.gguf",
+      "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+      "bytes": 2740937888,
+      "source_repository": "unsloth/Qwen3.5-4B-GGUF",
+      "source_revision": "e87f176479d0855a907a41277aca2f8ee7a09523",
+      "publisher": "unsloth",
+      "base_model": "Qwen/Qwen3.5-4B"
+    },
+    {
+      "id": "qwen35-9b",
+      "role": "chat",
+      "path": "models/gguf/Qwen3.5-9B-Q4_K_M.gguf",
+      "url": "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/resolve/3885219b6810b007914f3a7950a8d1b469d598a5/Qwen3.5-9B-Q4_K_M.gguf",
+      "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+      "bytes": 5680522464,
+      "source_repository": "unsloth/Qwen3.5-9B-GGUF",
+      "source_revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+      "publisher": "unsloth",
+      "base_model": "Qwen/Qwen3.5-9B"
+    },
+    {
+      "id": "vulkan",
+      "role": "runtime",
+      "path": "runtime/llama-b11669-vulkan/llama-server.exe",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11669/llama-b11669-bin-win-vulkan-x64.zip",
+      "source_revision": "b11669",
+      "publisher": "ggml-org",
+      "archive_bytes": 32182350,
+      "archive_sha256": "2c07574e7bde71321cb785282b20cc821e951132149eeceeea32ddebdbf0598e"
+    }
+  ]
+}

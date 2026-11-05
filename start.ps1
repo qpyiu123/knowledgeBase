@@ -1,6 +1,6 @@
 ﻿# CTF 知识库 一键启动
 #
-#   .\start.ps1              直接运行即启动 Ollama + Web 搜索界面，并打开浏览器
+#   .\start.ps1              启动 Qwen3.5 + Web 搜索界面，并打开浏览器
 #   .\start.ps1 -Start       同上（显式启动开关）
 #   .\start.ps1 -Stop        停止全部服务
 #   .\start.ps1 -Status      只看状态（[Web] / [索引] / [模型] 三层独立显示）
@@ -8,10 +8,11 @@
 #   .\start.ps1 -NoBrowser   不自动开浏览器
 #   .\start.ps1 -CpuOnly     强制 CPU 推理（显存被别的程序占了时用）
 #   .\start.ps1 -NoModel     只启动查询界面
+#   .\start.ps1 -ChatModel qwen35-4b  使用可选的 4B 模型（默认 9B）
 #   .\start.ps1 -PythonExe <路径>  临时选择 Python（也可使用 KB_PYTHON / config.toml）
 #   .\start.ps1 -CheckEnvironment  检查实际 Python 与依赖，不启动服务
 #
-# 说明：本脚本自己拉起 ollama serve 和 Web 服务，都写到 logs/ 下。
+# 说明：本脚本拉起配置中选择的模型服务和 Web，日志写到 logs/ 下。
 #      pid 文件记录的是按端口反查到的“真实监听进程”，不是 Start-Process 外壳；
 #      -Stop 先按监听端口关闭，再核对 pid 文件，避免关错或留下孤儿监听。
 
@@ -26,11 +27,15 @@ param(
     [switch]$CheckEnvironment,
     [string]$PythonExe = '',
     [string]$LogDirectory = '',
+    [ValidateSet('', 'qwen35-9b', 'qwen35-4b')]
+    [string]$ChatModel = '',
     [int]$Port = 8765,
     [int]$OllamaPort = 11434
 )
 
 $ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+$OutputEncoding = [Console]::OutputEncoding
 $Root  = $PSScriptRoot
 . (Join-Path $Root 'tools\python-runtime.ps1')
 $RuntimeChoice = $null
@@ -54,6 +59,11 @@ $OlLib = Join-Path $Root 'models\ollama-server\lib\ollama'
 $OlMod = Join-Path $Root 'models\ollama-models'
 $BuildScript = Join-Path $Root 'tools\agent\buildinfo.py'
 $CliScript   = Join-Path $Root 'tools\cli.py'
+$LlamaScript = Join-Path $Root 'tools\llama_runtime.py'
+$PreviousChatModel = $env:KB_CHAT_MODEL
+try {
+$Backend = 'llama_server'
+if ($ChatModel) { $env:KB_CHAT_MODEL = $ChatModel }
 
 New-Item -ItemType Directory -Force -Path $LogD | Out-Null
 
@@ -67,6 +77,10 @@ if ($CheckEnvironment) {
     $report | Add-Member -NotePropertyName selected_by -NotePropertyValue $RuntimeChoice.Source
     $report | ConvertTo-Json -Depth 6
     return
+}
+if ($Venv) {
+    $LlamaConfig = (& $Venv -X utf8 $LlamaScript command | ConvertFrom-Json)
+    $Backend = $LlamaConfig.backend
 }
 
 # ---------------------------------------------------------------- 工具函数
@@ -194,6 +208,12 @@ function Show-StartupAdvice([int]$p) {
 }
 
 function Show-ModelStatus {
+    if ($Backend -in @('none', 'off')) { Ok '模型解释已关闭'; return }
+    if ($Backend -eq 'llama_server') {
+        if ($Venv) { & $Venv -X utf8 $LlamaScript status }
+        else { Warn '请指定可用 Python 后检查模型状态' }
+        return
+    }
     try {
         $op = Get-PortPid $OllamaPort
         if (-not $op) {
@@ -495,6 +515,7 @@ if ($Stop) {
     Stop-Listening $Port 'Web 界面' | Out-Null
     if (-not $NoModel) { Stop-Listening $OllamaPort 'Ollama' | Out-Null }
     Stop-PidFile (Join-Path $LogD 'web.pid') 'Web 界面'
+    if (-not $NoModel) { Stop-PidFile (Join-Path $LogD 'llama.pid') 'Qwen3.5 模型服务' }
     if (-not $NoModel) { Stop-PidFile (Join-Path $LogD 'ollama.pid') 'Ollama' }
     Say ''
     if ($NoModel) { Ok '查询服务已停止' } else { Ok '全部停止' }
@@ -582,11 +603,17 @@ Show-IndexFreshness
 
 # ---------------------------------------------------------------- Ollama
 Say ''
-Say '=== 2. Ollama 模型服务 ===' 'Cyan'
+Say '=== 2. 模型服务 ===' 'Cyan'
 
 $olPid = Get-PortPid $OllamaPort
-if ($NoModel) {
+if ($NoModel -or $Backend -in @('none', 'off')) {
     Ok '仅启动查询界面，不启动生成模型服务'
+} elseif ($Backend -eq 'llama_server') {
+    $llamaArgs = @($LlamaScript, 'start', '--log-dir', $LogD)
+    if ($ChatModel) { $llamaArgs += @('--model', $ChatModel) }
+    if ($CpuOnly) { $llamaArgs += '--cpu' }
+    & $Venv -X utf8 @llamaArgs
+    if ($LASTEXITCODE -ne 0) { Warn '模型服务启动失败，可先使用资料查询；原因见上方提示和日志' }
 } elseif ($olPid) {
     Show-ModelStatus
 } else {
@@ -707,3 +734,9 @@ Say '  .\start.ps1 -Reindex  重建索引' 'DarkGray'
 Say '  .\start.ps1 -Stop     停止全部服务' 'DarkGray'
 Say '  .\start.ps1 -Stop -NoModel  只停止查询服务' 'DarkGray'
 Say ''
+} finally {
+    if ($ChatModel) {
+        if ($null -eq $PreviousChatModel) { Remove-Item -LiteralPath 'Env:\KB_CHAT_MODEL' -ErrorAction SilentlyContinue }
+        else { $env:KB_CHAT_MODEL = $PreviousChatModel }
+    }
+}

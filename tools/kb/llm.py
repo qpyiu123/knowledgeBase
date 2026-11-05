@@ -10,7 +10,8 @@
 | Ollama + num_gpu=0        |  9.7 tok/s | 纯 CPU 对照 |
 | llama-cpp-python 直载 3B  |  9.6 tok/s | pip wheel 无 CUDA 后端 |
 
-所以**默认走 Ollama**（能真正用上 GPU），llama-cpp-python 作为离线备用。
+以上为历史开发机数据。当前默认使用独立 llama-server / Vulkan，
+Qwen3.5-9B 默认、4B 可选；Ollama 和 Python 直载保留显式兼容入口。
 """
 from __future__ import annotations
 
@@ -348,6 +349,9 @@ def get_backend(cfg: Config, force: str | None = None) -> BaseBackend | None:
         return None
     if backend == "ollama":
         return OllamaBackend(cfg)
+    if backend == 'llama_server':
+        from .llama_server import LlamaServerBackend
+        return LlamaServerBackend(cfg)
     if backend in ("llama_cpp", "llamacpp", "gguf"):
         return LlamaCppBackend(cfg)
     raise LLMError(f"未知 backend: {backend}")

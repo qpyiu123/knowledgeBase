@@ -41,17 +41,23 @@ query_prefix = "为这个句子生成表示以用于检索相关文章："
 batch_size = 32
 
 [llm]
-backend = "llama_cpp"        # llama_cpp | ollama | none
-gguf_path = "models/gguf/qwen2.5-coder-7b-instruct-q4_k_m.gguf"
+backend = "llama_server"
+gguf_path = "models/gguf/Qwen3.5-9B-Q4_K_M.gguf"
 chat_format = "chatml"
-n_ctx = 6144
-n_gpu_layers = 20
+n_ctx = 8192
+n_gpu_layers = 99
 kv_cache_type = "q8_0"
-n_threads = 8
+n_threads = 6
 n_batch = 256
 temperature = 0.2
 max_tokens = 1200
 timeout = 300
+
+[llama_server]
+model = "qwen35-9b"
+runtime = "runtime/llama-b11669-vulkan"
+port = 8766
+device = "auto"
 
 [ollama]
 host = "http://127.0.0.1:11434"

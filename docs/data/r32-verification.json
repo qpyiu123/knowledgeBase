@@ -1,0 +1,102 @@
+{
+  "date": "2026-11-05",
+  "python_tests": 436,
+  "frontend_tests": 49,
+  "platform": "Windows 10 x64",
+  "vulkan_device": "RTX 4070 / 12GB, Vulkan0",
+  "context_in_real_model_test": 2048,
+  "cpu": {
+    "ok": true,
+    "python": "3.13.17",
+    "models": [
+      {
+        "model": "qwen35-9b",
+        "cpu": true,
+        "context": 2048,
+        "load_ms": 51684.6,
+        "text": "可用",
+        "completion_tokens": 2,
+        "tokens_per_sec": 2.83,
+        "stream_text": "OK"
+      },
+      {
+        "model": "qwen35-4b",
+        "cpu": true,
+        "context": 2048,
+        "load_ms": 28322.9,
+        "text": "可用",
+        "completion_tokens": 2,
+        "tokens_per_sec": 4.83,
+        "stream_text": "OK"
+      }
+    ],
+    "own_processes_stopped": true,
+    "vulkan_inference_tested": false
+  },
+  "vulkan": {
+    "ok": true,
+    "python": "3.13.17",
+    "models": [
+      {
+        "model": "qwen35-9b",
+        "cpu": false,
+        "device": "Vulkan0",
+        "context": 2048,
+        "load_ms": 8382.7,
+        "text": "可用",
+        "completion_tokens": 2,
+        "tokens_per_sec": 0.85,
+        "stream_text": "OK"
+      },
+      {
+        "model": "qwen35-4b",
+        "cpu": false,
+        "device": "Vulkan0",
+        "context": 2048,
+        "load_ms": 4227.2,
+        "text": "可用",
+        "completion_tokens": 2,
+        "tokens_per_sec": 31.04,
+        "stream_text": "OK"
+      }
+    ],
+    "own_processes_stopped": true,
+    "vulkan_inference_tested": true
+  },
+  "powershell": {
+    "ok": true,
+    "powershell": "5.1",
+    "model": "qwen35-4b",
+    "backend": "llama_server",
+    "runtime": {
+      "executable": "E:\\knowledgeBase\\runtime\\python-portable\\python.exe",
+      "version": "3.13.17",
+      "pid": 22252
+    },
+    "query_and_index": true,
+    "sse": [
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "tok",
+      "done"
+    ],
+    "text": "### 1. 判断依据\nRSA 共模攻击（Common Mod"
+  },
+  "temporary_model_env_restored": true,
+  "portable_query_recheck": true,
+  "r1_direct_at_5": 29,
+  "r1_direct_or_linked_at_5": 30
+}

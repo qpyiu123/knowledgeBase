@@ -209,7 +209,7 @@ def _strip_front_matter(text: str) -> str:
     return text
 
 
-def _collect_sources(kb, paths) -> tuple[list[str], str | None]:
+def _collect_sources(kb, paths, query: str = '') -> tuple[list[str], str | None]:
     """读取并截断知识库正文；返回 (parts, error)。"""
     if not isinstance(paths, list):
         return [], "paths 必须是数组"
@@ -235,7 +235,8 @@ def _collect_sources(kb, paths) -> tuple[list[str], str | None]:
         remain = MAX_CONTEXT_CHARS - used
         if remain <= 0:
             break
-        chunk = text[: min(MAX_PER_DOC_CHARS, remain)]
+        from kb.excerpts import select_excerpt
+        chunk = select_excerpt(text, query, limit=min(MAX_PER_DOC_CHARS, remain))
         parts.append(f"【{rel}】\n{chunk}")
         used += len(chunk)
     if not parts:
@@ -784,7 +785,7 @@ def _ask_stream(q: str, paths: list[str], workspace_context: str = ""):
     import requests
 
     kb = get_kb()
-    parts, err = _collect_sources(kb, paths)
+    parts, err = _collect_sources(kb, paths, q)
     if err:
         yield _sse({"t": "err", "v": err})
         return
@@ -810,10 +811,32 @@ def _ask_stream(q: str, paths: list[str], workspace_context: str = ""):
     system = ASK_SYSTEM
     if workspace_context:
         system = system + "\n\n" + workspace_context
-    payload = _ask_payload([
+    messages = [
         {"role": "system", "content": system},
         {"role": "user", "content": user},
-    ])
+    ]
+    if _cfg('llm', 'backend', 'ollama') == 'llama_server':
+        from kb.llm import get_backend
+        stream = None
+        pieces = 0
+        try:
+            stream = get_backend(CFG).stream(messages, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
+            for piece in stream:
+                pieces += 1
+                yield _sse({'t': 'tok', 'v': piece})
+            if pieces:
+                yield _sse({'t': 'done', 'info': f'{pieces} 段'})
+            else:
+                yield _sse({'t': 'err', 'v': '模型没有返回内容。'})
+        except GeneratorExit:
+            raise
+        except Exception as error:
+            yield _sse({'t': 'err', 'v': str(error)})
+        finally:
+            if stream is not None:
+                stream.close()
+        return
+    payload = _ask_payload(messages)
 
     import time
     t0 = time.time()
@@ -1174,12 +1197,28 @@ class Handler(BaseHTTPRequestHandler):
     def _health(self):
         import requests
         index = _index_status()
-        if GENERATION_DISABLED:
+        if GENERATION_DISABLED or _cfg('llm', 'backend', 'ollama') in ('none', 'off'):
             self._json({"ok": False, "model_ok": False, "index_ok": index["ok"],
                         "runtime": PYTHON_INFO, "generation_enabled": False,
-                        "build": BUILD_ID, "config": CONFIG_ID, "model": MODEL,
+                        "build": BUILD_ID, "config": CONFIG_ID,
+                        "model": (os.environ.get('KB_CHAT_MODEL') or _cfg('llama_server', 'model', 'qwen35-9b'))
+                        if _cfg('llm', 'backend', 'ollama') == 'llama_server' else MODEL,
                         "models": [], "index": index, "docs": index.get("docs", 0),
                         "error": "模型解释已关闭", "attachment": {"max_bytes": _attachment_max_bytes()}})
+            return
+        if _cfg('llm', 'backend', 'ollama') == 'llama_server':
+            from kb.llama_server import LlamaServerBackend
+            try:
+                backend = LlamaServerBackend(CFG)
+                ok, detail = backend.health()
+                self._json({'ok': ok, 'model_ok': ok, 'index_ok': index['ok'],
+                            'runtime': PYTHON_INFO, 'generation_enabled': True, 'build': BUILD_ID,
+                            'config': CONFIG_ID, 'model': backend.model, 'models': [backend.model] if ok else [],
+                            'backend': backend.name, 'index': index, 'docs': index.get('docs', 0),
+                            'error': '' if ok else detail, 'attachment': {'max_bytes': _attachment_max_bytes()}})
+            except Exception as error:
+                self._json({'ok': False, 'model_ok': False, 'index_ok': index['ok'],
+                            'runtime': PYTHON_INFO, 'index': index, 'error': str(error)})
             return
         try:
             r = requests.get(f"{OLLAMA}/api/tags", timeout=4)
@@ -1282,8 +1321,8 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if u.path == "/api/ask":
-            if GENERATION_DISABLED:
-                self._json({"error": "模型解释已关闭，请去掉 -NoModel 后重新启动本项目服务"}, 503)
+            if GENERATION_DISABLED or _cfg('llm', 'backend', 'ollama') in ('none', 'off'):
+                self._json({"error": "模型解释已关闭。请先停止本项目服务，启用 config.toml 中的模型后端，再去掉 -NoModel 重新启动"}, 503)
                 return
             try:
                 q = _check_query(req.get("q", ""))
@@ -1379,9 +1418,12 @@ class Handler(BaseHTTPRequestHandler):
 
 def main() -> int:
     print(f"CTF 知识库  http://{HOST}:{PORT}")
-    print(f"  模型: {MODEL}")
-    print(f"  Ollama: {OLLAMA}")
-    print("  首次搜索会加载嵌入模型（约 1-2 秒）")
+    if _cfg('llm', 'backend', 'ollama') == 'llama_server':
+        from kb.llama_server import base_url, model_id
+        print(f'  模型: {model_id(CFG)} / {base_url(CFG)}')
+    else:
+        print(f"  模型: {MODEL} / {OLLAMA}")
+    print('  关键词查询读取现有索引，语义检索按需加载')
     srv = ThreadingHTTPServer((HOST, PORT), Handler)
     try:
         srv.serve_forever()

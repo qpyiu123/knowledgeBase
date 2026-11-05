@@ -507,6 +507,37 @@ def test_search_conditions_are_optional_and_preserve_hit_order(env, monkeypatch)
     assert status == 400
 
 
+def test_qwen35_web_uses_shared_backend_and_preserves_sse(env, monkeypatch):
+    from kb.config import Config
+    cfg = Config()
+    cfg.data['llm']['backend'] = 'llama_server'
+    cfg.data['llama_server'] = {'model': 'qwen35-9b', 'port': 8766}
+    monkeypatch.setattr(server, 'CFG', cfg)
+    monkeypatch.setattr('requests.get', lambda *a, **k: FakeResp(payload={'data': [{'id': 'qwen35-9b'}]}))
+    response = FakeResp(lines=[b'data: {"choices":[{"delta":{"content":"ok"}}]}', b'data: [DONE]'])
+    seen = []
+    def post(url, **kwargs):
+        seen.append((url, kwargs['json']))
+        return response
+    monkeypatch.setattr('requests.post', post)
+    status, text, _ = call(env, 'POST', '/api/ask', {'q': 'RSA', 'paths': ['crypto/rsa.md']})
+    assert status == 200
+    assert [event['t'] for event in sse_events(text)] == ['tok', 'done']
+    assert seen[0][0].endswith('/v1/chat/completions')
+    assert seen[0][1]['model'] == 'qwen35-9b'
+    assert response.closed
+
+
+def test_config_can_disable_generation_without_model_requests(env, monkeypatch):
+    monkeypatch.setattr(env['kb'].cfg, 'get', lambda section, key, default=None:
+                        'none' if (section, key) == ('llm', 'backend') else default)
+    monkeypatch.setattr('requests.post', lambda *a, **k: pytest.fail('不应请求模型'))
+    status, text, _ = call(env, 'POST', '/api/ask', {'q': 'RSA', 'paths': ['crypto/rsa.md']})
+    assert status == 503 and '模型解释已关闭' in text
+    status, text, _ = call(env, 'GET', '/api/health')
+    assert status == 200 and json.loads(text)['generation_enabled'] is False
+
+
 def _ask_capture(monkeypatch):
     fake = FakeResp(lines=[b'{"message":{"content":"ok"},"done":true}'])
     seen: dict = {}

@@ -171,12 +171,15 @@ class KB:
         return g.expand(seeds, hops=hops).to_dict()
 
     # ---------- 上下文组装 ----------
-    def build_context(self, hits: list[FusedHit], char_budget: int = 7000) -> str:
+    def build_context(self, hits: list[FusedHit], char_budget: int = 7000, query: str = '') -> str:
         blocks: list[str] = []
         used = 0
         for i, h in enumerate(hits, 1):
             body = ""
-            f = self.cfg.kb_dir / h.doc_path
+            root = self.cfg.kb_dir.resolve()
+            f = (root / h.doc_path).resolve()
+            if not f.is_relative_to(root):
+                continue
             if f.exists():
                 body = f.read_text(encoding="utf-8", errors="replace")
                 # 去掉 front-matter，省 token
@@ -186,7 +189,8 @@ class KB:
                         body = body[end + 4:]
             elif h.best_text:
                 body = h.best_text
-            excerpt = _trim_md(body.strip(), 1600)
+            from .excerpts import select_excerpt
+            excerpt = select_excerpt(body, query, getattr(h, 'section', '') or '', limit=1600)
             tag = ""
             gv = getattr(h, "graph_via", None)
             if gv:
@@ -203,7 +207,7 @@ class KB:
         return "\n\n---\n\n".join(blocks)
 
     def prompt(self, question: str, hits: list[FusedHit], char_budget: int = 7000) -> list[dict[str, str]]:
-        ctx = self.build_context(hits, char_budget)
+        ctx = self.build_context(hits, char_budget, question)
         user = (
             f"【知识库】（共 {len(hits)} 条，按相关度排序）\n{ctx}\n\n"
             f"【题目 / 问题】\n{question}\n\n"
