@@ -3,6 +3,7 @@
 指纹覆盖 `tools/agent/`、`tools/kb/` 下的 Python 源码与 `start.ps1`；
 git 可用时附带短 HEAD。只读文件，不启动服务、不联网。
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -17,8 +18,7 @@ def _source_files(root: Path = ROOT) -> list[Path]:
     for name in ("agent", "kb"):
         base = root / "tools" / name
         if base.is_dir():
-            files.extend(p for p in base.rglob("*.py")
-                         if "__pycache__" not in p.parts)
+            files.extend(p for p in base.rglob("*.py") if "__pycache__" not in p.parts)
     extra = root / "start.ps1"
     if extra.is_file():
         files.append(extra)
@@ -60,12 +60,15 @@ def config_id(root: Path = ROOT) -> str:
 
 
 def git_head(root: Path = ROOT) -> str:
-    if not (root / '.git').exists():
-        return ''
+    if not (root / ".git").exists():
+        return ""
     try:
         out = subprocess.run(
             ["git", "-C", str(root), "rev-parse", "--short", "HEAD"],
-            capture_output=True, text=True, timeout=5, check=False,
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
         )
     except (OSError, subprocess.SubprocessError):
         return ""

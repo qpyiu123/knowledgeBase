@@ -1,4 +1,5 @@
 """工具层测试：路径越界、权限、参数校验、知识库检索。"""
+
 from __future__ import annotations
 
 import sys
@@ -24,23 +25,16 @@ def test_read_file_rejects_absolute_outside():
     assert "越界" in r.content
 
 
-def test_write_file_cannot_escape_workspace():
+def test_write_file_cannot_escape_workspace(tmp_path, monkeypatch):
     """试图写到 tools/ 时必须被重定向进 work/，绝不能真的落到 tools/。"""
-    from agent import tools as T2
+    workspace = tmp_path / "work"
+    monkeypatch.setattr(T, "ROOT", tmp_path)
+    monkeypatch.setattr(T, "WORKSPACE", workspace)
+    monkeypatch.setattr(T, "WRITE_ROOTS", [workspace])
     target = "tools/hacked_probe.py"
-    real_tools_file = T2.ROOT / "tools" / "hacked_probe.py"
     r = T.write_file(target, "print(1)")
-    try:
-        # 无论成功与否，都不应该在真实的 tools/ 下产生文件
-        assert not real_tools_file.exists(), "安全漏洞：写穿了 work/ 目录"
-        if r.ok:
-            # 允许被安全地重定向进 work/
-            assert "work" in r.content.lower()
-    finally:
-        if real_tools_file.exists():
-            real_tools_file.unlink()
-        for p in (T2.WORKSPACE / "tools").glob("hacked_probe.py"):
-            p.unlink()
+    assert not (tmp_path / target).exists(), "写入超出 work/ 目录"
+    assert r.ok and (workspace / target).read_text(encoding="utf-8") == "print(1)"
 
 
 def test_write_file_rejects_venv():
@@ -120,6 +114,7 @@ def test_search_kb_empty_query():
 def test_search_kb_real_hit():
     """真实索引存在时，中文题面应能命中。"""
     from kb.config import Config
+
     cfg = Config.load()
     if not (cfg.index_dir / "fts.db").exists():
         pytest.skip("no index built")
@@ -131,6 +126,7 @@ def test_search_kb_real_hit():
 def test_search_kb_bad_category_falls_back():
     """非法 category 应被忽略而不是报错。"""
     from kb.config import Config
+
     cfg = Config.load()
     if not (cfg.index_dir / "fts.db").exists():
         pytest.skip("no index built")
@@ -171,6 +167,7 @@ def test_write_file_unescapes_double_backslash_n(tmp_path, monkeypatch):
     """曾经的 bug：模型传来的 content 是双重转义（\\\\n），
     直接把整段脚本写成了单行，文件语法错误。"""
     import ast
+
     monkeypatch.setattr(T, "WORKSPACE", tmp_path)
     monkeypatch.setattr(T, "WRITE_ROOTS", [tmp_path])
     monkeypatch.setattr(T, "READ_ROOTS", [tmp_path])
@@ -181,7 +178,7 @@ def test_write_file_unescapes_double_backslash_n(tmp_path, monkeypatch):
     text = (tmp_path / "exp.py").read_text(encoding="utf-8")
     assert "\n" in text, "换行没有被还原，脚本会写成一行"
     assert "\\n" not in text
-    ast.parse(text)          # 必须是合法 Python
+    ast.parse(text)  # 必须是合法 Python
 
 
 def test_write_file_keeps_real_newlines(tmp_path, monkeypatch):

@@ -28,7 +28,7 @@
 界面是**搜索引擎样式**：输入题面特征 → 出结果卡片 → 卡片可「看全文」「问模型」。
 地址 http://127.0.0.1:8765/
 
-模型文件放在 `models/gguf/`，运行库在 `runtime/llama-b11669-vulkan/`。默认 9B，可在 `config.toml` 的 `[llama_server].model` 改为 `qwen35-4b`；切换前先用 `start.ps1 -Stop` 关闭本项目服务。`-CpuOnly` 可改用 CPU。Qwen3 已停用，旧文件保留到迁移时按需清理。
+模型文件放在 `models/gguf/`，运行库在 `runtime/llama-b11669-vulkan/`。默认 9B，可在 `config.toml` 的 `[llama_server].model` 改为 `qwen35-4b`；切换前先用 `start.ps1 -Stop` 关闭本项目服务。`-CpuOnly` 可改用 CPU。项目不再携带旧 Qwen3 和 Ollama 运行资源。
 
 从仅查询模式开启解释时，先运行 `start.ps1 -Stop -NoModel`，再运行 `start.ps1`。命令行临时选择 4B 可设置 `$env:KB_CHAT_MODEL='qwen35-4b'`；它要与正在运行的模型服务一致。
 

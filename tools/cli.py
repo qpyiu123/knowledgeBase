@@ -11,6 +11,7 @@
     kb bench                    测一次推理速度
     kb lint                     校验所有 md 的 front-matter
 """
+
 from __future__ import annotations
 
 import argparse
@@ -36,21 +37,28 @@ from kb.config import Config  # noqa: E402
 from kb.fts import FtsIndex  # noqa: E402
 from kb.fusion import FusedHit  # noqa: E402
 from kb.llm import LLMError  # noqa: E402
-from kb.parser import VALID_CATEGORIES, iter_docs, load_doc, split_front_matter  # noqa: E402
+from kb.parser import VALID_CATEGORIES, iter_docs  # noqa: E402
 from kb.rag import KB  # noqa: E402
 
 # Windows 控制台中文 + ANSI
 if os.name == "nt":
     try:
         import ctypes
+
         ctypes.windll.kernel32.SetConsoleOutputCP(65001)
     except Exception:
         pass
 
 
 class C:
-    G = "\033[32m"; Y = "\033[33m"; B = "\033[36m"; M = "\033[35m"
-    R = "\033[31m"; DIM = "\033[2m"; BOLD = "\033[1m"; END = "\033[0m"
+    G = "\033[32m"
+    Y = "\033[33m"
+    B = "\033[36m"
+    M = "\033[35m"
+    R = "\033[31m"
+    DIM = "\033[2m"
+    BOLD = "\033[1m"
+    END = "\033[0m"
 
     @classmethod
     def strip(cls) -> None:
@@ -82,8 +90,13 @@ def cmd_index(cfg: Config, args) -> int:
     from kb.reindex import ReindexError, run_reindex
 
     cfg.ensure_dirs()
-    stage_labels = {"scan": "扫描", "fts": "FTS", "vectors": "向量",
-                    "manifest": "manifest", "swap": "切换"}
+    stage_labels = {
+        "scan": "扫描",
+        "fts": "FTS",
+        "vectors": "向量",
+        "manifest": "manifest",
+        "swap": "切换",
+    }
     chunk_chars = int(cfg.get("search", "chunk_chars", 900))
     overlap = int(cfg.get("search", "chunk_overlap", 120))
 
@@ -100,7 +113,9 @@ def cmd_index(cfg: Config, args) -> int:
 
     try:
         res = run_reindex(
-            cfg, chunk_chars=chunk_chars, overlap=overlap,
+            cfg,
+            chunk_chars=chunk_chars,
+            overlap=overlap,
             fts_only=bool(getattr(args, "fts_only", False)),
             on_progress=progress,
         )
@@ -119,8 +134,7 @@ def cmd_index(cfg: Config, args) -> int:
         names = ", ".join(str(it["path"]) for it in skipped[:5])
         if len(skipped) > 5:
             names += "…"
-        print(f"{C.Y}警告：跳过 {len(skipped)} 个不可读文件（保持旧哈希）{C.END}",
-              file=sys.stderr)
+        print(f"{C.Y}警告：跳过 {len(skipped)} 个不可读文件（保持旧哈希）{C.END}", file=sys.stderr)
         for it in skipped[:20]:
             print(f"  {it['path']}: {it['error']}", file=sys.stderr)
         return f"（跳过 {len(skipped)} 个不可读文件: {names}）"
@@ -129,16 +143,22 @@ def cmd_index(cfg: Config, args) -> int:
         tail = skipped_tail()
         print(f"\n{C.Y}警告：仅 FTS 更新，向量索引停留在旧时间。{C.END}")
         print(f"{C.DIM}可稍后在嵌入模型可用时重新运行 kb index 补齐向量。{C.END}")
-        print(f"\n{C.Y}仅 FTS{C.END}  docs={res['docs']}, chunks={res['chunks']}, "
-              f"reused=0, reencoded=0, {res['seconds']}s{tail}")
+        print(
+            f"\n{C.Y}仅 FTS{C.END}  docs={res['docs']}, chunks={res['chunks']}, "
+            f"reused=0, reencoded=0, {res['seconds']}s{tail}"
+        )
         return 0
 
     tail = skipped_tail()
-    print(f"\n{C.G}完整增量更新{C.END}  docs={res['docs']}, chunks={res['chunks']}, "
-          f"reused={res['reused']}, reencoded={res['reencoded']}, "
-          f"removed_chunks={res['removed_chunks']}, {res['seconds']}s{tail}")
-    print(f"{C.DIM}新增 {res['added_docs']} 篇 / 修改 {res['changed_docs']} 篇 / "
-          f"删除 {res['removed_docs']} 篇；manifest: {cfg.index_dir / 'manifest.json'}{C.END}")
+    print(
+        f"\n{C.G}完整增量更新{C.END}  docs={res['docs']}, chunks={res['chunks']}, "
+        f"reused={res['reused']}, reencoded={res['reencoded']}, "
+        f"removed_chunks={res['removed_chunks']}, {res['seconds']}s{tail}"
+    )
+    print(
+        f"{C.DIM}新增 {res['added_docs']} 篇 / 修改 {res['changed_docs']} 篇 / "
+        f"删除 {res['removed_docs']} 篇；manifest: {cfg.index_dir / 'manifest.json'}{C.END}"
+    )
     return 0
 
 
@@ -172,8 +192,9 @@ def cmd_hint(cfg: Config, args) -> int:
             rc = 1
     return rc
 
+
 def cmd_graph(cfg: Config, args) -> int:
-    from kb.graph import BOOSTING, RELATION_KINDS, Graph
+    from kb.graph import BOOSTING, Graph
     from kb.parser import iter_md_paths, load_doc
 
     if args.build or not (cfg.index_dir / "graph.db").exists():
@@ -196,8 +217,9 @@ def cmd_graph(cfg: Config, args) -> int:
         kb = KB(cfg)
         d = kb.expand(args.expand, hops=args.hops)
         print(f"\n扩展: {args.expand} (hops={args.hops})")
-        print(f"  节点 {len(d.get('nodes', []))}, 截断={d.get('truncated')}, "
-              f"{d.get('elapsed_ms')}ms")
+        print(
+            f"  节点 {len(d.get('nodes', []))}, 截断={d.get('truncated')}, {d.get('elapsed_ms')}ms"
+        )
         for n in d.get("nodes", []):
             tag = "关联" if n["via"] in BOOSTING else "对照"
             print(f"  [{tag}:{n['via']}] hop={n['hop']}  {n['key']}")
@@ -212,19 +234,30 @@ def cmd_graph(cfg: Config, args) -> int:
     g.close()
     return 0
 
+
 def cmd_search(cfg: Config, args) -> int:
     kb = KB(cfg)
-    top_k = int(args.top_k or cfg.get('search', 'top_k', 8))
+    top_k = int(args.top_k or cfg.get("search", "top_k", 8))
     t0 = time.time()
     if args.vec_only:
         hits = kb.vec.search(args.query, top_k=top_k, category=args.category)
         from kb.fusion import FusedHit
-        fused = [FusedHit(doc_path=h["doc_path"], title=h["title"], category=h["category"],
-                          score=h["score"], sources=["vec"], best_text=h.get("text", ""))
-                 for h in hits]
+
+        fused = [
+            FusedHit(
+                doc_path=h["doc_path"],
+                title=h["title"],
+                category=h["category"],
+                score=h["score"],
+                sources=["vec"],
+                best_text=h.get("text", ""),
+            )
+            for h in hits
+        ]
     elif args.fts_only:
         raw = kb.fts.search(args.query, top_k=top_k, category=args.category, mode=args.mode)
         from kb.fusion import fuse_single_source
+
         fused = fuse_single_source(raw, top_k)
     else:
         fused = kb.search(args.query, top_k=top_k, category=args.category, mode=args.mode)
@@ -232,20 +265,23 @@ def cmd_search(cfg: Config, args) -> int:
 
     if args.json:
         out = {
-            "query": args.query, "ms": round(dt, 1),
+            "query": args.query,
+            "ms": round(dt, 1),
             "hits": [h.as_dict() for h in fused],
         }
         # 附带图谱信息，方便排查"这条是怎么被找出来的"
-        gv = [(h.doc_path, getattr(h, "graph_via", None))
-              for h in fused if getattr(h, "graph_via", None)]
+        gv = [
+            (h.doc_path, getattr(h, "graph_via", None))
+            for h in fused
+            if getattr(h, "graph_via", None)
+        ]
         if gv:
             out["graph_edges"] = [{"path": p, "via": v} for p, v in gv]
         print(json.dumps(out, ensure_ascii=False, indent=2))
     else:
         print(f"{C.DIM}查询: {args.query}  ({dt:.0f} ms){C.END}\n")
         print(_fmt_hits(fused, cfg, verbose=args.verbose))
-        gh = [(h, getattr(h, "graph_via", None)) for h in fused
-              if getattr(h, "graph_via", None)]
+        gh = [(h, getattr(h, "graph_via", None)) for h in fused if getattr(h, "graph_via", None)]
         if gh:
             print(f"\n{C.DIM}── 图谱关联 ──{C.END}")
             for h, via in gh:
@@ -258,9 +294,9 @@ def cmd_ask(cfg: Config, args) -> int:
     kb = KB(cfg)
     try:
         if args.stream:
-            hits, gen = kb.ask_stream(args.question, top_k=args.top_k,
-                                      category=args.category,
-                                      force_backend=args.backend)
+            hits, gen = kb.ask_stream(
+                args.question, top_k=args.top_k, category=args.category, force_backend=args.backend
+            )
             print(_fmt_hits(hits, cfg))
             print(f"\n{C.B}== 作答 =={C.END}\n")
             buf = []
@@ -270,8 +306,9 @@ def cmd_ask(cfg: Config, args) -> int:
                 sys.stdout.flush()
             print()
             return 0 if "".join(buf).strip() else 1
-        ans = kb.ask(args.question, top_k=args.top_k, category=args.category,
-                     force_backend=args.backend)
+        ans = kb.ask(
+            args.question, top_k=args.top_k, category=args.category, force_backend=args.backend
+        )
     except LLMError as e:
         print(f"{C.R}模型不可用{C.END}: {e}", file=sys.stderr)
         print(f"{C.DIM}已保留检索结果，见下方（用 kb search 单独查）{C.END}\n", file=sys.stderr)
@@ -280,14 +317,20 @@ def cmd_ask(cfg: Config, args) -> int:
         return 3
 
     if args.json:
-        print(json.dumps({
-            "question": args.question,
-            "answer": ans.answer,
-            "backend": ans.backend,
-            "model": ans.model,
-            "stats": ans.stats,
-            "hits": [h.as_dict() for h in ans.hits],
-        }, ensure_ascii=False, indent=2))
+        print(
+            json.dumps(
+                {
+                    "question": args.question,
+                    "answer": ans.answer,
+                    "backend": ans.backend,
+                    "model": ans.model,
+                    "stats": ans.stats,
+                    "hits": [h.as_dict() for h in ans.hits],
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
         return 0
 
     print(_fmt_hits(ans.hits, cfg))
@@ -295,9 +338,11 @@ def cmd_ask(cfg: Config, args) -> int:
     print(ans.answer)
     s = ans.stats
     if s:
-        print(f"\n{C.DIM}-- prompt={s.get('prompt_tokens')} tok, "
-              f"gen={s.get('completion_tokens')} tok, {s.get('seconds')}s "
-              f"({s.get('tokens_per_sec')} tok/s){C.END}")
+        print(
+            f"\n{C.DIM}-- prompt={s.get('prompt_tokens')} tok, "
+            f"gen={s.get('completion_tokens')} tok, {s.get('seconds')}s "
+            f"({s.get('tokens_per_sec')} tok/s){C.END}"
+        )
     return 0
 
 
@@ -353,7 +398,10 @@ def cmd_doctor(cfg: Config, args) -> int:
     for d in docs:
         cats[d.category] = cats.get(d.category, 0) + 1
     if docs:
-        print(f"[{ok}] 知识库 {len(docs)} 篇  " + ", ".join(f"{k}={v}" for k, v in sorted(cats.items())))
+        print(
+            f"[{ok}] 知识库 {len(docs)} 篇  "
+            + ", ".join(f"{k}={v}" for k, v in sorted(cats.items()))
+        )
     else:
         print(f"[{bad}] 知识库为空: {cfg.kb_dir}")
 
@@ -371,8 +419,10 @@ def cmd_doctor(cfg: Config, args) -> int:
     else:
         vs = kb.vec.stats()
         if vs.get("enabled"):
-            print(f"[{ok}] 向量索引 {vs.get('count')} 块 dim={vs.get('dim')} "
-                  f"backend={vs.get('backend')} 嵌入={kb.embedder.backend}")
+            print(
+                f"[{ok}] 向量索引 {vs.get('count')} 块 dim={vs.get('dim')} "
+                f"backend={vs.get('backend')} 嵌入={kb.embedder.backend}"
+            )
         else:
             print(f"[{warn}] 嵌入模型就绪但向量索引未建（运行 kb index）")
 
@@ -381,6 +431,7 @@ def cmd_doctor(cfg: Config, args) -> int:
     print(f"[{C.DIM}..{C.END}] LLM backend = {backend}")
     try:
         from kb.llm import get_backend
+
         be = get_backend(cfg)
         if be is None:
             print(f"[{C.DIM}..{C.END}] 未启用模型（仅检索）")
@@ -393,9 +444,12 @@ def cmd_doctor(cfg: Config, args) -> int:
     # GPU
     try:
         import subprocess
+
         r = subprocess.run(
             ["nvidia-smi", "--query-gpu=name,memory.total,memory.used", "--format=csv,noheader"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         print(f"[{ok}] GPU: {r.stdout.strip()}")
     except Exception as e:
@@ -413,9 +467,11 @@ def cmd_bench(cfg: Config, args) -> int:
     print(f"{C.B}加载模型并生成 64 tokens...{C.END}")
     t0 = time.time()
     res = be.chat(prompt, max_tokens=args.max_tokens, temperature=0.1)
-    print(f"首次(含加载) {time.time()-t0:.1f}s")
-    print(f"{C.G}{res.tokens_per_sec} tok/s{C.END}  "
-          f"(prompt={res.prompt_tokens}, gen={res.completion_tokens}, {res.seconds}s)")
+    print(f"首次(含加载) {time.time() - t0:.1f}s")
+    print(
+        f"{C.G}{res.tokens_per_sec} tok/s{C.END}  "
+        f"(prompt={res.prompt_tokens}, gen={res.completion_tokens}, {res.seconds}s)"
+    )
     print(f"\n{res.text[:400]}")
     return 0
 
@@ -454,8 +510,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("index", help="重建索引（增量向量编码）")
-    s.add_argument("--fts-only", action="store_true",
-                   help="只刷新 FTS；向量索引保持旧状态，会打印警告")
+    s.add_argument(
+        "--fts-only", action="store_true", help="只刷新 FTS；向量索引保持旧状态，会打印警告"
+    )
     s.set_defaults(func=cmd_index)
 
     s = sub.add_parser("search", help="模糊检索")

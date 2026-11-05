@@ -54,10 +54,10 @@ def test_scripts_have_selftest_flag() -> None:
 
 
 @pytest.mark.parametrize("script", SCRIPTS, ids=[p.stem for p in SCRIPTS])
-def test_script_selftest_passes(script: Path) -> None:
+def test_script_selftest_passes(script: Path, tmp_path: Path) -> None:
     proc = subprocess.run(
         [_python_exe(), str(script), "--selftest"],
-        cwd=str(REPO_ROOT),
+        cwd=tmp_path,
         capture_output=True,
         text=True,
         encoding="utf-8",

@@ -12,6 +12,7 @@
   probe_file(path)       自动侦察：file → 魔数 → strings 摘要 → 内嵌文件
   run_tool(tool, path,args)  白名单工具调用（binwalk/exiftool/steghide/...）
 """
+
 from __future__ import annotations
 
 import os
@@ -19,7 +20,6 @@ import shutil
 import zipfile
 import subprocess
 import sys
-from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -31,6 +31,7 @@ MAX_LIST = 200
 MAX_STRINGS = 60
 MAX_OUT = 4000
 TIMEOUT = 30
+
 
 # 白名单工具：名称 -> [候选命令前缀...]，按顺序找第一个存在的
 #
@@ -67,8 +68,10 @@ TOOL_CMDS: dict[str, list[list[str]]] = {
     "file": [["file"]],
     "binwalk": [[sys.executable, str(BIN / "binwalk-2.3.1" / "src" / "scripts" / "binwalk")]],
     "strings": [["strings"]],
-    "exiftool": [[str(BIN / "exiftool-13.27_64" / "exiftool.exe")],
-                 [str(BIN / "exiftool-13.27_64" / "exiftool(-k).exe"), "-k"]],
+    "exiftool": [
+        [str(BIN / "exiftool-13.27_64" / "exiftool.exe")],
+        [str(BIN / "exiftool-13.27_64" / "exiftool(-k).exe"), "-k"],
+    ],
     "foremost": [[str(BIN / "foremost" / "foremost.exe")]],
     "pngcheck": [["pngcheck"]],
     "zsteg": [["zsteg"]],
@@ -82,8 +85,12 @@ TOOL_CMDS: dict[str, list[list[str]]] = {
 # 参数模板（{path} {outdir} 会被替换）
 TOOL_ARGS: dict[str, list[list[str]]] = {
     "file": [["{path}"]],
-    "binwalk": [["{path}"], ["-e", "--run-as=root", "--directory={outdir}", "{path}"],
-                ["-A", "{path}"], ["-E", "{path}"]],
+    "binwalk": [
+        ["{path}"],
+        ["-e", "--run-as=root", "--directory={outdir}", "{path}"],
+        ["-A", "{path}"],
+        ["-E", "{path}"],
+    ],
     "strings": [["-n", "6", "{path}"], ["{path}"]],
     "exiftool": [["-S", "-a", "-G1", "{path}"], ["-S", "{path}"]],
     "foremost": [["-q", "-i", "{path}", "-o", "{outdir}"], ["-i", "{path}"]],
@@ -110,8 +117,14 @@ TOOL_DESC = {
 }
 
 # 常用别名，方便模型直接说
-_ALIAS = {"exif": "exiftool", "magic": "file", "identify": "file",
-          "rar": "7z", "zip": "unzip", "unrar": "7z"}
+_ALIAS = {
+    "exif": "exiftool",
+    "magic": "file",
+    "identify": "file",
+    "rar": "7z",
+    "zip": "unzip",
+    "unrar": "7z",
+}
 
 
 # 本机没装这些命令时给 agent 的替代建议（对应纯 Python 实现，见 carve.py）
@@ -233,7 +246,7 @@ def probe_file(path: str) -> tuple[bool, str]:
     head = data[:32]
     tail = data[-32:] if len(data) > 32 else b""
 
-    out = [f"文件: {f.name}", f"大小: {size} 字节 ({size/1024:.1f} KB)"]
+    out = [f"文件: {f.name}", f"大小: {size} 字节 ({size / 1024:.1f} KB)"]
     out.append(f"头部 16 字节: {_hx(head)}")
     out.append(f"尾部 16 字节: {_hx(tail[-16:])}")
 
@@ -245,9 +258,20 @@ def probe_file(path: str) -> tuple[bool, str]:
             break
     # 扩展名与魔数是否一致
     ext = f.suffix.lower()
-    ext_map = {".png": "PNG", ".jpg": "JPEG", ".jpeg": "JPEG", ".gif": "GIF",
-               ".zip": "ZIP", ".rar": "RAR", ".7z": "7z", ".pdf": "PDF",
-               ".elf": "ELF", ".exe": "PE", ".wav": "WAV", ".mp3": "MP3"}
+    ext_map = {
+        ".png": "PNG",
+        ".jpg": "JPEG",
+        ".jpeg": "JPEG",
+        ".gif": "GIF",
+        ".zip": "ZIP",
+        ".rar": "RAR",
+        ".7z": "7z",
+        ".pdf": "PDF",
+        ".elf": "ELF",
+        ".exe": "PE",
+        ".wav": "WAV",
+        ".mp3": "MP3",
+    }
     out.append(f"类型判定: {kind or '未知（可能是纯文本或未知格式）'}")
     if kind and ext in ext_map and ext_map[ext].lower() not in kind.lower():
         out.append(f"  ⚠ 扩展名是 {ext} 但内容是 {kind} —— 扩展名可能被改过")
@@ -279,11 +303,12 @@ def probe_file(path: str) -> tuple[bool, str]:
 
     # 按格式做深度解析
     if _carve is not None:
-        name_l = f.name.lower()
         if kind and "PNG" in kind:
             pi = _carve.png_info(f)
-            out.append(f"PNG 结构: {pi.get('width')}x{pi.get('height')}, "
-                       f"{len(pi.get('chunks', []))} 个 chunk")
+            out.append(
+                f"PNG 结构: {pi.get('width')}x{pi.get('height')}, "
+                f"{len(pi.get('chunks', []))} 个 chunk"
+            )
             for a in pi.get("anomalies", [])[:6]:
                 out.append(f"  ⚠ {a}")
         elif kind and "RIFF" in kind:
@@ -364,8 +389,11 @@ def _auto_decode_interesting(strs: list[str]) -> list[str]:
 
         # 可读占比
         def readable(ch: str) -> bool:
-            return (ch.isalnum() or "\u4e00" <= ch <= "\u9fff"
-                    or ch in " \t\n\r_-.:/{}[]()@#$%^&*+=,;'\"<>|\\!?~`")
+            return (
+                ch.isalnum()
+                or "\u4e00" <= ch <= "\u9fff"
+                or ch in " \t\n\r_-.:/{}[]()@#$%^&*+=,;'\"<>|\\!?~`"
+            )
 
         ratio = sum(1 for ch in t if readable(ch)) / len(t)
         if ratio < 0.9:
@@ -421,6 +449,7 @@ def _auto_decode_interesting(strs: list[str]) -> list[str]:
 def _grab_strings(data: bytes, minlen: int = 6) -> list[str]:
     """从二进制里捞可打印字符串，关键词优先排序。"""
     import re
+
     pat = re.compile(rb"[\x20-\x7e]{%d,}" % minlen)
     raw = [m.group().decode("ascii", "ignore") for m in pat.finditer(data[:2_000_000])]
     seen, uniq = set(), []
@@ -429,8 +458,23 @@ def _grab_strings(data: bytes, minlen: int = 6) -> list[str]:
             continue
         seen.add(s)
         uniq.append(s)
-    KEY = ("flag", "ctf", "pass", "key", "secret", "admin", "token",
-           "http", "user", "zip", "png", "jpg", ".txt", ".py", ".php")
+    KEY = (
+        "flag",
+        "ctf",
+        "pass",
+        "key",
+        "secret",
+        "admin",
+        "token",
+        "http",
+        "user",
+        "zip",
+        "png",
+        "jpg",
+        ".txt",
+        ".py",
+        ".php",
+    )
     hot = [s for s in uniq if any(k in s.lower() for k in KEY)]
     cold = [s for s in uniq if s not in set(hot)]
     return (hot + cold)[:MAX_STRINGS]
@@ -458,8 +502,7 @@ def run_tool(tool: str, path: str, argset: int = 0) -> tuple[bool, str]:
     name = (tool or "").strip().lower()
     name = _ALIAS.get(name, name)
     if name not in TOOL_CMDS:
-        return False, (f"不支持的侦察工具 {tool!r}。"
-                       f"可用：{', '.join(sorted(TOOL_CMDS))}")
+        return False, (f"不支持的侦察工具 {tool!r}。可用：{', '.join(sorted(TOOL_CMDS))}")
 
     prefix = _resolve_cmd(name)
     if prefix is None:
@@ -482,9 +525,14 @@ def run_tool(tool: str, path: str, argset: int = 0) -> tuple[bool, str]:
     argv = [t.format(path=str(f), outdir=outdir) for t in tmpl]
 
     try:
-        r = subprocess.run([*prefix, *argv], capture_output=True, text=True,
-                           timeout=TIMEOUT, cwd=str(f.parent),
-                           errors="replace")
+        r = subprocess.run(
+            [*prefix, *argv],
+            capture_output=True,
+            text=True,
+            timeout=TIMEOUT,
+            cwd=str(f.parent),
+            errors="replace",
+        )
     except subprocess.TimeoutExpired:
         return False, f"{name} 超时（>{TIMEOUT}s）"
     except Exception as e:  # noqa: BLE001
@@ -511,8 +559,7 @@ TOOL_SPECS = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "directory": {"type": "string",
-                                  "description": "目录，默认 work"},
+                    "directory": {"type": "string", "description": "目录，默认 work"},
                 },
                 "required": [],
             },
@@ -530,8 +577,10 @@ TOOL_SPECS = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "path": {"type": "string",
-                             "description": "文件相对路径，如 work/attachment.png"},
+                    "path": {
+                        "type": "string",
+                        "description": "文件相对路径，如 work/attachment.png",
+                    },
                 },
                 "required": ["path"],
             },
@@ -552,8 +601,7 @@ TOOL_SPECS = [
                 "properties": {
                     "tool": {"type": "string", "description": "工具名"},
                     "path": {"type": "string", "description": "目标文件路径"},
-                    "argset": {"type": "integer",
-                               "description": "参数组合编号，一般用 0"},
+                    "argset": {"type": "integer", "description": "参数组合编号，一般用 0"},
                 },
                 "required": ["tool", "path"],
             },
@@ -658,25 +706,39 @@ def extract_embedded(path: str, offset: int, size: int | None = None) -> tuple[b
             size = cand[0]["size"]
     size = int(size) if size else len(data) - off
 
-    blob = data[off: off + size]
+    blob = data[off : off + size]
     outdir = ROOT / "work" / "_probe"
     outdir.mkdir(parents=True, exist_ok=True)
     # 猜扩展名
     from agent.recon import MAGIC
+
     ext = ".bin"
     for magic, desc in MAGIC:
         if len(magic) <= len(blob) and blob.startswith(magic):
             key = desc.split("(")[0].strip()
-            ext = {"PNG": ".png", "JPEG": ".jpg", "GIF": ".gif", "PDF": ".pdf",
-                   "ELF": ".elf", "OGG": ".ogg", "FLAC": ".flac", "BMP": ".bmp",
-                   "gzip": ".gz", "bzip2": ".bz2", "xz": ".xz",
-                   "ZIP": ".zip", "RAR": ".rar", "7z": ".7z",
-                   "PE": ".exe", "WAV": ".wav", "MP3": ".mp3"}.get(key, ".bin")
+            ext = {
+                "PNG": ".png",
+                "JPEG": ".jpg",
+                "GIF": ".gif",
+                "PDF": ".pdf",
+                "ELF": ".elf",
+                "OGG": ".ogg",
+                "FLAC": ".flac",
+                "BMP": ".bmp",
+                "gzip": ".gz",
+                "bzip2": ".bz2",
+                "xz": ".xz",
+                "ZIP": ".zip",
+                "RAR": ".rar",
+                "7z": ".7z",
+                "PE": ".exe",
+                "WAV": ".wav",
+                "MP3": ".mp3",
+            }.get(key, ".bin")
             break
     out = outdir / f"extract_{off:x}{ext}"
     out.write_bytes(blob)
-    return True, (f"已导出 {len(blob)} 字节 -> {out}\n"
-                  f"可以继续用 probe_file 或 extract_zip 分析它")
+    return True, (f"已导出 {len(blob)} 字节 -> {out}\n可以继续用 probe_file 或 extract_zip 分析它")
 
 
 # ---------------------------------------------------------------- 工具 5
@@ -701,8 +763,6 @@ def extract_zip(path: str) -> tuple[bool, str]:
     return True, "\n".join(lines)
 
 
-
-
 # ---------------------------------------------------------------- 工具 6
 def extract_gzip(path: str) -> tuple[bool, str]:
     """解 GZIP（含藏在别的文件里的 gzip 片段）。"""
@@ -723,6 +783,7 @@ def extract_gzip(path: str) -> tuple[bool, str]:
     if r.get("outfile"):
         lines.append(f"已写出: {r['outfile']}")
     return True, "\n".join(lines)
+
 
 # ---------------------------------------------------------------- 工具 7
 def suggest_directions(path: str, question: str = "") -> tuple[bool, str]:
@@ -745,18 +806,25 @@ def dispatch(name: str, args: dict) -> tuple[bool, str]:
     if name == "probe_file":
         return probe_file(**{"path": args.get("path", "")})
     if name == "run_tool":
-        return run_tool(**{"tool": args.get("tool", ""),
-                           "path": args.get("path", ""),
-                           "argset": args.get("argset", 0)})
+        return run_tool(
+            **{
+                "tool": args.get("tool", ""),
+                "path": args.get("path", ""),
+                "argset": args.get("argset", 0),
+            }
+        )
     if name == "extract_embedded":
-        return extract_embedded(**{"path": args.get("path", ""),
-                                   "offset": args.get("offset", 0),
-                                   "size": args.get("size")})
+        return extract_embedded(
+            **{
+                "path": args.get("path", ""),
+                "offset": args.get("offset", 0),
+                "size": args.get("size"),
+            }
+        )
     if name == "extract_gzip":
         return extract_gzip(**{"path": args.get("path", "")})
     if name == "extract_zip":
         return extract_zip(**{"path": args.get("path", "")})
     if name == "suggest_directions":
-        return suggest_directions(path=args.get("path", ""),
-                                   question=args.get("question", ""))
+        return suggest_directions(path=args.get("path", ""), question=args.get("question", ""))
     return False, f"未知工具: {name}"

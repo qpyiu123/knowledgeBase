@@ -50,7 +50,7 @@ device = "auto"
 
 [ollama]
 # server.py 与 kb.llm 都从这里读；AGENT_OLLAMA / AGENT_MODEL 仅做显式覆盖。
-# 本机实际 manifest 名为 qwen2.5-coder-7b:local，server 会按 /api/tags 自动解析。
+# 仅用于显式接入另行安装的旧服务；本项目不再携带 Ollama 运行库和权重。
 host = "http://127.0.0.1:11434"
 model = "qwen2.5-coder-7b"
 

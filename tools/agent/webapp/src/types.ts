@@ -1,4 +1,4 @@
-export type DocType = 'topic' | 'card' | 'method';
+export type DocType = "topic" | "card" | "method";
 
 export type LibraryLink = { path: string; title?: string; external?: boolean };
 export type DocumentResp = {
@@ -30,24 +30,29 @@ export type MatchInfo = {
 export type ApplicabilityCondition = {
   id: string;
   label: string;
-  status: 'known' | 'unknown' | 'unsatisfied';
+  status: "known" | "unknown" | "unsatisfied";
   status_label: string;
   evidence?: string;
   check?: string;
   need?: string[];
   source?: string;
-  trace?: 'rule' | 'requires';
+  trace?: "rule" | "requires";
 };
 
 export type Applicability = {
   error?: string;
-  status: 'known' | 'unknown' | 'unsatisfied';
+  status: "known" | "unknown" | "unsatisfied";
   status_label: string;
   label?: string;
   conditions?: ApplicabilityCondition[];
   hint?: string;
   trace?: { rules: number; requires: number };
-  reading?: { path: string | null; title: string; present: boolean; missing: boolean }[];
+  reading?: {
+    path: string | null;
+    title: string;
+    present: boolean;
+    missing: boolean;
+  }[];
   guide?: {
     id: string;
     title: string;
@@ -58,7 +63,14 @@ export type Applicability = {
 };
 
 export type Hit = {
-  focus_basis?: { field: string; label: string; text: string; entry_id?: string; entry_ids?: string[]; missing?: boolean }[];
+  focus_basis?: {
+    field: string;
+    label: string;
+    text: string;
+    entry_id?: string;
+    entry_ids?: string[];
+    missing?: boolean;
+  }[];
   title: string;
   category: string;
   path: string;
@@ -81,7 +93,7 @@ export type SearchResp = {
   focus?: {
     workspace_id: string;
     title: string;
-    basis: NonNullable<Hit['focus_basis']>;
+    basis: NonNullable<Hit["focus_basis"]>;
     hits: Hit[];
     excluded: Hit[];
   };
@@ -198,10 +210,10 @@ export type AttachmentReport = {
   error?: string;
 };
 
-export type WorkspaceEntryKind = 'fact' | 'attempt' | 'reference';
-export type AttemptResult = 'pending' | 'success' | 'failed';
-export type FailureKind = 'unknown' | 'runtime' | 'condition';
-export type WorkspaceStatus = 'open' | 'solved' | 'archived';
+export type WorkspaceEntryKind = "fact" | "attempt" | "reference";
+export type AttemptResult = "pending" | "success" | "failed";
+export type FailureKind = "unknown" | "runtime" | "condition";
+export type WorkspaceStatus = "open" | "solved" | "archived";
 
 export type WorkspaceEntry = {
   id: string;
