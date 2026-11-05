@@ -26,6 +26,7 @@ NATIVE = "runtime/llama-b11669-vulkan"
 ONNX = "models/bge-small-zh-v1.5-onnx"
 INDEX_FILES = ("fts.db", "vectors.db", "vectors_cache.db", "manifest.json")
 CORE = (
+    "启动.cmd",
     "start.ps1",
     "backup.ps1",
     "tools/python-runtime.ps1",
@@ -173,7 +174,7 @@ def plan(root: Path, profile: str):
     root = root.resolve()
     selected = PROFILES[profile]
     files = {name: root / name for name in CORE}
-    files["开箱说明.md"] = root / "docs/离线包使用说明.md"
+    files["开箱说明.md"] = root / "docs/guide/离线包使用说明.md"
     for directory, suffixes in (
         ("kb", KB_TYPES),
         ("tools/kb", {".py", ".json"}),

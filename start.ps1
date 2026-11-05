@@ -1,16 +1,16 @@
 ﻿# CTF 知识库 一键启动
 #
-#   .\start.ps1              启动 Qwen3.5 + Web 搜索界面，并打开浏览器
-#   .\start.ps1 -Start       同上（显式启动开关）
-#   .\start.ps1 -Stop        停止全部服务
-#   .\start.ps1 -Status      只看状态（[Web] / [索引] / [模型] 三层独立显示）
-#   .\start.ps1 -Reindex     重建索引（FTS + 向量，前台显示进度）
-#   .\start.ps1 -NoBrowser   不自动开浏览器
-#   .\start.ps1 -CpuOnly     强制 CPU 推理（显存被别的程序占了时用）
-#   .\start.ps1 -NoModel     只启动查询界面
-#   .\start.ps1 -ChatModel qwen35-4b  使用可选的 4B 模型（默认 9B）
-#   .\start.ps1 -PythonExe <路径>  临时选择 Python（也可使用 KB_PYTHON / config.toml）
-#   .\start.ps1 -CheckEnvironment  检查实际 Python 与依赖，不启动服务
+#   .\启动.cmd              仅启动查询界面，并打开浏览器
+#   .\启动.cmd -Start       启动查询和解释服务
+#   .\启动.cmd -Stop        停止全部服务
+#   .\启动.cmd -Status      只看状态（[Web] / [索引] / [模型] 三层独立显示）
+#   .\启动.cmd -Reindex     重建索引（FTS + 向量，前台显示进度）
+#   .\启动.cmd -NoBrowser   不自动开浏览器
+#   .\启动.cmd -CpuOnly     强制 CPU 推理（显存被别的程序占了时用）
+#   .\启动.cmd -NoModel     只启动查询界面
+#   .\启动.cmd -ChatModel qwen35-4b  使用可选的 4B 模型（默认 9B）
+#   .\启动.cmd -PythonExe <路径>  临时选择 Python（也可使用 KB_PYTHON / config.toml）
+#   .\启动.cmd -CheckEnvironment  检查实际 Python 与依赖，不启动服务
 #
 # 说明：本脚本拉起配置中选择的模型服务和 Web，日志写到 logs/ 下。
 #      pid 文件记录的是按端口反查到的“真实监听进程”，不是 Start-Process 外壳；
@@ -267,9 +267,9 @@ function Show-WebStatus {
             if ($null -ne $h.build) { $running = "$($h.build)".Trim() }
             $expected = Get-ExpectedBuild
             if (-not $running) {
-                Warn '检测到旧版本后端正在运行（health 无 build 字段），建议先 .\start.ps1 -Stop 再 -Start'
+                Warn '检测到旧版本后端正在运行（health 无 build 字段），建议先 .\启动.cmd -Stop 再 -Start'
             } elseif ($expected -and $running -ne $expected) {
-                Warn "检测到旧版本后端正在运行（运行中 build=$running，当前代码=$expected），建议先 .\start.ps1 -Stop 再 -Start"
+                Warn "检测到旧版本后端正在运行（运行中 build=$running，当前代码=$expected），建议先 .\启动.cmd -Stop 再 -Start"
             } else {
                 Ok "后端版本一致 (build=$running)"
             }
@@ -375,7 +375,7 @@ function Get-FtsStats {
 function Show-IndexFreshness {
     $info = Get-IndexInfo
     if (-not $info) {
-        Warn '索引不存在，运行 .\start.ps1 -Reindex 建立'
+        Warn '索引不存在，运行 .\启动.cmd -Reindex 建立'
         return
     }
     $docs = -1
@@ -394,7 +394,7 @@ function Show-IndexFreshness {
         $issues += ("kb {0} 篇，索引 {1} 篇" -f $info.MdCount, $docs)
     }
     if ($issues.Count -gt 0) {
-        Warn ("索引可能过期（" + ($issues -join '；') + "），运行 .\start.ps1 -Reindex")
+        Warn ("索引可能过期（" + ($issues -join '；') + "），运行 .\启动.cmd -Reindex")
     } elseif ($docs -ge 0) {
         Ok ("索引较新（kb {0} 篇 / 索引 {1} 篇，构建 {2:yyyy-MM-dd HH:mm}）" -f $info.MdCount, $docs, $info.DbTime)
     } else {
@@ -427,7 +427,7 @@ function Show-DataProtection {
             Warn "索引清单 manifest 存在但无法读取: $($_.Exception.Message)"
         }
     } else {
-        Warn '索引清单 manifest 不存在（运行 .\start.ps1 -Reindex 生成）'
+        Warn '索引清单 manifest 不存在（运行 .\启动.cmd -Reindex 生成）'
     }
 
     $backupDir = Join-Path $Root 'backup'
@@ -534,7 +534,7 @@ if ($Reindex) {
         return
     }
     if (Get-PortPid $Port) {
-        Warn '后端仍在运行；重建完成后请再执行 .\start.ps1 -Stop 然后 -Start 使新索引生效'
+        Warn '后端仍在运行；重建完成后请再执行 .\启动.cmd -Stop 然后 -Start 使新索引生效'
     }
     Push-Location $Root
     try {
@@ -549,7 +549,7 @@ if ($Reindex) {
 
 if ($Status) { Show-Status; return }
 
-# -Start 是显式别名：与“直接运行 .\start.ps1（无参数）”走完全相同的启动流程，
+# -Start 显式启动查询和解释服务；CMD 无参数时会传入 -NoModel。
 # 因此这里不单独分支，继续执行下面的环境检查与服务启动。
 if ($Start) { }
 
@@ -728,11 +728,11 @@ if (-not $NoBrowser) {
 
 Say ''
 Say '提示：' 'DarkGray'
-Say '  .\start.ps1 -Start    启动服务（等同直接运行 .\start.ps1）' 'DarkGray'
-Say '  .\start.ps1 -Status   查看三层状态' 'DarkGray'
-Say '  .\start.ps1 -Reindex  重建索引' 'DarkGray'
-Say '  .\start.ps1 -Stop     停止全部服务' 'DarkGray'
-Say '  .\start.ps1 -Stop -NoModel  只停止查询服务' 'DarkGray'
+Say '  .\启动.cmd -Start    启动查询和解释服务' 'DarkGray'
+Say '  .\启动.cmd -Status   查看三层状态' 'DarkGray'
+Say '  .\启动.cmd -Reindex  重建索引' 'DarkGray'
+Say '  .\启动.cmd -Stop     停止全部服务' 'DarkGray'
+Say '  .\启动.cmd -Stop -NoModel  只停止查询服务' 'DarkGray'
 Say ''
 } finally {
     if ($ChatModel) {

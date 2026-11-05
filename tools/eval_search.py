@@ -36,7 +36,7 @@ from kb.rag import KB  # noqa: E402
 LEGACY_FILE = ROOT / "eval" / "search_queries.json"
 EXPANDED_FILE = ROOT / "eval" / "search_queries_expanded.json"
 
-# P1/P8 旧 22 条固定集基线（见 docs/PROJECT_MEMORY.md 第 7 节）。
+# P1/P8 旧 22 条固定集基线（见 docs/dev/专题/检索评测.md）。
 LEGACY_BASELINE = {
     "top1": 1.0,
     "hit@5": 1.0,

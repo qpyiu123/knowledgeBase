@@ -24,7 +24,7 @@ def project(tmp_path):
 
     for path in (
         *release.CORE,
-        "docs/离线包使用说明.md",
+        "docs/guide/离线包使用说明.md",
         "kb/misc/example.md",
         "kb/_methods/scripts/example.py",
         "work/workspaces/private.json",
@@ -100,6 +100,8 @@ def test_pack_profiles(project, tmp_path, profile, models):
     assert config["runtime"]["python"] == "auto" and config["kb"]["root"] == "."
     assert (target / release.NATIVE).is_dir() == bool(models)
     assert result["index"] == {"docs": 1, "chunks": 1, "vector_chunks": 1}
+    assert (target / "启动.cmd").is_file()
+    assert (target / "开箱说明.md").is_file()
     assert (target / "licenses/frontend/example/LICENSE").is_file()
     for name in (".git", ".venv", "logs", "work", f"{release.WEB}/node_modules"):
         assert not (target / name).exists()
