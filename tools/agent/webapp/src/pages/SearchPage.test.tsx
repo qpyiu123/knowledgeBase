@@ -84,6 +84,36 @@ beforeEach(() => {
 });
 
 describe('SearchPage 显式参数', () => {
+  it('shows a cancelled state instead of an empty-model error', async () => {
+    searchMock.mockResolvedValue({ hits: [HIT] });
+    askMock.mockImplementation(async (_q, _paths, handlers, signal) => new Promise((_resolve, reject) => {
+      signal?.addEventListener('abort', () => {
+        handlers.onDone?.('已取消');
+        reject(new DOMException('已取消', 'AbortError'));
+      });
+    }));
+    renderPage();
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+    fireEvent.click(await screen.findByRole('button', { name: '问模型' }));
+    fireEvent.click(await screen.findByRole('button', { name: '取消解释' }));
+    await screen.findByText('已取消本次解释。');
+    expect(screen.queryByText(/模型没有返回内容/)).toBeNull();
+    expect(screen.queryByRole('button', { name: '取消解释' })).toBeNull();
+  });
+  it('uses workspace focus only when selected and prioritizes its references for ask', async () => {
+    const related = { ...HIT, path: 'crypto/related.md', title: '卡点对应资料' };
+    searchMock.mockResolvedValue({ hits: [HIT], focus: { workspace_id: 'ws1', title: '示例工作区',
+      basis: [{ field: 'goal', label: '当前目标', text: '计算 gcd' }], hits: [related], excluded: [] } });
+    askMock.mockResolvedValue(undefined);
+    renderPage('ws1');
+    fireEvent.click(screen.getByRole('checkbox', { name: '参考当前卡点' }));
+    fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));
+    await screen.findByText('当前卡点资料 · 示例工作区');
+    expect(searchMock.mock.calls[0][7]).toBe('ws1');
+    fireEvent.click(screen.getByRole('button', { name: '问模型' }));
+    await waitFor(() => expect(askMock).toHaveBeenCalled());
+    expect(askMock.mock.calls[0][1]).toEqual([related.path, HIT.path]);
+  });
   it('uses only keywords by default', async () => {
     renderPage();
     fireEvent.click(screen.getByRole('button', { name: /按特征查方法/ }));

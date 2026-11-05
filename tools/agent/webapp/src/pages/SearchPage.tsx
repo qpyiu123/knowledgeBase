@@ -31,11 +31,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Md from '../components/Md';
 import AttachmentPanel from '../components/AttachmentPanel';
 import ConditionDetails from '../components/ConditionDetails';
+import FocusReading from '../components/FocusReading';
 import WorkspacePicker, {
   type PickedWorkspace,
 } from '../components/WorkspacePicker';
 import { api, ask } from '../api';
-import type { DocType, Hit } from '../types';
+import type { DocType, Hit, SearchResp } from '../types';
 
 const MODES = [
   { value: 'direct', label: '直接搜索' },
@@ -109,6 +110,10 @@ export default function SearchPage({
   const [counts, setCounts] = useState<{ topic: number; card: number; method?: number } | null>(null);
   const [semantic, setSemantic] = useState(false);
   const [withConditions, setWithConditions] = useState(false);
+  const [withFocus, setWithFocus] = useState(false);
+  const [focus, setFocus] = useState<SearchResp['focus']>();
+  const selectedWorkspace = useRef(workspaceId);
+  selectedWorkspace.current = workspaceId;
   const [supplementing, setSupplementing] = useState(false);
   const searchRequest = useRef(0);
   const searchAbort = useRef<AbortController | null>(null);
@@ -166,12 +171,14 @@ export default function SearchPage({
         'fts',
         searchController.signal,
         withConditions,
+        withFocus ? workspaceId : undefined,
       );
       if (request !== searchRequest.current) return;
       if (r.error) setError(r.error);
       setHits(r.hits || []);
       setGraph(r.graph || []);
       setCounts(r.counts || null);
+      setFocus(r.focus?.workspace_id === selectedWorkspace.current ? r.focus : undefined);
       setResultQuery(text);
       setMs(r.ms ?? null);
       setBusy(false);
@@ -209,7 +216,7 @@ export default function SearchPage({
         setSupplementing(false);
       }
     }
-  }, [q, category, docType, semantic, withConditions]);
+  }, [q, category, docType, semantic, withConditions, withFocus, workspaceId]);
 
   useEffect(() => () => {
     ++searchRequest.current;
@@ -240,14 +247,22 @@ export default function SearchPage({
         3,
         category,
         docType === 'all' ? null : docType,
+        'hybrid',
+        c.signal,
+        true,
+        withFocus ? workspaceId : undefined,
       );
-      setHits(r.hits || []);
+      const selected = [...(r.focus?.hits || []), ...(r.hits || [])]
+        .filter((hit, index, all) => all.findIndex((h) => h.path === hit.path) === index)
+        .slice(0, 3);
+      setHits(selected);
+      setFocus(r.focus);
       setGraph(r.graph || []);
       setCounts(r.counts || null);
       setResultQuery(text);
       setMs(r.ms ?? null);
       setSearched(true);
-      const paths = (r.hits || []).map((h) => h.path);
+      const paths = selected.map((h) => h.path);
       if (!paths.length) {
         setAnswer('> 没有检索到可用的资料，换个关键词试试。');
         return;
@@ -275,10 +290,14 @@ export default function SearchPage({
         },
         c.signal,
         workspaceId,
+        Object.fromEntries(selected.filter((hit) => hit.section).map((hit) => [hit.path, hit.section!])),
       );
       if (!acc.trim()) setAnswer('> 模型没有返回内容。确认本地模型已启动。');
     } catch (e) {
-      if ((e as Error).name !== 'AbortError') {
+      if ((e as Error).name === 'AbortError') {
+        setAnswer((old) => old.trim() ? old : '> 已取消本次解释。');
+        setDoneInfo((old) => old || '已取消');
+      } else {
         setError(String((e as Error).message || e));
         setAnswer('> 生成中断。');
       }
@@ -286,7 +305,7 @@ export default function SearchPage({
       setBusy(false);
       setPhase('');
     }
-  }, [q, category, docType, workspaceId]);
+  }, [q, category, docType, workspaceId, withFocus]);
 
   const run = useCallback(() => {
     if (mode === 'ask') runAsk();
@@ -295,9 +314,8 @@ export default function SearchPage({
 
   const stop = useCallback(() => {
     ctrl.current?.abort();
-    setBusy(false);
-    setPhase('');
-    setError('已停止接收本次回答；本地连接已断开，后端模型可能仍在收尾。');
+    setPhase('正在取消…');
+    setError('');
   }, []);
 
   const sendFeedback = useCallback(
@@ -442,6 +460,8 @@ export default function SearchPage({
               )}
               {mode === 'direct' && <Checkbox label="显示条件关联" checked={withConditions}
                 onChange={(event) => setWithConditions(event.currentTarget.checked)} />}
+              {workspaceId && <Checkbox label="参考当前卡点" checked={withFocus}
+                onChange={(event) => setWithFocus(event.currentTarget.checked)} />}
             </Group>
             <Group gap={8}>
               {busy && mode === 'ask' ? (
@@ -450,8 +470,9 @@ export default function SearchPage({
                   color="gray"
                   leftSection={<Square size={14} />}
                   onClick={stop}
+                  disabled={phase === '正在取消…'}
                 >
-                  停止接收
+                  取消解释
                 </Button>
               ) : (
                 <Button
@@ -573,6 +594,10 @@ export default function SearchPage({
               </Text>
             </Title>
             <Group gap="sm">
+              {focus && focus.workspace_id === workspaceId && <Button variant="subtle" size="compact-xs"
+                onClick={() => document.getElementById('focus-reading')?.scrollIntoView({ behavior: 'smooth' })}>
+                卡点资料 {focus.hits.length}
+              </Button>}
               {counts && (counts.topic + counts.card + (counts.method || 0) > 0) && (
                 <Text size="xs" c="dimmed">
                   专题 {counts.topic} · 比赛卡片 {counts.card}
@@ -838,6 +863,8 @@ export default function SearchPage({
           知识库共 {docs} 篇 · 支持 Ctrl + K 快速聚焦
         </Text>
       )}
+
+      <FocusReading focus={focus?.workspace_id === workspaceId ? focus : undefined} onOpenDoc={onOpenDoc} />
 
       <WorkspacePicker
         opened={pickerHit !== null}

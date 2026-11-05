@@ -1,0 +1,456 @@
+{
+  "date": "2026-11-05",
+  "python_tests": 457,
+  "python_seconds": 63.45,
+  "frontend_tests": 52,
+  "typecheck": true,
+  "build": true,
+  "focus": {
+    "date": "2026-11-05",
+    "queries": 15,
+    "covered_cases": 13,
+    "A_found": 3,
+    "AB_found": 13,
+    "same_primary_order": 15,
+    "wrong_condition_status": 0,
+    "missing_or_empty_correct": 2,
+    "median_ms": {
+      "A": 18.68,
+      "AB": 101.8
+    },
+    "peak_working_set_mib": 48.0,
+    "generation_calls": 0,
+    "results": [
+      {
+        "id": "common-parameters",
+        "query": "下一步先查哪里",
+        "expected": [
+          "crypto/rsa-common-modulus-attack.md",
+          "_methods/rsa_common_modulus_attack.md"
+        ],
+        "primary": [
+          "_imported/pwn/面向返回编程（ROP）.md",
+          "_imported/web/SSTI-在哪里？.md",
+          "_methods/xorshift_recovery.md",
+          "misc/misc-checklist.md",
+          "_imported_cats/reverse/r00t CTF 2024 _ 地下一层__official-02f741201510c492085f9c.md"
+        ],
+        "focus": [
+          "crypto/rsa-common-modulus-attack.md",
+          "_methods/rsa_common_modulus_attack.md",
+          "crypto/rsa-broadcast-attack.md",
+          "_methods/rsa_hastad_broadcast.md",
+          "crypto/rsa-crt-fault-injection.md"
+        ],
+        "A_found": false,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": [
+          "RSA 低指数广播：标准 CRT 路径",
+          "RSA 低指数广播：标准 CRT 路径"
+        ]
+      },
+      {
+        "id": "common-hypothesis",
+        "query": "只有部分条件，如何继续",
+        "expected": [
+          "crypto/rsa-common-modulus-attack.md",
+          "_methods/rsa_common_modulus_attack.md"
+        ],
+        "primary": [
+          "_methods/traffic-pcap.md",
+          "_methods/file-carving.md",
+          "_des/cards/web/闽盾杯2025部分题解.full.md",
+          "_des/cards/web/2025年_ISG_观安杯网络安全比赛部分题解.full.md",
+          "pwn/aslr-bruteforce.md"
+        ],
+        "focus": [
+          "crypto/rsa-common-modulus-attack.md",
+          "crypto/rsa-broadcast-attack.md",
+          "_methods/rsa_hastad_broadcast.md",
+          "_methods/rsa_common_modulus_attack.md",
+          "crypto/rsa-crt-fault-injection.md"
+        ],
+        "A_found": false,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": [
+          "RSA 低指数广播：标准 CRT 路径",
+          "RSA 低指数广播：标准 CRT 路径"
+        ]
+      },
+      {
+        "id": "common-gcd-variant",
+        "query": "这个方向还能查什么",
+        "expected": [
+          "crypto/rsa-common-modulus-attack.md",
+          "_methods/rsa_common_modulus_attack.md"
+        ],
+        "primary": [
+          "pwn/heap-tcache-dup.md",
+          "misc/memory-dump-misc.md",
+          "_des/cards/web/UTCTF_·_2025_WriteUp.full.md",
+          "_des/cards/reverse/D^3CTF2024逆向Writeup.full.md",
+          "_imported_cats/pwn/NewStar CTF 2025 _ go___official-f3a5d596264b860dc9d4af.md"
+        ],
+        "focus": [
+          "crypto/rsa-common-modulus-attack.md",
+          "crypto/rsa-broadcast-attack.md",
+          "_methods/rsa_hastad_broadcast.md",
+          "_methods/rsa_d_modulus.md",
+          "_methods/rsa_common_modulus_attack.md"
+        ],
+        "A_found": false,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": [
+          "RSA 共模：指数互素路径",
+          "RSA 低指数广播：标准 CRT 路径",
+          "RSA 低指数广播：标准 CRT 路径",
+          "RSA 共模：指数互素路径"
+        ]
+      },
+      {
+        "id": "broadcast",
+        "query": "多份输出怎样合并",
+        "expected": [
+          "crypto/rsa-broadcast-attack.md",
+          "_methods/rsa_hastad_broadcast.md"
+        ],
+        "primary": [
+          "_imported/web/禁止内卷.md",
+          "forensics/timeline-reconstruction.md",
+          "pwn/partial-overwrite-oob.md",
+          "_imported/misc/doyo2024的MISC题目WP合集（简化版）.md",
+          "_methods/rsa_shared_prime_attack.md"
+        ],
+        "focus": [
+          "_methods/rsa_hastad_broadcast.md",
+          "crypto/rsa-broadcast-attack.md",
+          "crypto/rsa-common-modulus-attack.md",
+          "_des/cards/crypto/2024_红明谷_dualrsa.full.md",
+          "_methods/rsa_common_modulus_attack.md"
+        ],
+        "A_found": false,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": [
+          "RSA 共模：指数互素路径",
+          "RSA 共模：指数互素路径"
+        ]
+      },
+      {
+        "id": "shared-factor",
+        "query": "这个方向怎么改",
+        "expected": [
+          "_methods/rsa_shared_prime_attack.md"
+        ],
+        "primary": [
+          "_des/cards/reverse/强网拟态2025初赛_Mobile方向just_Writeup.full.md",
+          "_des/cards/misc/【BuildCTF】Misc方向AK全解WP.full.md",
+          "_des/cards/web/ciscn国赛华东南分区赛WEB方向WriteUp分享.full.md",
+          "_des/cards/web/【BuildCTF】Web方向AK全解WP.full.md",
+          "_des/cards/pwn/ciscn国赛华东南分区赛PWN方向WriteUp分享.full.md"
+        ],
+        "focus": [
+          "_methods/rsa_shared_prime_attack.md",
+          "_imported/crypto/RSA.md",
+          "_methods/rsa_hastad_broadcast.md",
+          "_des/cards/crypto/2024_网鼎杯_半决赛&决赛.full.md",
+          "crypto/rsa-fermat-factorization.md"
+        ],
+        "A_found": false,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": [
+          "RSA 低指数广播：标准 CRT 路径",
+          "RSA 共模：指数互素路径"
+        ]
+      },
+      {
+        "id": "direct-root",
+        "query": "这段解密如何验证",
+        "expected": [
+          "crypto/rsa-small-e-attack.md",
+          "_methods/rsa_small_e_attack.md"
+        ],
+        "primary": [
+          "ai/llm-jailbreak.md",
+          "_des/cards/reverse/看雪2022_KCTF_秋季赛_-_第十题设计思路及解析.full.md",
+          "_imported/crypto/單表代換加密.md",
+          "_des/cards/reverse/春秋杯Re_2024_赛题解析.full.md",
+          "_imported_cats/web/GeekGame 2024 _ [Web] 验证码__official-2322692a594494deb8bcc1.md"
+        ],
+        "focus": [
+          "_methods/rsa_small_e_attack.md",
+          "crypto/rsa-broadcast-attack.md",
+          "_methods/rsa_hastad_broadcast.md",
+          "crypto/rsa-small-e-attack.md",
+          "_des/cards/crypto/2022柏鹭杯WP–Polaris战队.full.md"
+        ],
+        "A_found": false,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": []
+      },
+      {
+        "id": "bounded-k",
+        "query": "开根没有出结果",
+        "expected": [
+          "crypto/rsa-small-e-attack.md",
+          "_methods/rsa_small_e_attack.md"
+        ],
+        "primary": [
+          "misc/misc-checklist.md",
+          "_imported/web/PHP-代码审计.md",
+          "_des/tools/web/Dirsearch.md",
+          "_methods/rsa_small_e_attack.md",
+          "_des/cards/crypto/2023_江苏省首届数据安全竞赛.full.md"
+        ],
+        "focus": [
+          "_methods/rsa_small_e_attack.md",
+          "_methods/rsa_coppersmith.md",
+          "_methods/rsa_dp_leak.md",
+          "crypto/rsa-small-e-attack.md",
+          "crypto/rsa-dp-leak.md"
+        ],
+        "A_found": true,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": [
+          "RSA 单密文直接开根：k=0 路径",
+          "RSA 单密文直接开根：k=0 路径"
+        ]
+      },
+      {
+        "id": "known-prefix",
+        "query": "只知道一段明文怎么办",
+        "expected": [
+          "crypto/rsa-coppersmith.md"
+        ],
+        "primary": [
+          "crypto/hash-length-extension.md",
+          "crypto/rsa-dp-leak.md",
+          "_methods/rsa_small_e_attack.md",
+          "_imported/misc/神秘代码-2.md",
+          "misc/zip-archive-tricks.md"
+        ],
+        "focus": [
+          "crypto/rsa-coppersmith.md",
+          "_methods/rsa_coppersmith.md",
+          "_methods/rsa_small_e_attack.md",
+          "crypto/rsa-small-e-attack.md",
+          "_des/cards/crypto/2024_网鼎杯_朱雀&玄武.full.md"
+        ],
+        "A_found": false,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": []
+      },
+      {
+        "id": "base64-error",
+        "query": "解码为什么报错",
+        "expected": [
+          "_reference/python39/base64.md"
+        ],
+        "primary": [
+          "_reference/python39/base64.md",
+          "_imported/misc/[Misc]-新穷铁道.md",
+          "_methods/jwt_forge.md",
+          "_imported_cats/misc/GeekGame 2024 _ [Misc] 新穷铁道__official-2f4961e2f6c13aaa9b045c.md",
+          "_methods/java_deser.md"
+        ],
+        "focus": [
+          "_reference/python39/base64.md"
+        ],
+        "A_found": true,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": []
+      },
+      {
+        "id": "json-error",
+        "query": "读取结果无法解析",
+        "expected": [
+          "_reference/python39/json.md"
+        ],
+        "primary": [
+          "_imported_cats/reverse/NewStar CTF 2025 _ Dancing Functions__official-09052ef79d2553c5417952.md",
+          "_imported/misc/不宽的宽字符.md",
+          "_des/cards/reverse/看雪2022_KCTF_秋季赛_-_第十一题设计思路及解析.full.md",
+          "_imported/reverse/game3.md",
+          "_des/wp_summary/web/ctfshow-文件上传wp.md"
+        ],
+        "focus": [
+          "_reference/python39/json.md"
+        ],
+        "A_found": false,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": []
+      },
+      {
+        "id": "replacement-error",
+        "query": "字符串替换错误如何排查",
+        "expected": [
+          "_reference/python39/re.md"
+        ],
+        "primary": [
+          "_reference/python39/re.md",
+          "_reference/python39/base64.md",
+          "_des/topics/web/PHP反序列化漏洞总结.md",
+          "_reference/python39/json.md",
+          "_imported/web/小羊走迷宫.md"
+        ],
+        "focus": [
+          "_reference/python39/re.md"
+        ],
+        "A_found": true,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": []
+      },
+      {
+        "id": "findall-groups",
+        "query": "分组结果不对",
+        "expected": [
+          "_reference/python39/re.md"
+        ],
+        "primary": [
+          "_imported/crypto/分组密码.md",
+          "crypto/rsa-crt-fault-injection.md",
+          "_methods/aes_ecb_oracle.md",
+          "misc/rare-encoding-family.md",
+          "_imported/misc/文件隐写.md"
+        ],
+        "focus": [
+          "_reference/python39/re.md"
+        ],
+        "A_found": false,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": []
+      },
+      {
+        "id": "old-error-resolved",
+        "query": "现在核对输出格式",
+        "expected": [
+          "_reference/python39/json.md"
+        ],
+        "primary": [
+          "misc/shell-oneliner-tricks.md",
+          "_des/tools/web/Dirsearch.md",
+          "_methods/mt19937_untemper.md",
+          "_des/tools/forensics/tshark使用.md",
+          "ai/system-prompt-leak.md"
+        ],
+        "focus": [
+          "_reference/python39/json.md",
+          "_des/cards/misc/强网拟态_2022_By_W&M.full.md",
+          "web/jwt-forge.md",
+          "ai/agent-privilege-escalation.md",
+          "forensics/timeline-reconstruction.md"
+        ],
+        "A_found": false,
+        "AB_found": true,
+        "wrong_status": [],
+        "empty_focus_correct": null,
+        "excluded_scopes": []
+      },
+      {
+        "id": "missing-symbol",
+        "query": "如何继续",
+        "expected": [],
+        "primary": [
+          "_methods/traffic-pcap.md",
+          "_imported/pwn/面向返回编程（ROP）.md",
+          "misc/encoding-auto-detect.md",
+          "_methods/exif-metadata.md",
+          "_methods/file-carving.md"
+        ],
+        "focus": [],
+        "A_found": false,
+        "AB_found": false,
+        "wrong_status": [],
+        "empty_focus_correct": true,
+        "excluded_scopes": []
+      },
+      {
+        "id": "empty-workspace",
+        "query": "这一步卡住了",
+        "expected": [],
+        "primary": [
+          "mobile/mobile-ctf-checklist.md",
+          "_imported/misc/神秘代码-2.md",
+          "_des/cards/pwn/House_of_orange的进一步利用（house_of_orange+）.full.md",
+          "pwn/pwn-tools-setup.md",
+          "_des/cards/misc/安洵杯2023-WP_–Polaris.full.md"
+        ],
+        "focus": [],
+        "A_found": false,
+        "AB_found": false,
+        "wrong_status": [],
+        "empty_focus_correct": true,
+        "excluded_scopes": []
+      }
+    ]
+  },
+  "edge": {
+    "ok": true,
+    "plain_screen_ms": 491.9,
+    "focus_screen_ms": 182.8,
+    "primary_order_unchanged": true,
+    "paired_code_opened": true,
+    "cancel": [
+      {
+        "phase": "首段前",
+        "ms": 98.2
+      },
+      {
+        "phase": "首段后",
+        "ms": 107.2
+      }
+    ],
+    "next_ask_after_cancel": true,
+    "mock_generation_requests": 3,
+    "real_model_calls": 0,
+    "personal_workspaces_accessed": false
+  },
+  "real_cancel": {
+    "ok": true,
+    "model": "qwen35-4b",
+    "device": "RTX 4070 / Vulkan0",
+    "context": 4096,
+    "cancelled_before_first_piece": true,
+    "cancel_ms": 906.5,
+    "pieces_before_cancel": 0,
+    "next_request_ms": 8057.7,
+    "next_text": "OK"
+  },
+  "r1": {
+    "direct_at_5": 29,
+    "direct_or_linked_at_5": 30
+  },
+  "r2": {
+    "cases": 30,
+    "same_order": 30,
+    "wrong_status": 0,
+    "condition_errors": 0
+  },
+  "notes": [
+    "卡点附加列表仍有背景资料，保留可选。",
+    "第一次真实取消检查的后续请求超过任意设置的10秒阈值，改记实际时间；连接超时保留。"
+  ]
+}

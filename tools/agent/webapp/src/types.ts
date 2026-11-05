@@ -58,6 +58,7 @@ export type Applicability = {
 };
 
 export type Hit = {
+  focus_basis?: { field: string; label: string; text: string; entry_id?: string; entry_ids?: string[]; missing?: boolean }[];
   title: string;
   category: string;
   path: string;
@@ -77,6 +78,13 @@ export type Hit = {
 };
 
 export type SearchResp = {
+  focus?: {
+    workspace_id: string;
+    title: string;
+    basis: NonNullable<Hit['focus_basis']>;
+    hits: Hit[];
+    excluded: Hit[];
+  };
   hits: Hit[];
   graph?: Hit[];
   ms?: number;

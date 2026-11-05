@@ -33,3 +33,33 @@ def test_cli_context_cannot_read_outside_library(tmp_path):
     fake = SimpleNamespace(cfg=SimpleNamespace(kb_dir=root))
     hit = SimpleNamespace(doc_path='../private.md', title='外部文件', best_text='')
     assert KB.build_context(fake, [hit]) == ''
+
+
+def test_rsa_pairing_selects_the_scoped_script_not_another_method():
+    from pathlib import Path
+    from kb.excerpts import paired_code
+    from kb.library import LibraryCatalog
+    root = Path(__file__).resolve().parents[1]
+    catalog = LibraryCatalog(root / 'kb', root / 'index/fts.db')
+    script = paired_code(root / 'kb', 'crypto/rsa-common-modulus-attack.md', catalog)
+    assert script['path'] == '_methods/scripts/rsa_common_modulus.py'
+    assert 'def ' in script['body']
+
+
+def test_web_materials_include_paired_code_once_and_honor_selected_section():
+    from pathlib import Path
+    from types import SimpleNamespace
+    from agent.server import _collect_sources, MAX_CONTEXT_CHARS
+    from kb.library import LibraryCatalog
+    root = Path(__file__).resolve().parents[1]
+    original = 'crypto/rsa-common-modulus-attack.md'
+    card = '_methods/rsa_common_modulus_attack.md'
+    kb = SimpleNamespace(cfg=SimpleNamespace(kb_dir=root / 'kb'),
+                         library=LibraryCatalog(root / 'kb', root / 'index/fts.db'))
+    parts, error = _collect_sources(kb, [original, card], '模糊问题', {original: '二、原理'})
+    assert error is None
+    assert '## 二、原理' in parts[0]
+    code = [p for p in parts if p.startswith(('【完整代码', '【代码片段'))]
+    assert len(code) == 1 and '_methods/scripts/rsa_common_modulus.py' in code[0]
+    assert '脚本参数：' in code[0] and '第三方导入：' in code[0]
+    assert sum(map(len, parts)) <= MAX_CONTEXT_CHARS

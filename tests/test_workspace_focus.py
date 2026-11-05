@@ -86,3 +86,19 @@ def test_context_separates_hypotheses_runtime_errors_and_excluded_conditions(sto
     assert '前提已排除的方法：\n- 广播路径 → n 相同' in context
     assert '失败原因待确认：\n- 旧尝试' in context
     assert context.index('已确认的事实') < context.index('待验证假设')
+
+
+def test_long_numeric_fact_is_omitted_whole_instead_of_cut_mid_value():
+    value = 'n=' + '1234567890' * 200
+    context = compile_workspace_context({'entries': [{'kind': 'fact', 'text': value}]})
+    assert '1234567890' not in context
+    assert '已省略部分完整记录' in context
+
+
+def test_later_success_replaces_old_exclusion_in_model_context():
+    context = compile_workspace_context({'entries': [
+        {'kind': 'attempt', 'direction': '共模', 'result': 'failed', 'failure_kind': 'condition', 'conclusion': '旧参数不适用'},
+        {'kind': 'attempt', 'direction': '共模', 'result': 'success', 'conclusion': '新参数验证成功'},
+    ]})
+    assert '旧参数不适用' not in context
+    assert '前提已排除' not in context

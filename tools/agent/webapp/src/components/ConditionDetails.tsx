@@ -16,7 +16,7 @@ export default function ConditionDetails({ app, onOpenDoc }: {
         {guide && <Text size="sm" fw={600}>{guide.title}</Text>}
         {app.conditions?.map((c) => <div key={c.id}>
           <Text size="sm" fw={500}>{c.status_label}：{c.label}</Text>
-          <Text size="xs">{c.evidence}</Text>
+          <Text size="xs" style={{ overflowWrap: 'anywhere' }}>{c.evidence}</Text>
           {c.check && <Text size="xs" c="dimmed">核对：{c.check}</Text>}
         </div>)}
         {guide && <>

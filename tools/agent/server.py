@@ -25,6 +25,8 @@ import re
 import socket
 import sys
 import threading
+import uuid
+from collections import deque
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -109,11 +111,40 @@ _KB = None
 _KB_LOCK = threading.Lock()
 # /api/ask 串行：4GB 显存下并发生成会互相挤爆。忙碌时直接拒绝，不排队。
 _ASK_LOCK = threading.Lock()
+_ACTIVE_LOCK = threading.Lock()
+_ACTIVE_REQUEST = None
+# 取消可能先于解释请求到达，保留近期编号，避免迟到的请求又开始生成。
+_EARLY_CANCELS = deque(maxlen=128)
 _FEEDBACK_LOCK = threading.Lock()
 
 
 class BadRequest(ValueError):
     """客户端输入不合法，返回 400。"""
+
+
+def _request_id(raw=None):
+    if raw is None:
+        return uuid.uuid4().hex
+    if not isinstance(raw, str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,64}', raw):
+        raise BadRequest('request_id 应为 1–64 个字母、数字、横线或下划线')
+    return raw
+
+
+def api_cancel(req):
+    if not isinstance(req, dict) or not req.get('request_id'):
+        raise BadRequest('取消解释需要 request_id')
+    request_id = _request_id(req['request_id'])
+    with _ACTIVE_LOCK:
+        state = _ACTIVE_REQUEST
+        if state is None or state['id'] != request_id:
+            _EARLY_CANCELS.append(request_id)
+            return {'ok': True, 'accepted': True, 'cancelled': True}
+        state['cancelled'].set()
+        backend = state.get('backend')
+    if backend is not None:
+        backend.cancel()
+    finished = state['finished'].wait(5)
+    return {'ok': True, 'accepted': True, 'cancelled': finished}
 
 
 def _sse(obj: dict) -> str:
@@ -209,7 +240,7 @@ def _strip_front_matter(text: str) -> str:
     return text
 
 
-def _collect_sources(kb, paths, query: str = '') -> tuple[list[str], str | None]:
+def _collect_sources(kb, paths, query: str = '', sections=None) -> tuple[list[str], str | None]:
     """读取并截断知识库正文；返回 (parts, error)。"""
     if not isinstance(paths, list):
         return [], "paths 必须是数组"
@@ -220,6 +251,7 @@ def _collect_sources(kb, paths, query: str = '') -> tuple[list[str], str | None]
     parts: list[str] = []
     used = 0
     seen: set[str] = set()
+    code_paths = set()
     for rel in paths:
         p, err = _resolve_kb_file(kb, rel)
         if err:
@@ -232,13 +264,30 @@ def _collect_sources(kb, paths, query: str = '') -> tuple[list[str], str | None]
             text = _strip_front_matter(p.read_text(encoding="utf-8", errors="replace"))
         except OSError as e:
             return [], f"文件不可读: {e}"
-        remain = MAX_CONTEXT_CHARS - used
+        header = f'【{rel}】\n'
+        remain = MAX_CONTEXT_CHARS - used - len(header)
         if remain <= 0:
             break
         from kb.excerpts import select_excerpt
-        chunk = select_excerpt(text, query, limit=min(MAX_PER_DOC_CHARS, remain))
-        parts.append(f"【{rel}】\n{chunk}")
-        used += len(chunk)
+        chunk = select_excerpt(text, query, (sections or {}).get(rel, ''), limit=min(MAX_PER_DOC_CHARS, remain))
+        parts.append(header + chunk)
+        used += len(header) + len(chunk)
+        from kb.excerpts import paired_code
+        try:
+            script = paired_code(kb.cfg.kb_dir, rel, getattr(kb, 'library', None))
+        except (OSError, ValueError) as error:
+            return [], f'配套代码无法读取：{error}'
+        if script and script['path'] not in code_paths and used < MAX_CONTEXT_CHARS:
+            meta = f"\n第三方导入：{', '.join(script['dependencies']) or '无'}；脚本参数：{' '.join(script['arguments'])}\n"
+            header = f"【代码片段：{script['path']}】" + meta
+            room = min(4000, max(0, MAX_CONTEXT_CHARS - used - len(header)))
+            code = script['body'][:room]
+            kind = '完整代码' if len(code) == len(script['body']) else '代码片段'
+            if code:
+                part = f"【{kind}：{script['path']}】" + meta + code
+                parts.append(part)
+                used += len(part)
+                code_paths.add(script['path'])
     if not parts:
         return [], "没有可用的知识库内容"
     return parts, None
@@ -400,23 +449,28 @@ def compile_workspace_context(ws: dict) -> str:
     只读工作区记录，不写盘、不调用模型；空工作区返回空串。
     """
     entries = ws.get("entries") or []
+    from kb.focus import latest_attempts
     facts = [e for e in entries if e.get("kind") == "fact"]
     attempts = [
-        e for e in entries
+        e for e in latest_attempts(ws)
         if e.get("kind") == "attempt" and e.get("result") == "failed"
     ]
     lines: list[str] = []
+    for key, label in (('goal', '当前目标'), ('pending_checks', '待查项')):
+        value = _one_line(ws.get(key))
+        if value:
+            lines.extend([label + '：', value])
     fact_lines = [f"- {_one_line(e.get('text'))}"
                   for e in facts if _one_line(e.get("text"))]
     if fact_lines:
         lines.append("用户在该题已确认的事实：")
         lines.extend(fact_lines)
-    for key, label in (('goal', '当前目标'), ('hypotheses', '待验证假设（未确认为事实）'), ('pending_checks', '待查项')):
+    for key, label in (('hypotheses', '待验证假设（未确认为事实）'),):
         value = _one_line(ws.get(key))
         if value:
             lines.extend([label + '：', value])
     for kind, label in (('condition', '前提已排除的方法'), ('runtime', '运行出错的尝试（先排错再试）'), ('unknown', '失败原因待确认')):
-        group = [e for e in attempts[:MAX_WORKSPACE_ATTEMPTS]
+        group = [e for e in attempts[-MAX_WORKSPACE_ATTEMPTS:]
                  if (e.get('failure_kind') or 'unknown') == kind]
         if group:
             lines.append(label + '：')
@@ -431,8 +485,15 @@ def compile_workspace_context(ws: dict) -> str:
         + "\n".join(lines)
     )
     if len(text) > MAX_WORKSPACE_CONTEXT_CHARS:
-        marker = "（上下文过长，已截断）"
-        text = text[:MAX_WORKSPACE_CONTEXT_CHARS - len(marker)] + marker
+        marker = '（上下文过长，已省略部分完整记录；详情见工作区）'
+        prefix = '【用户该题的工作区上下文（记录数据）】\n'
+        kept = []
+        used = len(prefix) + len(marker) + 1
+        for line in lines:
+            if used + len(line) + 1 <= MAX_WORKSPACE_CONTEXT_CHARS:
+                kept.append(line)
+                used += len(line) + 1
+        text = prefix + '\n'.join(kept) + '\n' + marker
     return text
 
 
@@ -706,6 +767,28 @@ def api_search(req: dict) -> dict:
         counts[item["doc_type"]] = counts.get(item["doc_type"], 0) + 1
         out.append(item)
 
+    focus = None
+    if req.get('workspace_id') is not None:
+        from agent.workspace import WorkspaceError
+        from kb.focus import condition_query, focus_hits
+        try:
+            workspace = _workspace_store().load(req['workspace_id'])
+        except WorkspaceError as error:
+            raise BadRequest(str(error)) from error
+        related, basis = focus_hits(kb, workspace, top_k=min(k, 5), category=cat, doc_type=dtype_filter)
+        focus_context = [row['hit'].doc_path for row in related]
+        technical_query = condition_query(workspace, q)
+        related_items, excluded = [], []
+        for row in related:
+            item = _hit_item(row['hit'], technical_query, context + focus_context)
+            item['focus_basis'] = row['basis']
+            app = item.get('applicability') or {}
+            related_items.append(item)
+            if app.get('guide') and app.get('status') == 'unsatisfied':
+                excluded.append(item)
+        focus = {'workspace_id': workspace['id'], 'title': workspace['title'], 'basis': basis,
+                 'hits': related_items[:min(k, 5)], 'excluded': excluded[:min(k, 5)]}
+
     # 若全部都是图谱命中（极少见），至少给一条
     if not out and graph:
         out.append(dict(graph[0]))
@@ -720,7 +803,7 @@ def api_search(req: dict) -> dict:
     return {"hits": out, "graph": graph, "ms": round((time.time() - t0) * 1000, 1), "search_ms": ms,
             "query": q, "category": cat, "doc_type": dtype_filter,
             "counts": counts, "applicability": applic, "retrieval": retrieval,
-            "with_conditions": with_conditions}
+            "with_conditions": with_conditions, **({'focus': focus} if focus is not None else {})}
 
 
 def api_doc(path: str) -> dict:
@@ -780,12 +863,13 @@ def _ask_payload(messages: list[dict[str, str]]) -> dict:
     }
 
 
-def _ask_stream(q: str, paths: list[str], workspace_context: str = ""):
+def _ask_stream(q: str, paths: list[str], workspace_context: str = "", request_state=None, condition_text=None,
+                source_query=None, sections=None):
     """生成 SSE 事件流：tok / err / done 三种事件，终态必有一个。"""
     import requests
 
     kb = get_kb()
-    parts, err = _collect_sources(kb, paths, q)
+    parts, err = _collect_sources(kb, paths, source_query or q, sections)
     if err:
         yield _sse({"t": "err", "v": err})
         return
@@ -794,13 +878,13 @@ def _ask_stream(q: str, paths: list[str], workspace_context: str = ""):
     check = ""
     try:
         from kb.applicability import evaluate_paths
-        app = evaluate_paths(kb.cfg.kb_dir, paths, q)
+        app = evaluate_paths(kb.cfg.kb_dir, paths, condition_text or q)
         if app.get("hint"):
             check = (
                 "\n\n【适用前提检查（规则判定，不是模型推断）】\n"
                 + app["hint"]
-                + "\n如果关键前提未知或不满足，先在回答开头明确写出「缺少前提：…（unknown）」"
-                  "或「不满足：…（unsatisfied）」，不要假设它成立。"
+                + ("\n如果关键前提未知或不满足，先说明待确认或不满足的具体条件，不要假设它成立。"
+                   if any(i['applicability']['conditions'] for i in app['items']) else '')
             )
     except Exception as e:  # noqa: BLE001  # 判定失败不影响正常问答
         check = f"\n\n【适用前提检查失败】{type(e).__name__}: {e}"
@@ -815,23 +899,38 @@ def _ask_stream(q: str, paths: list[str], workspace_context: str = ""):
         {"role": "system", "content": system},
         {"role": "user", "content": user},
     ]
+    if request_state is not None and request_state['cancelled'].is_set():
+        yield _sse({'t': 'done', 'info': '已取消'})
+        return
     if _cfg('llm', 'backend', 'ollama') == 'llama_server':
         from kb.llm import get_backend
         stream = None
         pieces = 0
         try:
-            stream = get_backend(CFG).stream(messages, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
+            backend = get_backend(CFG)
+            if request_state is not None:
+                request_state['backend'] = backend
+                if request_state['cancelled'].is_set():
+                    backend.cancel()
+            stream = backend.stream(messages, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
             for piece in stream:
+                if request_state is not None and request_state['cancelled'].is_set():
+                    break
                 pieces += 1
                 yield _sse({'t': 'tok', 'v': piece})
-            if pieces:
+            if request_state is not None and request_state['cancelled'].is_set():
+                yield _sse({'t': 'done', 'info': '已取消'})
+            elif pieces:
                 yield _sse({'t': 'done', 'info': f'{pieces} 段'})
             else:
                 yield _sse({'t': 'err', 'v': '模型没有返回内容。'})
         except GeneratorExit:
             raise
         except Exception as error:
-            yield _sse({'t': 'err', 'v': str(error)})
+            if request_state is not None and request_state['cancelled'].is_set():
+                yield _sse({'t': 'done', 'info': '已取消'})
+            else:
+                yield _sse({'t': 'err', 'v': str(error)})
         finally:
             if stream is not None:
                 stream.close()
@@ -849,6 +948,10 @@ def _ask_stream(q: str, paths: list[str], workspace_context: str = ""):
                           stream=True, timeout=TIMEOUT)
         r.raise_for_status()
         for line in r.iter_lines():
+            if request_state is not None and request_state['cancelled'].is_set():
+                yield _sse({'t': 'done', 'info': '已取消'})
+                finished = True
+                return
             if not line:
                 continue
             try:
@@ -1260,6 +1363,7 @@ class Handler(BaseHTTPRequestHandler):
             })
 
     def do_POST(self):
+        global _ACTIVE_REQUEST
         u = urlparse(self.path)
         if u.path == "/api/analyze":
             self._analyze(u)
@@ -1284,6 +1388,13 @@ class Handler(BaseHTTPRequestHandler):
             return
         if not isinstance(req, dict):
             self._json({"error": "请求体必须是 JSON 对象"}, 400)
+            return
+
+        if u.path == '/api/cancel':
+            try:
+                self._json(api_cancel(req))
+            except BadRequest as error:
+                self._json({'error': str(error)}, 400)
             return
 
         if u.path == "/api/search":
@@ -1327,18 +1438,26 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 q = _check_query(req.get("q", ""))
                 paths = req.get("paths")
+                request_id = _request_id(req.get('request_id'))
                 if not q:
                     raise BadRequest("需要问题 q")
                 if not isinstance(paths, list) or not paths:
                     raise BadRequest("需要至少一个知识库路径")
                 if len(paths) > MAX_PATHS:
                     raise BadRequest(f"最多引用 {MAX_PATHS} 篇资料")
+                sections = {} if req.get('sections') is None else req['sections']
+                if not isinstance(sections, dict) or len(sections) > MAX_PATHS or any(
+                        key not in paths or not isinstance(value, str) or len(value) > MAX_PATH_CHARS
+                        for key, value in sections.items()):
+                    raise BadRequest('sections 只能填写已选资料的小节名称')
             except BadRequest as e:
                 self._json({"error": str(e)}, 400)
                 return
 
             # 工作区上下文可选：格式非法 400，不存在 404（前端改用无上下文重试）。
             workspace_context = ""
+            condition_text = q
+            source_query = q
             workspace_id = req.get("workspace_id")
             if workspace_id not in (None, ""):
                 from agent.workspace import (
@@ -1361,6 +1480,9 @@ class Handler(BaseHTTPRequestHandler):
                     self._json({"error": str(e)}, 400)
                     return
                 workspace_context = compile_workspace_context(ws)
+                from kb.focus import condition_query
+                condition_text = condition_query(ws, q)
+                source_query = '；'.join([ws.get('pending_checks') or ws.get('goal') or '', q])
 
             # 串行生成：忙碌时立即拒绝，避免显存被打爆。
             if not _ASK_LOCK.acquire(blocking=False):
@@ -1368,13 +1490,19 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             gen = None
+            state = {'id': request_id, 'cancelled': threading.Event(), 'finished': threading.Event(), 'backend': None}
+            with _ACTIVE_LOCK:
+                if request_id in _EARLY_CANCELS:
+                    state['cancelled'].set()
+                    _EARLY_CANCELS.remove(request_id)
+                _ACTIVE_REQUEST = state
             try:
                 self.send_response(200)
                 self.send_header("Content-Type", "text/event-stream; charset=utf-8")
                 self.send_header("Cache-Control", "no-cache")
                 self.send_header("Connection", "close")
                 self.end_headers()
-                gen = _ask_stream(q, paths, workspace_context)
+                gen = _ask_stream(q, paths, workspace_context, state, condition_text, source_query, sections)
                 for chunk in gen:
                     self.wfile.write(chunk.encode("utf-8"))
                     self.wfile.flush()
@@ -1388,6 +1516,10 @@ class Handler(BaseHTTPRequestHandler):
                     except Exception:  # noqa: BLE001
                         pass
                 _ASK_LOCK.release()
+                with _ACTIVE_LOCK:
+                    if _ACTIVE_REQUEST is state:
+                        _ACTIVE_REQUEST = None
+                state['finished'].set()
             return
 
         self._json({"error": "not found"}, 404)

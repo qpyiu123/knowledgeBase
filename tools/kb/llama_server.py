@@ -2,7 +2,10 @@
 from __future__ import annotations
 
 import json
+from http.client import HTTPConnection, HTTPException
 import os
+import socket
+import threading
 import time
 
 from .llm import BaseBackend, GenResult, LLMError
@@ -32,6 +35,18 @@ class LlamaServerBackend(BaseBackend):
         self.cfg = cfg
         self.model = model_id(cfg)
         self.host = base_url(cfg)
+        self._connection = None
+        self._socket = None
+        self._cancelled = threading.Event()
+
+    def cancel(self):
+        self._cancelled.set()
+        active_socket = self._socket
+        if active_socket is not None:
+            try:
+                active_socket.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                pass
 
     def health(self):
         import requests
@@ -88,9 +103,31 @@ class LlamaServerBackend(BaseBackend):
             response.close()
 
     def stream(self, messages, max_tokens=None, temperature=None):
-        response = self._post(self._payload(messages, max_tokens, temperature, True))
+        if self._cancelled.is_set():
+            return
+        ok, detail = self.health()
+        if not ok:
+            raise LLMError(detail)
+        connection = HTTPConnection('127.0.0.1', int(self.host.rsplit(':', 1)[1]),
+                                                timeout=int(self.cfg.get('llm', 'timeout', 300)))
+        self._connection = connection
+        response = None
         try:
-            for line in response.iter_lines():
+            connection.connect()
+            self._socket = connection.sock.dup()
+            if self._cancelled.is_set():
+                return
+            connection.request('POST', '/v1/chat/completions',
+                               body=json.dumps(self._payload(messages, max_tokens, temperature, True)).encode('utf-8'),
+                               headers={'Content-Type': 'application/json'})
+            if self._cancelled.is_set():
+                return
+            response = connection.getresponse()
+            if response.status != 200:
+                raise LLMError(f'模型服务返回 HTTP {response.status}：{response.read().decode("utf-8", errors="replace")[:500]}')
+            for line in response:
+                if self._cancelled.is_set():
+                    return
                 if not line or not line.startswith(b'data:'):
                     continue
                 data = line[5:].strip()
@@ -106,6 +143,16 @@ class LlamaServerBackend(BaseBackend):
                     piece = (choice.get('delta') or {}).get('content')
                     if piece:
                         yield piece
-            raise LLMError('模型连接提前结束，请重试本次解释')
+            if not self._cancelled.is_set():
+                raise LLMError('模型连接提前结束，请重试本次解释')
+        except (OSError, HTTPException) as error:
+            if not self._cancelled.is_set():
+                raise LLMError(f'模型流连接失败：{error}') from error
         finally:
-            response.close()
+            if response is not None:
+                response.close()
+            connection.close()
+            if self._socket is not None:
+                self._socket.close()
+                self._socket = None
+            self._connection = None

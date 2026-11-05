@@ -314,23 +314,32 @@ def evaluate_paths(kb_dir: str | Path, paths: Iterable[str], query: str) -> dict
                       if i["applicability"]["status"] == STATUS_UNSATISFIED)
     lines = []
     reading_lines = []
+    scope_lines = []
+    unregistered_lines = []
     for i in items:
         app = i["applicability"]
+        if app.get('guide'):
+            scope_lines.append(f"- {i['path']}：{app['guide']['title']}")
         if not app["conditions"] and app["status"] == STATUS_UNKNOWN:
-            lines.append(f"- {i['path']}：{app['label']}（unknown）")
+            unregistered_lines.append(f"- {i['path']}：{app['label']}（unknown）")
         for c in app["conditions"]:
             if c["status"] == STATUS_UNKNOWN:
-                lines.append(f"- {i['path']}：缺少前提：{c['label']}（unknown）")
+                lines.append(f"- {i['path']}：缺少前提：{c['label']}（unknown）；{c.get('check') or c.get('evidence') or ''}")
             elif c["status"] == STATUS_UNSATISFIED:
-                lines.append(f"- {i['path']}：不满足：{c['label']}（unsatisfied）")
+                lines.append(f"- {i['path']}：不满足：{c['label']}（unsatisfied）；{c.get('check') or c.get('evidence') or ''}")
         for r in app.get('reading', []):
             reading_lines.append(f"- {r['title']}（{r['path'] or '资料缺失'}）")
     if not lines:
-        summary = "查询已给出登记条件的支持线索。"
+        summary = ("查询已给出登记条件的支持线索。" if any(i['applicability']['conditions'] for i in items)
+                   else "选中资料未登记方法条件；按正文回答用法。")
     else:
         summary = "以下前提尚未确认，回答时不要假设它成立：\n" + "\n".join(lines)
     if reading_lines:
         summary += '\n阅读依赖：\n' + '\n'.join(dict.fromkeys(reading_lines))
+    if scope_lines:
+        summary += '\n本次核对的具体路径：\n' + '\n'.join(scope_lines)
+    if unregistered_lines:
+        summary += '\n未登记条件的资料：\n' + '\n'.join(unregistered_lines)
     return {
         "status": (STATUS_UNSATISFIED if unsatisfied else
                    STATUS_UNKNOWN if unknown else STATUS_KNOWN),

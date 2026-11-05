@@ -7,6 +7,21 @@ from .explain import match_terms
 from .parser import split_front_matter
 
 
+def paired_code(root, rel: str, catalog):
+    """只读取明确配对的脚本；多种方法合写时不随意选一个。"""
+    if catalog is None:
+        return None
+    from .condition_guides import load_guides
+    from .library import read_code
+    guide = next((g for g in load_guides() if rel in g['paths']), None)
+    target = next(p for p in guide['paths'] if p.startswith('_methods/')) if guide else rel
+    file = (root / target).resolve()
+    if not file.is_relative_to(root.resolve()):
+        return None
+    links = catalog.info(target, file.read_text(encoding='utf-8'))['scripts']
+    return read_code(root, links[0]['path']) if len(links) == 1 else None
+
+
 def select_excerpt(text: str, query: str = '', section: str = '', limit: int = 2600) -> str:
     _, body = split_front_matter(text)
     lines = body.splitlines(keepends=True)

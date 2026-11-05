@@ -456,7 +456,7 @@ def test_ask_stream_tok_done_contract(env, monkeypatch):
     assert fake.closed is True
 
 
-def test_ask_prompt_includes_rule_based_applicability_hint(env, monkeypatch):
+def test_ask_keeps_reading_refs_separate_from_technical_checks(env, monkeypatch):
     kb_dir = env["kb"].cfg.kb_dir
     (kb_dir / "crypto" / "needs.md").write_text(
         "---\ntitle: 进阶利用\nrequires: [crypto/rsa.md]\n---\n正文\n",
@@ -481,7 +481,7 @@ def test_ask_prompt_includes_rule_based_applicability_hint(env, monkeypatch):
     assert "尚未登记条件" in user
     assert "阅读依赖" in user
     assert "unknown" in user
-    assert "不要假设它成立" in user
+    assert '按正文回答用法' in user
 
 
 def test_search_conditions_are_optional_and_preserve_hit_order(env, monkeypatch):
@@ -514,12 +514,9 @@ def test_qwen35_web_uses_shared_backend_and_preserves_sse(env, monkeypatch):
     cfg.data['llama_server'] = {'model': 'qwen35-9b', 'port': 8766}
     monkeypatch.setattr(server, 'CFG', cfg)
     monkeypatch.setattr('requests.get', lambda *a, **k: FakeResp(payload={'data': [{'id': 'qwen35-9b'}]}))
-    response = FakeResp(lines=[b'data: {"choices":[{"delta":{"content":"ok"}}]}', b'data: [DONE]'])
-    seen = []
-    def post(url, **kwargs):
-        seen.append((url, kwargs['json']))
-        return response
-    monkeypatch.setattr('requests.post', post)
+    from llama_mock import mock_stream
+    response, seen = mock_stream(monkeypatch,
+        [b'data: {"choices":[{"delta":{"content":"ok"}}]}', b'data: [DONE]'])
     status, text, _ = call(env, 'POST', '/api/ask', {'q': 'RSA', 'paths': ['crypto/rsa.md']})
     assert status == 200
     assert [event['t'] for event in sse_events(text)] == ['tok', 'done']
@@ -536,6 +533,39 @@ def test_config_can_disable_generation_without_model_requests(env, monkeypatch):
     assert status == 503 and '模型解释已关闭' in text
     status, text, _ = call(env, 'GET', '/api/health')
     assert status == 200 and json.loads(text)['generation_enabled'] is False
+
+
+@pytest.mark.parametrize('sections', [[], False, {'outside.md': '秘密'}, {'crypto/rsa.md': 1}])
+def test_ask_sections_must_match_selected_docs(env, sections):
+    status, _, _ = call(env, 'POST', '/api/ask', {'q': 'RSA', 'paths': ['crypto/rsa.md'], 'sections': sections})
+    assert status == 400
+
+
+def test_focus_keeps_primary_query_order_and_excludes_incompatible_pilot(env, monkeypatch):
+    monkeypatch.setenv('AGENT_WORKSPACE_DIR', str(env['tmp'] / 'focus-workspaces'))
+    call(env, 'POST', '/api/workspaces', {'id': 'focus', 'title': '共模题'})
+    call(env, 'POST', '/api/workspaces/focus', {'pending_checks': '核对指数', 'hypotheses': '不同 n'})
+    for fact in ('同一个 n', '同一明文', '两个指数互素'):
+        call(env, 'POST', '/api/workspaces/focus/entries', {'kind': 'fact', 'text': fact})
+    paths = ['crypto/rsa-common-modulus-attack.md', 'crypto/rsa-broadcast-attack.md']
+    calls = []
+    def search(query, **kwargs):
+        calls.append(query)
+        return [FakeHit(p, title=p) for p in paths]
+    monkeypatch.setattr(env['kb'], 'search', search)
+    _, text, _ = call(env, 'POST', '/api/search', {'q': '原查询', 'with_conditions': False})
+    plain = json.loads(text)
+    status, text, _ = call(env, 'POST', '/api/search', {'q': '原查询', 'workspace_id': 'focus', 'with_conditions': False})
+    result = json.loads(text)
+    assert status == 200 and result['query'] == '原查询'
+    assert [h['path'] for h in result['hits']] == [h['path'] for h in plain['hits']] == paths
+    assert calls[0] == calls[1] == '原查询' and '核对指数' in calls
+    assert result['focus']['hits'][0]['path'] == paths[0]
+    assert result['focus']['hits'][0]['applicability']['status'] == 'known'
+    assert result['focus']['excluded'][0]['path'] == paths[1]
+    assert any(row['field'] == 'hypotheses' for row in result['focus']['basis'])
+    status, _, _ = call(env, 'POST', '/api/search', {'q': 'RSA', 'workspace_id': '../bad'})
+    assert status == 400
 
 
 def _ask_capture(monkeypatch):
@@ -652,7 +682,7 @@ def test_ask_truncates_workspace_context(env, monkeypatch):
     context = system[len(server.ASK_SYSTEM) + 2:]
 
     assert status == 200
-    assert "（上下文过长，已截断）" in context
+    assert '已省略部分完整记录' in context
     assert len(context) <= server.MAX_WORKSPACE_CONTEXT_CHARS
 
 

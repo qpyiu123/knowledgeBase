@@ -197,7 +197,8 @@ describe('ask SSE 契约', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(
-        (_url: string, init?: RequestInit) =>
+        (url: string, init?: RequestInit) =>
+          url === '/api/cancel' ? Promise.resolve(new Response(JSON.stringify({ ok: true, accepted: true, cancelled: true }), { status: 200 })) :
           new Promise<Response>((_resolve, reject) => {
             init?.signal?.addEventListener('abort', () => {
               reject(new DOMException('Aborted', 'AbortError'));
@@ -207,13 +208,19 @@ describe('ask SSE 契约', () => {
     );
 
     const ctrl = new AbortController();
+    const done = vi.fn();
     const p = ask(
       '问题',
       ['crypto/a.md'],
-      { onToken: () => {} },
+      { onToken: () => {}, onDone: done },
       ctrl.signal,
     );
     ctrl.abort();
     await expect(p).rejects.toMatchObject({ name: 'AbortError' });
+    expect(done).toHaveBeenCalledWith('已取消');
+    const calls = vi.mocked(fetch).mock.calls;
+    const sent = JSON.parse(String(calls[0][1]?.body));
+    const cancelled = JSON.parse(String(calls[1][1]?.body));
+    expect(cancelled.request_id).toBe(sent.request_id);
   });
 });

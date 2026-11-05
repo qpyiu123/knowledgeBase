@@ -6,6 +6,7 @@ from kb.config import Config
 from kb.llama_server import LlamaServerBackend, model_id
 from kb.llm import LLMError, get_backend
 from llama_runtime import command
+from llama_mock import mock_stream
 
 
 class Response:
@@ -73,9 +74,8 @@ def test_chat_and_thinking_default_off(backend, monkeypatch):
 
 
 def test_stream_and_generator_close_release_upstream(backend, monkeypatch):
-    response = Response(lines=[b'data: ' + json.dumps({'choices': [{'delta': {'content': 'hello'}}]}).encode(),
-                               b'data: [DONE]'])
-    monkeypatch.setattr('requests.post', lambda *a, **k: response)
+    response, _ = mock_stream(monkeypatch, [b'data: ' + json.dumps({'choices': [{'delta': {'content': 'hello'}}]}).encode(),
+                                          b'data: [DONE]'])
     assert list(backend.stream([])) == ['hello']
     assert response.closed
     response.closed = False
@@ -87,8 +87,7 @@ def test_stream_and_generator_close_release_upstream(backend, monkeypatch):
 
 @pytest.mark.parametrize('lines', [[b'data: invalid'], [b'data: {"error":"busy"}'], []])
 def test_stream_errors_are_visible_and_close_response(backend, monkeypatch, lines):
-    response = Response(lines=lines)
-    monkeypatch.setattr('requests.post', lambda *a, **k: response)
+    response, _ = mock_stream(monkeypatch, lines)
     with pytest.raises((LLMError, ValueError)):
         list(backend.stream([]))
     assert response.closed

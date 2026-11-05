@@ -68,8 +68,11 @@ export const api = {
       '/api/doc?path=' + encodeURIComponent(path),
     ),
   code: (path: string) => getJSON<CodeResp>('/api/code?path=' + encodeURIComponent(path)),
+  cancel: (request_id: string) => postJSON<{ ok: boolean; accepted: boolean; cancelled: boolean }>(
+    '/api/cancel', { request_id }),
   search: (q: string, top_k = 10, category?: string | null, doc_type?: string | null,
-           retrieval: 'fts' | 'hybrid' = 'hybrid', signal?: AbortSignal, withConditions = true) =>
+           retrieval: 'fts' | 'hybrid' = 'hybrid', signal?: AbortSignal, withConditions = true,
+           focusWorkspace?: string) =>
     getJSON<SearchResp>('/api/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -81,6 +84,7 @@ export const api = {
         doc_type: doc_type || null,
         retrieval,
         with_conditions: withConditions,
+        ...(focusWorkspace ? { workspace_id: focusWorkspace } : {}),
       }),
     }),
   feedback: (
@@ -181,19 +185,32 @@ export async function ask(
   handlers: AskHandlers,
   signal?: AbortSignal,
   workspaceId?: string | null,
+  sections?: Record<string, string>,
 ): Promise<void> {
+  if (signal?.aborted) throw new DOMException('已取消', 'AbortError');
+  const requestId = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  let cancellation: ReturnType<typeof api.cancel> | undefined;
+  let terminal = false;
+  const tracked: AskHandlers = { ...handlers,
+    onDone: (info) => { terminal = true; handlers.onDone?.(info); },
+    onError: (message) => { terminal = true; handlers.onError?.(message); },
+  };
+  const onAbort = () => { cancellation = api.cancel(requestId)
+    .catch(() => ({ ok: false, accepted: false, cancelled: false })); };
+  signal?.addEventListener('abort', onAbort, { once: true });
   const send = (withWorkspace: boolean) =>
     fetch('/api/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
         withWorkspace && workspaceId
-          ? { q, paths, workspace_id: workspaceId }
-          : { q, paths },
+          ? { q, paths, workspace_id: workspaceId, request_id: requestId, sections }
+          : { q, paths, request_id: requestId, sections },
       ),
       signal,
     });
 
+  try {
   let r = await send(true);
   // 仅当后端明确说“工作区不存在”时，回落到无上下文提问一次并提示。
   if (workspaceId && (await isMissingWorkspace(r))) {
@@ -203,12 +220,23 @@ export async function ask(
   if (!r.ok || !r.body) throw new Error(await errorMessage(r));
 
   handlers.onStart?.();
-  const { tokens, terminal } = await readAskStream(r.body, handlers, signal);
-  if (!terminal) {
+  const { tokens, terminal: streamTerminal } = await readAskStream(r.body, tracked, signal);
+  if (!streamTerminal) {
     if (tokens === 0) {
-      handlers.onError?.('模型没有返回内容。确认本地模型已启动。');
+      tracked.onError?.('模型没有返回内容。确认本地模型已启动。');
     } else {
-      handlers.onDone?.('完成');
+      tracked.onDone?.('完成');
+    }
+  }
+  } finally {
+    signal?.removeEventListener('abort', onAbort);
+    if (cancellation) {
+      const result = await cancellation;
+      if (!terminal) {
+        handlers.onDone?.(result.cancelled ? '已取消' : '已停止接收');
+        if (!result.ok) handlers.onNotice?.('取消请求未送达，模型可能仍在计算，请检查服务状态。');
+        else if (!result.cancelled) handlers.onNotice?.('取消请求已发送，模型正在收尾。');
+      }
     }
   }
 }

@@ -1,0 +1,17 @@
+[
+  {"id":"common-parameters","query":"下一步先查哪里","goal":"恢复 RSA 明文","pending_checks":"两组密文共用同一个 n，指数不同，计算 gcd(e1,e2)","facts":["n1=11413 n2=11413","e1=3 e2=17","同一明文"],"expected":["crypto/rsa-common-modulus-attack.md","_methods/rsa_common_modulus_attack.md"],"status":"known"},
+  {"id":"common-hypothesis","query":"只有部分条件，如何继续","goal":"比较两次 RSA 加密","pending_checks":"同一个 n，不同指数的两组密文","hypotheses":"可能是同一明文","facts":["同一个 n","e1=3 e2=17"],"expected":["crypto/rsa-common-modulus-attack.md","_methods/rsa_common_modulus_attack.md"],"status":"unknown"},
+  {"id":"common-gcd-variant","query":"这个方向还能查什么","goal":"恢复 m 的平方以后开根验证","pending_checks":"RSA 同一个 n，两组密文的指数不互素，gcd 开根变体","facts":["同一个 n","同一明文","gcd(e1,e2)=2"],"expected":["crypto/rsa-common-modulus-attack.md","_methods/rsa_common_modulus_attack.md"],"status":"unsatisfied"},
+  {"id":"broadcast","query":"多份输出怎样合并","goal":"恢复各次加密的明文","pending_checks":"RSA 不同 n、相同 e=3，把三组密文合并再求整数根","facts":["不同 n，各 n 两两互素","e=3，e 相同，同一明文，有三组密文"],"expected":["crypto/rsa-broadcast-attack.md","_methods/rsa_hastad_broadcast.md"],"status":"known"},
+  {"id":"shared-factor","query":"这个方向怎么改","goal":"分解多份 RSA 公钥","pending_checks":"多个 n 共享素数，计算 gcd 分解","facts":["不同 n，共享素数"],"expected":["_methods/rsa_shared_prime_attack.md"]},
+  {"id":"direct-root","query":"这段解密如何验证","goal":"恢复单组 RSA 明文","pending_checks":"单组小指数密文，整数立方根精确后重新加密","facts":["e=3，整数根精确"],"expected":["crypto/rsa-small-e-attack.md","_methods/rsa_small_e_attack.md"],"status":"known"},
+  {"id":"bounded-k","query":"开根没有出结果","goal":"检查后续变体","pending_checks":"RSA c+k*n 有界枚举 k","facts":["e=3，开根不精确，m^e>=n"],"expected":["crypto/rsa-small-e-attack.md","_methods/rsa_small_e_attack.md"],"status":"unsatisfied"},
+  {"id":"known-prefix","query":"只知道一段明文怎么办","goal":"用已知高位恢复剩余部分","pending_checks":"RSA 已知明文高位 m=m0+x，小根","facts":["已知 m0，未知 x 很小"],"expected":["crypto/rsa-coppersmith.md"]},
+  {"id":"base64-error","query":"解码为什么报错","goal":"检查字节解码输入","pending_checks":"base64.b64decode 的填充和 validate 参数","facts":["输入来自题目返回的 Base64 字符串"],"attempts":[{"direction":"Base64 解码","result":"failed","failure_kind":"runtime","conclusion":"binascii.Error: Incorrect padding"}],"expected":["_reference/python39/base64.md"]},
+  {"id":"json-error","query":"读取结果无法解析","goal":"核对 JSON 输入格式","pending_checks":"json.loads 抛出 JSONDecodeError","facts":["传入的是空字符串"],"attempts":[{"direction":"解析 JSON","result":"failed","failure_kind":"runtime","conclusion":"JSONDecodeError: Expecting value: line 1 column 1"}],"expected":["_reference/python39/json.md"]},
+  {"id":"replacement-error","query":"字符串替换错误如何排查","goal":"修正替换字符串","pending_checks":"re.sub 替换字符串 bad escape","facts":["模式能编译，错误发生在 repl"],"attempts":[{"direction":"正则替换","result":"failed","failure_kind":"runtime","conclusion":"re.error: bad escape \\d at position 0"}],"expected":["_reference/python39/re.md"]},
+  {"id":"findall-groups","query":"分组结果不对","goal":"逐个读取匹配对象","pending_checks":"re.findall 返回捕获组，re.finditer 返回 Match","facts":["正则模式含捕获组"],"expected":["_reference/python39/re.md"]},
+  {"id":"old-error-resolved","query":"现在核对输出格式","goal":"输出 JSON 中文文本","pending_checks":"json.dumps ensure_ascii=False","attempts":[{"direction":"正则替换","result":"failed","failure_kind":"runtime","conclusion":"re.error: bad escape"},{"direction":"正则替换","result":"success","conclusion":"替换已修复"}],"expected":["_reference/python39/json.md"]},
+  {"id":"missing-symbol","query":"如何继续","pending_checks":"QuantumCtf.nonexistent_probe_2026","expected":[],"empty_focus":true},
+  {"id":"empty-workspace","query":"这一步卡住了","expected":[],"empty_focus":true}
+]

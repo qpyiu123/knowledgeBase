@@ -174,6 +174,7 @@ class KB:
     def build_context(self, hits: list[FusedHit], char_budget: int = 7000, query: str = '') -> str:
         blocks: list[str] = []
         used = 0
+        code_paths = set()
         for i, h in enumerate(hits, 1):
             body = ""
             root = self.cfg.kb_dir.resolve()
@@ -197,6 +198,17 @@ class KB:
                 kind = "关联" if getattr(h, "graph_boost", False) else "对照"
                 tag = f"  [图谱{kind}: {gv}]"
             block = f"[{i}] {h.title}  (路径: {h.doc_path}){tag}\n{excerpt}"
+            from .excerpts import paired_code
+            script = paired_code(root, h.doc_path, getattr(self, 'library', None))
+            if script and script['path'] not in code_paths:
+                meta = f"\n第三方导入：{', '.join(script['dependencies']) or '无'}；脚本参数：{' '.join(script['arguments'])}\n"
+                code_header = f"\n\n【代码片段：{script['path']}】" + meta
+                room = min(4000, max(0, char_budget - used - len(block) - len(code_header)))
+                if room:
+                    code = script['body'][:room]
+                    kind = '完整代码' if len(code) == len(script['body']) else '代码片段'
+                    block += f"\n\n【{kind}：{script['path']}】" + meta + code
+                    code_paths.add(script['path'])
             if used + len(block) > char_budget:
                 remain = char_budget - used
                 if remain < 400:
