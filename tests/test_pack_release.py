@@ -101,6 +101,7 @@ def test_pack_profiles(project, tmp_path, profile, models):
     assert (target / release.NATIVE).is_dir() == bool(models)
     assert result["index"] == {"docs": 1, "chunks": 1, "vector_chunks": 1}
     assert (target / "启动.cmd").is_file()
+    assert (target / "tools/console-job.ps1").is_file()
     assert (target / "开箱说明.md").is_file()
     assert (target / "licenses/frontend/example/LICENSE").is_file()
     for name in (".git", ".venv", "logs", "work", f"{release.WEB}/node_modules"):

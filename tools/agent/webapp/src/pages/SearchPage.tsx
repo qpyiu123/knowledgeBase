@@ -6,7 +6,6 @@ import {
   Checkbox,
   Center,
   Divider,
-  Drawer,
   Group,
   Loader,
   SegmentedControl,
@@ -29,6 +28,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Md from "../components/Md";
+import ResizableDrawer from "../components/ResizableDrawer";
 import AttachmentPanel from "../components/AttachmentPanel";
 import ConditionDetails from "../components/ConditionDetails";
 import FocusReading from "../components/FocusReading";
@@ -592,8 +592,8 @@ export default function SearchPage({
         </Alert>
       )}
 
-      <Drawer opened={answerOpen && !!result} onClose={() => setAnswerOpen(false)}
-        title={result?.title || "任务结果"} position="right" size="lg"
+      <ResizableDrawer opened={answerOpen && !!result} onClose={() => setAnswerOpen(false)}
+        title={result?.title || "任务结果"} defaultWidth={620} resizeLabel="调整结果侧栏宽度"
         withOverlay={false} trapFocus={false} lockScroll={false}>
         {result && <Stack gap="md">
           <Group justify="flex-end">
@@ -611,7 +611,7 @@ export default function SearchPage({
               onClick={() => { setAnswerOpen(false); readHit(ref); }}>{ref.title}</Button>)}
           </>}
         </Stack>}
-      </Drawer>
+      </ResizableDrawer>
 
       {searched && (
         <div>
@@ -662,7 +662,7 @@ export default function SearchPage({
                     <Badge
                       size="xs"
                       variant="outline"
-                      color={h.doc_type === "card" ? "grape" : "teal"}
+                      color={h.doc_type === "card" ? "grape" : "brand"}
                     >
                       {h.kind_label ||
                         h.doc_type_label ||
@@ -867,7 +867,7 @@ export default function SearchPage({
                       </Button>
                     </Group>
                     {feedback[h.path] && (
-                      <Text size="xs" c="teal">
+                      <Text size="xs" c="brand">
                         已记录：
                         {FEEDBACK_LABEL[feedback[h.path]] || feedback[h.path]}
                       </Text>

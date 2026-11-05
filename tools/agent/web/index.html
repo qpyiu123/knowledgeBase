@@ -6,15 +6,15 @@
 <title>CTF 知识库</title>
 <style>
 :root{
-  --page-bg:#f5f7f9; --surface:#fff; --border:#e1e6ea; --muted:#6e7c89;
-  --ink:#243443; --accent:#087f6b; --code-bg:#f6f8fa;
-  --accent-soft:#087f6b12; --shadow:0 3px 12px #203d4b0a;
+  --page-bg:#f4f6fa; --surface:#fff; --border:#dfe5ef; --muted:#5f6e83;
+  --ink:#26344b; --accent:#2859b6; --code-bg:#f3f6fc;
+  --accent-soft:#2859b612; --shadow:0 3px 12px #203d4b0a;
   --mono:Consolas,'Cascadia Code','JetBrains Mono',monospace;
 }
 [data-theme="dark"]{
-  --page-bg:#171d23; --surface:#202830; --border:#34414b; --muted:#9aabb8;
-  --ink:#e1e9ef; --accent:#63cbb7; --code-bg:#192128;
-  --accent-soft:#63cbb71a; --shadow:0 3px 12px #0005;
+  --page-bg:#151b28; --surface:#1e2838; --border:#354155; --muted:#a9b8cd;
+  --ink:#e2e9f5; --accent:#8bb5ff; --code-bg:#192233;
+  --accent-soft:#8bb5ff1a; --shadow:0 3px 12px #0005;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -31,19 +31,10 @@ a{color:var(--accent);text-underline-offset:3px}
 /* ---------- 头部 ---------- */
 .app-header{
   position:sticky; top:0; z-index:30; height:64px;
-  display:flex; align-items:center; justify-content:space-between;
+  display:flex; align-items:center; justify-content:flex-end;
   gap:16px; padding:0 24px;
   background:var(--surface); border-bottom:1px solid var(--border);
 }
-.brand{display:flex;align-items:center;gap:12px;min-width:0}
-.brand-icon{
-  width:38px; height:38px; flex-shrink:0; border-radius:11px;
-  background:var(--accent-soft); color:var(--accent);
-  display:grid; place-items:center;
-}
-.brand-text{display:flex;flex-direction:column;line-height:1.35;min-width:0}
-.brand-text b{font-size:15px;font-weight:650}
-.brand-text span{font-size:12px;color:var(--muted)}
 .header-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .status{
   display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);
@@ -336,7 +327,6 @@ select:focus{border-color:var(--accent)}
   .nav-label,.nav-bottom{display:none}
   .cat-btn{width:auto;padding:7px 11px;font-size:12.5px}
   .starter-grid{grid-template-columns:1fr}
-  .brand-text span{display:none}
   .page{padding:20px 16px 48px}
   h1{font-size:22px}
   .search-box{padding:16px}
@@ -348,17 +338,6 @@ select:focus{border-color:var(--accent)}
 <body>
 
 <header class="app-header">
-  <div class="brand">
-    <div class="brand-icon">
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-      </svg>
-    </div>
-    <div class="brand-text">
-      <b>CTF 知识库</b>
-      <span>从线索找到下一步</span>
-    </div>
-  </div>
   <div class="header-right">
     <div class="status" id="status"><i class="dot"></i><span>检查中…</span></div>
     <button class="icon-btn" id="theme" title="切换明暗主题" aria-label="切换明暗主题">
@@ -382,7 +361,7 @@ select:focus{border-color:var(--accent)}
 
   <main class="page">
     <p class="eyebrow">搜索与助手</p>
-    <h1>从线索找到下一步</h1>
+    <h1>搜索资料</h1>
     <p class="sub">输入题面特征、函数名、报错信息，或描述已经试过的方法。</p>
 
     <section class="card search-box">

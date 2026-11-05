@@ -1,10 +1,11 @@
 ﻿# CTF 知识库 一键启动
 #
-#   .\启动.cmd              仅启动查询界面，并打开浏览器
+#   .\启动.cmd              打开查询界面，保留控制窗口
 #   .\启动.cmd -Start       启动查询服务
 #   .\启动.cmd -Stop        停止全部服务
 #   .\启动.cmd -Status      只看状态（[Web] / [索引] / [模型] 三层独立显示）
 #   .\启动.cmd -Reindex     重建索引（FTS + 向量，前台显示进度）
+#   .\启动.cmd -Console     保留控制窗口，可搭配 -NoBrowser 或 -ChatModel
 #   .\启动.cmd -NoBrowser   不自动开浏览器
 #   .\启动.cmd -CpuOnly     强制 CPU 推理（显存被别的程序占了时用）
 #   .\启动.cmd -LoadModel   显式预加载解释服务（诊断用）
@@ -23,6 +24,7 @@ param(
     [switch]$Status,
     [switch]$Reindex,
     [switch]$NoBrowser,
+    [switch]$Console,
     [switch]$CpuOnly,
     [switch]$NoModel,
     [switch]$LoadModel,
@@ -72,6 +74,8 @@ $BuildScript = Join-Path $Root 'tools\agent\buildinfo.py'
 $CliScript   = Join-Path $Root 'tools\cli.py'
 $LlamaScript = Join-Path $Root 'tools\llama_runtime.py'
 $PreviousChatModel = $env:KB_CHAT_MODEL
+$ConsoleJob = $null
+$ConsoleGate = $null
 try {
 $Backend = 'llama_server'
 if ($ChatModel) { $env:KB_CHAT_MODEL = $ChatModel }
@@ -79,7 +83,7 @@ if ($ChatModel) { $env:KB_CHAT_MODEL = $ChatModel }
 New-Item -ItemType Directory -Force -Path $LogD | Out-Null
 
 function Say($m, $c = 'Gray') { Write-Host $m -ForegroundColor $c }
-function Ok  ($m) { Say "  [OK]   $m" 'Green' }
+function Ok  ($m) { Say "  [OK]   $m" 'White' }
 function Warn($m) { Say "  [警告] $m" 'Yellow' }
 function Bad ($m) { Say "  [失败] $m" 'Red' }
 
@@ -560,6 +564,13 @@ if ($Reindex) {
 
 if ($Status) { Show-Status; return }
 
+if ($Console -and $LoadModel) {
+    throw '控制窗口启动后，请在设置中启动模型，或在首次使用时按需加载。'
+}
+if ($Console -and (Get-PortPid $Port)) {
+    throw "端口 $Port 已在使用。请回到原来的控制窗口；若此前用命令启动了本项目，请先运行 .\启动.cmd -Stop。"
+}
+
 # 常规启动只打开查询；-LoadModel 供显式预加载和诊断脚本使用。
 # 因此这里不单独分支，继续执行下面的环境检查与服务启动。
 if ($Start) { }
@@ -675,6 +686,7 @@ Say '=== 3. Web 搜索界面 ===' 'Cyan'
 
 $webPid = Get-PortPid $Port
 if ($webPid) {
+    if ($Console) { throw "端口 $Port 已在使用，请停止原服务后重试。" }
     Show-WebStatus
 } else {
     $env:AGENT_PORT = "$Port"
@@ -689,11 +701,20 @@ if ($webPid) {
     try {
         Push-Location $Root
         try {
-            $sp = Start-Process -FilePath $Venv -ArgumentList @(('"{0}"' -f $Srv)) `
-                  -WorkingDirectory $Root `
-                  -RedirectStandardOutput (Join-Path $LogD 'web.log') `
-                  -RedirectStandardError  (Join-Path $LogD 'web.err.log') `
-                  -WindowStyle Hidden -PassThru
+            if ($Console) {
+                . (Join-Path $Root 'tools\console-job.ps1')
+                $ConsoleJob = [KbConsoleJob]::new()
+                $gateName = 'Local\KbWeb-' + [Guid]::NewGuid().ToString('N')
+                $ConsoleGate = [Threading.EventWaitHandle]::new($false, 'ManualReset', $gateName)
+                $sp = Start-KbConsoleWeb -Python $Venv -Script $Srv -Root $Root -LogDir $LogD `
+                    -GateName $gateName -Job $ConsoleJob -Gate $ConsoleGate
+            } else {
+                $sp = Start-Process -FilePath $Venv -ArgumentList @(('"{0}"' -f $Srv)) `
+                      -WorkingDirectory $Root `
+                      -RedirectStandardOutput (Join-Path $LogD 'web.log') `
+                      -RedirectStandardError  (Join-Path $LogD 'web.err.log') `
+                      -WindowStyle Hidden -PassThru
+            }
         } finally {
             Pop-Location
         }
@@ -714,6 +735,7 @@ if ($webPid) {
             }
             Show-WebStatus
         } else {
+            if ($Console) { throw "等待查询服务超时（端口 $Port）" }
             Bad "Web 启动超时（:$Port）"
             Show-LogTail 'web'
             Show-StartupAdvice $Port
@@ -723,6 +745,7 @@ if ($webPid) {
         Bad "Web 启动失败: $($_.Exception.Message)"
         Show-LogTail 'web'
         Show-StartupAdvice $Port
+        if ($Console) { exit 1 }
         return
     }
 }
@@ -740,6 +763,11 @@ if (-not $NoBrowser) {
 }
 
 Say ''
+if ($Console) {
+    Say '关掉浏览器后，查询服务仍会运行。'
+    $null = Read-Host '按 Enter 或关闭此窗口，停止本次服务'
+    return
+}
 Say '提示：' 'DarkGray'
 Say '  .\启动.cmd -Start    启动查询服务' 'DarkGray'
 Say '  .\启动.cmd -Status   查看三层状态' 'DarkGray'
@@ -748,6 +776,8 @@ Say '  .\启动.cmd -Stop     停止全部服务' 'DarkGray'
 Say '  .\启动.cmd -Stop -NoModel  只停止查询服务' 'DarkGray'
 Say ''
 } finally {
+    if ($ConsoleJob) { $ConsoleJob.Dispose() }
+    if ($ConsoleGate) { $ConsoleGate.Dispose() }
     if ($ChatModel) {
         if ($null -eq $PreviousChatModel) { Remove-Item -LiteralPath 'Env:\KB_CHAT_MODEL' -ErrorAction SilentlyContinue }
         else { $env:KB_CHAT_MODEL = $PreviousChatModel }

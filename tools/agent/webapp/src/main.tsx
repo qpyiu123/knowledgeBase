@@ -5,22 +5,22 @@ import App from './App';
 import '@mantine/core/styles.css';
 import './styles.css';
 
-// 与参考设计一致的墨绿主色
 const brand: MantineColorsTuple = [
-  '#e6f6f2',
-  '#ccece5',
-  '#a3dcd1',
-  '#78cbbd',
-  '#57bcac',
-  '#43b0a0',
-  '#35a996',
-  '#229c85',
-  '#0f8b74',
-  '#087f6b',
+  '#eff5ff',
+  '#dbe8ff',
+  '#b9d2ff',
+  '#90b8fb',
+  '#6495ee',
+  '#4778da',
+  '#3569ca',
+  '#2859b6',
+  '#204a98',
+  '#193d7c',
 ];
 
 const theme = createTheme({
   primaryColor: 'brand',
+  primaryShade: { light: 7, dark: 7 },
   colors: { brand },
   fontFamily:
     '"Segoe UI","Microsoft YaHei",system-ui,-apple-system,sans-serif',

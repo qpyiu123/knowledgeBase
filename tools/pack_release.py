@@ -28,6 +28,7 @@ INDEX_FILES = ("fts.db", "vectors.db", "vectors_cache.db", "manifest.json")
 CORE = (
     "启动.cmd",
     "start.ps1",
+    "tools/console-job.ps1",
     "backup.ps1",
     "tools/python-runtime.ps1",
     "tools/python_runtime.py",

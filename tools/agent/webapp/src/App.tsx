@@ -14,7 +14,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { BookOpen, FolderKanban, Moon, Search, Settings as SettingsIcon, Sun } from 'lucide-react';
+import { FolderKanban, Moon, Search, Settings as SettingsIcon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Reader, { type ReaderTarget } from './components/Reader';
 import SearchPage from './pages/SearchPage';
@@ -96,19 +96,8 @@ export default function App() {
       >
         <AppShell.Header>
           <Group h="100%" px="lg" justify="space-between" wrap="nowrap">
-            <Group gap={12} wrap="nowrap">
-              <ActionIcon hiddenFrom="sm" variant="subtle" onClick={toggle} aria-label="展开导航">
-                <Burger opened={opened} size="sm" />
-              </ActionIcon>
-              <div className="brand-icon">
-                <BookOpen size={21} />
-              </div>
-              <div className="brand-text">
-                <b>CTF 知识库</b>
-                <span>从线索找到下一步</span>
-              </div>
-            </Group>
-            <Group gap={10} wrap="nowrap">
+            <Burger hiddenFrom="sm" opened={opened} size="sm" onClick={toggle} aria-label="导航菜单" />
+            <Group gap={10} wrap="nowrap" ml="auto">
               <Badge
                 variant="light"
                 color={health?.index_ok ? 'brand' : 'gray'}

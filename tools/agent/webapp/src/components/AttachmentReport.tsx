@@ -59,7 +59,7 @@ export default function AttachmentReportView({
         <Badge variant="light" color="brand">
           {report.type?.kind || '未知类型'}
         </Badge>
-        <Badge variant="outline" color={report.type?.is_text ? 'teal' : 'gray'}>
+        <Badge variant="outline" color={report.type?.is_text ? 'brand' : 'gray'}>
           {report.type?.is_text ? '文本' : '二进制'}
         </Badge>
         <Badge variant="outline">{bytes(report.file?.size)}</Badge>

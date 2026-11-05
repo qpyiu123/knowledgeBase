@@ -1,7 +1,8 @@
-import { Button, Code, Drawer, Group, Loader, ScrollArea, Stack, Text } from '@mantine/core';
+import { Button, Code, Group, Loader, ScrollArea, Stack, Text } from '@mantine/core';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { api } from '../api';
 import Md from './Md';
+import ResizableDrawer from './ResizableDrawer';
 import type { CodeResp, DocumentResp } from '../types';
 
 export type ReaderTarget = { path: string; title?: string } | null;
@@ -86,26 +87,20 @@ export default function Reader({
   const showToc = !isCode && heads.length > 1;
 
   return (
-    <Drawer
+    <ResizableDrawer
       opened={!!target}
       onClose={onClose}
-      position="right"
-      size={920}
-      withCloseButton
-      keepMounted={false}
+      defaultWidth={920}
+      resizeLabel="调整文章侧栏宽度"
       title={
         <Text fw={650} size="md" style={{ overflowWrap: 'anywhere' }}>
           {title}
         </Text>
       }
-      styles={{
-        title: { flex: 1, minWidth: 0, paddingRight: 8 },
-        body: { padding: 0, height: 'calc(100dvh - 60px)' },
-        header: { borderBottom: '1px solid var(--border)', minHeight: 60 },
-      }}
+      classNames={{ title: 'reader-title', body: 'reader-scroll', header: 'reader-header' }}
     >
       <ScrollArea h="100%" viewportRef={viewport} type="hover" offsetScrollbars>
-        <div style={{ display: 'flex', gap: 26, padding: '24px 26px 60px' }}>
+        <div className="reader-body">
           {showToc && (
             <nav className="reader-toc">
               <p>目录</p>
@@ -185,6 +180,6 @@ export default function Reader({
           </div>
         </div>
       </ScrollArea>
-    </Drawer>
+    </ResizableDrawer>
   );
 }
