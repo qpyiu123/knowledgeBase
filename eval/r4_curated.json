@@ -1,0 +1,13 @@
+{
+  "description": "R4 建索引前固定的新增资料问题；旧 R1/R2/R3 预期不变。",
+  "queries": [
+    {"id":"rsa-direct-check","query":"RSA 密文8000 模数11413 直接开根筛选","expected":["_reference/rsa-path-check.md","crypto/rsa-small-e-attack.md"]},
+    {"id":"rsa-bounded-k","query":"RSA 有限枚举k 上限之外 精确根","expected":["_reference/rsa-path-check.md","crypto/rsa-small-e-attack.md"]},
+    {"id":"rsa-greater-gcd","query":"共模 gcd指数大于1 组合结果 回代","expected":["_reference/rsa-path-check.md","_methods/rsa_common_modulus_attack.md"]},
+    {"id":"rsa-prefix-vs-product","query":"RSA 普通字节前缀 移位加法 整数相乘","expected":["_reference/rsa-path-check.md","crypto/rsa-small-e-attack.md"]},
+    {"id":"python-padding","query":"Base64 Incorrect padding 补等号 长度余1","expected":["_reference/python-decoding-errors.md"]},
+    {"id":"python-json-position","query":"JSONDecodeError lineno colno pos 定位错误","expected":["_reference/python-decoding-errors.md","_reference/python39/json.md"]},
+    {"id":"python-groups","query":"re.findall 捕获组 元组 返回值","expected":["_reference/python-decoding-errors.md","_reference/python39/re.md"]},
+    {"id":"python-replacement","query":"re.sub 替换字符串 Windows路径 bad escape 回调函数","expected":["_reference/python-decoding-errors.md"]}
+  ]
+}

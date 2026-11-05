@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-05",
+  "base_commit": "eda4935",
+  "workflow": "按弱模型任务书的筛选、提炼、核对三步逐项检查，本批未调用生成模型",
+  "original_backup": "backup/r4-before-20261105.zip",
+  "external_sources": [
+    {"url":"https://doc.sagemath.org/html/en/reference/polynomial_rings/sage/rings/polynomial/polynomial_modn_dense_ntl.html#sage.rings.polynomial.polynomial_modn_dense_ntl.small_roots","location":"small_roots 的 X、beta、epsilon","license":"本批核对参数并链接，不附页面副本"},
+    {"url":"https://cacr.uwaterloo.ca/hac/about/chap8.pdf","location":"§8.2.2(ii)","license":"CRC Press 允许单份个人使用；本批仅核对并链接，不分发 PDF"},
+    {"url":"https://crypto.stanford.edu/~dabo/papers/RSA-survey.pdf","location":"§4.2","license":"页面未提供本批可采用的再分发许可；仅链接"},
+    {"url":"https://docs.python.org/3.9/license.html","location":"文档与示例代码许可","license":"PSF-2.0；文档代码另可采用 0BSD，现存副本 licenses/python-3.9-license.html"}
+  ],
+  "items": [
+    {"id":"r4-small-e-source","path":"kb/crypto/rsa-small-e-attack.md","decision":"accepted","reviewed":true,"sections":["识别信号","解题步骤","常见坑 / 变体"],"local_sources":["kb/_methods/scripts/rsa_small_e.py"],"license":"既有项目整理内容，保留既有来源链接；本批修订自行表述","changes":["移除错误的 c<n^(1/e) 筛选","纠正密文范围、有限 k 与前缀构造","保留原文修订前副本与 Sage 代码"],"unknowns":["SageMath 小根片段本轮未运行"]},
+    {"id":"r4-small-e-card","path":"kb/_methods/rsa_small_e_attack.md","decision":"accepted","reviewed":true,"sections":["前置条件","步骤","手工示例"],"local_sources":["kb/crypto/rsa-small-e-attack.md","kb/_methods/scripts/rsa_small_e.py"],"license":"项目原创卡片修订","changes":["与原文的精确整数根判断一致","固定 k=0 和 k=2 示例","解释普通前缀与乘法因子的区别"],"unknowns":[]},
+    {"id":"r4-common-card","path":"kb/_methods/rsa_common_modulus_attack.md","decision":"accepted","reviewed":true,"sections":["前置条件","步骤","立即可用脚本","失效场景"],"local_sources":["kb/crypto/rsa-common-modulus-attack.md","kb/_methods/scripts/rsa_common_modulus.py"],"license":"项目原创卡片修订","changes":["g=1 无需再开根","g>1 的组合结果使用 r 表示","核对实际 JSON 字段和退出码"],"unknowns":[]},
+    {"id":"r4-small-e-code","path":"kb/_methods/scripts/rsa_small_e.py","decision":"accepted","reviewed":true,"sections":["small_e_attack","selftest"],"local_sources":["kb/crypto/rsa-small-e-attack.md"],"license":"既有项目脚本修订","changes":["检查标准密文范围和非负枚举上限","只返回 m<n 的候选","修正自检模数构造说明"],"unknowns":[]},
+    {"id":"r4-rsa-guide","path":"kb/_reference/rsa-path-check.md","decision":"accepted","reviewed":true,"sections":["先按参数选路径","直接开根与有限 k 的数值例子","普通字节前缀与整数相乘"],"local_sources":["kb/crypto/rsa-small-e-attack.md","kb/crypto/rsa-common-modulus-attack.md","kb/crypto/rsa-broadcast-attack.md","kb/_methods/scripts/rsa_small_e.py","kb/_methods/scripts/rsa_common_modulus.py"],"license":"本批原创说明与示例，论文只链接","changes":["增加路径对照","固定例子与回代检查","区分条件排除的具体路径"],"unknowns":["未增加 g>1 自动条件规则","未复现 SageMath 小根"]},
+    {"id":"r4-python-errors","path":"kb/_reference/python-decoding-errors.md","decision":"accepted","reviewed":true,"sections":["Base64","JSONDecodeError","re.findall","re.sub"],"local_sources":["kb/_reference/python39/base64.md","kb/_reference/python39/json.md","kb/_reference/python39/re.md","licenses/python-3.9-license.html"],"license":"本批原创说明与固定示例，依据 PSF 文档","changes":["按具体运行错误说明下一步检查","提供完整固定示例和全文入口"],"unknowns":["未在 Python 3.9 解释器复跑；现有开发与便携解释器独立验证"]}
+  ]
+}

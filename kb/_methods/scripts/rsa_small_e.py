@@ -54,12 +54,12 @@ def printable_ratio(b: bytes) -> float:
 
 def small_e_attack(n: int, e: int, c: int, max_k: int = 1 << 20) -> list[tuple[int, bytes]]:
     """返回 [(k, m_bytes)]；k=0 表示没有发生模约减。找不到返回空列表。"""
-    if n <= 0 or e < 2 or c < 0:
-        raise ValueError("参数非法：需要 n>0、e>=2、c>=0")
+    if n <= 0 or e < 2 or not 0 <= c < n or max_k < 0:
+        raise ValueError("参数需要 n>0、e>=2、0<=c<n、max_k>=0")
     out: list[tuple[int, bytes]] = []
     for k in range(max_k + 1):
         r, ok = iroot(c + k * n, e)
-        if ok:
+        if ok and r < n:
             out.append((k, long_to_bytes(r)))
     return out
 
@@ -82,8 +82,7 @@ def selftest() -> int:
     fails = []
 
     # ---- 1 正常路径：e=3，m^3 < n，直接开根 ----
-    # 两个 64 位素数 -> n 约 128 位，保证 168 位的 m^3 远小于 n 才是"小 e 无约减"场景
-    # 说明：这两个模数在这里只用于自检，真实比赛用 512 位素数乘出来的 n
+    # 先构造测试 n，再扩大到可覆盖这条固定明文的立方；这里只检查整数关系。
     n1 = int(nextprime(1 << 60)) * int(nextprime((1 << 60) + 12345))
     e1 = 3
     flag = b"flag{sm4ll_3xp0n3nt}"

@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-05",
+  "platform": "Windows 10 开发机",
+  "python": {"version":"3.12.0","tests_passed":464,"seconds":64.68,"curation_tests":7},
+  "portable_python": {"version":"3.13.17","reviewed_example_blocks_passed":6},
+  "methods": {"cards_passed":54,"scripts_passed":52},
+  "index": {"docs":1917,"chunks":15926,"new_docs":2,"revised_docs":3,"removed_docs":0,"first_reused":15902,"first_encoded":24,"final_link_update_encoded":2},
+  "new_queries": {"cases":8,"top1":8,"hit_at_5":8,"average_ms":32.1},
+  "r1": {"direct_at_5":29,"direct_or_linked_at_5":30},
+  "r2": {"cases":30,"direct_at_5":30,"same_order":30,"wrong_status":0,"condition_errors":0},
+  "r3": {"target_cases":13,"primary_previous":3,"primary_now":2,"with_focus":13,"missing_or_empty_correct":2,"wrong_status":0,"changed_case":"开根没有出结果：旧卡移出普通前五，新对照在第 2，旧卡在卡点第 1"},
+  "legacy_hybrid": {"legacy_cases":22,"expanded_cases":60,"recall_at_5":[1.0,1.0],"top1":[0.9091,0.8333]},
+  "offline_http": {"passed":true,"generation_calls":0},
+  "frontend": "源码未变，沿用 R3.3 的构建与 52 项测试结果"
+}

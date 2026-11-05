@@ -14,7 +14,7 @@ signals:
 difficulty: easy
 source: kb/crypto/rsa-small-e-attack.md, kb/crypto/rsa-broadcast-attack.md
 tools: [python, 内置脚本]
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # 方法卡 · RSA 小公钥指数直接开方（含枚举 k）
@@ -31,12 +31,12 @@ updated: 2026-11-03
 
 - 已知 `n, e, c`；`e` 建议 `≤ 17`（`e` 大了枚举 `k` 的窗口会迅速失效）。
 - 成功条件：存在 `k ≥ 0` 使 `c + k*n` 是完全 `e` 次幂，此时 `m = (c + k*n)^(1/e)`。
-- 没有模约减时 `k = 0`，一步到位；`m` 略超 `n^(1/e)` 时 `k` 很小（经验上 `2^20` 足够）。
-- 明文长度上限约为 `n` 位数的 `1/e`；一旦明文超过这个量级，转 Coppersmith（高位已知情形见对应卡）。
+- 没有模约减时 `k = 0`；枚举上限由明文范围估计，`2^20` 是脚本默认预算。
+- 直接开根要求 `m^e<n`；有已知高位时，可继续检查 Coppersmith 所需的未知量大小。
 
 ## 步骤
 
-1. 算 `bit_length`：`c < n^(1/e)` 时直接 `iroot(c, e)`，精确即结束。
+1. 直接 `iroot(c, e)`，检查精确性并回代；不使用 `c < n^(1/e)` 筛选。例：`n=11413, e=3, c=8000`，精确根为 `m=20`。
 2. 不精确就枚举 `k = 0,1,2,...`，对 `c + k*n` 做整数 `e` 次开方，命中即停：
 
    ```python
@@ -46,10 +46,9 @@ updated: 2026-11-03
            return k, long_to_bytes(r)
    ```
 
-3. 拿到 `m` 先转 bytes 看可打印率；若 `e=3` 且 `m = m1*m2`（分段明文），用已知前缀 `m1`（如 `b"flag{"`）
-   对开出的整数取整除，得到 `m2`。
+3. 拿到 `m` 按题目编码转 bytes、回代加密。只有源码明确构造 `m=m1*m2` 时才按已知因子整除；普通字节前缀是移位加法关系。
 4. 仍不开就检查两件事：题面是不是加了固定填充（不是纯幂）；明文是否只知高位（→ Coppersmith 小根）。
-5. 输出前务必备注命中的 `k`：`k > 0` 说明发生过模约减，结果才可信。
+5. 输出命中的 `k`，并核对 `m<n`、`pow(m,e,n)==c`、题目格式。`k=0` 和 `k>0` 都是可检查的候选。
 
 ## 脚本
 
@@ -75,7 +74,18 @@ updated: 2026-11-03
 - **明文被填充**：`m = long_to_bytes(pad(flag))` 或 `m = flag + os.urandom(8)`，此时 `m` 与 `n` 同量级，`k` 涨到无法枚举。
 - **`e` 不小**（如 65537）或明文超过 `n^(1/e)` 多个数量级：枚举 `k` 的复杂度按 `m^e / n` 线性爆炸，`2^20` 远不够。
 - **`n` 是较小的玩具模数**：自检里的 `e=3` 若 `m^3 > n` 也会走 `k>0` 分支，容易把"平凡解"误当攻击成功，先核对 `k` 与 `m` 长度。
-- **密文经过二次编码**（hex 当十进制、`int(flag.hex(), 16)`）：开出的数转 bytes 后不可读，不要直接判死，先还原编码。
+- **输入进制或字节序不符**：先按题目还原数据；`int(flag.hex(),16)` 本身与大端字节转整数相同。
+
+## 手工示例
+
+```powershell
+runtime/python-portable/python.exe kb/_methods/scripts/rsa_small_e.py --n 11413 --e 3 --c 8000 --max-k 0 --json
+# k=0，m_hex=14（整数 20）
+runtime/python-portable/python.exe kb/_methods/scripts/rsa_small_e.py --n 11413 --e 3 --c 4174 --max-k 2 --json
+# k=2，m_hex=1e（整数 30）；max-k=1 时未找到
+```
+
+这里的字节是玩具数据，不要求可打印。完整对照及来源见 `kb/_reference/rsa-path-check.md`。
 
 ## 相关文档
 
