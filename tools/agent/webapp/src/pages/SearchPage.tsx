@@ -6,6 +6,7 @@ import {
   Checkbox,
   Center,
   Divider,
+  Drawer,
   Group,
   Loader,
   SegmentedControl,
@@ -22,12 +23,11 @@ import {
   Check,
   Copy,
   Search,
-  Sparkles,
   Square,
   ThumbsDown,
   ThumbsUp,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Md from "../components/Md";
 import AttachmentPanel from "../components/AttachmentPanel";
 import ConditionDetails from "../components/ConditionDetails";
@@ -40,13 +40,24 @@ import type { DocType, Hit, SearchResp } from "../types";
 
 const MODES = [
   { value: "direct", label: "直接搜索" },
-  { value: "ask", label: "问模型" },
+  { value: "ask", label: "深度搜索" },
+  { value: "raw", label: "直接模式" },
+  { value: "translate", label: "翻译" },
 ];
 
 const MODE_DESC: Record<string, string> = {
   direct: "先查关键词，可选择补充语义相近的资料。",
-  ask: "先检索相关资料，再让本地模型给出思路和脚本。",
+  ask: "结合资料整理思路，完成后在侧栏查看。",
+  raw: "按原样提交输入，不加入资料或题目记录。",
+  translate: "翻译文本，保留代码、函数名和报错。",
 };
+
+function taskError(message: string): string {
+  if (/请先在设置中启动/.test(message)) return "请先在设置中启动，再提交任务。";
+  if (/关闭|未启用/.test(message)) return "此功能已关闭，请到设置检查。";
+  if (/上一项|上一条|尚未结束/.test(message)) return "上一项任务尚未结束，请稍后再试。";
+  return "本次任务未完成，请到设置查看状态。";
+}
 
 const FEEDBACK_LABEL: Record<string, string> = {
   useful: "有用",
@@ -138,6 +149,10 @@ export default function SearchPage({
   const [withFocus, setWithFocus] = useState(false);
   const [focus, setFocus] = useState<SearchResp["focus"]>();
   const selectedWorkspace = useRef(workspaceId);
+  useEffect(() => {
+    ctrl.current?.abort();
+    setAnswerOpen(false);
+  }, [workspaceId, category]);
   selectedWorkspace.current = workspaceId;
   const [supplementing, setSupplementing] = useState(false);
   const searchRequest = useRef(0);
@@ -149,16 +164,17 @@ export default function SearchPage({
   >({});
   const [ms, setMs] = useState<number | null>(null);
   const [searched, setSearched] = useState(false);
-  const [answer, setAnswer] = useState("");
+  const [result, setResult] = useState<{ text: string; refs: Hit[]; title: string }>();
   const [answerOpen, setAnswerOpen] = useState(false);
-  const [elapsed, setElapsed] = useState(0);
-  const [doneInfo, setDoneInfo] = useState("");
+  const [taskBusy, setTaskBusy] = useState(false);
+  const [taskPhase, setTaskPhase] = useState("");
+  const [translation, setTranslation] = useState<string>();
+  const target = translation ?? String(preferences?.find(f => f.key === 'ui.translation')?.value || 'zh');
   const [copied, setCopied] = useState(false);
   const [pickerHit, setPickerHit] = useState<Hit | null>(null);
   const [defaultPickerOpen, setDefaultPickerOpen] = useState(false);
   const ta = useRef<HTMLTextAreaElement>(null);
   const ctrl = useRef<AbortController | null>(null);
-  const t0 = useRef(0);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -186,9 +202,8 @@ export default function SearchPage({
       setError("");
       setPhase("正在查找资料…");
       setSearched(true);
+      ctrl.current?.abort();
       setAnswerOpen(false);
-      setAnswer("");
-      setDoneInfo("");
       setFeedback({});
       try {
         const r = await api.search(
@@ -279,113 +294,92 @@ export default function SearchPage({
     () => () => {
       ++searchRequest.current;
       searchAbort.current?.abort();
+      ctrl.current?.abort();
     },
     [],
   );
 
   const runAsk = useCallback(
-    async (override?: string) => {
-      const text = (override ?? q).trim();
-      if (!text) return;
-      ++searchRequest.current;
-      searchAbort.current?.abort();
-      setSupplementing(false);
-      setQ(text);
-      setBusy(true);
-      setError("");
-      setAnswerOpen(true);
-      setAnswer("");
-      setDoneInfo("");
-      setPhase("正在检索资料…");
-      setFeedback({});
-      t0.current = Date.now();
-      ctrl.current?.abort();
+    async (override?: string, action = "ask") => {
+      const raw = override ?? q;
+      const text = action === "ask" ? raw.trim() : raw;
+      if (!text.trim() || taskBusy) return;
       const c = new AbortController();
       ctrl.current = c;
+      const stillCurrent = () => ctrl.current === c && !c.signal.aborted && selectedWorkspace.current === workspaceId;
+      setTaskBusy(true);
+      setError("");
+      setAnswerOpen(false);
+      setTaskPhase(action === "ask" ? "正在搜索…" : action === "translate" ? "正在翻译…" : "正在处理…");
       try {
-        const r = await api.search(
-          text,
-          3,
-          category,
-          docType === "all" ? null : docType,
-          "hybrid",
-          c.signal,
-          true,
-          withFocus ? workspaceId : undefined,
-        );
-        const selected = [...(r.focus?.hits || []), ...(r.hits || [])]
-          .filter(
-            (hit, index, all) =>
-              all.findIndex((h) => h.path === hit.path) === index,
-          )
-          .slice(0, 3);
-        setHits(selected);
-        setFocus(r.focus);
-        setGraph(r.graph || []);
-        setCounts(r.counts || null);
-        setResultQuery(text);
-        setMs(r.ms ?? null);
-        setSearched(true);
-        const paths = selected.map((h) => h.path);
-        if (!paths.length) {
-          setAnswer("> 没有检索到可用的资料，换个关键词试试。");
-          return;
+        let selected: Hit[] = [];
+        if (action === "ask") {
+          const response = await api.search(
+            text, 3, category, docType === "all" ? null : docType, "hybrid",
+            c.signal, true, withFocus ? workspaceId : undefined,
+          );
+          if (!stillCurrent()) return;
+          selected = [...(response.focus?.hits || []), ...(response.hits || [])]
+            .filter((hit, index, all) => all.findIndex(h => h.path === hit.path) === index)
+            .slice(0, 3);
+          if (!selected.length) {
+            setError("没有找到可用资料，换个关键词试试。");
+            return;
+          }
         }
-        setPhase("模型正在整理思路…");
-        let acc = "";
+        let textBuffer = "", complete = false, cancelled = false, failed = false;
+        const task = action === "raw" ? {task: "raw" as const} :
+          action === "translate" ? {task: "translate" as const, target} : undefined;
         await ask(
-          text,
-          paths,
+          text, selected.map(h => h.path),
           {
-            onToken: (t) => {
-              acc += t;
-              setAnswer(acc);
-              setElapsed((Date.now() - t0.current) / 1000);
+            onToken: piece => { textBuffer += piece; },
+            onError: message => {
+              failed = true;
+              if (stillCurrent()) setError(taskError(message));
             },
-            onError: (m) => {
-              setError(m);
-              if (!acc.trim()) setAnswer("> 未收到模型内容，请查看上方提示。");
+            onDone: info => {
+              cancelled = /取消|停止接收/.test(info || "");
+              complete = !cancelled;
             },
-            onDone: (info) => {
-              setDoneInfo(info);
-              setElapsed((Date.now() - t0.current) / 1000);
-            },
-            onNotice: (m) => setError(m),
+            onNotice: message => { if (stillCurrent()) setError(message); },
           },
-          c.signal,
-          workspaceId,
-          Object.fromEntries(
-            selected
-              .filter((hit) => hit.section)
-              .map((hit) => [hit.path, hit.section!]),
-          ),
+          c.signal, action === "ask" ? workspaceId : undefined,
+          action === "ask" ? Object.fromEntries(
+            selected.filter(hit => hit.section).map(hit => [hit.path, hit.section!]),
+          ) : undefined,
+          task,
         );
-        if (!acc.trim()) setAnswer("> 模型没有返回内容。确认本地模型已启动。");
+        if (!stillCurrent()) return;
+        const finalText = textBuffer.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, "").trim();
+        if (complete && !failed && finalText) {
+          setResult({ text: finalText, refs: selected,
+            title: action === "translate" ? "翻译结果" : action === "raw" ? "直接模式结果" : "深度搜索结果" });
+          setAnswerOpen(true);
+          setCopied(false);
+        } else if (!failed && !cancelled) setError("未收到完整结果，请重试。");
       } catch (e) {
-        if ((e as Error).name === "AbortError") {
-          setAnswer((old) => (old.trim() ? old : "> 已取消本次解释。"));
-          setDoneInfo((old) => old || "已取消");
-        } else {
-          setError(String((e as Error).message || e));
-          setAnswer("> 生成中断。");
-        }
+        if (stillCurrent()) setError(taskError((e as Error).message));
       } finally {
-        setBusy(false);
-        setPhase("");
+        if (ctrl.current === c) {
+          ctrl.current = null;
+          setTaskBusy(false);
+          setTaskPhase("");
+        }
       }
     },
-    [q, category, docType, workspaceId, withFocus],
+    [q, category, docType, workspaceId, withFocus, target, taskBusy],
   );
 
   const run = useCallback(() => {
-    if (mode === "ask") runAsk();
-    else runSearch();
+    if (mode === "direct") void runSearch();
+    else void runAsk(undefined, mode);
   }, [mode, runAsk, runSearch]);
 
   const stop = useCallback(() => {
     ctrl.current?.abort();
-    setPhase("正在取消…");
-    setError("");
+    setTaskPhase("正在取消…");
+    setError("已取消本次任务。");
   }, []);
 
   const sendFeedback = useCallback(
@@ -402,8 +396,6 @@ export default function SearchPage({
     },
     [resultQuery],
   );
-
-  const refs = useMemo(() => hits.slice(0, 3), [hits]);
 
   const saveHitToWorkspace = useCallback(
     async (h: Hit, ws: PickedWorkspace) => {
@@ -443,8 +435,7 @@ export default function SearchPage({
   return (
     <Stack gap="lg">
       <div>
-        <p className="eyebrow">搜索与助手</p>
-        <h1 className="page-title">从线索找到下一步</h1>
+        <h1 className="page-title">搜索资料</h1>
         <p className="page-sub">
           输入题面特征、函数名、报错信息，或描述已经试过的方法。
           {category ? ` 当前只看「${category}」方向。` : ""}
@@ -453,7 +444,7 @@ export default function SearchPage({
           <Text size="xs" c="dimmed">
             {workspaceId
               ? `默认工作区：${workspaceTitle || workspaceId}`
-              : "尚未选择默认工作区；问模型与收藏会先让你选择或新建。"}
+              : "尚未选择默认工作区。"}
           </Text>
           {onSelectWorkspace && (
             <>
@@ -541,7 +532,10 @@ export default function SearchPage({
                   }
                 />
               )}
-              {workspaceId && (
+              {mode === "translate" && <Select label="译成" data={[
+                { value: "zh", label: "中文" }, { value: "en", label: "英语" },
+              ]} value={target} onChange={value => { if (value) setTranslation(value); }} allowDeselect={false} />}
+              {workspaceId && (mode === "direct" || mode === "ask") && (
                 <Checkbox
                   label="参考当前卡点"
                   checked={withFocus}
@@ -552,31 +546,12 @@ export default function SearchPage({
               )}
             </Group>
             <Group gap={8}>
-              {busy && mode === "ask" ? (
-                <Button
-                  variant="light"
-                  color="gray"
-                  leftSection={<Square size={14} />}
-                  onClick={stop}
-                  disabled={phase === "正在取消…"}
-                >
-                  取消解释
-                </Button>
-              ) : (
-                <Button
-                  leftSection={
-                    mode === "ask" ? (
-                      <Sparkles size={16} />
-                    ) : (
-                      <Search size={16} />
-                    )
-                  }
-                  onClick={run}
-                  disabled={busy || !q.trim()}
-                >
-                  {mode === "ask" ? "提问" : "查找"}
-                </Button>
-              )}
+              {taskBusy && <Button variant="light" color="gray" leftSection={<Square size={14} />}
+                onClick={stop} disabled={taskPhase === "正在取消…"}>取消任务</Button>}
+              <Button leftSection={<Search size={16} />} onClick={run}
+                disabled={!(q.trim()) || (mode === "direct" ? busy : taskBusy)}>
+                {mode === "direct" ? "查找" : mode === "ask" ? "开始搜索" : mode === "translate" ? "翻译" : "提交"}
+              </Button>
             </Group>
           </Group>
           <Group justify="space-between">
@@ -602,10 +577,12 @@ export default function SearchPage({
           <Loader size={16} />
           <Text size="sm" c="dimmed">
             {supplementing ? "正在补充语义资料，关键词结果可先阅读…" : phase}
-            {elapsed > 0 && mode === "ask" ? ` · ${elapsed.toFixed(1)} 秒` : ""}
           </Text>
         </Group>
       )}
+
+      {taskBusy && <Group gap="xs" role="status"><Loader size={16} /><Text size="sm">{taskPhase}</Text></Group>}
+      {result && !answerOpen && <Button variant="subtle" size="xs" onClick={() => setAnswerOpen(true)}>查看结果</Button>}
 
       {error && (
         <Alert color="orange" title="本次请求">
@@ -613,72 +590,28 @@ export default function SearchPage({
         </Alert>
       )}
 
-      {answerOpen && (
-        <Card withBorder className="answer-card">
-          <Group justify="space-between" mb="md">
-            <Group gap={10}>
-              <Badge variant="light">解题提示</Badge>
-              {elapsed > 0 && (
-                <Text size="xs" c="dimmed">
-                  {elapsed.toFixed(1)} 秒
-                </Text>
-              )}
-              {doneInfo && (
-                <Text size="xs" c="dimmed">
-                  {doneInfo}
-                </Text>
-              )}
-            </Group>
-            <Tooltip label="复制回答">
-              <Button
-                variant="subtle"
-                size="compact-sm"
-                leftSection={<Copy size={14} />}
-                onClick={() =>
-                  navigator.clipboard.writeText(answer).then(() => {
-                    setCopied(true);
-                    window.setTimeout(() => setCopied(false), 1400);
-                  })
-                }
-              >
-                {copied ? "已复制" : "复制"}
-              </Button>
-            </Tooltip>
+      <Drawer opened={answerOpen && !!result} onClose={() => setAnswerOpen(false)}
+        title={result?.title || "任务结果"} position="right" size="lg"
+        withOverlay={false} trapFocus={false} lockScroll={false}>
+        {result && <Stack gap="md">
+          <Group justify="flex-end">
+            <Button size="xs" variant="subtle" leftSection={<Copy size={14} />}
+              onClick={() => navigator.clipboard.writeText(result.text).then(() => setCopied(true))
+                .catch(() => setError("复制失败，请手动选择文字。"))}>
+              {copied ? "已复制" : "复制结果"}
+            </Button>
           </Group>
-          <div className="answer-body">
-            {answer ? (
-              <Md text={answer} />
-            ) : (
-              <Text size="sm" c="dimmed">
-                {phase || "等待模型输出…"}
-              </Text>
-            )}
-          </div>
-          {refs.length > 0 && answer && (
-            <>
-              <Divider my="md" />
-              <Text size="sm" fw={600} mb="xs">
-                引用资料
-              </Text>
-              <Stack gap={4}>
-                {refs.map((r, i) => (
-                  <Button
-                    key={r.path}
-                    variant="subtle"
-                    size="compact-sm"
-                    justify="flex-start"
-                    onClick={() => onOpenDoc(r.path, r.title)}
-                  >
-                    [{i + 1}] {r.title}
-                  </Button>
-                ))}
-              </Stack>
-            </>
-          )}
-        </Card>
-      )}
+          <Md text={result.text} />
+          {result.refs.length > 0 && <>
+            <Divider />
+            <Text size="sm" fw={600}>引用资料</Text>
+            {result.refs.map(ref => <Button key={ref.path} variant="subtle" size="xs" justify="flex-start"
+              onClick={() => { setAnswerOpen(false); onOpenDoc(ref.path, ref.title); }}>{ref.title}</Button>)}
+          </>}
+        </Stack>}
+      </Drawer>
 
-      {searched && mode === "direct" && (
+      {searched && (
         <div>
           <Group justify="space-between" mb="md" align="baseline">
             <Title order={3}>
@@ -857,14 +790,13 @@ export default function SearchPage({
                       <Button
                         variant="subtle"
                         size="compact-sm"
+                        disabled={taskBusy}
                         onClick={() => {
                           const question = `结合《${h.title}》说明这类题的判断依据和解题步骤`;
-                          setQ(question);
-                          setMode("ask");
                           void runAsk(question);
                         }}
                       >
-                        问模型
+                        深度搜索
                       </Button>
                       <Tooltip
                         label={

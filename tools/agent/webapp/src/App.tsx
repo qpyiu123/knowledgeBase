@@ -111,14 +111,14 @@ export default function App() {
             <Group gap={10} wrap="nowrap">
               <Badge
                 variant="light"
-                color={health?.ok ? 'brand' : 'gray'}
+                color={health?.index_ok ? 'brand' : 'gray'}
                 leftSection={
                   <span
                     style={{
                       width: 7,
                       height: 7,
                       borderRadius: '50%',
-                      background: health?.ok ? 'var(--accent)' : '#c04b4b',
+                      background: health?.index_ok ? 'var(--accent)' : '#c04b4b',
                       display: 'inline-block',
                     }}
                   />
@@ -126,7 +126,7 @@ export default function App() {
                 visibleFrom="xs"
                 tt="none"
               >
-                {health?.ok ? health.model || '模型就绪' : '模型未连接'}
+                {health?.index_ok ? '资料可查' : '索引待检查'}
                 {total ? ` · ${total} 篇` : ''}
               </Badge>
               <Tooltip label="切换明暗主题">
@@ -156,7 +156,7 @@ export default function App() {
                 close();
               }}
               leftSection={<Search size={15} />}
-              label={<span style={{ fontSize: 13.5 }}>搜索与助手</span>}
+              label={<span style={{ fontSize: 13.5 }}>搜索</span>}
             />
             <NavLink
               component="button"

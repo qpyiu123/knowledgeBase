@@ -97,11 +97,11 @@ describe("SearchPage 显式参数", () => {
     );
     renderPage();
     fireEvent.click(screen.getByRole("button", { name: /按特征查方法/ }));
-    fireEvent.click(await screen.findByRole("button", { name: "问模型" }));
-    fireEvent.click(await screen.findByRole("button", { name: "取消解释" }));
-    await screen.findByText("已取消本次解释。");
+    fireEvent.click(await screen.findByRole("button", { name: "深度搜索" }));
+    fireEvent.click(await screen.findByRole("button", { name: "取消任务" }));
+    await screen.findByText("已取消本次任务。");
     expect(screen.queryByText(/模型没有返回内容/)).toBeNull();
-    expect(screen.queryByRole("button", { name: "取消解释" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "取消任务" })).toBeNull();
   });
   it("uses workspace focus only when selected and prioritizes its references for ask", async () => {
     const related = {
@@ -125,7 +125,7 @@ describe("SearchPage 显式参数", () => {
     fireEvent.click(screen.getByRole("button", { name: /按特征查方法/ }));
     await screen.findByText("当前卡点资料 · 示例工作区");
     expect(searchMock.mock.calls[0][7]).toBe("ws1");
-    fireEvent.click(screen.getByRole("button", { name: "问模型" }));
+    fireEvent.click(screen.getByRole("button", { name: "深度搜索" }));
     await waitFor(() => expect(askMock).toHaveBeenCalled());
     expect(askMock.mock.calls[0][1]).toEqual([related.path, HIT.path]);
   });
@@ -206,8 +206,8 @@ describe("SearchPage 显式参数", () => {
 
     renderPage();
     fireEvent.click(screen.getByRole("button", { name: /按特征查方法/ }));
-    await screen.findByRole("button", { name: "问模型" });
-    fireEvent.click(screen.getByRole("button", { name: "问模型" }));
+    await screen.findByRole("button", { name: "深度搜索" });
+    fireEvent.click(screen.getByRole("button", { name: "深度搜索" }));
 
     await waitFor(() => expect(askMock).toHaveBeenCalledTimes(1));
     const [question, paths] = askMock.mock.calls[0];
@@ -215,7 +215,7 @@ describe("SearchPage 显式参数", () => {
     expect(question).not.toBe(STARTER_Q);
     expect(paths).toEqual([HIT.path]);
 
-    await screen.findByText("12 tok · 1.0 tok/s");
+    await screen.findByText("深度搜索结果");
     await screen.findByText(/步骤一/);
   });
 
@@ -225,8 +225,8 @@ describe("SearchPage 显式参数", () => {
 
     renderPage("ws1");
     fireEvent.click(screen.getByRole("button", { name: /按特征查方法/ }));
-    await screen.findByRole("button", { name: "问模型" });
-    fireEvent.click(screen.getByRole("button", { name: "问模型" }));
+    await screen.findByRole("button", { name: "深度搜索" });
+    fireEvent.click(screen.getByRole("button", { name: "深度搜索" }));
 
     await waitFor(() => expect(askMock).toHaveBeenCalledTimes(1));
     expect(askMock.mock.calls[0][4]).toBe("ws1");
@@ -265,10 +265,30 @@ describe("SearchPage 显式参数", () => {
 
     renderPage();
     fireEvent.click(screen.getByRole("button", { name: /按特征查方法/ }));
-    await screen.findByRole("button", { name: "问模型" });
-    fireEvent.click(screen.getByRole("button", { name: "问模型" }));
+    await screen.findByRole("button", { name: "深度搜索" });
+    fireEvent.click(screen.getByRole("button", { name: "深度搜索" }));
 
-    await screen.findByText("模型不可达");
+    await screen.findByText("本次任务未完成，请到设置查看状态。");
+  });
+
+  it("keeps task output out of search until completion", async () => {
+    searchMock.mockResolvedValue({ hits: [HIT], ms: 2 });
+    let finish!: () => void;
+    askMock.mockImplementation(async (_q, _paths, handlers) => {
+      handlers.onToken("<think>不展示</think>完成内容");
+      await new Promise<void>(resolve => { finish = resolve; });
+      handlers.onDone?.("完成");
+    });
+    renderPage();
+    fireEvent.click(screen.getByRole("button", { name: /按特征查方法/ }));
+    fireEvent.click(await screen.findByRole("button", { name: "深度搜索" }));
+    await screen.findByText("正在搜索…");
+    await waitFor(() => expect(finish).toBeDefined());
+    expect(screen.queryByText("完成内容")).toBeNull();
+    finish();
+    await screen.findByText("完成内容");
+    expect(screen.queryByText("不展示")).toBeNull();
+    expect(screen.getAllByText(HIT.title).length).toBeGreaterThan(0);
   });
 
   it("passes the doc type filter to search", async () => {

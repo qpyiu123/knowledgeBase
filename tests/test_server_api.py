@@ -420,7 +420,7 @@ def test_ask_is_serial_and_rejects_when_busy(env):
         server._ASK_LOCK.release()
 
     assert status == 429
-    assert "正在处理上一条问题" in json.loads(text)["error"]
+    assert "上一项任务尚未结束" in json.loads(text)["error"]
 
 
 def test_ask_stream_tok_done_contract(env, monkeypatch):

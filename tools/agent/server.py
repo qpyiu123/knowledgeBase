@@ -882,8 +882,6 @@ def _ask_payload(messages: list[dict[str, str]]) -> dict:
 def _ask_stream(q: str, paths: list[str], workspace_context: str = "", request_state=None, condition_text=None,
                 source_query=None, sections=None):
     """生成 SSE 事件流：tok / err / done 三种事件，终态必有一个。"""
-    import requests
-
     kb = get_kb()
     parts, err = _collect_sources(kb, paths, source_query or q, sections)
     if err:
@@ -915,6 +913,11 @@ def _ask_stream(q: str, paths: list[str], workspace_context: str = "", request_s
         {"role": "system", "content": system},
         {"role": "user", "content": user},
     ]
+    yield from _stream_messages(messages, request_state)
+
+
+def _stream_messages(messages, request_state=None):
+    import requests
     if request_state is not None and request_state['cancelled'].is_set():
         yield _sse({'t': 'done', 'info': '已取消'})
         return
@@ -1338,7 +1341,10 @@ class Handler(BaseHTTPRequestHandler):
             from kb.llama_server import LlamaServerBackend
             try:
                 backend = LlamaServerBackend(CFG)
-                ok, detail = backend.health()
+                with socket.socket() as probe:
+                    probe.settimeout(0.15)
+                    listening = probe.connect_ex(("127.0.0.1", int(backend.host.rsplit(":", 1)[1]))) == 0
+                ok, detail = backend.health() if listening else (False, "尚未启动")
                 self._json({'ok': ok, 'model_ok': ok, 'index_ok': index['ok'],
                             'runtime': PYTHON_INFO, 'generation_enabled': True, 'build': BUILD_ID,
                             'config': CONFIG_ID, 'model': backend.model, 'models': [backend.model] if ok else [],
@@ -1496,20 +1502,38 @@ class Handler(BaseHTTPRequestHandler):
                 self._json({"error": "此功能已关闭，请到设置检查启动方式"}, 503)
                 return
             try:
-                q = _check_query(req.get("q", ""))
-                paths = req.get("paths")
+                task = req.get("task", "deep")
+                if task not in ("deep", "raw", "translate"):
+                    raise BadRequest("请选择深度搜索、直接模式或翻译")
                 request_id = _request_id(req.get('request_id'))
-                if not q:
-                    raise BadRequest("需要问题 q")
-                if not isinstance(paths, list) or not paths:
-                    raise BadRequest("需要至少一个知识库路径")
-                if len(paths) > MAX_PATHS:
-                    raise BadRequest(f"最多引用 {MAX_PATHS} 篇资料")
-                sections = {} if req.get('sections') is None else req['sections']
-                if not isinstance(sections, dict) or len(sections) > MAX_PATHS or any(
-                        key not in paths or not isinstance(value, str) or len(value) > MAX_PATH_CHARS
-                        for key, value in sections.items()):
-                    raise BadRequest('sections 只能填写已选资料的小节名称')
+                if task == "deep":
+                    q = _check_query(req.get("q", ""))
+                    paths = req.get("paths")
+                    if not q:
+                        raise BadRequest("需要问题 q")
+                    if not isinstance(paths, list) or not paths:
+                        raise BadRequest("需要至少一个知识库路径")
+                    if len(paths) > MAX_PATHS:
+                        raise BadRequest(f"最多引用 {MAX_PATHS} 篇资料")
+                    sections = {} if req.get('sections') is None else req['sections']
+                    if not isinstance(sections, dict) or len(sections) > MAX_PATHS or any(
+                            key not in paths or not isinstance(value, str) or len(value) > MAX_PATH_CHARS
+                            for key, value in sections.items()):
+                        raise BadRequest('sections 只能填写已选资料的小节名称')
+                    messages = None
+                else:
+                    q = req.get("q", "")
+                    if not isinstance(q, str) or not q.strip() or len(q) > 12000:
+                        raise BadRequest("请输入内容，最多 12000 字")
+                    messages = [{"role": "user", "content": q}]
+                    if task == "translate":
+                        target = req.get("target") or _cfg("ui", "translation", "zh")
+                        if target not in ("zh", "en"):
+                            raise BadRequest("请选择中文或英语")
+                        language = {"zh": "中文", "en": "英语"}[target]
+                        messages.insert(0, {"role": "system", "content":
+                            f"将用户提供的文本译成{language}，只输出译文。保留代码块、函数名、参数和报错原文。"})
+                    paths, sections = [], {}
             except BadRequest as e:
                 self._json({"error": str(e)}, 400)
                 return
@@ -1518,7 +1542,7 @@ class Handler(BaseHTTPRequestHandler):
             workspace_context = ""
             condition_text = q
             source_query = q
-            workspace_id = req.get("workspace_id")
+            workspace_id = req.get("workspace_id") if task == "deep" else None
             if workspace_id not in (None, ""):
                 from agent.workspace import (
                     WorkspaceError, WorkspaceNotFound, check_id,
@@ -1546,7 +1570,7 @@ class Handler(BaseHTTPRequestHandler):
 
             # 串行生成：忙碌时立即拒绝，避免显存被打爆。
             if not _ASK_LOCK.acquire(blocking=False):
-                self._json({"error": "模型正在处理上一条问题，请稍后再试"}, 429)
+                self._json({"error": "上一项任务尚未结束，请稍后再试"}, 429)
                 return
 
             gen = None
@@ -1562,7 +1586,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Cache-Control", "no-cache")
                 self.send_header("Connection", "close")
                 self.end_headers()
-                gen = _ask_stream(q, paths, workspace_context, state, condition_text, source_query, sections)
+                gen = (_ask_stream(q, paths, workspace_context, state, condition_text, source_query, sections)
+                       if messages is None else _stream_messages(messages, state))
                 for chunk in gen:
                     self.wfile.write(chunk.encode("utf-8"))
                     self.wfile.flush()

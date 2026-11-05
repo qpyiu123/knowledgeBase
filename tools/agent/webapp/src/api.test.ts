@@ -119,7 +119,7 @@ describe("ask SSE 契约", () => {
     });
 
     expect(errors).toHaveLength(1);
-    expect(errors[0]).toContain("模型没有返回内容");
+    expect(errors[0]).toContain("没有收到结果");
   });
 
   it("shows a busy 429 message from the JSON error body", async () => {

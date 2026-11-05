@@ -212,6 +212,7 @@ export async function ask(
   signal?: AbortSignal,
   workspaceId?: string | null,
   sections?: Record<string, string>,
+  task?: { task: "raw" | "translate"; target?: string },
 ): Promise<void> {
   if (signal?.aborted) throw new DOMException("已取消", "AbortError");
   const requestId =
@@ -241,7 +242,7 @@ export async function ask(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
-        withWorkspace && workspaceId
+        task ? { q, ...task, request_id: requestId } : withWorkspace && workspaceId
           ? {
               q,
               paths,
@@ -270,11 +271,7 @@ export async function ask(
       signal,
     );
     if (!streamTerminal) {
-      if (tokens === 0) {
-        tracked.onError?.("模型没有返回内容。确认本地模型已启动。");
-      } else {
-        tracked.onDone?.("完成");
-      }
+      tracked.onError?.(tokens ? "连接中断，未收到完整结果" : "没有收到结果，请到设置检查");
     }
   } finally {
     signal?.removeEventListener("abort", onAbort);
