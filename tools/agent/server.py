@@ -66,6 +66,38 @@ HOST = os.environ.get("AGENT_HOST", "127.0.0.1")
 PORT = int(os.environ.get("AGENT_PORT") or _cfg("runtime", "port", 8765))
 GENERATION_DISABLED = os.environ.get("AGENT_DISABLE_GENERATION") == "1"
 _MODEL_CONTROL = ModelControl(os.environ.get("AGENT_LOG_DIR") or ROOT / "logs")
+_INDEX_JOB = {"state": "idle", "message": ""}
+_INDEX_JOB_LOCK = threading.Lock()
+
+
+def _start_index_update():
+    from kb.config import Config
+    from kb.reindex import run_reindex
+
+    saved = Config.load(CFG.path)
+    with _INDEX_JOB_LOCK:
+        if _INDEX_JOB["state"] == "running":
+            raise ValueError("索引正在更新")
+        _INDEX_JOB.update(state="running", message="正在更新索引，原有资料仍可查")
+    active = CFG
+
+    def worker():
+        global _KB
+        try:
+            result = run_reindex(active,
+                chunk_chars=int(saved.get("search", "chunk_chars", 900)),
+                overlap=int(saved.get("search", "chunk_overlap", 120)))
+            with _KB_LOCK:
+                _KB = None
+            with _INDEX_JOB_LOCK:
+                count = result.get("docs")
+                _INDEX_JOB.update(state="done", message=f"索引已更新：{count} 篇" if count is not None else "索引已更新")
+        except Exception as error:
+            with _INDEX_JOB_LOCK:
+                _INDEX_JOB.update(state="error", message=str(error))
+
+    threading.Thread(target=worker, daemon=True).start()
+
 
 
 def _generation_disabled():
@@ -78,7 +110,7 @@ def api_settings():
     from kb.config import Config
     active = CFG or Config()
     return {"fields": fields(Config.load(active.path, environment=False), active), "model": _MODEL_CONTROL.status(),
-            "forced_off": GENERATION_DISABLED}
+            "forced_off": GENERATION_DISABLED, "index_update": dict(_INDEX_JOB)}
 
 
 OLLAMA = (os.environ.get("AGENT_OLLAMA")
@@ -753,7 +785,8 @@ def api_search(req: dict) -> dict:
     if not isinstance(req, dict):
         raise BadRequest("请求体必须是 JSON 对象")
     q = _check_query(req.get("q", ""))
-    cat = _check_category(req.get("category"))
+    language = req.get("category") == "language"
+    cat = _check_category(None if language else req.get("category"))
     dtype_filter = _check_doc_type(req.get("doc_type"))
     k = _check_top_k(req.get("top_k"))
     retrieval = req.get("retrieval", "hybrid")
@@ -769,6 +802,13 @@ def api_search(req: dict) -> dict:
                 "retrieval": retrieval, "with_conditions": with_conditions}
     kb = get_kb()
     t0 = time.time()
+    lookup = getattr(getattr(kb, "fts", None), "search_language", None)
+    api_hits = lookup(q, k, language) if lookup and (language or (not cat and not dtype_filter)) else []
+    if language or api_hits:
+        return {"hits": api_hits, "graph": [], "ms": round((time.time() - t0) * 1000, 1),
+                "query": q, "category": "language" if language else None,
+                "doc_type": dtype_filter, "counts": {"topic": len(api_hits), "card": 0},
+                "retrieval": "fts", "with_conditions": False}
     hits = kb.search(q, top_k=k, category=cat, doc_type=dtype_filter, retrieval=retrieval)
     ms = round((time.time() - t0) * 1000, 1)
 
@@ -1421,7 +1461,7 @@ class Handler(BaseHTTPRequestHandler):
             self._json({"error": "请求体必须是 JSON 对象"}, 400)
             return
 
-        if u.path in ("/api/settings", "/api/model"):
+        if u.path in ("/api/settings", "/api/model", "/api/index"):
             if self.headers.get_content_type() != "application/json":
                 self._json({"error": "设置请求须使用 JSON"}, 415)
                 return
@@ -1435,6 +1475,10 @@ class Handler(BaseHTTPRequestHandler):
                     CFG = update(CFG, req)
                     if _generation_disabled():
                         _MODEL_CONTROL.stop()
+                elif u.path == "/api/index":
+                    if req.get("action") != "rebuild":
+                        raise ValueError("请选择更新索引")
+                    _start_index_update()
                 elif req.get("action") == "stop":
                     _MODEL_CONTROL.stop()
                 elif req.get("action") in ("start", "restart"):

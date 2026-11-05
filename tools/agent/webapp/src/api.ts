@@ -24,6 +24,7 @@ export type Settings = {
     options: string[]; limits: number[]; apply: string}[];
   model: {state: string; model: string | null; error: string};
   forced_off: boolean;
+  index_update?: {state: string; message: string};
 };
 
 async function errorMessage(r: Response): Promise<string> {
@@ -71,6 +72,7 @@ const wsPath = (id: string) => "/api/workspaces/" + encodeURIComponent(id);
 
 export const api = {
   settings: () => getJSON<Settings>("/api/settings"),
+  reindex: () => postJSON<Settings>("/api/index", {action: "rebuild"}),
   saveSettings: (changes: Record<string, SettingValue>) => postJSON<Settings>("/api/settings", changes),
   model: (action: "start" | "stop" | "restart") => postJSON<Settings>("/api/model", { action }),
   health: () => getJSON<Health>("/api/health"),

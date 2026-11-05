@@ -24,10 +24,10 @@ export default function SettingsPage({ onSaved }: { onSaved: (settings: Settings
     return () => { active = false; };
   }, []);
   useEffect(() => {
-    if (!starting) return;
+    if (!starting && data?.index_update?.state !== "running") return;
     const timer = window.setInterval(() => api.settings().then(setData).catch(() => {}), 800);
     return () => window.clearInterval(timer);
-  }, [starting]);
+  }, [starting, data?.index_update?.state]);
 
   const update = (key: string, value: SettingValue) => setChanges(previous => ({ ...previous, [key]: value }));
   const save = async () => {
@@ -83,7 +83,11 @@ export default function SettingsPage({ onSaved }: { onSaved: (settings: Settings
           return <TextInput key={field.key} label={field.label} description={description}
             value={String(value)} onChange={event => update(field.key, event.currentTarget.value)} />;
         })}
-        {group === "搜索与索引" && <Text size="sm">资料修改后，可关闭查询服务，再用启动入口的 -Reindex 更新索引。</Text>}
+        {group === "搜索与索引" && <Group>
+          <Button variant="default" size="xs" loading={data.index_update?.state === "running"}
+            onClick={() => { setError(""); api.reindex().then(setData).catch(e => setError(e.message)); }}>更新索引</Button>
+          {data.index_update?.message && <Text size="sm" role="status">{data.index_update.message}</Text>}
+        </Group>}
       </Stack>
     </Paper>)}
     {data && <Group><Button loading={saving} disabled={!Object.keys(changes).length} onClick={() => void save()}>保存设置</Button></Group>}

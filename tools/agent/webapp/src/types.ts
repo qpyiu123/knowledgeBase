@@ -63,6 +63,7 @@ export type Applicability = {
 };
 
 export type Hit = {
+  api?: { symbol: string; language: string; version: string; source: string; anchor: string };
   focus_basis?: {
     field: string;
     label: string;

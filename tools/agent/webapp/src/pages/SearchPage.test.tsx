@@ -41,12 +41,12 @@ const HIT: Hit = {
   },
 };
 
-function renderPage(workspaceId?: string) {
+function renderPage(workspaceId?: string, category = "", openDoc = vi.fn()) {
   return render(
     <MantineProvider>
       <SearchPage
-        category=""
-        onOpenDoc={() => {}}
+        category={category}
+        onOpenDoc={openDoc}
         docs={1567}
         workspaceId={workspaceId}
         workspaceTitle={workspaceId ? "示例工作区" : undefined}
@@ -289,6 +289,23 @@ describe("SearchPage 显式参数", () => {
     await screen.findByText("完成内容");
     expect(screen.queryByText("不展示")).toBeNull();
     expect(screen.getAllByText(HIT.title).length).toBeGreaterThan(0);
+  });
+
+  it("finds a function without extra retrieval and opens the matching section", async () => {
+    const openDoc = vi.fn();
+    searchMock.mockResolvedValue({hits: [{...HIT, title: "Node.js · Buffer.from",
+      path: "reverse/wasm-reverse.md", snippet: "把字符串按给定编码转成字节",
+      api: {symbol: "Buffer.from", language: "Node.js", version: "Node.js 22",
+        source: "https://nodejs.org/api/buffer.html", anchor: "buffer-from"}}]});
+    renderPage(undefined, "language", openDoc);
+    fireEvent.change(screen.getByLabelText("搜索内容"), {target: {value: "Node.js Buffer.from"}});
+    fireEvent.click(screen.getByRole("button", {name: "查找"}));
+    await screen.findByText("把字符串按给定编码转成字节");
+    expect(searchMock.mock.calls[0][2]).toBe("language");
+    expect(searchMock.mock.calls[0][4]).toBe("fts");
+    expect(askMock).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", {name: "阅读资料"}));
+    expect(openDoc).toHaveBeenCalledWith("reverse/wasm-reverse.md#buffer-from", "Node.js · Buffer.from");
   });
 
   it("passes the doc type filter to search", async () => {

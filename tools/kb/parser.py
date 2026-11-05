@@ -47,6 +47,10 @@ class Doc:
     illustrated_by: list[str] = field(default_factory=list)
     # 多值分类：一个知识点可以同时属于多个方向
     also_category: list[str] = field(default_factory=list)
+    kind: str = ""
+    api_language: str = ""
+    api_version: str = ""
+    api_symbols: list[str] = field(default_factory=list)
 
     def meta_text(self) -> str:
         """用于索引的元数据拼接（权重靠前，FTS5 中用列权重体现）。"""
@@ -125,6 +129,10 @@ def load_doc(path: Path, kb_dir: Path) -> Doc:
         uses_tool=_as_list(meta.get("uses_tool")),
         illustrated_by=_as_list(meta.get("illustrated_by")),
         also_category=[c.strip().lower() for c in _as_list(meta.get("also_category"))],
+        kind=str(meta.get("kind") or ""),
+        api_language=str(meta.get("api_language") or ""),
+        api_version=str(meta.get("version") or meta.get("api_version") or ""),
+        api_symbols=_as_list(meta.get("api_symbols")),
     )
     if not FM_RE.match(raw):
         doc.warnings.append("缺少 front-matter")

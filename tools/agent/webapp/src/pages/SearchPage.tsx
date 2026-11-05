@@ -125,6 +125,8 @@ export default function SearchPage({
   attachmentMaxBytes?: number;
 }) {
   const [q, setQ] = useState("");
+  const languageOnly = category === "language";
+  const readHit = (hit: Hit) => onOpenDoc(hit.api?.anchor ? hit.path + "#" + hit.api.anchor : hit.path, hit.title);
   const [mode, setMode] = useState("direct");
   const [docType, setDocType] = useState<"all" | DocType>("all");
   const [busy, setBusy] = useState(false);
@@ -230,7 +232,7 @@ export default function SearchPage({
         setMs(r.ms ?? null);
         setBusy(false);
         setPhase("");
-        if (semantic) {
+        if (semantic && !languageOnly) {
           setSupplementing(true);
           try {
             const extra = await api.search(
@@ -287,7 +289,7 @@ export default function SearchPage({
         }
       }
     },
-    [q, topK, category, docType, semantic, withConditions, withFocus, workspaceId],
+    [q, topK, category, docType, semantic, withConditions, withFocus, workspaceId, languageOnly],
   );
 
   useEffect(
@@ -435,10 +437,10 @@ export default function SearchPage({
   return (
     <Stack gap="lg">
       <div>
-        <h1 className="page-title">搜索资料</h1>
+        <h1 className="page-title">{languageOnly ? "语言文档" : "搜索资料"}</h1>
         <p className="page-sub">
           输入题面特征、函数名、报错信息，或描述已经试过的方法。
-          {category ? ` 当前只看「${category}」方向。` : ""}
+          {languageOnly ? " 输入语言和完整函数名，查看中文解释。" : category ? ` 当前只看「${category}」方向。` : ""}
         </p>
         <Group gap={8} mt={6} wrap="wrap">
           <Text size="xs" c="dimmed">
@@ -475,7 +477,7 @@ export default function SearchPage({
           <Textarea
             ref={ta}
             aria-label="搜索内容"
-            placeholder="例如：PHP str_replace 过滤了关键字，还能从哪些条件判断过滤方式？"
+            placeholder={languageOnly ? "例如：Python base64.b64decode" : "例如：PHP str_replace 过滤了关键字，还能从哪些条件判断过滤方式？"}
             autosize
             minRows={3}
             maxRows={12}
@@ -516,14 +518,14 @@ export default function SearchPage({
                   ]}
                 />
               </div>
-              {mode === "direct" && (
+              {mode === "direct" && !languageOnly && (
                 <Checkbox
                   label="补充语义相近资料"
                   checked={semantic}
                   onChange={(event) => setSemantic(event.currentTarget.checked)}
                 />
               )}
-              {mode === "direct" && (
+              {mode === "direct" && !languageOnly && (
                 <Checkbox
                   label="显示条件关联"
                   checked={withConditions}
@@ -606,7 +608,7 @@ export default function SearchPage({
             <Divider />
             <Text size="sm" fw={600}>引用资料</Text>
             {result.refs.map(ref => <Button key={ref.path} variant="subtle" size="xs" justify="flex-start"
-              onClick={() => { setAnswerOpen(false); onOpenDoc(ref.path, ref.title); }}>{ref.title}</Button>)}
+              onClick={() => { setAnswerOpen(false); readHit(ref); }}>{ref.title}</Button>)}
           </>}
         </Stack>}
       </Drawer>
@@ -680,7 +682,7 @@ export default function SearchPage({
                   <button
                     className="hit-title"
                     type="button"
-                    onClick={() => onOpenDoc(h.path, h.title)}
+                    onClick={() => readHit(h)}
                   >
                     {h.title}
                   </button>
@@ -777,13 +779,18 @@ export default function SearchPage({
                     onOpenDoc={onOpenDoc}
                   />
                   <Group justify="space-between" mt={10} wrap="wrap" gap={8}>
-                    <span className="hit-path">{h.path}</span>
+                    <Group gap="xs">
+                      <span className="hit-path">{h.path}</span>
+                      {h.api?.version && <Text size="xs" c="dimmed">{h.api.version}</Text>}
+                      {h.api?.source.startsWith("https://") && <Button component="a" href={h.api.source}
+                        target="_blank" rel="noreferrer" size="compact-xs" variant="subtle">原文来源</Button>}
+                    </Group>
                     <Group gap={4}>
                       <Button
                         variant="subtle"
                         size="compact-sm"
                         rightSection={<ArrowUpRight size={14} />}
-                        onClick={() => onOpenDoc(h.path, h.title)}
+                        onClick={() => readHit(h)}
                       >
                         阅读资料
                       </Button>
@@ -872,7 +879,7 @@ export default function SearchPage({
             {!busy && !hits.length && (
               <Center py={56} style={{ flexDirection: "column", gap: 8 }}>
                 <Search size={26} opacity={0.4} />
-                <Text fw={600}>没有找到相关资料</Text>
+                <Text fw={600}>{languageOnly ? "未找到收录的函数，试试语言名和完整函数名" : "没有找到相关资料"}</Text>
                 <Text size="sm" c="dimmed">
                   试试函数名、题目特征或更短的关键词。
                 </Text>
@@ -906,7 +913,7 @@ export default function SearchPage({
                       variant="subtle"
                       size="compact-sm"
                       justify="flex-start"
-                      onClick={() => onOpenDoc(h.path, h.title)}
+                      onClick={() => readHit(h)}
                     >
                       {h.title}
                     </Button>
@@ -977,7 +984,7 @@ export default function SearchPage({
         opened={defaultPickerOpen}
         onClose={() => setDefaultPickerOpen(false)}
         defaultId={workspaceId}
-        hint="选择默认工作区后，问模型会带上该题已确认的事实与失败尝试。"
+        hint="选择默认工作区后，深度搜索可使用该题已确认的事实与失败尝试。"
         onPicked={async (ws) => {
           onSelectWorkspace?.(ws.id, ws.title);
           setDefaultPickerOpen(false);

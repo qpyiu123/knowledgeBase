@@ -16,6 +16,9 @@ difficulty: hard
 source: "Synacktiv / ctf-wiki / PayloadsAllTheThings"
 tools: [python, burpsuite, php_filter_chain_generator]
 updated: 2026-10-22
+api_language: PHP
+api_version: PHP 7 / 8
+api_symbols: [str_replace, str_ireplace, base64_decode, file_get_contents]
 ---
 
 ## 一、识别信号（题面长什么样）
@@ -144,3 +147,52 @@ print(subprocess.run(
 - [PayloadsAllTheThings — PHP filter chain](https://github.com/swisskyrepo/PayloadsAllTheThings)
 - [CTF Wiki — PHP 伪协议](https://www.ctf-wiki.org/)
 - [HackTricks — PHP Tricks](https://book.hacktricks.wiki/en/pentesting-web/php-tricks-esp/php-useful-functions-disable_functions-open_basedir-bypass/index.html)
+
+# PHP 函数速查
+
+## str_replace
+
+按字面匹配替换字符串，区分大小写。前三个参数是查找值、替换值和输入，第四个可选参数按引用返回替换次数。数组查找项按顺序处理，后一步会看到前一步的结果。
+
+```php
+// str_replace($search, $replace, $subject, &$count = null)
+$text = str_replace('old', 'new', 'old-old', $count); // new-new，次数 2
+```
+
+检查过滤代码时，先核对替换顺序、大小写和解码发生在哪一步。这里不使用正则。
+来源：[PHP 手册：str_replace](https://www.php.net/manual/zh/function.str-replace.php)（旧库 2026-10-23 页）。
+
+## str_ireplace
+
+用法与 str_replace 对应，匹配时忽略大小写，第四个可选参数记录替换次数。比较题面给出的大小写处理，不要与正则的标志位混用。
+
+```php
+// str_ireplace($search, $replace, $subject, &$count = null)
+$text = str_ireplace('abc', 'x', 'AbC', $count); // x，次数 1
+```
+
+来源：[PHP 手册：str_ireplace](https://www.php.net/manual/zh/function.str-ireplace.php)（旧库 2026-10-23 页）。
+
+## base64_decode
+
+把 Base64 文本解码为字节串。第二个参数 strict 默认为 false；设为 true 时，字母表之外的字符会导致返回 false。失败值要用严格比较，空字符串也可能是正常输出。
+
+```php
+// base64_decode(string $string, bool $strict = false): string|false
+$data = base64_decode('QUI=', true); // AB
+```
+
+来源：[PHP 手册：base64_decode](https://www.php.net/manual/zh/function.base64-decode.php)（旧库 2026-10-24 页）。
+
+## file_get_contents
+
+读取文件或已启用包装器提供的内容，成功返回字符串，失败返回 false。可选参数依次用于是否搜索 include_path、流上下文、起始偏移和最大读取长度。检查返回值时区分空文件和读取失败。
+
+```php
+// file_get_contents($filename, $use_include_path = false, $context = null, $offset = 0, $length = null)
+$data = file_get_contents('sample.txt');
+if ($data === false) { echo '读取失败'; }
+```
+
+题目中遇到包装器时，另查目标 PHP 配置和访问限制。
+来源：[PHP 手册：file_get_contents](https://www.php.net/manual/zh/function.file-get-contents.php)（旧库 2026-10-24 页）。

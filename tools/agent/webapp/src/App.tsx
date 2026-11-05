@@ -196,6 +196,8 @@ export default function App() {
                     label={<span style={{ fontSize: 13.5 }}>全部</span>}
                     rightSection={<span className="cat-count">{total}</span>}
                   />
+                  <NavLink component="button" active={category === 'language'} label="语言文档"
+                    onClick={() => { setCategory('language'); close(); }} />
                   {cats.map(([k, n]) => (
                     <NavLink
                       key={k}

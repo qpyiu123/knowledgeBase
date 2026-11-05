@@ -7,6 +7,9 @@ difficulty: medium
 source: "WebAssembly 官方规范 / wabt / CTF-Wiki RE"
 tools: [wabt, wasm2wat, wasm-decompile, wasm2c, wasmtime, jadx, node]
 updated: 2026-10-22
+api_language: Node.js
+api_version: Node.js 22 文档与旧库归档
+api_symbols: [Buffer.from, Buffer.readUInt32LE, Buffer.readUInt32BE]
 ---
 
 ## 一、识别信号（题面长什么样）
@@ -181,3 +184,39 @@ if (ex.check && ex.memory) {
 - [wasmtime 运行时](https://github.com/bytecodealliance/wasmtime)
 - [Binaryen（wasm 优化与工具）](https://github.com/WebAssembly/binaryen)
 - [wasm3 轻量解释器](https://github.com/wasm3/wasm3)
+
+# Node.js 字节读取速查
+
+## Buffer.from
+
+把字符串按给定编码转成字节；字符串形式默认 UTF-8。十六进制文本应指定 hex，Base64 文本应指定 base64。再用 toString 指定输出如何解释，避免把文本编码和整数大小端混为一谈。
+
+```javascript
+// Buffer.from(string[, encoding])
+const bytes = Buffer.from('4142', 'hex');
+console.log(bytes.toString('utf8')); // AB
+```
+
+来源：[Node.js 22 Buffer.from](https://nodejs.org/docs/latest-v22.x/api/buffer.html#static-method-bufferfromstring-encoding)，结合旧库 node-buffer 归档核对。
+
+## Buffer.readUInt32LE
+
+从 offset 开始读取四个字节，按小端序解释为无符号 32 位整数，返回 JavaScript number。确保 offset 到末尾至少有四字节；越界时检查数据长度与偏移来源。
+
+```javascript
+// buf.readUInt32LE([offset])
+Buffer.from('01000000', 'hex').readUInt32LE(0); // 1
+```
+
+来源：[Node.js 22 readUInt32LE](https://nodejs.org/docs/latest-v22.x/api/buffer.html#bufreaduint32leoffset)。
+
+## Buffer.readUInt32BE
+
+从 offset 开始读取四个字节，按大端序解释为无符号 32 位整数。与小端版本读取范围一致，差别是字节解释顺序。
+
+```javascript
+// buf.readUInt32BE([offset])
+Buffer.from('00000001', 'hex').readUInt32BE(0); // 1
+```
+
+来源：[Node.js 22 readUInt32BE](https://nodejs.org/docs/latest-v22.x/api/buffer.html#bufreaduint32beoffset)。
