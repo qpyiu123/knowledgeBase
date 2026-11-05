@@ -21,7 +21,7 @@ from kb.llama_server import MODELS, LlamaServerBackend, model_id, base_url
 def command(cfg, cpu=False):
     model = model_id(cfg)
     runtime = cfg.resolve(str(cfg.get("llama_server", "runtime", "runtime/llama-b11669-vulkan")))
-    weights = cfg.resolve("models/gguf/" + MODELS[model])
+    weights = cfg.models_dir / "gguf" / MODELS[model]
     args = [
         str(runtime / "llama-server.exe"),
         "-m",
@@ -61,6 +61,12 @@ def start(cfg, log_dir: Path, cpu=False, timeout=120):
             if not ok:
                 raise RuntimeError(f"端口 {port} 已被占用：{detail}")
             return {"ok": True, "reused": True, "model": backend.model}
+    process = spawn(cfg, log_dir, cpu)
+    return wait_ready(process, backend, log_dir, cpu, timeout)
+
+
+def spawn(cfg, log_dir: Path, cpu=False):
+    backend = LlamaServerBackend(cfg)
     args = command(cfg, cpu)
     if not Path(args[2]).is_file():
         raise FileNotFoundError(
@@ -82,10 +88,21 @@ def start(cfg, log_dir: Path, cpu=False, timeout=120):
             env=environment,
             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
         )
-    (log_dir / "llama.pid").write_text(str(process.pid), encoding="ascii")
+    try:
+        (log_dir / "llama.pid").write_text(str(process.pid), encoding="ascii")
+    except OSError:
+        process.terminate()
+        process.wait(timeout=10)
+        raise
+    return process
+
+
+def wait_ready(process, backend, log_dir, cpu, timeout=120, cancelled=None):
     deadline = time.monotonic() + timeout
     try:
         while time.monotonic() < deadline:
+            if cancelled is not None and cancelled.is_set():
+                raise RuntimeError("已取消")
             if process.poll() is not None:
                 raise RuntimeError(
                     f"模型服务退出，代码 {process.returncode}；查看 {log_dir / 'llama.log'}"

@@ -108,6 +108,7 @@ def env(tmp_path: Path, monkeypatch):
     fake_kb = FakeKB(kb_dir, index_dir)
     monkeypatch.setattr(server, "CFG", fake_kb.cfg)
     monkeypatch.setattr(server, "_KB", fake_kb)
+    monkeypatch.setattr(server, "_MODEL_CONTROL", server.ModelControl(tmp_path / "logs"))
     monkeypatch.setenv("AGENT_ATTACHMENT_DIR", str(tmp_path / "attachments"))
 
     srv = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
@@ -299,7 +300,7 @@ def test_no_model_health_does_not_probe_service_and_ask_is_disabled(env, monkeyp
     assert body['runtime']['version']
     status, text, _ = call(env, 'POST', '/api/ask', {'q': 'test', 'paths': ['crypto/rsa.md']})
     assert status == 503
-    assert '模型解释已关闭' in json.loads(text)['error']
+    assert '此功能已关闭' in json.loads(text)['error']
 
 
 def test_search_forwards_fts_without_changing_existing_defaults(env):
@@ -514,6 +515,7 @@ def test_qwen35_web_uses_shared_backend_and_preserves_sse(env, monkeypatch):
     cfg.data['llama_server'] = {'model': 'qwen35-9b', 'port': 8766}
     monkeypatch.setattr(server, 'CFG', cfg)
     monkeypatch.setattr('requests.get', lambda *a, **k: FakeResp(payload={'data': [{'id': 'qwen35-9b'}]}))
+    monkeypatch.setattr(server._MODEL_CONTROL, 'prepare', lambda config, *a: config)
     from llama_mock import mock_stream
     response, seen = mock_stream(monkeypatch,
         [b'data: {"choices":[{"delta":{"content":"ok"}}]}', b'data: [DONE]'])
@@ -530,7 +532,7 @@ def test_config_can_disable_generation_without_model_requests(env, monkeypatch):
                         'none' if (section, key) == ('llm', 'backend') else default)
     monkeypatch.setattr('requests.post', lambda *a, **k: pytest.fail('不应请求模型'))
     status, text, _ = call(env, 'POST', '/api/ask', {'q': 'RSA', 'paths': ['crypto/rsa.md']})
-    assert status == 503 and '模型解释已关闭' in text
+    assert status == 503 and '此功能已关闭' in text
     status, text, _ = call(env, 'GET', '/api/health')
     assert status == 200 and json.loads(text)['generation_enabled'] is False
 

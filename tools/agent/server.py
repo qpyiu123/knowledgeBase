@@ -37,6 +37,7 @@ PYTHON_INFO = {"executable": sys.executable, "version": sys.version.split()[0], 
 sys.path.insert(0, str(ROOT / "tools"))
 
 from agent.buildinfo import BUILD_ID, config_id  # noqa: E402
+from agent.model_control import ModelControl  # noqa: E402
 
 try:
     CONFIG_ID = config_id()
@@ -62,8 +63,23 @@ def _cfg(section: str, key: str, default):
 
 
 HOST = os.environ.get("AGENT_HOST", "127.0.0.1")
-PORT = int(os.environ.get("AGENT_PORT", "8765"))
+PORT = int(os.environ.get("AGENT_PORT") or _cfg("runtime", "port", 8765))
 GENERATION_DISABLED = os.environ.get("AGENT_DISABLE_GENERATION") == "1"
+_MODEL_CONTROL = ModelControl(os.environ.get("AGENT_LOG_DIR") or ROOT / "logs")
+
+
+def _generation_disabled():
+    return (GENERATION_DISABLED or _cfg("llm", "backend", "ollama") in ("none", "off")
+            or _cfg("ui", "generation", "on_demand") == "off")
+
+
+def api_settings():
+    from agent.settings import fields
+    from kb.config import Config
+    active = CFG or Config()
+    return {"fields": fields(Config.load(active.path, environment=False), active), "model": _MODEL_CONTROL.status(),
+            "forced_off": GENERATION_DISABLED}
+
 
 OLLAMA = (os.environ.get("AGENT_OLLAMA")
           or str(_cfg("ollama", "host", "http://127.0.0.1:11434"))).rstrip("/")
@@ -907,12 +923,16 @@ def _ask_stream(q: str, paths: list[str], workspace_context: str = "", request_s
         stream = None
         pieces = 0
         try:
-            backend = get_backend(CFG)
+            cfg = _MODEL_CONTROL.prepare(
+                CFG, _cfg("ui", "generation", "on_demand") == "on_demand",
+                request_state["cancelled"] if request_state is not None else None,
+            )
+            backend = get_backend(cfg)
             if request_state is not None:
                 request_state['backend'] = backend
                 if request_state['cancelled'].is_set():
                     backend.cancel()
-            stream = backend.stream(messages, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
+            stream = backend.stream(messages)
             for piece in stream:
                 if request_state is not None and request_state['cancelled'].is_set():
                     break
@@ -1116,6 +1136,11 @@ class Handler(BaseHTTPRequestHandler):
             return
         if u.path == "/api/health":
             self._health()
+        elif u.path == "/api/settings":
+            try:
+                self._json(api_settings())
+            except (ValueError, OSError) as error:
+                self._json({"error": str(error)}, 400)
         elif u.path == "/api/stats":
             self._stats()
         elif u.path == "/api/doc":
@@ -1300,7 +1325,7 @@ class Handler(BaseHTTPRequestHandler):
     def _health(self):
         import requests
         index = _index_status()
-        if GENERATION_DISABLED or _cfg('llm', 'backend', 'ollama') in ('none', 'off'):
+        if _generation_disabled():
             self._json({"ok": False, "model_ok": False, "index_ok": index["ok"],
                         "runtime": PYTHON_INFO, "generation_enabled": False,
                         "build": BUILD_ID, "config": CONFIG_ID,
@@ -1363,7 +1388,7 @@ class Handler(BaseHTTPRequestHandler):
             })
 
     def do_POST(self):
-        global _ACTIVE_REQUEST
+        global _ACTIVE_REQUEST, CFG
         u = urlparse(self.path)
         if u.path == "/api/analyze":
             self._analyze(u)
@@ -1388,6 +1413,41 @@ class Handler(BaseHTTPRequestHandler):
             return
         if not isinstance(req, dict):
             self._json({"error": "请求体必须是 JSON 对象"}, 400)
+            return
+
+        if u.path in ("/api/settings", "/api/model"):
+            if self.headers.get_content_type() != "application/json":
+                self._json({"error": "设置请求须使用 JSON"}, 415)
+                return
+            origin = self.headers.get("Origin")
+            if origin and urlparse(origin).netloc != self.headers.get("Host"):
+                self._json({"error": "请在本应用页面操作设置"}, 403)
+                return
+            try:
+                if u.path == "/api/settings":
+                    from agent.settings import update
+                    CFG = update(CFG, req)
+                    if _generation_disabled():
+                        _MODEL_CONTROL.stop()
+                elif req.get("action") == "stop":
+                    _MODEL_CONTROL.stop()
+                elif req.get("action") in ("start", "restart"):
+                    if _generation_disabled() or _cfg("llm", "backend", "") != "llama_server":
+                        raise ValueError("当前运行方式未启用本地解释")
+                    if not _ASK_LOCK.acquire(blocking=False):
+                        self._json({"error": "上一项任务尚未结束"}, 409)
+                        return
+                    try:
+                        if req["action"] == "restart":
+                            _MODEL_CONTROL.stop()
+                        _MODEL_CONTROL.prepare(CFG)
+                    finally:
+                        _ASK_LOCK.release()
+                else:
+                    raise ValueError("请选择启动、停止或重启")
+                self._json(api_settings())
+            except (ValueError, RuntimeError, OSError) as error:
+                self._json({"error": str(error)}, 400)
             return
 
         if u.path == '/api/cancel':
@@ -1432,8 +1492,8 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if u.path == "/api/ask":
-            if GENERATION_DISABLED or _cfg('llm', 'backend', 'ollama') in ('none', 'off'):
-                self._json({"error": "模型解释已关闭。请先停止本项目服务，启用 config.toml 中的模型后端，再去掉 -NoModel 重新启动"}, 503)
+            if _generation_disabled():
+                self._json({"error": "此功能已关闭，请到设置检查启动方式"}, 503)
                 return
             try:
                 q = _check_query(req.get("q", ""))
@@ -1561,6 +1621,9 @@ def main() -> int:
         srv.serve_forever()
     except KeyboardInterrupt:
         print("\nbye")
+    finally:
+        _MODEL_CONTROL.stop()
+        srv.server_close()
     return 0
 
 

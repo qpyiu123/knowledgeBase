@@ -17,6 +17,15 @@ import { readAskStream, type AskHandlers } from "./lib/sse";
 
 export type { AskHandlers } from "./lib/sse";
 
+export type SettingValue = string | number | boolean;
+export type Settings = {
+  fields: {key: string; group: string; label: string; value: SettingValue;
+    effective: SettingValue; override: string | null; kind: string;
+    options: string[]; limits: number[]; apply: string}[];
+  model: {state: string; model: string | null; error: string};
+  forced_off: boolean;
+};
+
 async function errorMessage(r: Response): Promise<string> {
   let detail = "";
   try {
@@ -61,6 +70,9 @@ function delJSON<T>(url: string): Promise<T> {
 const wsPath = (id: string) => "/api/workspaces/" + encodeURIComponent(id);
 
 export const api = {
+  settings: () => getJSON<Settings>("/api/settings"),
+  saveSettings: (changes: Record<string, SettingValue>) => postJSON<Settings>("/api/settings", changes),
+  model: (action: "start" | "stop" | "restart") => postJSON<Settings>("/api/model", { action }),
   health: () => getJSON<Health>("/api/health"),
   stats: () => getJSON<Stats>("/api/stats"),
   doc: (path: string) =>

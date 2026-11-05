@@ -115,7 +115,7 @@ class Config:
 
     # ---- 加载 ----
     @classmethod
-    def load(cls, path: str | Path | None = None) -> "Config":
+    def load(cls, path: str | Path | None = None, *, environment=True) -> "Config":
         p = Path(path) if path else ROOT / "config.toml"
         data = _defaults()
         if p.exists():
@@ -126,6 +126,12 @@ class Config:
                 raw = raw[3:]
             loaded = _load_toml(raw.decode("utf-8", errors="replace"))
             data = _deep_merge(data, loaded)
+        from .user_settings import read
+        for name, value in read(p).items():
+            section, key = name.split(".", 1)
+            data.setdefault(section, {})[key] = value
+        if not environment:
+            return cls(data=data, path=p)
         # 环境变量覆盖（方便临时切换后端）
         if os.environ.get("KB_LLM_BACKEND"):
             data["llm"]["backend"] = os.environ["KB_LLM_BACKEND"]

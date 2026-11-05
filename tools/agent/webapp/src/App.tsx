@@ -14,12 +14,13 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { BookOpen, FolderKanban, Moon, Search, Sun } from 'lucide-react';
+import { BookOpen, FolderKanban, Moon, Search, Settings as SettingsIcon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Reader, { type ReaderTarget } from './components/Reader';
 import SearchPage from './pages/SearchPage';
 import WorkspacePage from './pages/WorkspacePage';
-import { api } from './api';
+import { api, type Settings } from './api';
+import SettingsPage from './pages/SettingsPage';
 import {
   clearLastWorkspace,
   loadLastWorkspace,
@@ -27,7 +28,7 @@ import {
 } from './lib/lastWorkspace';
 import type { Health, Stats } from './types';
 
-type Page = 'search' | 'workspace';
+type Page = 'search' | 'workspace' | 'settings';
 type CurrentWorkspace = { id: string; title: string };
 
 const CAT_LABEL: Record<string, string> = {
@@ -46,7 +47,13 @@ const CAT_LABEL: Record<string, string> = {
 
 export default function App() {
   const [opened, { toggle, close }] = useDisclosure();
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const { colorScheme, toggleColorScheme, setColorScheme } = useMantineColorScheme();
+  const [settings, setSettings] = useState<Settings>();
+  const applySettings = (next: Settings) => {
+    setSettings(next);
+    const theme = next.fields.find(f => f.key === 'ui.theme')?.value;
+    if (theme === 'auto' || theme === 'light' || theme === 'dark') setColorScheme(theme);
+  };
   const [stats, setStats] = useState<Stats | null>(null);
   const [health, setHealth] = useState<Health | null>(null);
   const [category, setCategory] = useState<string>('');
@@ -63,6 +70,7 @@ export default function App() {
   };
 
   useEffect(() => {
+    api.settings().then(applySettings).catch(() => {});
     api.stats().then(setStats).catch(() => setStats(null));
     api.health().then(setHealth).catch(() => setHealth(null));
   }, []);
@@ -167,6 +175,8 @@ export default function App() {
                 ) : undefined
               }
             />
+            <NavLink component="button" active={page === 'settings'} label="设置"
+              leftSection={<SettingsIcon size={15} />} onClick={() => { setPage('settings'); close(); }} />
           </Stack>
           <Divider mb="sm" />
           {page === 'search' ? (
@@ -220,9 +230,10 @@ export default function App() {
 
         <AppShell.Main>
           <div className="page">
-            {page === 'search' ? (
+            {page === 'settings' ? <SettingsPage onSaved={applySettings} /> : page === 'search' ? (
               <SearchPage
                 category={category}
+                preferences={settings?.fields}
                 onOpenDoc={(path, title) => setReader({ path, title })}
                 docs={total}
                 workspaceId={currentWorkspace.id || undefined}

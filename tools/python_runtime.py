@@ -21,7 +21,9 @@ def configured_python(root: Path = ROOT) -> str:
     path = root / 'config.toml'
     if not path.is_file():
         return 'auto'
-    return str(tomllib.loads(path.read_text(encoding='utf-8-sig')).get('runtime', {}).get('python') or 'auto')
+    settings = path.parent / "work/settings.json"
+    saved = json.loads(settings.read_text(encoding="utf-8-sig")).get("runtime.python") if settings.exists() else None
+    return str(saved or tomllib.loads(path.read_text(encoding='utf-8-sig')).get('runtime', {}).get('python') or 'auto')
 
 
 def resolve_python(explicit: str = '', *, root: Path = ROOT, environ=None) -> tuple[Path, str]:

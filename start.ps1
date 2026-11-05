@@ -1,12 +1,13 @@
 ﻿# CTF 知识库 一键启动
 #
 #   .\启动.cmd              仅启动查询界面，并打开浏览器
-#   .\启动.cmd -Start       启动查询和解释服务
+#   .\启动.cmd -Start       启动查询服务
 #   .\启动.cmd -Stop        停止全部服务
 #   .\启动.cmd -Status      只看状态（[Web] / [索引] / [模型] 三层独立显示）
 #   .\启动.cmd -Reindex     重建索引（FTS + 向量，前台显示进度）
 #   .\启动.cmd -NoBrowser   不自动开浏览器
 #   .\启动.cmd -CpuOnly     强制 CPU 推理（显存被别的程序占了时用）
+#   .\启动.cmd -LoadModel   显式预加载解释服务（诊断用）
 #   .\启动.cmd -NoModel     只启动查询界面
 #   .\启动.cmd -ChatModel qwen35-4b  使用可选的 4B 模型（默认 9B）
 #   .\启动.cmd -PythonExe <路径>  临时选择 Python（也可使用 KB_PYTHON / config.toml）
@@ -24,12 +25,13 @@ param(
     [switch]$NoBrowser,
     [switch]$CpuOnly,
     [switch]$NoModel,
+    [switch]$LoadModel,
     [switch]$CheckEnvironment,
     [string]$PythonExe = '',
     [string]$LogDirectory = '',
     [ValidateSet('', 'qwen35-9b', 'qwen35-4b')]
     [string]$ChatModel = '',
-    [int]$Port = 8765,
+    [int]$Port = 0,
     [int]$OllamaPort = 11434
 )
 
@@ -37,6 +39,15 @@ $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 $OutputEncoding = [Console]::OutputEncoding
 $Root  = $PSScriptRoot
+if (-not $Port -and $env:AGENT_PORT) { $Port = [int]$env:AGENT_PORT }
+if (-not $Port) {
+    $settingsPath = Join-Path $Root 'work\settings.json'
+    if (Test-Path -LiteralPath $settingsPath) {
+        $savedSettings = Get-Content -LiteralPath $settingsPath -Raw -Encoding UTF8 | ConvertFrom-Json
+        $Port = [int]$savedSettings.'runtime.port'
+    }
+    if (-not $Port) { $Port = 8765 }
+}
 . (Join-Path $Root 'tools\python-runtime.ps1')
 $RuntimeChoice = $null
 $Venv = ''
@@ -515,7 +526,7 @@ if ($Stop) {
     Stop-Listening $Port 'Web 界面' | Out-Null
     if (-not $NoModel) { Stop-Listening $OllamaPort 'Ollama' | Out-Null }
     Stop-PidFile (Join-Path $LogD 'web.pid') 'Web 界面'
-    if (-not $NoModel) { Stop-PidFile (Join-Path $LogD 'llama.pid') 'Qwen3.5 模型服务' }
+    Stop-PidFile (Join-Path $LogD 'llama.pid') 'Qwen3.5 模型服务'
     if (-not $NoModel) { Stop-PidFile (Join-Path $LogD 'ollama.pid') 'Ollama' }
     Say ''
     if ($NoModel) { Ok '查询服务已停止' } else { Ok '全部停止' }
@@ -549,7 +560,7 @@ if ($Reindex) {
 
 if ($Status) { Show-Status; return }
 
-# -Start 显式启动查询和解释服务；CMD 无参数时会传入 -NoModel。
+# 常规启动只打开查询；-LoadModel 供显式预加载和诊断脚本使用。
 # 因此这里不单独分支，继续执行下面的环境检查与服务启动。
 if ($Start) { }
 
@@ -606,7 +617,7 @@ Say ''
 Say '=== 2. 模型服务 ===' 'Cyan'
 
 $olPid = Get-PortPid $OllamaPort
-if ($NoModel -or $Backend -in @('none', 'off')) {
+if (-not $LoadModel -or $NoModel -or $Backend -in @('none', 'off')) {
     Ok '仅启动查询界面，不启动生成模型服务'
 } elseif ($Backend -eq 'llama_server') {
     $llamaArgs = @($LlamaScript, 'start', '--log-dir', $LogD)
@@ -669,6 +680,8 @@ if ($webPid) {
     $env:AGENT_PORT = "$Port"
     $env:AGENT_HOST = '127.0.0.1'
     $env:AGENT_DISABLE_GENERATION = if ($NoModel) { '1' } else { '0' }
+    $env:AGENT_LOG_DIR = $LogD
+    if ($CpuOnly) { $env:KB_CPU_ONLY = '1' }
     # 模型/host/context 由 config.toml 决定；这里不再硬编码模型名。
     # AGENT_MODEL / AGENT_OLLAMA 只有在用户显式设置时才覆盖配置。
     if ($CpuOnly) { $env:AGENT_OLLAMA = "http://127.0.0.1:$OllamaPort" }
@@ -728,7 +741,7 @@ if (-not $NoBrowser) {
 
 Say ''
 Say '提示：' 'DarkGray'
-Say '  .\启动.cmd -Start    启动查询和解释服务' 'DarkGray'
+Say '  .\启动.cmd -Start    启动查询服务' 'DarkGray'
 Say '  .\启动.cmd -Status   查看三层状态' 'DarkGray'
 Say '  .\启动.cmd -Reindex  重建索引' 'DarkGray'
 Say '  .\启动.cmd -Stop     停止全部服务' 'DarkGray'

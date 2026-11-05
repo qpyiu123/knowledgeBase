@@ -14,6 +14,11 @@ function Resolve-KbPython {
             }
         }
     }
+    $settings = Join-Path $Root 'work\settings.json'
+    if (Test-Path -LiteralPath $settings) {
+        $stored = Get-Content -LiteralPath $settings -Raw -Encoding UTF8 | ConvertFrom-Json
+        if ($stored.'runtime.python') { $configured = $stored.'runtime.python' }
+    }
     $choice = $PythonExe
     $source = 'parameter'
     if (-not $choice) { $choice = $env:KB_PYTHON; $source = 'KB_PYTHON' }

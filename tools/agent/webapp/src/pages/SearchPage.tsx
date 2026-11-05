@@ -95,6 +95,7 @@ function cleanSnippet(s: string, title?: string): string {
 }
 
 export default function SearchPage({
+  preferences,
   category,
   onOpenDoc,
   docs,
@@ -104,6 +105,7 @@ export default function SearchPage({
   attachmentMaxBytes,
 }: {
   category: string;
+  preferences?: import('../api').Settings['fields'];
   onOpenDoc: (path: string, title?: string) => void;
   docs: number;
   workspaceId?: string;
@@ -125,6 +127,13 @@ export default function SearchPage({
     method?: number;
   } | null>(null);
   const [semantic, setSemantic] = useState(false);
+  const topK = Number(preferences?.find(f => f.key === 'search.top_k')?.value || 8);
+  useEffect(() => {
+    if (preferences) {
+      setSemantic(Boolean(preferences.find(f => f.key === 'ui.semantic')?.value));
+      setWithConditions(Boolean(preferences.find(f => f.key === 'ui.conditions')?.value));
+    }
+  }, [preferences]);
   const [withConditions, setWithConditions] = useState(false);
   const [withFocus, setWithFocus] = useState(false);
   const [focus, setFocus] = useState<SearchResp["focus"]>();
@@ -184,7 +193,7 @@ export default function SearchPage({
       try {
         const r = await api.search(
           text,
-          10,
+          topK,
           category,
           docType === "all" ? null : docType,
           "fts",
@@ -211,7 +220,7 @@ export default function SearchPage({
           try {
             const extra = await api.search(
               text,
-              10,
+              topK,
               category,
               docType === "all" ? null : docType,
               "hybrid",
@@ -263,7 +272,7 @@ export default function SearchPage({
         }
       }
     },
-    [q, category, docType, semantic, withConditions, withFocus, workspaceId],
+    [q, topK, category, docType, semantic, withConditions, withFocus, workspaceId],
   );
 
   useEffect(

@@ -61,7 +61,7 @@ class LlamaServerBackend(BaseBackend):
                 return False, f"当前服务使用 {available}，需要 {self.model}；请按所选模型重新启动"
             return True, self.model
         except (requests.RequestException, ValueError, KeyError) as error:
-            return False, f"模型服务未就绪：{error}；请运行 启动.cmd -Start 启动解释服务"
+            return False, f"模型服务未就绪：{error}；请到设置查看启动状态"
 
     def _payload(self, messages, max_tokens, temperature, stream):
         return {
