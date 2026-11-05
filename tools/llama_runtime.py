@@ -42,9 +42,10 @@ def start(cfg, log_dir: Path, cpu=False, timeout=120):
                 raise RuntimeError(f'端口 {port} 已被占用：{detail}')
             return {'ok': True, 'reused': True, 'model': backend.model}
     args = command(cfg, cpu)
-    for path in (Path(args[0]), Path(args[2])):
-        if not path.is_file():
-            raise FileNotFoundError(f'缺少文件：{path}；请先准备旧项目中的完整运行文件')
+    if not Path(args[2]).is_file():
+        raise FileNotFoundError(f'缺少所选模型 {backend.model}：{args[2]}；请选择已保留的模型，或用 -NoModel 仅查询')
+    if not Path(args[0]).is_file():
+        raise FileNotFoundError(f'缺少 Vulkan 运行文件：{args[0]}；请复制完整运行目录，或用 -NoModel 仅查询')
     log_dir.mkdir(parents=True, exist_ok=True)
     environment = {k: v for k, v in os.environ.items() if not k.startswith('LLAMA_ARG_')}
     with (log_dir / 'llama.log').open('ab') as log:

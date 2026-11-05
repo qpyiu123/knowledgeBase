@@ -60,6 +60,8 @@ def config_id(root: Path = ROOT) -> str:
 
 
 def git_head(root: Path = ROOT) -> str:
+    if not (root / '.git').exists():
+        return ''
     try:
         out = subprocess.run(
             ["git", "-C", str(root), "rev-parse", "--short", "HEAD"],

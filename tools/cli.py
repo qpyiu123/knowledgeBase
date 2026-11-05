@@ -214,19 +214,20 @@ def cmd_graph(cfg: Config, args) -> int:
 
 def cmd_search(cfg: Config, args) -> int:
     kb = KB(cfg)
+    top_k = int(args.top_k or cfg.get('search', 'top_k', 8))
     t0 = time.time()
     if args.vec_only:
-        hits = kb.vec.search(args.query, top_k=args.top_k, category=args.category)
+        hits = kb.vec.search(args.query, top_k=top_k, category=args.category)
         from kb.fusion import FusedHit
         fused = [FusedHit(doc_path=h["doc_path"], title=h["title"], category=h["category"],
                           score=h["score"], sources=["vec"], best_text=h.get("text", ""))
                  for h in hits]
     elif args.fts_only:
-        raw = kb.fts.search(args.query, top_k=args.top_k, category=args.category, mode=args.mode)
+        raw = kb.fts.search(args.query, top_k=top_k, category=args.category, mode=args.mode)
         from kb.fusion import fuse_single_source
-        fused = fuse_single_source(raw, args.top_k)
+        fused = fuse_single_source(raw, top_k)
     else:
-        fused = kb.search(args.query, top_k=args.top_k, category=args.category, mode=args.mode)
+        fused = kb.search(args.query, top_k=top_k, category=args.category, mode=args.mode)
     dt = (time.time() - t0) * 1000
 
     if args.json:

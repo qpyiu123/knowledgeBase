@@ -1,6 +1,7 @@
 # ---- 大目录 / 可重建产物（保留在本地，不提交）----
 models/
 runtime/
+release/
 index/
 temp_newData/
 work/

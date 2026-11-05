@@ -18,6 +18,7 @@ import os
 import shutil
 import zipfile
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -36,15 +37,13 @@ TIMEOUT = 30
 # 便携工具集的位置**不写死**：按优先级依次探测，哪个存在用哪个。
 #   1. 环境变量 KB_TOOLS_DIR（想放到别处时设这个）
 #   2. <项目根>/tools/_bin          （项目自带）
-#   3. <项目根的上一级>/tools        （当前布局：E:\CTF\tools / F:\CTFfiles\..\tools）
-#   4. E:\CTF\tools                  （历史位置兜底）
+#   3. <项目根的上一级>/tools        （可选同级工具集）
 def _find_bin_dir() -> Path:
     """找一个**确实含有便携工具**的目录。
 
     注意不能只看目录存在：项目里有个空的 tools/_bin（早期预留），
     如果它被优先选中，exiftool/foremost 就找不到，可用工具会变少。
     """
-    import os
     probe = ("exiftool-13.27_64", "foremost", "WinRAR")
 
     cands = []
@@ -53,7 +52,6 @@ def _find_bin_dir() -> Path:
         cands.append(Path(env))
     cands.append(ROOT / "tools" / "_bin")
     cands.append(ROOT.parent / "tools")
-    cands.append(Path(r"E:\CTF\tools"))
 
     for c in cands:
         if c.is_dir() and any((c / p).exists() for p in probe):
@@ -61,16 +59,13 @@ def _find_bin_dir() -> Path:
     for c in cands:
         if c.is_dir():
             return c
-    return cands[-1]
+    return ROOT / "tools" / "_bin"
 
 
 BIN = _find_bin_dir()
-VENV_PY = ROOT / ".venv" / "Scripts" / "python.exe"
-
 TOOL_CMDS: dict[str, list[list[str]]] = {
-    "file": [[r"C:\Program Files\Git\usr\bin\file.exe"],
-             ["file"]],
-    "binwalk": [[str(VENV_PY), str(BIN / "binwalk-2.3.1" / "src" / "scripts" / "binwalk")]],
+    "file": [["file"]],
+    "binwalk": [[sys.executable, str(BIN / "binwalk-2.3.1" / "src" / "scripts" / "binwalk")]],
     "strings": [["strings"]],
     "exiftool": [[str(BIN / "exiftool-13.27_64" / "exiftool.exe")],
                  [str(BIN / "exiftool-13.27_64" / "exiftool(-k).exe"), "-k"]],
@@ -80,7 +75,7 @@ TOOL_CMDS: dict[str, list[list[str]]] = {
     "steghide": [["steghide"]],
     # 注意：WinRAR.exe 是 GUI 程序，命令行调用会挂起，不能用。
     # ZIP 统一走 extract_zip（纯 Python，见 carve.py）。
-    "unzip": [["unzip"], [r"C:\Program Files\Git\usr\bin\unzip.exe"]],
+    "unzip": [["unzip"]],
     "tar": [["tar"]],
 }
 

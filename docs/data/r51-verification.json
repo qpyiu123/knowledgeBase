@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-05",
+  "platform": "Windows 10 x64 开发机",
+  "powershell": "5.1",
+  "portable_python": "3.13.17",
+  "python_tests_passed": 475,
+  "python_test_seconds": 64.41,
+  "bundle": {"profile":"both","relative_path":"release/CTF知识库-R5-both","files":6301,"bytes":8943822053,"docs":1917,"chunks":15926,"vector_chunks":15926},
+  "query_only": {"alias_drive":"Y:","bytes":431929773,"startup_seconds":4.26,"edge":true,"edge_external_requests":0,"semantic":true,"save_restore":true},
+  "native_models": [
+    {"id":"qwen35-9b","startup_seconds":19.53,"sse_pieces":16,"done":true},
+    {"id":"qwen35-4b","startup_seconds":17.86,"sse_pieces":16,"done":true}
+  ],
+  "test_services_closed": true,
+  "network": "测试进程外网代理不可达；Edge 仅允许本机应用请求；未关闭整机网络",
+  "competition_laptop_offline": "待在 8845HS / 24 GB 比赛机验收"
+}
