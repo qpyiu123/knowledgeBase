@@ -94,3 +94,13 @@ updated: 2026-10-31
 选择剖切查看内部
 
 Zoom in 查看内部
+
+## 原文配图
+
+![盒子](../../_assets/images/5a87e59f3f1dd2b97f865c6742daa08e7653303e0216d66e74ed62ed98427683.jpg)
+
+![题解（原文图）](../../_assets/images/71733bfad36094b6911142d341f9404520cffea078a66b890121e09998041158.png)
+
+![题解（原文图）](../../_assets/images/97cf4a17d45e6c751319684894e1514a813c6342bcdc49e927a14e4ce1529fe6.png)
+
+![题解（原文图）](../../_assets/images/2934ced9b9a33d0142eaf9bf09c55373b844d2b99a30430786ef43675b1aa179.png)

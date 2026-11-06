@@ -82,3 +82,15 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 第三题：使用区块链浏览器查看地址第一次交易 https://sepolia.etherscan.io/
 
 第四题：使用 remix 编译部署合约
+
+## 原文配图
+
+![以太坊题目页面](../../_assets/images/b0748fd446228fead5a2fe18b6e1141d8794e755d79f7fa0a76a085f3a28354d.png)
+
+![连接钱包](../../_assets/images/84465769dccc0e2cf2c9a4eff828bd9d7e9161ea112bb414715e3ca1a91a9d41.jpg)
+
+![合约交易记录](../../_assets/images/93eb261cab53bdd4c46e704d1d4e44b902cba66dde650f3462d032ddb946d57c.jpg)
+
+![调用合约方法](../../_assets/images/ab6d2df10f0947301d4c605c6c4527397a1da0589dc0bfc89b2e51d445f668f1.jpg)
+
+![获得以太坊题 FLAG](../../_assets/images/165134a3893087255f14a0d9c0b2d8c4f6ab8cce20b6631553fa9da09fa13521.jpg)

@@ -98,3 +98,13 @@ robot36：https://github.com/xdsopl/robot36
 或者也可以手动拼图
 
 ~~真有人会这么做吗~~
+
+## 原文配图
+
+![图片1](../../_assets/images/6985db4ca16e96fe8aa0f37e631265fbbb1ae1d0ebb67532e9636602cd868792.jpg)
+
+![图片2](../../_assets/images/144932e3fa3673a9a7183925746ffb95250b415f69780d4c84e0df11583adae2.jpg)
+
+![图片3](../../_assets/images/6b9f34491359184652687f806eb444a945bcbb58e8a2bddfe08b8dd6f57d1544.png)
+
+![图片4](../../_assets/images/329f5e372466720a7f7a5591ede6108352e97e6d4d50d45071b8be5ba678c2d4.jpg)

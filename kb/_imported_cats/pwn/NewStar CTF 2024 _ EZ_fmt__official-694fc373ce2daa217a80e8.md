@@ -88,3 +88,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 - 第三次输入为 `sh`，构造出 `printf(buf)=system(sh)` 即可
 
 EXP 如下
+
+## 原文配图
+
+![vuln 函数](../../_assets/images/375f2ad71e5b0e3cd3f20d568cbba982541159f5bc698f11a95fb33e5315474f.png)
+
+![确定偏移](../../_assets/images/acba10c04159cffc797126717b43e907cddf78d9775544a552d920c95df4a07a.png)

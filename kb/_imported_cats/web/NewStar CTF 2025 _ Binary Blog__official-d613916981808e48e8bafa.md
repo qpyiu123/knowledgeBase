@@ -118,3 +118,29 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 修改 template 为 `php://filter/read=convert.base64-encode/resource=flag.php` 来泄露 `flag.php` 的源码
 
 得到 FLAG。
+
+## 原文配图
+
+![Dirsearch 发现 flag.php](../../_assets/images/cae78eb0ba5e3c0a7a4d551b936276d80bdd097d562341d7a83a55bff1065f38.png)
+
+![主页发现 admin 账户](../../_assets/images/ccfe58d51b5a3434463bab8de96700f3778493cc7f75911e43a6bd97e820b7bb.png)
+
+![爆破 admin 登录失败](../../_assets/images/801c2ed5ea20b4a4db524fee54525216cbf59399cdab18925188de443c419965.png)
+
+![修改密码接口请求](../../_assets/images/6ead5bbd57f0bfdeb0d4b36b1b53c07a6a4a321de95e2b17781bf01f45a1d54d.png)
+
+![修改 admin 用户密码](../../_assets/images/ab60137799d33f7014c2140f08c868edd84e07d31cb6f89e6a5aba09e61a0688.png)
+
+![登录 admin 用户](../../_assets/images/998384a70ed0f9080623f7d410ece94e11f3cff4a75aaaec9e7cfa7721ca2544.png)
+
+![管理员接口页面](../../_assets/images/e7e855ee049b6112ab5a1669ca4c5ffc2a67e8ccc40efd7e3ab248b9ae71898a.png)
+
+![博客导出功能](../../_assets/images/fcc10cdb1ecbe82773d152b4086f7bba3a7fe50fa46834aef6dc9b4a95fec00a.png)
+
+![页面提示信息](../../_assets/images/845732a9242a6c91af7789517993dcb973a209cd59219a3c036605809d06e3a2.png)
+
+![发现 PHP 文件](../../_assets/images/8cca18d6afeef646144df79d3a5942a6e8f91e6e65c2a7ba04b2f3f9b776e369.png)
+
+![读取 flag.php 源码](../../_assets/images/5a44f70eb06017e07f66a0324992c8d931c13e0d49dc19d467c5ca2f3d637389.png)
+
+![获得 FLAG](../../_assets/images/cf5cf66eaf7a9cdff9dde1f2f4ae91ffe152ca80a5859eb6136485766d29b91a.png)

@@ -44,6 +44,7 @@ CORE = (
     "licenses/python-3.9-license.html",
     "licenses/离线包第三方来源.md",
     "docs/data/r4-curation.json",
+    "docs/data/r66-curation.json",
     "docs/data/r1-reference-import.json",
     "licenses/BAAI-bge-small-zh-v1.5-README.md",
 )

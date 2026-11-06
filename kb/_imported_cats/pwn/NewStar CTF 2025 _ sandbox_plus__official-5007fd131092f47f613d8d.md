@@ -94,3 +94,11 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 可以将结构体布置在栈上。执行上面的 `openat` shellcode 后，`rsi` 中保留了栈地址，因此可以通过 `rsi` 指定 `readv` 读入地址和 `writev` 写出地址。shellcode 如下：
 
 因此可以得到 EXP：
+
+## 原文配图
+
+![程序主逻辑](../../_assets/images/6247b19f661afd696ccedb3b6977197072481b0dbc859ca602e3357e1289e1ca.jpg)
+
+![seccomp 沙箱安装函数](../../_assets/images/9f3061be1c45a709d50444c29edd5ae9fbf223b9989a101ffb98862e4b89998a.jpg)
+
+![seccomp-tools 查看沙箱规则](../../_assets/images/3206ad70a1f759aefb8f01962fcdfa55dd602a364137fc9339a22d7c14ed1adb.jpg)

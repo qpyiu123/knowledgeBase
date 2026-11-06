@@ -23,7 +23,7 @@ Wireshark 的主界面包含 6 个部分：
 5. 数据包详情：数据包的详细数据
 6. 数据包字节：数据包对应的字节流，二进制
 
-![](https://files.mdnice.com/user/88172/f9fa3cc7-9ab5-4c86-a926-e64eda9e968b.png)
+![](../../../_assets/images/253dc99d13ae52659620ea2a1a365aa04011df6304d7c51dbd30e20d2b2d7601.webp)
 
 注意，数据包详情面板中展示的信息是经过 Wireshark 解析并”格式化”过的，方便阅读。最下面的数据包字节面板里才是这个包的真实数据。
 
@@ -70,12 +70,12 @@ BPF（全称 Berkeley Packet Filter），中文叫伯克利封包过滤器，它
 
 在过滤栏输入过滤语句，修改后立即生效。
 
-![](https://files.mdnice.com/user/88172/8ef86c76-70bf-4ae8-8ec7-28b5e0d94c59.png)
+![](../../../_assets/images/b87efc93e21085db393f0cd1658d367f8f7c6aa41de68702b9d8b3f7a7347419.webp)
 
 
 #### 过滤器比较符号
 
-![](https://files.mdnice.com/user/88172/17d660d8-640a-4e81-ade0-0016f3e4393a.png)
+![](../../../_assets/images/173b22fc8ae186678e46e7669dea6d66f27aa39f132b824595761b97536d648d.webp)
 
 #### 常见过滤语法
 
@@ -125,20 +125,20 @@ http.cookie contains "userid"
 
 在 wireshark 界面按“Ctrl+F”，可以进行关键字搜索：
 
-![](https://files.mdnice.com/user/88172/570a0518-a471-4bb1-82ca-5e7e5cf566b9.png)
+![](../../../_assets/images/b24dd24a974f88807091f2830dd1a82154886efb8dfd538e9e206e52365f9f00.webp)
 
 
 Wireshark 的搜索功能支持正则表达式、字符串、十六进制等方式进行搜索，通常情况下直接使用字符串方式进行搜索。
 
-![](https://files.mdnice.com/user/88172/463871a2-2fe6-4cca-88a3-90ba5ecf792e.png)
+![](../../../_assets/images/817eee874da9390200eb6074b8f6613443496e0ababcea96b01970082e4c1a82.webp)
 
 
 搜索栏的左边下拉，有分组列表、分组详情、分组字节流三个选项，分别对应 wireshark 界面的三个部分，搜索时选择不同的选项以指定搜索区域：
 
 
-![](https://files.mdnice.com/user/88172/4ff78dce-31e0-4ec0-905c-a2a9d78a2d32.png)
+![](../../../_assets/images/00e4ff7970001360225cf0e0804a9d58924d3c8f8bff15698d374ad2935af5d4.webp)
 
-![](https://files.mdnice.com/user/88172/746fcd72-1ce6-42fb-8876-839c5b1624fb.png)
+![](../../../_assets/images/67fa470e4f25c4fbdfc95166920ef1a0d708f4d6e1e3ee7b51c50f033ca4b070.webp)
 
 
 ### 数据包追踪
@@ -167,12 +167,12 @@ Wireshark 的搜索功能支持正则表达式、字符串、十六进制等方�
 
 以一个简单的 HTTP 交互举例来说，在报文中单击一个 TCP 或者 HTTP 数据包:
 
-![](https://files.mdnice.com/user/88172/2fdaaa5c-6ca7-4bad-af0a-bee862a39e3f.png)
+![](../../../_assets/images/4b5ec35347ab967d78258e0206e74946c4ba5abed63eaf13bf945d6778d16584.webp)
 
 右键单击这个文件并选择跟踪流。这时候 TCP 流就会在一个单独的窗口中显示出来。
 
 
-![](https://files.mdnice.com/user/88172/b746e48a-8fa1-4bfa-b549-2ef79a94b3b4.png)
+![](../../../_assets/images/1757df593c8805c16832f74917d29de03a4c342f9630a4daacc373f4ceafe5fa.webp)
 
 红色用来标明从源地址前往目标地址的流量。蓝色用来区分出相反方向，也就是从目标地址到源地址的流量。
 
@@ -180,29 +180,29 @@ Wireshark 的搜索功能支持正则表达式、字符串、十六进制等方�
 
 以网站向服务器发送请求为例，首先浏览器会与服务器建立 TCP 连接。通过 TCP 三次握手进行连接。连接后通过 http 协议开始发送操作请求。首先浏览器所在的客户机向服务器发送请求报文 SYN，服务器接收到报文后，向客户机发送确认报文 SYN+ACK。客户机接收到确认报文后，再次向服务器发出 ACK 报文，确认已接收到确认报文，此时客户机与服务器之间的 TCP 连接建立完成，开始通信。发送 http 请求，如下图：
 
-![](https://files.mdnice.com/user/88172/766b7b2f-4c00-42f4-b58a-27ede40007fd.png)
+![](../../../_assets/images/0e7b315a89999cd3ec61b0cdfae910d041c18dc6eb589b5c8269a4ea9d3f4b3f.webp)
 
 
 Wireshark 中数据流追踪的操作步骤
 
 首先我们点击选择一条数据包，可以选择数据流，点击右键中的快捷键，追踪流-TCP 流。
 
-![](https://files.mdnice.com/user/88172/46b1f699-d549-4043-a0ac-3cf170634c58.png)
+![](../../../_assets/images/206a9954fd0789dd92ce77aa3056dd71030cdd6aa2e0b256e9f3dbee74a879d4.webp)
 
 
 在追踪数据流页面，红色代表请求信息（request）蓝色代表响应信息（response）。是将三个 TCP 数据包拼装成的可视化的展示。
 
-![](https://files.mdnice.com/user/88172/42ddce75-ad83-4051-b5f5-8aee02ac40c3.png)
+![](../../../_assets/images/f02f2c8efa7db3f8d9bcf259a971d09f1f7d6030770267f66c67ba20d1efbdc4.webp)
 
 
 当然，对于 http 协议，也可以点击追踪流进行可视化的展示。点击 http 协议数据包，选择追踪流-http 流。
 
-![](https://files.mdnice.com/user/88172/bcba8065-fd8d-4a0b-9200-135d8e9a38be.png)
+![](../../../_assets/images/ba85775324a85f368370a2975ba72ae2dc6d8d65211d7eebf067aa23558a36c6.webp)
 
 
 最后总结一下数据流追踪功能，那就是将 TCP、UDP、SSL 等数据流进行重组并完整呈现出来。
 
-![](https://files.mdnice.com/user/88172/c7649440-2e60-4df5-a635-8b115f72bd21.jpg)
+![](../../../_assets/images/e0cfba99d8295a8cccfaa73c8605a3c99dcdbe72a8d5675bd0f2d98689d02ddb.webp)
 
 
 上行流为红色，下行流为蓝色。可以在下拉菜单中选择同时显示上下行，或只选择单向流。支持以 ASCII 码、原始 16 进制、Hex 转储等编码方式显示数据。可以使用**查找栏**查找关键的值，选择显示原始数据时可查找 16 进制值，显示 ASCII 码时可查找字符串类型值。
@@ -215,12 +215,12 @@ Wireshark 支持提取通过 http 传输（上传/下载）、ftp、tcp 等协�
 
 文件-> 导出对象->HTTP
 
-![](https://files.mdnice.com/user/88172/786e05ad-b49d-4d97-b146-13632d3e6188.png)
+![](../../../_assets/images/1d9e14552dab36d652b63708486138596d6847d95035390b03949d83f68e7eae.webp)
 
 
 在打开的对象列表中找到有价值的文件，如压缩文件、文本文件、音频文件、图片等，点击 `Save` 进行保存，或者 `Save All` 保存所有对象再进入文件夹进行分析。
 
-![](https://files.mdnice.com/user/88172/1eefb814-b748-4bc0-90f7-ff85c02f6f30.png)
+![](../../../_assets/images/3f1e9ef14c851f1cd2edaeacd672d5cc43bd458d087c3a9135876cb00023d7d5.webp)
 
 
 将所有 http 请求和响应体的数据进行导出。
@@ -229,7 +229,7 @@ Wireshark 支持提取通过 http 传输（上传/下载）、ftp、tcp 等协�
 
 右键特定字段，选择导出分组字节，可调出分组字节窗口。《显示为》 选项可选择编码方式，可以根据需求选择，然后导出该字段的所有字节。明文数据可以导出 ASCII 码。部分压缩文件可导出原始数据。 开始和结束也可以控制字节的大小。
 
-![](https://files.mdnice.com/user/88172/91c3c88f-70ea-47d9-8ce0-e8918fb967ad.jpg)
+![](../../../_assets/images/b4b039dc743816f9e03d0af6eb475e8b066f0795d862ca38b3b96cf4444804d9.webp)
 
 
 # Tshark
@@ -242,14 +242,14 @@ wireshark 是一个伟大的网络问题分析工具，当然它也是有终端�
 -r 提取如wireshark表格中显示的封包摘要信息
 ```
 
-![](https://files.mdnice.com/user/88172/7fc6f720-2908-4940-b6da-4a641aa5f97b.png)
+![](../../../_assets/images/e7a61385b2c2c90330dc558045be995b622f17ee3f48dad8b1da58c4937d1d2b.webp)
 
 
 ```bash
 -Y 使用filter过滤器
 ```
 
-![](https://files.mdnice.com/user/88172/f8bde136-3b3e-44dc-85ff-9309f0942ccd.png)
+![](../../../_assets/images/2e01f4414cce81303231b400a46e2a1eb698b1e930ae9be01b11fec9e25901d3.webp)
 
 ```bash
 -T 指出解析时输出的格式 
@@ -259,31 +259,31 @@ wireshark 是一个伟大的网络问题分析工具，当然它也是有终端�
 -e 指定一个字段
 ```
 
-![](https://files.mdnice.com/user/88172/c50123c6-4c96-4794-b741-de768a8a2673.png)
+![](../../../_assets/images/cd76150c04a0b118b62ba7737220eda77b87e4ba7875d9d0acc3d41e1f6e6a4e.webp)
 
 
 字段名可以通过 apply as column 应用为列
 
-![](https://files.mdnice.com/user/88172/d267d2c9-0583-419d-9ee0-fb40ce73a673.png)
+![](../../../_assets/images/945dc2a956826175a921754703352a8a6739fdb8f2f99dc6faddafa55923c7de.webp)
 
 
 然后在列中右击，此时就可以看到我们想提取的字段对应的字段表达式
-![](https://files.mdnice.com/user/88172/b9b58c54-7a3e-4451-9daf-ed95781fda29.png)
+![](../../../_assets/images/afce45815d6e779bb79a5d402bd3548c8fceb2a13c0d50106149355aae1850eb.webp)
 
 
 例如：我要提取 http 协议中每个请求的 uri。首先，找到 uri 的位置。
 
-![](https://files.mdnice.com/user/88172/23f35007-409d-489d-a04f-12d3e3d33b71.png)
+![](../../../_assets/images/a84b400073b9bd8101ac6858a01f24c2950279535345ae7b06794d29a7b4789d.webp)
 
 
 右击应用为列
 
-![](https://files.mdnice.com/user/88172/2b61cf28-81d0-4637-adcf-c52a3165e98c.png)
+![](../../../_assets/images/56e406fd7aebe493874a5e8d4253a17f7763e49263c94fffe2d129c5fc0b5625.webp)
 
 
 在分组列表右键，可以看到 request uri 对应的表达式字典为 http.request.uri
 
-![](https://files.mdnice.com/user/88172/6a270e12-a96e-428e-a5ec-60b687c26cb6.png)
+![](../../../_assets/images/e66be9f1a0ffcc8286dcffb98c984ba447da073673f71171515c70123b5fd61f.webp)
 
 ## 参考来源
 

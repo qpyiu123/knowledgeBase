@@ -7,13 +7,17 @@ from __future__ import annotations
 import http.client
 import json
 import threading
+from base64 import b64decode
+from hashlib import sha256
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import quote
 
 import pytest
 
 from agent import server
 from kb.fts import FtsIndex
+from kb.images import IMAGE_DIR
 from kb.parser import Doc
 
 
@@ -137,6 +141,35 @@ def call(env, method: str, path: str, body=None):
         return r.status, text, r.getheader("Content-Type") or ""
     finally:
         conn.close()
+
+
+def test_archive_image_endpoint(env):
+    root = env["kb"].cfg.kb_dir
+    data = b64decode(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII="
+    )
+    asset = f"{IMAGE_DIR}/{sha256(data).hexdigest()}.png"
+    path = root / asset
+    path.parent.mkdir(parents=True)
+    path.write_bytes(data)
+
+    conn = http.client.HTTPConnection("127.0.0.1", env["port"], timeout=10)
+    try:
+        conn.request("GET", "/api/image?path=" + quote(asset, safe=""))
+        response = conn.getresponse()
+        assert response.status == 200
+        assert response.getheader("Content-Type") == "image/png"
+        assert response.getheader("X-Content-Type-Options") == "nosniff"
+        assert response.read() == data
+    finally:
+        conn.close()
+
+    url = "/api/image?path="
+    assert call(env, "GET", url + quote("../../secret.txt", safe=""))[0] == 400
+    assert call(env, "GET", url + quote(asset.replace(".png", ".svg"), safe=""))[0] == 400
+    assert call(env, "GET", url + quote(f"{IMAGE_DIR}/{'0' * 64}.png", safe=""))[0] == 404
+    path.write_bytes(b"<html>not an image</html>")
+    assert call(env, "GET", url + quote(asset, safe=""))[0] == 400
 
 
 def call_raw(env, path: str, data: bytes,

@@ -15,23 +15,23 @@ updated: 2026-10-22
 - 解压出来的目录里同时有 `readme.txt` 和 `Desktop.zip`，两边都有同名文件。
 - 包里一堆 **4~6 字节**的 `*.txt` 小文件，数量很多——典型 CRC32 爆破题。
 - 在 Kali/WSL 下 `unzip` 居然不需要密码就开了（伪加密）。
-- `zipinfo -v` 显示 `General purpose bit flag: 0x0009`（加密位被置 1）。
-- `unzip` 报 `bad CRC`，说明内容被篡改或伪加密痕迹。
+- `zipinfo -v` 显示 `General purpose bit flag: 0x0009`（bit 0 表示加密，bit 3 表示带数据描述符）。
+- `unzip` 报 `bad CRC`，只说明读取出的内容与校验值不符；密码错误、数据损坏或格式读错都可能出现。
 - 包注释里有 base64/hex，解出来是一段明文。
 
 ## 二、原理
 
 ZIP 结构：`Local File Header (50 4B 03 04)` + 数据 + `Central Directory (50 4B 01 02)` + `EOCD (50 4B 05 06)`。
 
-1. **伪加密**：解析器优先信 **Central Directory 的 General purpose bit flag**（偏移 +8，bit0 表示加密）。若出题人手工把该位由 `00` 改成 `01`，但数据其实是明文、没有加密，就会出现「要密码」。很多 Linux 工具（unzip 7.x、部分 KDE/Ark 版本）会直接忽略或宽容处理，而 Windows 的 WinRAR/7-Zip 严格校验就卡住。**修复方法：把中央目录里那两个字节改回 `00 00`**（注意是中央目录，不是本地头）。
-2. **CRC32 爆破**：ZIP 里存的 CRC32 是**未加密明文**的校验值。若明文只有 1~5 字节，可以穷举所有候选字符串，比对 CRC32 反推明文，完全绕过密码。
+1. **伪加密**：条目设了加密位，但压缩数据实际是明文。用目录定位具体条目后，在副本上只清 bit 0，再尝试解压和校验。`09 00` 应变为 `08 00`，保留 bit 3。若副本校验失败，保留原包，继续查密码或压缩数据。
+2. **用 CRC32 筛候选**：ZIP 通常记录未加密内容的 CRC32。若条目很短且字符范围已知，可以枚举候选并比较 CRC；可能有多个结果，用题目的其他线索继续筛。
 3. **明文攻击（已知明文）**：ZipCrypto（传统加密）非常弱，只要知道**同一个文件至少 12 字节连续的明文**（且压缩算法一致），就能通过 Biham–Kocher 攻击恢复 3 个内部密钥，再用密钥解出整包。`bkcrack` 是现代实现，几分钟内完成。
 4. **AES 加密（ZipCrypto 之外）**：只能爆破/字典，`zip2john + john` 转换后跑哈希。
 
 ## 三、操作步骤
 
 1. **看结构**：`zipinfo -v target.zip`、`zipdetails target.zip`，先判断是「真加密」还是「伪加密」。
-2. **试伪加密**：用十六进制编辑器在 `50 4B 01 02` 后第 8 字节处，把 `09 00` 改成 `00 00`；或者直接 `binwalk -e`。
+2. **试伪加密**：核对中央目录和本地文件头里的同一条目。只清两处的加密位，用 ZIP 读取器重读副本。不要在整个文件中搜到签名就改，压缩数据中也可能出现相同字节。
 3. **小文件 → CRC 爆破**：读出中央目录里的 CRC32，枚举候选串。
 4. **有已知明文 → bkcrack**：把已知文件用**相同压缩器和相同压缩级别**重新压成 zip，再 `bkcrack -C ... -c ... -p ... -P ...`。
 5. **需要密码字典 → fcrackzip / john**：`zip2john target.zip > h.txt && john h.txt --wordlist=rockyou.txt`。
@@ -46,45 +46,43 @@ zipinfo -v target.zip | head -60        # 详细属性：加密方式、CRC、�
 zipdetails target.zip                   # 逐字段解析（Perl 工具）
 zip -FF target.zip --out repaired.zip   # 修复损坏的压缩包
 7z l -slt target.zip                    # 列出 method / encrypted 字段
-grep -abo $'\x50\x4b\x01\x02' target.zip   # 定位所有中央目录头偏移
+zipinfo -l target.zip                         # 列出实际目录条目
 ```
 
-### 伪加密修复
+### 试验单个条目是否只是设了加密位
+
+脚本用中央目录和本地头里的实际偏移修改同一个条目。副本解压且 CRC 通过才另存；普通条目不用改，真实加密应回原包找密码。Nothing to See 的密码线索就在外层图像里。
 
 ```python
-#!/usr/bin/env python3
-# zip_fake_crypt.py —— 将中央目录 General purpose bit flag 的加密位清零
-import sys, struct
-p = sys.argv[1]
-d = bytearray(open(p, 'rb').read())
-off, n = 0, 0
-while True:
-    i = d.find(b'PK\x01\x02', off)
-    if i < 0:
-        break
-    flag = struct.unpack('<H', d[i+8:i+10])[0]
-    if flag & 1:
-        d[i+8:i+10] = struct.pack('<H', flag & ~1)
-        n += 1
-        print(f'[+] cd header @0x{i:x} flag 0x{flag:04x} -> 0x{flag & ~1:04x}')
-    off = i + 4
-# 本地头也顺手清一遍（有些更严格）
-off = 0
-while True:
-    i = d.find(b'PK\x03\x04', off)
-    if i < 0:
-        break
-    flag = struct.unpack('<H', d[i+6:i+8])[0]
-    if flag & 1:
-        d[i+6:i+8] = struct.pack('<H', flag & ~1)
-        print(f'[+] local header @0x{i:x} flag 0x{flag:04x} -> 0x{flag & ~1:04x}')
-    off = i + 4
-open(p.replace('.zip', '_fixed.zip'), 'wb').write(d)
-print(f'[+] cleared {n} central flags -> {p.replace(".zip", "_fixed.zip")}')
-```
+import struct
+import sys
+from io import BytesIO
+from pathlib import Path
+from zipfile import ZipFile
 
-```bash
-python zip_fake_crypt.py target.zip && unzip -o target_fixed.zip
+source = Path(sys.argv[1])
+name = sys.argv[2]
+data = bytearray(source.read_bytes())
+with ZipFile(BytesIO(data)) as z:
+    central = z.start_dir
+    for entry in z.infolist():
+        assert data[central:central + 4] == b"PK\x01\x02"
+        if entry.filename == name:
+            local = entry.header_offset
+            assert data[local:local + 4] == b"PK\x03\x04"
+            if not entry.flag_bits & 1:
+                raise SystemExit("这个条目没有设置加密位，不用修复。")
+            for offset in (central + 8, local + 6):
+                flag = struct.unpack_from("<H", data, offset)[0]
+                struct.pack_into("<H", data, offset, flag & ~1)
+            break
+        sizes = struct.unpack_from("<HHH", data, central + 28)
+        central += 46 + sum(sizes)
+    else:
+        raise SystemExit("找不到指定的条目。")
+with ZipFile(BytesIO(data)) as z:
+    z.read(name)  # 读取并核对 CRC
+source.with_name(source.stem + "_fixed.zip").write_bytes(data)
 ```
 
 ### CRC32 撞库（已知 CRC 反推短明文）

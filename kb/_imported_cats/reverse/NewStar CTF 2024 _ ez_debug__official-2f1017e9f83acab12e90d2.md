@@ -100,3 +100,31 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 然后按下 <kbd>F9</kbd>，随便输入一些字符即可
 
 继续按下 <kbd>F9</kbd>
+
+## 原文配图
+
+![IDA 界面 1](../../_assets/images/13d2b0979c61c05443adbaca4709b5b8f37333012d23308167d8f4ea2e1e077b.png)
+
+![IDA 界面 2](../../_assets/images/92cc1a71b3a0109806854cfe79c51ce55865a9181403d52f7e1d52409055c563.png)
+
+![IDA 界面 3](../../_assets/images/6cf0f526db9f7a9658aeae97a9e9811d0a31fa667d696f1b2c3d3d5430aca7b0.png)
+
+![IDA 界面 4](../../_assets/images/cfaa6499d85979ded70d5305813cf825681e916a7f418fad9d49e1304e6b352e.png)
+
+![IDA 界面 5](../../_assets/images/07ec028d9ebb5dd2793456adbb31bf9ff194472287349c5571c87a4d6417d28c.png)
+
+![IDA 界面 6](../../_assets/images/1b05a69fba2a0fe069c61851df4d979bcff9776849131bd698686195352dd9e9.png)
+
+![IDA 界面 7](../../_assets/images/acfb942ca4a7fac8f16ad88539e619a5c215c4c7f87cfe6cc2892be17b2b47ad.png)
+
+![IDA 界面 8](../../_assets/images/49f959b3e486e16038f1c39f55ee90254311b89fdd9e78a994bd1bd12f0015ee.png)
+
+![xdbg 界面 1](../../_assets/images/36ef6921a11ccd694470e1adbbe3ca60710b4090242a76d6528d1472b99a4a2f.png)
+
+![xdbg 界面 2](../../_assets/images/623d2fd883380a9879a98d9097ed79d2a79e6cb298cf627dd310d034b8b1a458.png)
+
+![xdbg 界面 3](../../_assets/images/e98c2fa902891895b89bd2d212c45478823a1933eccd265f4d1dfcc649aed6a0.png)
+
+![xdbg 界面 4](../../_assets/images/1298d6be6ff90d8b91018494e61c89b2c53ca4625c379dd30025986686ed7216.png)
+
+![xdbg 界面 5](../../_assets/images/6e50092fef1f1241dc2cb879b5cbbd2a1f89cfa9491f8b5a48fc9792ad1ea1bd.png)

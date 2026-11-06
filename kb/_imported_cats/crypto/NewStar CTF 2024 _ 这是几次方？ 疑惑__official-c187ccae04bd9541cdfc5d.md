@@ -92,3 +92,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 结合题目描述，在网上搜索并用 AI 解读描述
 
 在 Python 中异或先计算两边，再进行异或操作
+
+## 原文配图
+
+![用 AI 解读](../../_assets/images/216f2d5e1092b494fbbcde3c37dece63a7fd4e47ef489dcf3a09983c8aad9ccc.png)

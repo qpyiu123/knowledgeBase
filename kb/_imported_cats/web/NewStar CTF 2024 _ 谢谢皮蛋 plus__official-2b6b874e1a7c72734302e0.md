@@ -92,3 +92,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 查询所有列名
 
 得到flag
+
+## 原文配图
+
+![注意引号的闭合种类](../../_assets/images/e0653fe732a198eb467866dc36c774f56ebd736602db9bc8e3891ae85d0db77a.png)
+
+![双引号中带有单引号也可以执行成功](../../_assets/images/a8d4855b22a53c9273b72f0383e2dcd27da64dfbe8f0d77c45d82e9abac85395.png)

@@ -115,3 +115,41 @@ Rust 的字符串比较用上了 xmm 寄存器，提高效率
 于是我们输入就可以 Get Shell：
 
 〔原图省略〕
+
+## 原文配图
+
+![Maze_Rust](../../_assets/images/ec925034db33937a858cc38f24c00024888b3c07749a32fa4b282c7e4f765d62.png)
+
+![迷宫](../../_assets/images/9bc8ea0233fac9cc3fe1955cbb6594384b84ca7b80eb335db3c826367408da19.png)
+
+![输入](../../_assets/images/6f4a255d8dc6546f603d2dccb6ebb0c54bdda5861a4b153853023a1a7347822b.png)
+
+![菜单](../../_assets/images/9117539cb798355d79d6677878514ca2418068167bfaa4135ed950beb08156e1.png)
+
+![提示](../../_assets/images/a7eba88c97677f1767ddd991fa2210fdd58a0a6ae1956351616eb9c951e911e8.png)
+
+![main](../../_assets/images/129109b6d682a905d3191fff3b7aeddd78e0ff60ba51248730f976697825d10b.png)
+
+![if 比较](../../_assets/images/f9c2cf948ed5cf6d664a85d0d9d602c80a6be77b5888ea6b294854d69bb710fa.png)
+
+![0721](../../_assets/images/91fbe5034d4d1dc87028da823b3ba7f51a377af0b69350456783a5e975cf088a.png)
+
+![DEBUG](../../_assets/images/76d11b600b38126e366b06725799d9624046d1a0fdf65c18ba17bc0bfd7945c0.png)
+
+![交叉引用](../../_assets/images/e8b7f0d4a3fc63498ae5c813dbd56b41c63353bcc60bd576289aacd1f8dee820.png)
+
+![Stage2](../../_assets/images/0e625c91af078117ec98db282cc12bf7076a374de54892e496e6b825d87e3f70.png)
+
+![提示](../../_assets/images/c40f629368355fb27ae515e619d670ec21c78c73e733388e93fee35a00741268.png)
+
+![IDA 反编译看代码](../../_assets/images/f8c3998ba6bae89dcbac324d9f07d355c9cc9772ef2dbf7d350f5f45c44bd116.png)
+
+![cmp](../../_assets/images/4694732072ad9d93d34bc95f564c4921db2a80fa5635dac669d736aec4afad3f.png)
+
+![字符](../../_assets/images/5628569df0cb78b462a8b99070fe8c38d7680f2eacad7cf8a3885b0967fa7d9a.png)
+
+![提取 1](../../_assets/images/6a3f27d0099b551d2a66bcb3594e61091d71d92500fc29d9967061e052a9e0a9.png)
+
+![提取 2](../../_assets/images/4a7aa24e1c69db9f369e2ce47cba86ec54ce8101193a7d0198c841ba2dcbd163.png)
+
+![输入](../../_assets/images/43e66be44ff73575bce6cf19510c8ec3c7bbbbd49a15f804e3130adb4005e675.png)

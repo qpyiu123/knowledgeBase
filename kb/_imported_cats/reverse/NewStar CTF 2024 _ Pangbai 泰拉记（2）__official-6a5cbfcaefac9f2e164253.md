@@ -80,3 +80,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 opcode 打印还原流程图
 
 前面有个针对表的伪随机，可以动调出，也可以这么出
+
+## 原文配图
+
+![opcode 还原流程](../../_assets/images/45b4f0e7cbb8232ee5b153e1c667d3926d22d3cd8786ff2541e3ab844164e41b.png)

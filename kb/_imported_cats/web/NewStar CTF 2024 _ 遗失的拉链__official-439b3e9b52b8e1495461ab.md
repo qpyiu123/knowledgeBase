@@ -88,3 +88,7 @@ PHP 中使用这些函数处理数组的时候会报错返回 `NULL` 从而完�
 命令执行过滤了 `cat`，使用 `tac` 代替。`flag`被过滤，使用 `fla*` 通配符绕过
 
 或者这样：`cmd=echo file_get_contents("/fla"."g");`
+
+## 原文配图
+
+![HackBar 传参](../../_assets/images/5b71786e0d4aa449c6b4019637133a36d022f44ac8452d92e41a953e354a1f62.png)

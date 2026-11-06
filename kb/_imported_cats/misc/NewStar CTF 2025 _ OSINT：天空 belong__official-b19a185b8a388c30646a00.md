@@ -96,3 +96,15 @@ import Container from '@/components/docs/Container.vue'
 在下面的航线图中，我们调整到拍摄时间，可以发现该航班经过的省会城市有且只有**武汉市**。
 
 所以答案是 `flag{UQ3574_武汉市_Xiaomi}`
+
+## 原文配图
+
+![OSINT：天空 belong（原文图）](../../_assets/images/eefd49831837b7957372665ae294c4ec0c82acd536f32273e3868932875a3787.png)
+
+![OSINT：天空 belong（原文图）](../../_assets/images/d348d7d247f6a76647723f57556036819fec9a0b031fa4ffca42320751115190.png)
+
+![OSINT：天空 belong（原文图）](../../_assets/images/2209d6b71aedfb2c208b5f874d38476eb168558c677c8b47455453883a2dfd4e.png)
+
+![OSINT：天空 belong（原文图）](../../_assets/images/9dc257646cb9afdd3158085a1977f2f8651d2346dc565b4cdbc003634b33e924.png)
+
+![OSINT：天空 belong（原文图）](../../_assets/images/fa87ec314c5076f35b04c310e56f179bd4611f54057bb3ad6840cac8c4c61feb.png)

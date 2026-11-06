@@ -92,3 +92,15 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 由于 FLAG 已经在这个段的开头部分，因此只需要通过 `lea` 从 `rip` 的偏移中计算出 FLAG 的绝对地址即可。
 
 `lea rsi, [rip-0x50]` 即可将 `rsi` 设置到 FLAG 地址之前，这样只要经过一次 `write` 就可以将 FLAG 打印出来。
+
+## 原文配图
+
+![main 函数调用 read_flag](../../_assets/images/de8e6771994dc7ccac17847d15047530d786cc87f10b962d139a2f7d2a5133ad.jpg)
+
+![read_flag 映射 FLAG](../../_assets/images/44e603228aac5e6d9c1853fa6d627eead74b917fd7765f798e97c32c9bb0a5dc.jpg)
+
+![seccomp 白名单规则](../../_assets/images/b917055fb127ab36063ab71a8947f03787c5616893665f084da937ef29ec74c8.png)
+
+![shellcode 前置指令调试](../../_assets/images/42a6437e334a272d8d72499d8d3510c3ce916129142edf3414856a0a16d424c5.jpg)
+
+![寄存器清零后的执行状态](../../_assets/images/3c0b96e880bc5595086c08fe642499bee51ca4a230fe9820f4ee532dc0120219.jpg)

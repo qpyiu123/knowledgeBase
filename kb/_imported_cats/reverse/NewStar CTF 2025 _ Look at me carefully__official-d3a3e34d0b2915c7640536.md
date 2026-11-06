@@ -92,3 +92,13 @@ import Container from '@/components/docs/Container.vue'
 所以我们可以根据这个规则逆推出 flag
 
 得到flag：`flag{H4ve_you_lo0ked_at_me_c1o5ely?}`。
+
+## 原文配图
+
+![main 函数分析](../../_assets/images/9a10762b0cccbf6d4677a92978ca59f70da473ba189ba4e930fcb1c218f9541a.png)
+
+![混淆代码](../../_assets/images/723fc067f31fc9eea78cac51fca074db7bb0b8555570e14b158993daaaafe633.png)
+
+![动态调试](../../_assets/images/9c6dbe1f2902cda6de7a86a0495619954470b6f1940f9d2c65d7e3b2741893aa.png)
+
+![内存变化](../../_assets/images/9c6b96b00beb35779f50a3417963a0aa2d2199fdf64ea5547c4e4739605a852e.png)

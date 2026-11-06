@@ -96,3 +96,9 @@ import Container from '@/components/docs/Container.vue'
 本题其实对于没接触过的人来说主打一个猜，还有查询资料的能力。
 
 如果上面的东西没看懂，[这篇文章](https://blog.csdn.net/qq_51116518/article/details/138270490)可能会帮助你。
+
+## 原文配图
+
+![解包后获取的目录](../../_assets/images/ca4e7f1da5d84302a5332873b92882177d03e84e595098bb4df2479f2f9d2d7e.png)
+
+![反编译结果](../../_assets/images/78e2f41945ab23e1e65bde3819dcbf59bbd8d72f09dd067e805587ff49e3f6bf.png)

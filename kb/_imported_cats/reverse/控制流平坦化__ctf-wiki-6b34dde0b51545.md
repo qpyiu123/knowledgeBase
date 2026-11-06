@@ -83,3 +83,9 @@ updated: 2026-10-31
 [騰訊安全應急響應中心 - 利用符號執行去除控制流平坦化](https://security.tencent.com/index.php/blog/msg/112)
 
 [OBFUSCATING C++ PROGRAMS VIA CONTROL FLOW FLATTENING](http://ac.inf.elte.hu/Vol_030_2009/003.pdf)
+
+## 原文配图
+
+![after-flattenning.png](../../_assets/images/4082f470a2303ac9f0ff989fd1cb7f18d3182abcaa93f88b361bef9f4c4b6a1e.png)
+
+![before-flattening.png](../../_assets/images/ba30d07b0459c99599dcb507353793fb43c12b54c85220cdb2cd7548c7cb2534.png)

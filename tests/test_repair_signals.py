@@ -29,6 +29,16 @@ def manifest() -> dict:
     return rs.load_manifest(MANIFEST)
 
 
+def pre_gallery_bytes(path: Path) -> bytes:
+    """历史清单的校验值使用 CRLF；后加的配图库不属于当时的正文。"""
+    body = path.read_text(encoding="utf-8")
+    base, sep, gallery = body.partition("\n\n## 原文配图\n\n")
+    if sep:
+        assert all("_assets/images/" in line for line in gallery.splitlines() if line)
+        body = base + "\n"
+    return body.replace("\n", "\r\n").encode("utf-8")
+
+
 def test_manifest_active_and_retired_cover_21_imported_docs() -> None:
     data = manifest()
     active = data["entries"]
@@ -51,7 +61,7 @@ def test_current_files_parse_and_keep_body() -> None:
         assert doc.signals == e["signals_expected"], e["path"]
         assert doc.category, e["path"]
         assert doc.title, e["path"]
-        raw = p.read_bytes()
+        raw = pre_gallery_bytes(p)
         assert rs.sha256_bytes(raw) == e["fixed_sha256"], e["path"]
         body = rs.body_text_of(raw.decode("utf-8"))
         assert rs.sha256_bytes(body.encode("utf-8")) == e["body_sha256"], e["path"]
@@ -62,7 +72,7 @@ def test_only_signals_line_changed_and_original_was_invalid() -> None:
     kb = ROOT / "kb"
     for e in manifest()["entries"]:
         p = kb / e["path"]
-        fixed = p.read_bytes().decode("utf-8")
+        fixed = pre_gallery_bytes(p).decode("utf-8")
         old = rs.replace_once(
             fixed,
             e["signals_fixed"] + _eol_of(fixed, e["signals_fixed"]),

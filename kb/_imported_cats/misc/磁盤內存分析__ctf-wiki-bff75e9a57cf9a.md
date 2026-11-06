@@ -101,3 +101,7 @@ VMDK 文件本質上是物理硬盤的虛擬版，也會存在跟物理硬盤的
 ## 參考
 
 -   [數據隱藏技術](http://wooyun.jozxing.cc/static/drops/tips-12614.html)
+
+## 原文配图
+
+![forensic-filesys.jpg](../../_assets/images/0e9a783441b85ce5726fd30f6c0be7dcfa2410b7f51e09765babd015aa0a1ecc.png)

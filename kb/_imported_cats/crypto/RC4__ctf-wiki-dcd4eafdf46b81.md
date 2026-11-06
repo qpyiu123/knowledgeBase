@@ -89,3 +89,11 @@ RC4 主要包含三個流程
 ## 攻擊方法
 
 待補充。
+
+## 原文配图
+
+![rc4_key.png](../../_assets/images/0cc305a1ec2108371bb5dbd88aa74ad2b48dbec20a86c542323f051f9b0370d3.png)
+
+![rc4_s.png](../../_assets/images/5cd05ed5b34757c1a9fe3737ff404206352585a72032cff97b66f2c1f252a0fe.png)
+
+![rc4_s_t.png](../../_assets/images/a2fe96abe6c0db9472aee0f091e0ce783bb221e9580c4cc54959ced4630e742d.png)

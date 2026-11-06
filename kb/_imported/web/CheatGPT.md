@@ -39,3 +39,7 @@ POST 访问：`http://IP:PORT/?cls=_wrap_close&cmd=set`，传参：
 
 
 往 cmd 里输入命令就能执行，flag 在环境变量里，`env, export` 等被过滤了，还能用 set。也可以通过管道、编码或者反引号等方法绕过关键字的过滤。
+
+## 原文配图
+
+![image-20240520165827034](../../_assets/images/6d0afec66dbf30ff79c8a920cd007ed6601ee876cafff101ce69881c78b316bf.png)

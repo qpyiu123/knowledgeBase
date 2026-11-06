@@ -66,3 +66,11 @@ IDA32 函数列表搜索 `UART`
 只有个异或 `0x1`，[CyberChef](<https://gchq.github.io/CyberChef/#recipe=XOR(%7B'option':'Hex','string':'01'%7D,'Standard',false)&input=Zmh3ZExkbW53ZE9uVm1ud2RPblY>) 解密后包上 `flag{}` 上交
 
 **Ans:** `flag{giveMeloveNoWloveNoW}`
+
+## 原文配图
+
+![03:01 歌词](../../_assets/images/5d1a7b85634a2b207e3e3aa9430bba355cae19932811dfdff64cbdf967864806.png)
+
+![LCD 图片](../../_assets/images/81a1fff39a9140bdab99b047b50aef214948e0677d79d6100011617feba749e9.png)
+
+![搜索 UART](../../_assets/images/6fc34fe60650012e0357849adfe1468a60bfab4e1e4f8c6fcf705324e7a5483d.png)

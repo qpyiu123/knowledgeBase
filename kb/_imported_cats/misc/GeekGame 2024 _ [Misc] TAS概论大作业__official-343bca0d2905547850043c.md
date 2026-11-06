@@ -167,3 +167,7 @@ Flag 3 的预期解法和 Bad Apple ACE 的流程如出一辙。
 终于，在播放完录像之后，你可以看到这样的画面：
 
 将画面顶端的 16 进制按 ASCII 转换为字符，即可得到最终的 flag。
+
+## 原文配图
+
+![诗人握持](../../_assets/images/5b5d264f104ff77ed839d5ce9be305759cabc72d28f3d3064c36cb9eb447c1a0.png)

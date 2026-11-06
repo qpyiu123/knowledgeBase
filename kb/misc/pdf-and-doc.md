@@ -30,6 +30,10 @@ updated: 2026-10-22
 
 **Office Open XML（docx/pptx/xlsx）本身就是 ZIP**，里面是 XML。藏法：`word/media/` 下多一张图、`docProps/custom.xml` 里的自定义属性、批注/修订记录、字体颜色为白色、`vbaProject.bin` 宏。老的 `.doc/.xls/.ppt` 是 **OLE 复合文档**（CFB），用 `olevba`、`oletools` 分析。
 
+### 含宏的 Office 文件
+
+`.xlsm` 和 `.docm` 外层是 ZIP。只读打开目录，分别查看 `xl/vbaProject.bin` 和 `word/vbaProject.bin`。它们是内层的 OLE 复合文档，可以交给 `olevba` 静态列出宏。别在 Office 中启用宏；先确认文件确实存在，再分析它记录了什么。
+
 ## 三、操作步骤
 
 1. **`file` 判类型 + `binwalk`** 看有没有追加 ZIP/图片。

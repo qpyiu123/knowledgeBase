@@ -90,3 +90,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 这里使用正则表达式进行演示：
 
 运行后即可得到 FLAG。
+
+## 原文配图
+
+![布尔盲注日志](../../_assets/images/08a5092b6c5493873c56decd1dba14e68869c253aa524a2c7be102eeca8d725b.png)
+
+![按位爆破请求](../../_assets/images/32eb1543d6b89d33557841d3ac07ad28cb1ee054a08ffd06f7ff7ed57bc32cba.png)

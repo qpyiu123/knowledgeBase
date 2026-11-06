@@ -189,3 +189,73 @@ updated: 2026-10-23
 然后爆破一分钟左右就跑出结果了。
 
 〔原图省略〕
+
+## 原文配图
+
+![很复杂的主函数](../../_assets/images/6d712d87d15bab78fd07497dec9b35bbb72b19d95611345174bd3e1cbd862744.png)
+
+![DIE 的查看结果](../../_assets/images/d58c79ac496b3863147ccdcb100dd4e3d9488dbe2e4fc859bb34328706d1f656.png)
+
+![UPX 命令行程序脱壳的结果](../../_assets/images/fecd78cc9a4d3dc7d9dbe9e0f413da6e3327fc12b0c6e41be226793031abbffa.png)
+
+![脱壳后的 IDA View](../../_assets/images/880ff2b2e0020297d7d294b9aa5ac552fff278c70bbfaf8d4c667d0484b7ee6b.png)
+
+![脱壳后的反编译结果](../../_assets/images/d703218c627e16b0ac4197def0dab94689c06514b51feb8b34d3c558a5ae31b2.png)
+
+![RC4 函数的实现](../../_assets/images/3c403c821b54f6b8ac78679c483e5f33ff25f97c5aecdc68253282170faeb46f.png)
+
+![key 变量](../../_assets/images/cc2451c668d31c83a7e8cb8131cfae04858e03af85ecfa6754a66b5436f9180d.png)
+
+![没有值的 data 变量](../../_assets/images/1d7523d83c6a95383fe6128bee0fddd08056a5cab3bd2db7c0dce029390ee3f7.png)
+
+![data 的交叉引用](../../_assets/images/4e0aeb6b2ac08c1f94670d241078e09c4d2730c610b5f4a28bd63ee9b07a0c41.png)
+
+![before_main 函数里的赋值操作](../../_assets/images/ef722dfd5637487f4b7aa3be9baf27fd0063dbe4dda6e7ce5ef71e72898ec9c7.png)
+
+![.init_array 段](../../_assets/images/8b378fedfce3158b067490fe3b5e2925e3c8d02dd9212ac14e30961001501d77.png)
+
+![下断点](../../_assets/images/01eaa01edde08bd4d75d5b6bfe324eac4e257b9ac9292d2f1e102f3b10d36d39.png)
+
+![我们的输入](../../_assets/images/5cf24193db5b9f63fba1c2f9dd13565b8a1d0368d5e7959452784f4703a58a6b.png)
+
+![IDA 中看到的 s 内的值](../../_assets/images/8dfa9e8cd3b109e26c8b1d34d393a81c41cf83a74d4cabe32245ffb86034710f.png)
+
+![data 数据](../../_assets/images/244a4222295fc482075a9c4ab5205fc94d923a6728a50ab19a04c4d6d09e7230.png)
+
+![修改 s 的数据](../../_assets/images/0d5fa988fb5ab6d754eec3c78cae625594e79f05d27c39574da2f2a716cfa1d5.png)
+
+![手动修改 s 的数据 1](../../_assets/images/50419051c49d84eaf5f6f2cde4b5a9fcf55f36da2d98eff7e5a528665ede112b.png)
+
+![手动修改 s 的数据 2](../../_assets/images/5656b268b400f06389860503e60fa6baf1380072bd95167bd3f8f546e03fc9a1.png)
+
+![断在第二个断点处](../../_assets/images/3dfa89742864956a5cd118522519a05d5e1f4f4e3bb82bfd54ecf6dd0c1b2cda.png)
+
+![解密后的 flag](../../_assets/images/1a2c57a36539e2e3664f0020ae23f2cd7fe52d7dd3faf0b8df268207eb3b343f.png)
+
+![flag](../../_assets/images/011da3a8f6b0e14b5265458f24eb6789b2eabf4709ec23d81b1fc18844ff6fc2.png)
+
+![RC4 的加密函数](../../_assets/images/3bd6c7207b8880af9b97bca405e9c54e914f98901d7a6aea3d29d30207c58c18.png)
+
+![汇编的视图方式 1](../../_assets/images/7ed567ad7f9171c1c21b6545599e09af9c883237e89cb38e18c661ff6211f4fc.png)
+
+![汇编的视图方式 2](../../_assets/images/3ddd2fb536d48578e4392a36e132c96bc1f59c113f5bd780b5164354d6c8afba.png)
+
+![动调查看 al](../../_assets/images/2d876e7d13066e0079212b8c7fa3e7444146792dbc6d82401107b2def839b641.png)
+
+![调出 IDAPython 窗口 1](../../_assets/images/4e9678771538b58273e717b9106bd8cc8c882ca591279f4e85a779a2484f022e.png)
+
+![调出 IDAPython 窗口 2](../../_assets/images/ae98833e61a60c3ff9029d661d252c63f0450f2199341b72f9e2df828de79fe0.png)
+
+![IDAPython 脚本](../../_assets/images/ad75b7fc85d03deb92a33a838576c946d02b7d4763f7f4c663b694e2a6c12d8f.png)
+
+![retn 下断点](../../_assets/images/0220f8d9097727c145b5b2656c5387d608d7955891333b120bcdfcc31143ef77.png)
+
+![异或的值](../../_assets/images/ee2b77b546b8b80065d181525e328f0a67796a215e904f6c810a41389aa652e4.png)
+
+![下条件断点](../../_assets/images/f36a8543181c5d8b1bef53d397b222446fd9db285c68689d43a79a547f92de1a.png)
+
+![假数据](../../_assets/images/61991372bfbe5d829ef745d902a55b06fcdacb236c8dd054819ea6bb4d5dad2a.png)
+
+![exit 函数相关代码](../../_assets/images/5b2fe0afb936a7aa756f54f3f2e5e3f82cbacbad14146061eca9abf07fdafeda.png)
+
+![爆破结果](../../_assets/images/1ad1958b885d134c30b678371b8b3e5fc6e7a8a528158c2fda0f2a6bc13c56fc.png)

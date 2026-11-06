@@ -92,3 +92,19 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 找到 tea 特征，发现未魔改，字符串也提供了，找个脚本解密得 flag
 
 得到 `flag{011vm_1s_eZ_But_C0MP1EX_!!}`
+
+## 原文配图
+
+![程序流程图](../../_assets/images/dfa6f5c5a94e6725bca85f4266e4ce50aa42aa7d61cbefaad8e1e3c572fa0412.png)
+
+![反编译结果](../../_assets/images/56de97999c16ecc0ce869cfea614b9d01f9b5de3eced038480efb0d94d182b95.png)
+
+![去除了部分控制流平坦化](../../_assets/images/af51687beab0edd43f938c16b0063bf0f82499fedbc5431aedf441a600d4f475.png)
+
+![发现可疑数据](../../_assets/images/81f39d619beb6c0467d109ba599107ded19636bc04ac9e66575dd331e2c246ca.png)
+
+![IDA 插件 findcrypt](../../_assets/images/ca6fe963e1e6b3197c963c01f9478a2129270194f27f04f3ad864ed1255fb8d9.png)
+
+![findcrypt 结果](../../_assets/images/c9d0bbf3dd71ae5ae5d98349d18b958db212454e3c37383b76289f6f9fa719e7.png)
+
+![找到 tea 特征](../../_assets/images/5a409cdde02ac48ecbefce7e1a060f480545897fc0f68b9cecd80012dc733820.png)

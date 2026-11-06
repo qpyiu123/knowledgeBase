@@ -106,3 +106,19 @@ JavaScript 是现代网络开发中最重要的编程语言之一，它的历史
 当然也可以直接根据前端逻辑去发送请求。
 
 将 Flag 各个部分拼起来，随后 Base64 解密即可。
+
+## 原文配图
+
+![第一关](../../_assets/images/8694c3f22ec49b19fb7ce3e9f89cc35c40a4ea3d56233fa2584f26ae19143cd6.png)
+
+![第二关](../../_assets/images/dab1365612e5f390f3efaa7fcbf5ff2e1ea9430ddf6cef8cf673e806d52b61eb.png)
+
+![第三关 1](../../_assets/images/0ea6fde8309fdfcf42a943d79aa6550c2caebc4d5e24ab53d88c8f476ab2c254.png)
+
+![第三关 2](../../_assets/images/4efd9cd82f2b28427dd41d0b4d6692728d01eeebde214e51157586108da15f12.png)
+
+![第三关 1](../../_assets/images/88221bfa9e453fb228a171f0a55f1a180100d4475e26a8934f81c82a4839ded2.png)
+
+![第三关 2](../../_assets/images/a7f6eb18c7d7c3a476cde3203feff2c96f89e6a05a78bf99eaa8acbb835a3a27.png)
+
+![第三关 3](../../_assets/images/47b0977ede6478c99c72e64417d5452f468a64d4989bf5979358838fd42cb62a.png)

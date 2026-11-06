@@ -1,0 +1,1884 @@
+[
+  {
+    "id": "r66-you-raise-me-up",
+    "title": "you_raise_me_up：从模幂结果还原指数",
+    "path": "_writeups/crypto/you-raise-me-up.md",
+    "role": "case_decision",
+    "source_id": "2020-wangding-you-raise-me-up",
+    "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=5ee6edd2-4fc9-46c9-b6b1-44e5fa5ca197",
+    "sources": [
+      "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=5ee6edd2-4fc9-46c9-b6b1-44e5fa5ca197",
+      "https://www.cnblogs.com/vict0r/p/13298370.html"
+    ],
+    "mechanisms": [
+      "模 2 的幂",
+      "离散对数"
+    ],
+    "summary": {
+      "text": "奇数底数在模 2 的幂下可逐位还原指数。每次把模数翻倍，只试旧答案和旧答案加一个周期。",
+      "evidence": [
+        "q1",
+        "q2"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "底数为奇数，模数为 2 的幂。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "只确定最终周期内的指数余数。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "从模 2 开始",
+        "depends_on": [],
+        "evidence": [
+          "q1"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "翻倍模数并检查周期",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "用原模幂回验",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "打开压缩包里的 Python 文件，读取注释中给出的底数和结果。",
+      "q2": "在模 2 下，奇数的任意次幂都是 1。先记指数代表 `x=0`、周期 `order=1`。每把模数翻倍，检查 `g**order` 在新模数下是否仍等于 1："
+    },
+    "verification": "DASCTF 判题通过",
+    "code": [
+      "_code/r66/pow2_log.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "模数": "2**512"
+    },
+    "unknowns": [],
+    "code_contains": [
+      "def solve(g, c, bits):"
+    ]
+  },
+  {
+    "id": "r66-firefox-forensics",
+    "title": "FireFox Forensics：两份文件怎样配对",
+    "path": "_writeups/forensics/firefox-forensics.md",
+    "role": "case_decision",
+    "source_id": "2021-gkctf-firefox",
+    "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=3ba70c01-db39-4043-b9ff-91fc7c6407a6",
+    "sources": [
+      "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=3ba70c01-db39-4043-b9ff-91fc7c6407a6",
+      "https://github.com/lclevy/firepwd",
+      "https://cloud.tencent.com/developer/article/1844889"
+    ],
+    "mechanisms": [
+      "Firefox",
+      "NSS",
+      "浏览器登录记录"
+    ],
+    "summary": {
+      "text": "同时找到 key4.db 和 logins.json 时，先验证主密码，再按密钥编号配对。数据库和登录字段使用的算法不同。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "两份文件来自同一配置，且主密码校验通过。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "不同样本可能声明不同算法，不能沿用 Chromium 文件格式。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "检查校验字段",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "按编号取密钥",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "按登录字段的算法解读",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "题目压缩包里的 `logins.json` 保存加密后的登录字段，`key4.db` 保存解开它们需要的密钥。",
+      "q2": "2. 先用空主密码试校验。本题这一步解出了固定文字 `password-check`，因此可以继续。不成功时，先核对算法编号和主密码，别把错误的密钥送去解登录记录。",
+      "q3": "3. 把 `encryptedPassword` 做 Base64 解码，再按 ASN.1（用来描述二进制字段的格式）读取密钥编号、算法、初始向量和密文。",
+      "q4": "4. 本题登录字段使用三重 DES 的 CBC 模式。"
+    },
+    "verification": "DASCTF 判题通过",
+    "code": [
+      "_code/r66/firefox_sample.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "登录字段算法": "3DES-CBC",
+      "主密码校验值": "password-check"
+    },
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-poly-rsa",
+    "title": "PolyRSA：用两组素数线性组合分解模数",
+    "path": "_writeups/crypto/poly-rsa.md",
+    "role": "case_decision",
+    "source_id": "poly-rsa",
+    "source": "本地密码题附件（第二轮编号：poly-rsa）",
+    "sources": [],
+    "mechanisms": [
+      "RSA",
+      "素数组合",
+      "最大公约数"
+    ],
+    "summary": {
+      "text": "额外模幂泄漏的是两组素数组合。先统一指数，再消去同一个素数项，对差值和模数求最大公约数。",
+      "evidence": [
+        "q1",
+        "q2"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "两组关系使用同一个模数，组合系数已知。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "底数不同，不能用同一明文的共模解法。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "统一指数",
+        "depends_on": [],
+        "evidence": [
+          "q1"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "消去一项并求公约数",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "回算原密文",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "两条底数不同，不能用“同一明文、不同指数”的共模解法。",
+      "q2": "把 `u` 再升到 `e2` 次，把 `v` 再升到 `e1` 次。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/crypto_round2.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "unknowns": [],
+    "code_contains": [
+      "k = e1 * e2"
+    ]
+  },
+  {
+    "id": "r66-curve-parameters",
+    "title": "消逝的曲线：四个点足够恢复哪些参数",
+    "path": "_writeups/crypto/curve-parameters.md",
+    "role": "case_decision",
+    "source_id": "curve-parameters",
+    "source": "本地密码题附件（第二轮编号：curve-parameters）",
+    "sources": [],
+    "mechanisms": [
+      "椭圆曲线",
+      "消元",
+      "未知模数"
+    ],
+    "summary": {
+      "text": "先用四个平面点消掉常数项。交叉相乘得到若干模数倍数，从公约数恢复模数后再求曲线系数。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "点在同一条短 Weierstrass 曲线上。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "公约数可能是模数的倍数，需检验位数和素性。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "计算 y²−x³",
+        "depends_on": [],
+        "evidence": [
+          "q1"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "交叉消元",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "逐点代回",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "1. 每个点都能算出整数 `u = y*y - x*x*x`。",
+      "q2": "2. 任选两组，交叉相乘再相减：`dx1*du2 - dx2*du1` 必定是 `p` 的倍数。",
+      "q3": "最后把四点逐个代回，确认 `(y*y - x**3 - a*x - b) % p == 0`。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/crypto_round2.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "模数位数": 160,
+      "公开点数": 4
+    },
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-rsa-shared-prime-prefix",
+    "title": "Factorize：两个素数为什么能从平方根附近分开",
+    "path": "_writeups/crypto/rsa-shared-prime-prefix.md",
+    "role": "case_decision",
+    "source_id": "rsa-shared-prime-prefix",
+    "source": "https://offshift.io/blog/2021-02-11-the-offshift-0x41414141-ctf-in-review/",
+    "sources": [
+      "https://offshift.io/blog/2021-02-11-the-offshift-0x41414141-ctf-in-review/",
+      "https://pwn.college/ctf-archive/0x41414141ctf2021/"
+    ],
+    "mechanisms": [
+      "RSA",
+      "Fermat 分解"
+    ],
+    "summary": {
+      "text": "两个素数共用高位，先从模数的平方根附近找平方差。找到候选后，乘回两个因子再回验原密文。",
+      "evidence": [
+        "q1",
+        "q2"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "两个奇素数的差距足够小。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "没有相近的证据时，先估计试探次数。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "从平方根起试",
+        "depends_on": [],
+        "evidence": [
+          "q1"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "检查平方差",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "重新加密",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "生成程序给两个 1024 位素数用同一段高 512 位，分别随机填低位。",
+      "q2": "在本题第一步就成功了。遇到另一题时，先估计差值；需要试的次数大约是 `(p-q)**2 / (8*sqrt(n))`。没有相近的证据，就不要让这个循环一直跑。解密用公钥指数 65537，最后按公开密文回验。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/crypto_round2.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "素数位数": 1024,
+      "共享高位数": 512
+    },
+    "unknowns": [],
+    "code_contains": [
+      "a = isqrt(n) + 1"
+    ]
+  },
+  {
+    "id": "r66-lcg-low-byte",
+    "title": "Lunar LCG：泄漏的是完整状态，还是低 8 位？",
+    "path": "_writeups/crypto/lcg-low-byte.md",
+    "role": "case_decision",
+    "source_id": "lcg-low-byte",
+    "source": "本地密码题附件（第二轮编号：lcg-low-byte）",
+    "sources": [],
+    "mechanisms": [
+      "线性同余发生器",
+      "低位密钥流"
+    ],
+    "summary": {
+      "text": "附件泄漏了完整状态，低 8 位只用来异或明文。用三项完整状态求参数，再用余下状态检验。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "模数已知，连续状态的第一组差值可逆。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "只有低位时，不能照搬完整状态公式。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "求状态差",
+        "depends_on": [],
+        "evidence": [
+          "q1"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "解乘数和增量",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "回算状态后生成密钥流",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "题目的线性同余发生器每次做 `s = (a*s+b) % m`，再取 `s & 255` 与明文异或。",
+      "q2": "把头三项写成两次递推，相减后有 `s2-s1 ≡ a*(s1-s0) (mod m)`。",
+      "q3": "assert all((a*x+b) % m == y for x, y in zip(states, states[1:]))"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/crypto_round2.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "公开完整状态数": 6,
+      "每轮密钥流位数": 8
+    },
+    "unknowns": [],
+    "code_contains": [
+      "answer.append(byte ^ (state & 255))"
+    ]
+  },
+  {
+    "id": "r66-ntru-sparse",
+    "title": "NTRU：只有四个非零项时，先试稀疏枚举",
+    "path": "_writeups/crypto/ntru-sparse.md",
+    "role": "case_decision",
+    "source_id": "ntru-sparse",
+    "source": "本地密码题附件（第二轮编号：ntru-sparse）",
+    "sources": [],
+    "mechanisms": [
+      "NTRU",
+      "稀疏多项式",
+      "循环卷积"
+    ],
+    "summary": {
+      "text": "随机多项式只有四个带符号的项，可以先枚举位置和符号。用明文系数范围筛选，再回算整条密文。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "环长小，非零位置数和系数范围明确。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "环长或非零位置变多时，枚举数量很快增大。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "准备循环移位",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "枚举位置和符号",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "回算全部系数",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "公开数据满足 `c = r*h + m`，多项式运算在模 12289、模 `x**31-1` 下进行。",
+      "q2": "2. 从 31 个位置选 4 个，为每个位置取正或负，共 `C(31,4)*16 = 503440` 种。",
+      "q3": "3. 用 `c-r*h` 得到候选明文，把每个系数还原到靠近 0 的范围。",
+      "q4": "4. 把剩下的明文系数转成字节，去掉末尾的零填充，并用原来的卷积再算一遍密文。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/crypto_round2.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "环长": 31,
+      "非零项数": 4,
+      "系数模数": 12289
+    },
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-bad-policies",
+    "title": "Bad Policies：从组策略首选项里找到正确字段",
+    "path": "_writeups/forensics/bad-policies.md",
+    "role": "case_decision",
+    "source_id": "badpolicies",
+    "source": "https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/forensics/badpolicies",
+    "sources": [
+      "https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/forensics/badpolicies",
+      "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be"
+    ],
+    "mechanisms": [
+      "组策略首选项",
+      "XML",
+      "AES"
+    ],
+    "summary": {
+      "text": "看到域策略目录，先找 Groups.xml 的 cpassword。按公开规则解码，最后重新加密核对原字段。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "题目附件有非空 cpassword 字段。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "Registry.pol 不是本题入口。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "定位字段",
+        "depends_on": [],
+        "evidence": [
+          "q1"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "解 Base64 和 AES",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "重新加密",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "ZIP 展开后是域策略的目录。看见 `Registry.pol` 不用马上读注册表：这道题要的是组策略首选项里的本地账户设置。先在目录中找 `Groups.xml`，再看账户对应的 `Properties` 节点。本题只有一个非空的 `cpassword`。",
+      "q2": "这个字段是 Base64 包装的密文。缺末尾的 `=` 时补到 4 的倍数再解码。按 [Microsoft 的加密规范](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be)使用公开的 32 字节 AES 密钥，初始向量为 16 字节零，用 CBC 模式解密。随后去掉分组填充，按 UTF-16 小端读文字。",
+      "q3": "本机把解出的字节重新填充并加密，与原密文一致。知识库现有的注册表资料能识别文件类型，但没指到本题所需的 XML 字段。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/misc_samples.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-wacky-recipe",
+    "title": "Wacky Recipe：把菜谱动作写成两未知数的方程",
+    "path": "_writeups/misc/wacky-recipe.md",
+    "role": "case_decision",
+    "source_id": "wackyrecipe",
+    "source": "https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/misc/wackyrecipe/solve/WRITEUP.md",
+    "sources": [
+      "https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/misc/wackyrecipe/solve/WRITEUP.md",
+      "https://www.dangermouse.net/esoteric/chef.html"
+    ],
+    "mechanisms": [
+      "Chef",
+      "栈",
+      "一次方程"
+    ],
+    "summary": {
+      "text": "菜谱中的搅拌碗是栈。把每轮操作写成含两个未知量的式子，用输出前缀确定食材数量，再检查整个输出。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "本题操作能化成两个未知量的一次式。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "注意入栈顺序与输出顺序。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "按动作列式",
+        "depends_on": [],
+        "evidence": [
+          "q1"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "由前缀求未知量",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "核对 20 项输出",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "看到 `Ingredients`（食材）和 `Method`（做法），以及反复操作搅拌碗，先想到 Chef。",
+      "q2": "未知食材数量是 `pain` 和 `effort`。用纸算也可以：第一组先把水从 1 加到 4，乘 `pain`，再减去面包屑的量 4，最后加 `effort`，得到 `4*pain + effort - 4`。每组都可以这样化成一条一次式。",
+      "q3": "按输出顺序把赛事答案前缀代入，解两个未知数。再把所有 20 项算一遍，确认都是可打印字符、首尾格式正确。本机复做时按两种可能的读取顺序检查，只有栈顶先出的方向得到一个候选。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/misc_samples.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-usb-hacker",
+    "title": "USB Hacker：先认抓包头，再还原键盘输入",
+    "path": "_writeups/forensics/usb-hacker.md",
+    "role": "case_decision",
+    "source_id": "usb-hacker",
+    "source": "https://github.com/W4terDr0p/W4terCTF-2023/tree/main/challenges/forensics/usb-hacker",
+    "sources": [
+      "https://github.com/W4terDr0p/W4terCTF-2023/tree/main/challenges/forensics/usb-hacker",
+      "https://cdn.kernel.org/doc/html/latest/usb/usbmon.html"
+    ],
+    "mechanisms": [
+      "PCAPNG",
+      "USB HID",
+      "键盘报告"
+    ],
+    "summary": {
+      "text": "先认抓包的链路类型。本题是 Linux 的 64 字节 usbmon 头，取到键盘报告后才处理按键、Shift 和退格。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "链路类型、端点和报告大小须与本题一致。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "Windows USBPcap 的头布局不同。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "认接口",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "按端点取报告",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "按新按下的键还原",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "第一步读 PCAPNG 接口描述块：本题链路类型是 220，对应 Linux 的 usbmon 64 字节头。",
+      "q2": "1. 对每个 USB 数据包先读方向、传输类型和已捕获长度。",
+      "q3": "2. 第一个字节是修饰键，第二个保留，后六字节是按键编号。",
+      "q4": "3. 对相邻报告做比较，只处理新按下的键；键还按着时不要重复添字。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/misc_samples.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "链路类型": 220,
+      "端点": "0x81",
+      "键盘报告字节数": 8
+    },
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-beep-boop-robot",
+    "title": "Beep Boop Robot：短音、长音和空白各代表什么",
+    "path": "_writeups/misc/beep-boop-robot.md",
+    "role": "case_decision",
+    "source_id": "beep-boop-robot",
+    "source": "https://github.com/TJCSec/tjctf-2023-challenges/tree/main/forensics/beep-boop-robot",
+    "sources": [
+      "https://github.com/TJCSec/tjctf-2023-challenges/tree/main/forensics/beep-boop-robot"
+    ],
+    "mechanisms": [
+      "摩斯电码",
+      "WAV",
+      "短窗口能量"
+    ],
+    "summary": {
+      "text": "只有一种鸣声时，先看音长和停顿。8 位 WAV 先减去 128，再按短窗口算能量，避免把过零误当静音。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "单音开关清楚，音长和停顿能分档。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "换录音要重看阈值。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "采样居中",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "按窗口分时长",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "按摩斯表读码",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "先看声音特征：附件是 8 位单声道 WAV，鸣声基本只有约 1000 Hz 的一个音。",
+      "q2": "1. 8 位 WAV 的采样是无符号整数，静音中心在 128。先减 128，再每 5 毫秒算一次均方根能量，也就是看这段声音的整体强度。逐个采样取绝对值会把正弦波过零点误判为停顿。",
+      "q3": "2. 用峰值能量的四分之一作为本题阈值。连续有声区分成约 0.04 秒和 0.13 秒两类，分别记作摩斯电码的点和划。",
+      "q4": "3. 无声区大致有 0.05、0.14 和 0.42 秒三档，分别表示同一字符内、字符之间、词之间。把点划组合按摩斯表读出来。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/misc_samples.py"
+    ],
+    "images": [
+      "_assets/images/f47c2eb458f05aa0ac6efb34380fa9fa08e1596dfa16a6621d603dbb5dff00ef.png"
+    ],
+    "material_type": "writeup",
+    "case_parameters": {
+      "窗口毫秒数": 5,
+      "声音频率约": 1000
+    },
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-miniscule",
+    "title": "Miniscule：PNG 的数据用了另一种压缩",
+    "path": "_writeups/misc/miniscule.md",
+    "role": "case_decision",
+    "source_id": "miniscule",
+    "source": "https://github.com/TJCSec/tjctf-2023-challenges/tree/main/forensics/miniscule",
+    "sources": [
+      "https://github.com/TJCSec/tjctf-2023-challenges/tree/main/forensics/miniscule",
+      "https://www.w3.org/TR/png/"
+    ],
+    "mechanisms": [
+      "PNG 修复",
+      "IDAT",
+      "Zstandard"
+    ],
+    "summary": {
+      "text": "PNG 外壳无误，但 IDAT 里面是 Zstandard。先还原行数据，再用 PNG 要求的 zlib 重压；只改校验值打不开。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "已确认真实压缩算法，且解压长度符合图像头。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "CRC 正确不能代替图像解码。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "核对签名",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "解压并检查行长度",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "重建并读图",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "文件有正确的 PNG 签名，只含 `IHDR`（图像头）、`IDAT`（压缩图像数据）和 `IEND`（结束块）。",
+      "q2": "1. 读取 `IDAT` 开头，实际是 `28 B5 2F FD`，对应 Zstandard（另一种压缩格式）。",
+      "q3": "2. 解压后得到 1,920,800 字节，正好等于 `800*(800*3+1)`：每行 800 个 RGB 像素，各占 3 字节，行首还有一个滤波类型字节。",
+      "q4": "3. 把解压后的行数据用 zlib 重新压缩，图像头的方法改成 0，按块重写长度和 CRC。",
+      "q5": "最后用独立解码器打开重建的图片，确认能读出完整一帧。先验数据长度，再验解码；CRC 正确只说明块里的字节与校验值相符。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/misc_samples.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "尺寸": [
+        800,
+        800
+      ],
+      "解压字节数": 1920800
+    },
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-nothing-to-see",
+    "title": "Nothing to See：压缩包藏在 PNG 结束块之后",
+    "path": "_writeups/misc/nothing-to-see.md",
+    "role": "case_decision",
+    "source_id": "nothing-to-see",
+    "source": "https://github.com/TJCSec/tjctf-2023-challenges/tree/main/forensics/nothing-to-see",
+    "sources": [
+      "https://github.com/TJCSec/tjctf-2023-challenges/tree/main/forensics/nothing-to-see"
+    ],
+    "mechanisms": [
+      "PNG 尾部附加",
+      "ZIP",
+      "文本元数据"
+    ],
+    "summary": {
+      "text": "沿块长度读到 IEND，再检查后面的 ZIP。密码在外层图像 Title 字段，用完整字段值读取并核对 CRC。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "能按块读到 PNG 结尾，后面的字节可独立当作 ZIP。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "不要只搜索文件里的 IEND 字符串。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "按块读到末尾",
+        "depends_on": [],
+        "evidence": [
+          "q1"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "检查 ZIP 目录",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "用 Title 解压",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "先按 PNG 块的长度读到 `IEND`（结束块），不要只搜索字符串的位置。",
+      "q2": "这份文件的偏移 14751 开始是一段 228 字节的 ZIP。",
+      "q3": "密码线索还在外层图像：`tEXt`（文本元数据块）里有一项 `Title`。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/misc_samples.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "ZIP 起始偏移": 14751,
+      "ZIP 字节数": 228
+    },
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-jocker",
+    "title": "jocker：公开题解导读",
+    "path": "_writeups/reverse/jocker.md",
+    "role": "case_decision",
+    "source_id": "jocker",
+    "source": "https://www.ylcao.top/2021/12/01/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84jocker/",
+    "sources": [
+      "https://www.ylcao.top/2021/12/01/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84jocker/",
+      "https://www.cnblogs.com/pppyyyzzz/p/13463136.html"
+    ],
+    "mechanisms": [
+      "反编译",
+      "栈不平衡",
+      "自修改代码"
+    ],
+    "summary": {
+      "text": "公开题解记录了栈不平衡提示、假答案和改写后的分段检查。先看作者如何核对每条线索，再回原文对照。",
+      "evidence": [
+        "q1",
+        "q2"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "仅作为网鼎杯 2020 青龙组同一题的导读。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "函数导入和反编译报错只是线索。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "按题名和赛事对照",
+        "depends_on": [],
+        "evidence": [
+          "q1"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "读原文的证据",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "按链接看原图",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "网鼎杯 2020 青龙组 · 逆向。这里只整理公开题解，不另做逆向或提交。",
+      "q2": "建议先看前文如何区分“工具没读懂这段代码”和“已经找到了答案”。"
+    },
+    "verification": "公开题解导读",
+    "code": [],
+    "images": [],
+    "material_type": "navigation",
+    "unknowns": [
+      "本次仅核对公开题解，未复做逆向。"
+    ],
+    "code_contains": []
+  },
+  {
+    "id": "r66-rsa-middle-bits",
+    "title": "highlow：素数两端已知，中间有一段被遮住",
+    "path": "_writeups/crypto/rsa-middle-bits.md",
+    "role": "case_decision",
+    "source_id": "rsa-middle-bits",
+    "source": "本地密码题附件（第二轮编号：rsa-middle-bits）",
+    "sources": [],
+    "mechanisms": [
+      "RSA",
+      "中间位泄漏",
+      "Coppersmith 小根"
+    ],
+    "summary": {
+      "text": "先把变化的 352 位清零，写出素数和一个小未知数的关系；求的是未知因子下的小根，再用原模数筛选。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "已知连续未知位的位置、其余位和模数。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "该式在因子下成立，不是在整个模数下成立。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "清零并写式",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "构造向量并约简",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "回验因子和密文",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "源码把 `p` 与左移 400 位的 44 字节明文做异或。",
+      "q2": "因为 `p` 整除公开的 `n`，这个式子在未知因子 `p` 下等于零。",
+      "q3": "本机用 Coppersmith 小根方法（把小根问题转成整数向量约简）试算。",
+      "q4": "对每个候选恢复 `p`，检查 `1 < p < n` 且 `n % p == 0`。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/lattice_samples.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "未知位起点": 400,
+      "未知位宽度": 352
+    },
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-groebner-composite",
+    "title": "Algebra：先还原字节密钥，再解三段密文",
+    "path": "_writeups/crypto/groebner-composite.md",
+    "role": "case_decision",
+    "source_id": "groebner-composite",
+    "source": "本地密码题附件（第二轮编号：groebner-composite）",
+    "sources": [],
+    "mechanisms": [
+      "模线性方程",
+      "字节范围",
+      "有限域开根"
+    ],
+    "summary": {
+      "text": "密钥方程少于未知量，但每项都在字节范围内。先利用这个范围恢复密钥，再分别试三个可能的指数。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "坐标限于 0–255，指数只可能是 2、3、5。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "复原字节时要保留固定宽度。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "求密钥",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "按指数开根",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "核对三段整数和",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "`keyTask.chall` 给出模数、一个 32×16 矩阵和 16 个结果。",
+      "q2": "本机把前 16 列化成单位阵，用后 16 个坐标表示前 16 个坐标，再加上各坐标的模数倍数。",
+      "q3": "源码的指数条件可以分解为 `(e-2)*(e-3)*(e-5)=0`。",
+      "q4": "把每段恢复成**固定 32 字节**，与密钥逐字节异或。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/lattice_samples.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "候选指数": [
+        2,
+        3,
+        5
+      ],
+      "密钥方程数": 16,
+      "固定字节宽度": 32
+    },
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-lwe-error-band",
+    "title": "lwe1：先把误差移到零附近",
+    "path": "_writeups/crypto/lwe-error-band.md",
+    "role": "case_decision",
+    "source_id": "lwe-error-band",
+    "source": "本地密码题附件（第二轮编号：lwe-error-band）",
+    "sources": [],
+    "mechanisms": [
+      "LWE",
+      "误差区间",
+      "整数向量约简"
+    ],
+    "summary": {
+      "text": "误差靠近 5950。先整体平移到 −50 至 50，再做整数向量约简，最后把候选代回原方程。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "误差区间窄，本题可选取可逆的 48 行。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "约简后的第一个向量未必符合误差区间。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "误差居中",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "检查短向量幅度",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "代回原矩阵",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "题目给出 `b = A*s + e (mod p)`。",
+      "q2": "1. 本题矩阵前 48 行在模 `p` 下可逆。求其逆，将整个矩阵右乘该逆，得到上方 48 行为单位阵的矩阵 `H`。",
+      "q3": "3. 把居中的 `b` 作为目标，在基底和目标后多添一列；普通向量添 0，目标添 50。",
+      "q4": "4. 用目标减去候选误差，取前 48 项，再用第 1 步的逆矩阵恢复原密钥。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/lattice_samples.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "误差区间": [
+        5900,
+        6000
+      ],
+      "居中值": 5950,
+      "矩阵尺寸": [
+        60,
+        48
+      ]
+    },
+    "unknowns": [],
+    "code_contains": []
+  },
+  {
+    "id": "r66-rabin-eight",
+    "title": "ez_raabin：先用已知的第三个因子",
+    "path": "_writeups/crypto/rabin-eight.md",
+    "role": "case_decision",
+    "source_id": "rabin-eight",
+    "source": "本地密码题附件（第二轮编号：rabin-eight）",
+    "sources": [],
+    "mechanisms": [
+      "Rabin",
+      "八次幂",
+      "模平方根"
+    ],
+    "summary": {
+      "text": "用 n 除以已知的 pq 直接得到第三个因子。对模这个因子的结果开三次平方，再按完整模数检验候选。",
+      "evidence": [
+        "q1",
+        "q2"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "第三个因子是模 4 余 3 的素数。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "要直接采用模根，明文整数须小于该因子。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "算第三因子",
+        "depends_on": [],
+        "evidence": [
+          "q1"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "保留正负候选",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "重算八次幂",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "题目给 `n=p*q*r`、`hint=p*q` 和 `C=m**8 % n`。",
+      "q2": "对这种素数，平方根候选可用 `pow(v,(r+1)//4,r)` 得到。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/lattice_samples.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "模根次数": 3,
+      "剩余因子位数": 512
+    },
+    "unknowns": [],
+    "code_contains": [
+      "values = {C % r}"
+    ]
+  },
+  {
+    "id": "r66-subgroup-choreographer",
+    "title": "Subgroup Choreographer：把查表运算变成同余方程",
+    "path": "_writeups/crypto/subgroup-choreographer.md",
+    "role": "case_decision",
+    "source_id": "subgroup-choreographer",
+    "source": "本地密码题附件（第二轮编号：subgroup-choreographer）",
+    "sources": [],
+    "mechanisms": [
+      "运算表",
+      "同余方程",
+      "模 4 消元"
+    ],
+    "summary": {
+      "text": "用首行首列重新编号，检验新表能否写成两个模 4 坐标的相加。核对全部表项后，再把三层查表改写成同余方程。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "首行首列都是排列，重新编号后的运算通过群性质检查。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_statement"
+      }
+    ],
+    "limits": [
+      {
+        "text": "模 4 下只有奇数主元可逆。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "重新编号并验证表",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "逐层展开坐标关系",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "复算三组公开数据",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "quotes": {
+      "q1": "附件给了一张 16×16 的表 `T`。每行和每列都把 16 个值各排列一次，但表本身没有单位元，也不满足结合律。直接把它当普通群，算出来的阶没有依据。",
+      "q2": "可以用首列和首行给两个输入重新编号。令 `u=T[a][0]`、`v=T[0][b]`，把 `T[a][b]` 填到新表的 `(u,v)`。由于首列、首行都是排列，每个格子都能唯一填入。新表的单位元是原来的 `T[0][0]`。本机逐项核对后发现，新表满足交换律和结合律，并能用两个各有 4 个取值的坐标表示所有 16 个元素。新运算就是两个坐标各自模 4 相加。",
+      "q3": "在这组坐标下，原表可写成 `T(a,b) = L*a + R*b + K (mod 4)`。",
+      "q4": "把 `p1=D(c,k)`、`p2=D(k,q)` 和 `sig=D(H(msg),q)` 一起写成方程。",
+      "q5": "最后把坐标换回 16 个原标签，逐个重算三组公开数组。"
+    },
+    "verification": "本机原附件回验",
+    "code": [
+      "_code/r66/subgroup_choreographer.py"
+    ],
+    "images": [],
+    "material_type": "writeup",
+    "case_parameters": {
+      "表尺寸": [
+        16,
+        16
+      ],
+      "奇数主元数": 768
+    },
+    "unknowns": [],
+    "code_contains": []
+  }
+]

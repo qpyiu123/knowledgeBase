@@ -142,3 +142,13 @@ Flag 2 的解法也差不多，只是需要注意一下比特在字节中的位�
 我们甚至还可以更进一步，考虑到 png 也是用的 deflate 算法，那么就[可以构造一个图片](https://www.idontplaydarts.com/2012/06/encoding-web-shells-in-png-idat-chunks/)，使得它编码成 png 之后会变成一段 webshell（可以用来出毒瘤套娃 web 题）：
 
 总之，希望做完这个题之后大家能对压缩算法有更深入的理解：就算你不能用画图画个 webshell 出来，至少也可以直接拍脑袋估测一段日志文件的压缩比。不觉得这很酷吗？
+
+## 原文配图
+
+![题目描述（原文图）](../../_assets/images/5b7efcb6af8e25c6d7bd7a6c35602b69062979c329db7b94609fec6433989d29.webp)
+
+![题目描述（原文图）](../../_assets/images/80fd2a0588052484872944e2facb806338924cc7d806f6e094070a3fbbd4ff6d.webp)
+
+![image-20241020155457558](../../_assets/images/1d42fe87ee8c84e96243a2d7ac5e37304870c6c72580aaa94dc4190898a187d8.png)
+
+![image-20241020155719163](../../_assets/images/26e9469e3a6920873e4dbd062f02c8eccbf0f0349a2b9513b326388613c3410d.png)

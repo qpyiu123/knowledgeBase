@@ -54,3 +54,9 @@ updated: 2026-10-23
 〔原图省略〕
 
 最终 payload `?txt=php://input&payload=O:4:"Hint":2:{s:6:"target";s:4:"r00t";}` 同时 POST 传递数据 `welcome to r00t`
+
+## 原文配图
+
+![image-20240530154545759](../../_assets/images/fdcb297df24274967b8c54361c9c67f1ef0aa4f260c56f3668cee9afc3510623.png)
+
+![image-20240530155231778](../../_assets/images/98ec0655e887c3ed1e71abffbb6242d2e66b679ff09b84b54628c71973579253.png)

@@ -105,3 +105,15 @@ import Container from '@/components/docs/Container.vue'
 所以 flag 的第四部分即 `1e_Gam3`
 
 最后将四个部分拼接起来再包裹上 `flag{}`，最终的 flag 即为 `flag{Do_Y0u_Like_7his_Jigs@w_puzz1e_Gam3}`
+
+## 原文配图
+
+![main 函数](../../_assets/images/4012a124e14525d7ebea251bd4af3b801f55506874c06f2137013fd9b45e21c9.png)
+
+![函数内容](../../_assets/images/d7470d304b4fb269db8ef616aa0e1eacf628aac571eabf87adbea9476d02486b.png)
+
+![Like_7his_Jig 函数内容](../../_assets/images/5b17aed50b759b24ce53c725c4fd73eba86f950e5dc18097f5e3eab2f96db163.png)
+
+![第三部分](../../_assets/images/b8d36e1ddda2f6c6bc3b15a1926331ead4dfc89f2d3d649b118a250e57352d38.png)
+
+![第四部分](../../_assets/images/f3f270cd16feb43fe6098f034b2367c124e762bff4e12a1f9011b8d09be973e1.png)

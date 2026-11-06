@@ -65,3 +65,27 @@ updated: 2026-10-23
 〔原图省略〕
 
 然后我们直接从后往前进行逆运算即可。
+
+## 原文配图
+
+![找到 Activity](../../_assets/images/616e23d58abcacf7b90ae3ac7bb88a09c66f0f133ad3cf3d786dde0e879f5156.png)
+
+![跳转到 CheckActivity](../../_assets/images/7024171cbb6fa0b5e174fd3b1402caf892a163bd62d81b25be7d7ad44485c4e7.png)
+
+![check() 函数](../../_assets/images/1dadb00258e1ef6645fe48cda046e3c000a04cd5bd023bd979bf7612bf546b15.png)
+
+![CheckActivity](../../_assets/images/328df39b2bb18fec8d2472b09455373cb644c1a55ba12232b878b9a3e428c152.png)
+
+![so文件](../../_assets/images/a62db953110eb7a5b78d3ec215a3ca7600e091c12604d4740e1b6de92824ef16.png)
+
+![函数列表](../../_assets/images/9653983781c7d19a3bcdfd55f06a57dda182f68ea24514f7505c03d2f81b4748.png)
+
+![JNI_OnLoad](../../_assets/images/b013958bb3a4e93d4b91f57744c0440a5430e3ccef98b7ec311d18dbe2685cc1.png)
+
+![jstring](../../_assets/images/0171d13a05d063dd8671791000a2a48cfcde25e7f79edea7ac8f53b4734f36f2.png)
+
+![CheckData](../../_assets/images/263a311e47dfd5a75314f19ebdc6bf440a0097418d25326781c17039bacd65ae.png)
+
+![UseLess](../../_assets/images/29b2b50548ff0631b15c677981351fe9e886a5ecabc8f0b921495ba43a66962c.png)
+
+![func](../../_assets/images/3644828d4f4302b8f9d363891bb2e087723a96ca327dfde08cc677b47002c284.png)

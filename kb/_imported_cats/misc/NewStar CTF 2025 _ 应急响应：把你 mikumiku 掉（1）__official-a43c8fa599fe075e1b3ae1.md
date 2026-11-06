@@ -84,3 +84,11 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 结合日志，可以确定使用的 cve
 
 **CVE-2025-24813**
+
+## 原文配图
+
+![Windows 日志文件](../../_assets/images/1d6bcbbdbc693fe0ee1bdc757fa27b8b77743fa91ba571c27059c8017cb25ba1.png)
+
+![筛选异常登录事件](../../_assets/images/d91bf2e31e48aecdc5cc70d7ed6d7c635a43ae961dea27368db5ac551d05c6e3.png)
+
+![定位 RDP 登录 IP](../../_assets/images/eb12f2e226c0b41e5ddb3e875ae2ecc313ad6f91b66e6b0a334f54855f8e0d8a.png)

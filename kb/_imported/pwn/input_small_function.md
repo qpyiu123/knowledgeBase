@@ -82,3 +82,15 @@ import Container from '@/components/docs/Container.vue'
 其实还有种思路，既然执行 shellcode 的时候，shellcode 所处段还是可读可写可执行的状态，并且 `rdx` 中还存储着此段的地址，那么可以考虑通过 shellcode 构建一个 `read`，通过这个 `read` 再次读入 shellcode，即可绕过 `main` 函数中 `read` 对于字节大小的限制。
 
 相当于是要分两次写入两段 shellcode，第一段 shellcode 调用 `read` 函数以读入第二段 shellcode，通过第二段 shellcode 拿到 shell
+
+## 原文配图
+
+![IDA 查看 main 函数](../../_assets/images/7cefb0dca30b664833e3a4ed7caba508f7be0b7d6e3baad4db5c3899bdbe619b.png)
+
+![IDA 查看 clear 函数](../../_assets/images/5420bcd27f4f1603886fef16d383db6c4bc644ca49b1dfcccbaa09c1fb20c65c.png)
+
+![clear 函数汇编清空寄存器](../../_assets/images/c5578795a5d0b0152c4646815cbdd8c80811999c1b7150f19fd6fa9db2c4160b.png)
+
+![返回 main 后设置 shellcode 地址](../../_assets/images/b7034275b01b93a1178bf400e762d4e9c8fb41bc6881ddf6b38cba63e1910804.png)
+
+![call rdx 执行 shellcode](../../_assets/images/61eae6a6ac601466160d26580ee16dd398fc95f3f80bd5ee1030ede85540d5cb.png)

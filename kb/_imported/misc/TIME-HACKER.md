@@ -68,3 +68,17 @@ updated: 2026-10-23
 
 
 此时已经能看出 FLAG 字符，但字符顺序不正确。图片的 EXIF 信息也是常见的信息隐藏载体，因此可以从 EXIF 中读取文件顺序。最终脚本如下：
+
+## 原文配图
+
+![压缩包尾部冗余数据](../../_assets/images/aed2571c28aa65b8be2480e06f6ea40e64a196abcd0e23c28d1a5e086ce4b2c4.png)
+
+![Base64 解码提示](../../_assets/images/79a494761362c4bc789351fed66af9e6d02d46ef031c79c232d9e4d5b8613c80.png)
+
+![password_checker 程序](../../_assets/images/a77b38a64bb0848380279fd5d5a0897dc87202e2fedf3d2fff35fb3b648aa791.png)
+
+![FLAG.zip 尾部提示](../../_assets/images/8bf6f589d876f8f33fcc0e7669d4bc133f194fd557c682f896649c15730af9c1.png)
+
+![密码长度提示](../../_assets/images/e93d61f4faf26cbe9b633e1fac4f1c53e455d1dee6be5848405bc4fa7c9af9d4.png)
+
+![解压后的图片文件](../../_assets/images/2e1e4bbd48db5801c3f3d5b8631b7350f880723abcd084a135c768e12f7927b4.png)

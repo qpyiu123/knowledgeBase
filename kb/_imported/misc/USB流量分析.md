@@ -36,6 +36,8 @@ comments: true
 - tshark 提取:`tshark -r x.pcap -T fields -e usb.capdata | grep -v "^$" > data.txt`。
 - HID 报文 8 字节结构:`[modifier][reserved][key1..key6]`。
 
+先分清容器、接口链路类型、USB 包头这三层。PCAPNG 的不同接口可以用不同的类型：220 是 Linux 的 64 字节 usbmon 头，249 是 Windows USBPcap。读取长度和端点前先确认类型。USB Hacker 的库内题解提供了 Linux 样本的检查过程。
+
 ## 键盘流量分析
 
 - HID Usage Table 映射 keycode → 字符;Shift 修饰(0x02/0x20)大小写与符号。

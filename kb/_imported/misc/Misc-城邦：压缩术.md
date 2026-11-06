@@ -116,3 +116,19 @@ import Container from '@/components/docs/Container.vue'
 〔原图省略〕
 
 打开 `flag2.zip` 即可得到 FLAG。
+
+## 原文配图
+
+![压缩包文件结构](../../_assets/images/921dd4cc55492bdd49b3809a74806709f1a7405c15ca060dc4188603a6be0efe.png)
+
+![压缩包加密标志位](../../_assets/images/b285cd867ee5e52aed39065b8e1103cf97364c72048f16168a7273a074ceb069.png)
+
+![修改加密标志位](../../_assets/images/9ada4dbacccde4aae205c514190756f228406e00c0dc5d0e50089fba7195f847.png)
+
+![解压得到 key 和 flag.zip](../../_assets/images/90330863d3edec09902e636e5be4e07aaeafd438990fb1f9f8bdeeb267c1527c.png)
+
+![CRC32 校验一致](../../_assets/images/21379be4825760199eae2884c43da3787301a1f5ded93c515dd93176a36f29d9.png)
+
+![bkcrack 明文攻击](../../_assets/images/b18a8b02379784d32f557e676be9b2451d03dd65f6f49637acb22b785f149a69.png)
+
+![打开 flag2.zip](../../_assets/images/abc3014349c08f0a108b6cddefab445f6fedad69726e0bef0e2b93fb0b2583a1.png)

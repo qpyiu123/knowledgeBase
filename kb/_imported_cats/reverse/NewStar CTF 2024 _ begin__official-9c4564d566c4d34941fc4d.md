@@ -96,3 +96,19 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 根据提示，这个函数名就是最后一部分，并且在最后加上 `}`
 
 则最后拼起来的 flag 是 `flag{Mak3_aN_3Ff0rt_tO_5eArcH_F0r_th3_f14g_C0Rpse}`
+
+## 原文配图
+
+![运行程序](../../_assets/images/9f1540c21e0711ba974d6e7e811ff04dea389007ad6cffb4a98485f37aaea92d.png)
+
+![IDA 界面 1](../../_assets/images/ea774eda01a217dc24a74075308cb7762bc910a0cfe4bfe7e79f4fed54d2b78b.png)
+
+![IDA 界面 2](../../_assets/images/7e40dbbb6e131a2769c9d19a56d4cee67163afb92c427f28f774cc99dadceb72.png)
+
+![IDA 界面 3](../../_assets/images/f79d87beb50d470d4fd73940e7e83f95e938c8d8ad15b5651289d05604697fa1.png)
+
+![IDA 界面 4](../../_assets/images/8347a4d18ae13aca84eadfeff74f570be6cd9904c84d529da65a695f2d2b5b1d.png)
+
+![IDA 界面 5](../../_assets/images/b3bf89a723d717def0c25e6bbe6445e90d96e8e30e0c61aa70116e8c2764f1ab.png)
+
+![IDA 界面 6](../../_assets/images/8c30edd7ae2237d6228c0ddf77cbea7f15953fb9a87e507d84901db350978f45.png)

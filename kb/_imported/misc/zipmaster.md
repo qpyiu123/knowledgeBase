@@ -69,3 +69,19 @@ CRC 值在压缩包中都可以看到，直接上脚本进行爆破
 
 
 解压后得到一个 Z1 文件，使用记事本打开得到 flag
+
+## 原文配图
+
+![压缩包结构](../../_assets/images/a8aa3fce7722ca26267846c4d41afd398ea41a5a7fd3b356bb64e733ff0a2dc9.png)
+
+![一样的文件](../../_assets/images/dc9744871502c0592117a5363591597eaf9366fbd537f3d95d7f91f0270de3e3.png)
+
+![bkcrack 命令使用](../../_assets/images/629aacee5a5153ac58c17ad3805a0f5bfe68676c7e08848375b9720618b04781.png)
+
+![bkcrack 构造](../../_assets/images/a4faba6d17e14b06ed58b6f9a515643935ed1ffa105cd5c723574ce734e48f9e.png)
+
+![010 Editor 打开](../../_assets/images/65314aae84732c4af0d242540c5df483b7bb2e4ab28bc3bb852b98e80827c702.png)
+
+![CyberChef 解密得到新压缩包](../../_assets/images/2d65c6ba4b9c41ec5cd7783ae27253e24ee73bfa6173d7dd003851fcc295474a.png)
+
+![hint](../../_assets/images/eb33c6321078edb412a1c6ee46c857c9e0a9a991f40f0d3db2b5fd729ddde593.png)

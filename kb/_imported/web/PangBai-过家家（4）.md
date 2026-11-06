@@ -97,3 +97,15 @@ Gopher 协议是一个互联网早期的协议，可以直接发送任意 TCP �
 然后访问 `/favorite` 路由即可得到 FLAG：
 
 〔原图省略〕
+
+## 原文配图
+
+![泄露 JWT 密钥](../../_assets/images/dc409996479f99f4a96c0a5ffb63fa15b0f3800f82b2fe4358ab08aec2d07920.png)
+
+![SSRF](../../_assets/images/8e73f7f57b8b786f2d003f0e07c2c233697c3486193793717652025a0425210f.png)
+
+![签一个 JWT](../../_assets/images/4bed835c065bbe0ed11e4a8d44db72d4d424e7b2775bfc0dedf0acf18f6923d5.png)
+
+![触发 Payload](../../_assets/images/ee89fddfc5d2ec18d393660f99a4d058e358a36ee835151ee515bb03d82ea380.png)
+
+![FLAG](../../_assets/images/3fb3b9657064fa61d61acd4decaacede7f95866d6e27377a1d484f3270436d2d.png)

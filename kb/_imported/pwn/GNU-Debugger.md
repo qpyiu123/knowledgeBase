@@ -77,3 +77,11 @@ nc 后面的 `8.147.132.32` 就是 IP，而 `39543` 则是端口，使用 `run 8
 
 
 这关使用 `set` 指令来修改数据，同样需要在地址前加上 `*` ，使用指令 `set *0x7fffffffdd04  = 0xdeadbeef` 即可，最后使用 `c` 命令让程序继续执行就能看到 FLAG 了。
+
+## 原文配图
+
+![初始容器](../../_assets/images/f8b8da0315873cb4329483270a18b734e03c0bf45c5e11b7b24d3b977d1f4518.png)
+
+![寄存器](../../_assets/images/d6baf5b19164968908844205e18d59e3a40dbfeced81b90084e9ea65d91e8962.png)
+
+![第二关](../../_assets/images/496b23762096c6233ae8e66bf2af35742f301ecae2018826b7798ef36b640998.png)

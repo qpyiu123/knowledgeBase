@@ -82,3 +82,11 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 根据提示<span data-desc>（其实也能听出来后半段音乐是倒放出来的）</span>将音频进行反向处理实现**倒放**，再解析其中的摩斯电码（Morse Code）。
 
 可以手动翻译摩斯电码表，也可以使用[在线解码](https://www.lddgo.net/encrypt/morse)。
+
+## 原文配图
+
+![界面 1](../../_assets/images/6aff6a4b8dc9a905ad399d618fc79ff6e25aface5b5a96a113c9aab251de3883.png)
+
+![界面 2](../../_assets/images/8561088c263d898f9e4ee2d054089e81347d48a5b02dc852e9579b592995f602.png)
+
+![Morse 解密结果](../../_assets/images/0d8f7adcc1319d5ff4886bdff9f1288124830200b5def66d83ad6d60e1e4fcc3.png)

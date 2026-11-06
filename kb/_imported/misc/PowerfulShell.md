@@ -75,3 +75,9 @@ PowerfulShell 是 CTF 比较典型的 jail 类题，笔者认为一道有新意�
 〔原图省略〕
 
 〔原图省略〕
+
+## 原文配图
+
+![趁大家不注意偷偷踹自己](../../_assets/images/148a2975b00c53d92d0e5ee75b43df0c013befbbb52fd65666119eaf1d67d7e6.webp)
+
+![meme](../../_assets/images/434d7b6c6285547b2df2b2bb9331ed9ab893505260001a5725566d3a87fe4e6b.webp)

@@ -89,3 +89,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 :::
 
 EXP:
+
+## 原文配图
+
+![func 函数](../../_assets/images/006c78b26586dd5be3a00a39d3f9e2f1cc28c1b5be2282712698f31e7e2734eb.png)
+
+![checksec 的结果](../../_assets/images/0509a7806c7fb8f91e46e2d9cfe2a54108988cf7ee623d6bb96f906110c73354.png)

@@ -86,3 +86,7 @@ import Container from '@/components/docs/Container.vue'
 在日志里可以看到 ip 为 `171.16.20.72` 访问了 `/admin/Webshell.php` 的记录，同时 `/admin/` 也是允许被访问的
 
 我们访问 `/admin/` 可以发现有目录浏览漏洞，而在里面只有 `Webshell.php`，访问后可以发现连接密码即为 flag.
+
+## 原文配图
+
+![日志分析](../../_assets/images/bc3a08f8e053e96ad39d0e6810efe9e973f47834913511671380b0b74419117a.png)

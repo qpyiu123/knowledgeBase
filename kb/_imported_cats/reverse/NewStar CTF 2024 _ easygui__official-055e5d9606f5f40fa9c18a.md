@@ -94,3 +94,13 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 其中 `subbytes_reverse` 函数中的 `table_reverse` 表可以由下面这段代码得到
 
 最后的 flag: `flag{GU!_r3v3R5e_3nG1n3er1ng_i5_v3ry_s1mpl3}`
+
+## 原文配图
+
+![sub_140001490](../../_assets/images/c3dbfe88563a397517f002b634194de64a03ca3d86a539c1ace592053384d1d2.png)
+
+![反调试](../../_assets/images/8485b4c8f5144cff17b7e198ebb3e96c41f011f7050e94af6c906cbe3280bc0f.png)
+
+![主逻辑](../../_assets/images/46c1b1982752370cfac5a4c0e3b313245f985804ff2f49d435d4f214d73b1b56.png)
+
+![flag](../../_assets/images/9f85be6b5243b98dc2d2c383036ecd89edc466ca3ebbf9e10ca4997a264288b0.png)

@@ -86,3 +86,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 需要注意的是，`call` 后面有 `add rbx, 1;` `cmp rbp, rbx;` `jnz` ...，我们需要控制 `rbx = 0` `rbp = 1`
 
 对于加密函数，异或和左移都是可逆运算，我们只需对我们输入的内容先右移后异或 `0x5A` 即可
+
+## 原文配图
+
+![ret2csu](../../_assets/images/c74b60eddfa4d9908918b3c225f5104c37a1848acaee143a04c58b1aef61dd5c.png)

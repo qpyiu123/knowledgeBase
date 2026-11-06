@@ -51,7 +51,32 @@ function CodeBlock({ lang, text, children }: { lang: string; text: string; child
   );
 }
 
-export default function Md({ text }: { text: string }) {
+function articleImage(
+  src: string | undefined,
+  documentPath: string | undefined,
+) {
+  if (!src || !documentPath || /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(src))
+    return src;
+  try {
+    const base = documentPath.split('/').map(encodeURIComponent).join('/');
+    const path = decodeURIComponent(
+      new URL(src, `https://kb.invalid/${base}`).pathname,
+    );
+    return path.startsWith('/_assets/images/')
+      ? `/api/image?path=${encodeURIComponent(path.slice(1))}`
+      : src;
+  } catch {
+    return src;
+  }
+}
+
+export default function Md({
+  text,
+  documentPath,
+}: {
+  text: string;
+  documentPath?: string;
+}) {
   return (
     <div className="md">
       <ReactMarkdown
@@ -66,6 +91,9 @@ export default function Md({ text }: { text: string }) {
             <a href={href} target="_blank" rel="noopener noreferrer">
               {children}
             </a>
+          ),
+          img: ({ src, alt, title }) => (
+            <img src={articleImage(src, documentPath)} alt={alt || ''} title={title} loading="lazy" />
           ),
           pre: ({ children }) => {
             const first = Children.toArray(children)[0];

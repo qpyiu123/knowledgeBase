@@ -67,3 +67,11 @@ import Container from '@/components/docs/Container.vue'
 也可以手动构造 payload。
 
 这里给出 EXP：
+
+## 原文配图
+
+![IDA 查看程序逻辑](../../_assets/images/13902a0e235264f581f475bb710e673d8a7c1b5e52d32c6a46ce92d122b015bb.png)
+
+![read_flag 函数](../../_assets/images/ef36a1b11327cc360838cff10ab6132e21c0ff6b6518654f7decdf653f2beabd.png)
+
+![GDB 查看格式化字符串偏移](../../_assets/images/df107fb38cd3a9f41574772d1da40148075bdbe5e5355a0292c5b50ec5348f64.png)

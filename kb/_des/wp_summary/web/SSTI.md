@@ -57,9 +57,9 @@ SSIT：服务器端模板注入（Server-Side Template Injection）
 >
 >   凡是使用模板的地方都可能会出现 SSTI 的问题，SSTI 不属于任何一种语言，沙盒绕过也不是，沙盒绕过只是由于模板引擎发现了很大的安全漏洞，然后模板引擎设计出来的一种防护机制，不允许使用没有定义或者声明的模块，这适用于所有的模板引擎
 
-![img](README/1344396-20200911174631687-758048107.png)
+![img](../../../_assets/images/cffd308dd5f9a860d1e2dbe056c5b1919779dbbb5f1322db375ef14ff463bcf8.png)
 
-![img](README/5ea647a0c2a9a83be5daa329.jpg)
+![img](../../../_assets/images/cb0767e74a5284f61e9b8c4c233882b5ff4fcb9945718f16db81d911a38afc85.jpg)
 
 
 
@@ -184,7 +184,7 @@ if __name__ == '__main__':
 
 黑名单是self和config，python还有一个函数叫做url_for，其作用是url是用于构建指定函数的URL，在配合**globals()**，该函数会以字典类型返回当前位置的全部全局变量。这样也可以实现查看的效果
 
-![image-20220110200730870](README/image-20220110200730870.png)
+![image-20220110200730870](../../../_assets/images/7778eadd7b771602b5410441eb77cd4ace3766dbf87d90d56f8dbcbd8fbfef86.png)
 
 `/shrine/{{url_for.__globals__['current_app'].config}}`
 
@@ -235,7 +235,7 @@ if __name__ == '__main__':
 
 decode：
 
-![image-20220110204103493](README/image-20220110204103493.png)
+![image-20220110204103493](../../../_assets/images/d476b0dfe71dd7640b8c4442114e577bdd9a9aa80b334b769a961aa0ec2d0ef6.png)
 
 应该过滤了flag，import，os等关键词。
 

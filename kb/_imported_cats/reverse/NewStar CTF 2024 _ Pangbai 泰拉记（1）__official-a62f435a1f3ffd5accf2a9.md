@@ -96,3 +96,15 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 - 解法 3：装自动绕过反调试插件，小幽灵
 
 得到正确的 flag 和 key，如果还没学到调试的话，其实看逻辑应该也可能解出这题
+
+## 原文配图
+
+![主函数](../../_assets/images/00d3f101bc4e88efa5e16f50676ed1a07b8627978fece28d393acf55772cf929.png)
+
+![前置函数](../../_assets/images/662f0b5ba768ad3184ac93b55e59cb4a24d1675814844f69eeb77f91a1435764.png)
+
+![反调试相关代码](../../_assets/images/253209767753316010dd7d53c64dae854e9bfb70b858d69d564e8643552fcdac.png)
+
+![改跳转法](../../_assets/images/1af2fb1be828597cee3bbee4480aad66cfb845386aed8b97257aeab0f52b29eb.png)
+
+![插件法](../../_assets/images/a95294356c7c80a86659e26df020ce4d79322e55fecfff9f9c063ad39940f4f2.png)

@@ -180,3 +180,35 @@ Remote 模式本质：
 〔原图省略〕
 
 最终 FLAG 为：`flag{It3_D3bugG_T11me!_le3_play}`。
+
+## 原文配图
+
+![断点设置](../../_assets/images/a9a136770792a725b2b55e27cdd46599f66bd69c61e22d5094946082b1dafb1c.png)
+
+![打开调试](../../_assets/images/89d1bb78af10a3769f0b8ca4e30c7d8a812e4ac0c44ac128b50c145d9d12311a.png)
+
+![linux_server](../../_assets/images/85d1cd20bae5acd8a0c352ffc3626b67b90b2281c95869a601bf68ea93400375.png)
+
+![远程启动](../../_assets/images/d8e05e07d9f904a62120e95933df2122290162d9e1870e155ddc8c352b966513.png)
+
+![IDA 设置](../../_assets/images/c5cb1fc9815530ee43aa171ae85ff281da61411f7450561db72b16a1ce12932c.png)
+
+![linux 环境输入](../../_assets/images/0ec65442c2f7aae7d6d411bb00de046b320863834c80e5522117fb003b3ac3e0.png)
+
+![寄存器表](../../_assets/images/8596f5a40f9a23f54262ec95e6707516b945c831d1512696553e8cf0daf14f07.png)
+
+![寄存器表](../../_assets/images/d4d19a2a220a2f4475e6d0e9d7b9549f2da9746c6d023a812fe96a1ed2855671.png)
+
+![栈窗口](../../_assets/images/08f6d77dc614eb3f3c1c8af8c7c116b067f7a511ac96cf028623feaee76f52c2.png)
+
+![加载模块](../../_assets/images/b46c8f3f5895d2ef1b6d6149529344ae001b1aae4fb7bdafea3a46a7fb771e29.png)
+
+![output 窗口](../../_assets/images/073ae7e4174a76e41ac4e4a6d1c4a41d9bd47ca5e3d1c85209df68b882f44a25.png)
+
+![打断点](../../_assets/images/94d1398ac133250c1d5360c7e7d64e78db468d3b5ef655c2ab44496bb062f226.png)
+
+![观察数据](../../_assets/images/19b7c5ff56051ce76878d99fffc05701f3c45a154156421f5aad6abc7d0e9892.png)
+
+![观察数据](../../_assets/images/0feaefc93a3604bf1763a56838d4e9469dcd6ef9cdf5d538ccf4254cf124a2f7.png)
+
+![获得 flag](../../_assets/images/cbc1fd6995d34df226a0b24ff0d1d04ce72fcde9487685b48a2cd1d42725a8dd.png)

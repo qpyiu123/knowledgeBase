@@ -118,3 +118,23 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 查看一下 `sub_401550` 的交叉引用：
 
 再往前跟踪几个函数<span data-desc>（篇幅有限，不列出来了）</span>，能发现上面的函数最终在程序初始化阶段被 `sub_401BC0` 调用，然后才执行的 `main` 函数<span data-desc>（所以要是你比较闲，从程序入口节点步进也是能调出来的）</span>
+
+## 原文配图
+
+![花指令](../../_assets/images/2f943827f603185664f08a90ab454db0b598a06339bdc55c4bcff4dc7459605e.png)
+
+![去完花指令](../../_assets/images/662abb21c0a8ba221ebe927e461402627876cd60ac000ec957755e22ff4e62a7.png)
+
+![sub_4017A9 函数](../../_assets/images/db25f4a470e11d6539dbaa06b71eb79d1d41818c741f8089877507cf1b7ca103.png)
+
+![查看交叉引用](../../_assets/images/351fbac189ac0f94cce809598faf63256762a88451ad811420f1f35a89147f82.png)
+
+![sub_401550函数](../../_assets/images/feca77e2a0566ec6fafa3380f7161cc449655d03b7301c58f5c264b82d08a37d.png)
+
+![sub_4017A9函数](../../_assets/images/bb64c8dcaa12db2471b5a00d2fcf03b45b329bd7740929d976a3774647ee471f.png)
+
+![反编译真正的加密逻辑](../../_assets/images/e62b0029e23dac12ec5eee70697f6f37fd66ea6b95de6b6856e706aba16fa433.png)
+
+![查看交叉引用](../../_assets/images/291afad52b8ddcc2f53e1750b568efcb5df622e712a1cb4fc6b60d4cba7d710d.png)
+
+![sub_401180](../../_assets/images/47753d2ca74f0135e33061213378a0e6a4abacc8d6d6c1824822647f240c6f01.png)

@@ -47,3 +47,15 @@ updated: 2026-10-23
 〔原图省略〕
 
 因此得到了整个程序逻辑，在运行时，父进程会更改子进程中偏移量，然后数据的判断就是通过子进程来进行的，所以这里只需要把子进程中的密文按照偏移 3 进行逆变换即可。
+
+## 原文配图
+
+![father 文件的逻辑](../../_assets/images/51c31ee147107bd220670902ad22011a3796a0e31fac1f7c2af7962d186ccf4c.png)
+
+![son 文件的逻辑 1](../../_assets/images/5b9355718c7979d5528e1849ad1c0c339d95a6295251aafc37d83e012fd0f595.png)
+
+![son 文件的逻辑 2](../../_assets/images/7d69613041fa86dc6cf1a455fcf8efa5678e07041850d9748c7edebbbe4fda02.png)
+
+![addr 的内容](../../_assets/images/edfe533ea745050abfef9981fcfc4f285d4011aeac113db292b52ec251ad3777.png)
+
+![son 文件的逻辑 3](../../_assets/images/6412ff45403045fa98ac96eb70fb54f7a15e2c1a8b89f71f82b0601feb90bf81.png)

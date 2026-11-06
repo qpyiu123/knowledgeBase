@@ -90,3 +90,13 @@ IDA 打开 so 文件，找到 `doEncCheck` 的实现
 思路全部清楚了，写解密脚本:
 
 将 so 层解密后的数据<span data-desc>（输出）</span>用 CyberChef 进行 Base64 和 AES 解密就行了：[Recipe](<https://gchq.github.io/CyberChef/#recipe=From_Base64('A-Za-z0-9%2B/%3D',true,false)AES_Decrypt(%7B'option':'UTF8','string':'IamEzEncryptGame'%7D,%7B'option':'Hex','string':''%7D,'ECB','Raw','Raw',%7B'option':'Hex','string':''%7D,%7B'option':'Hex','string':''%7D)>).
+
+## 原文配图
+
+![定位到 Enc](../../_assets/images/ff19fdccb6c993af423390693834941ca590fd382348cc03e331afcdf3522bf9.png)
+
+![找到 doEncCheck 的实现](../../_assets/images/fe31f7069ff11f928e9efa93e626cb2bfc1fc40099a0112b772d8edf4e571d4c.png)
+
+![native 层 enc 函数](../../_assets/images/c757e05a0a0fceda8b10f1d334c13ff0c390afcbe28555730a5c88427bdb0a92.png)
+
+![CyberChef](../../_assets/images/dd02a294978d4356a280b87ad7ef08e550e5bc62508987ea50b0e16b3cc9b8df.png)

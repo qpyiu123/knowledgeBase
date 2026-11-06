@@ -92,3 +92,15 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 查得 `flag2` 为 `ns2025`。
 
 结合前面得到的 `js_very_good`，最终 FLAG 为：
+
+## 原文配图
+
+![源码中的 function.js](../../_assets/images/491217836936a2a98129a3dc16301bd4c0d85243c381fcfbcd5ece5990a0f551.png)
+
+![目录扫描发现 www.zip](../../_assets/images/5b49e52b4526ec6c28047784954868ca217851af4271dbbec5dd6752857c84c4.png)
+
+![dashboard.php 混淆内容](../../_assets/images/efb6c9279d1e492bb17571824b8d8a53649dbc29e7608758d68b9c22a9ed0576.png)
+
+![解出嵌套混淆代码](../../_assets/images/37d836bf0f7ff85a4f8cb34dd39b5478f8cbd79d6966b43987346e532cb8dcf9.png)
+
+![触发后门得到 FLAG](../../_assets/images/2915efecc20301adf73ded0624455bb3acb67a6793a7e0f5f63becbe5dfcd8e8.png)

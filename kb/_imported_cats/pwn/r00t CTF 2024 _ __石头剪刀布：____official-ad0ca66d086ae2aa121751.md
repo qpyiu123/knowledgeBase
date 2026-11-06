@@ -87,3 +87,13 @@ updated: 2026-10-31
 **第二种：**就是直接nc连接，直接输入1000个字符，r,s,p都可以：
 
 尽管输了，但还是拿到shell啦
+
+## 原文配图
+
+![image-20240520175408557.png](../../_assets/images/6a11d79f05d677027563aa2b5c2e99db7a1efd292125266298de653affe15713.png)
+
+![image-20240520175547344.png](../../_assets/images/127d89a4def13ec47e66f38bf127c37d101f8e1efd7b99a241addcd50cfbea87.png)
+
+![image-20240520181243938.png](../../_assets/images/193cd328163d6b393a2152cf6f2ed6b44fa899371c910bd4ac06d62ff70251cd.png)
+
+![image-20240520181542062.png](../../_assets/images/0acbde937d12bd217dadf05ecfde1e1a7dfe779a4945f4f44ca76797bac09c00.png)

@@ -90,3 +90,13 @@ import Container from '@/components/docs/Container.vue'
 :::warning
 如果使用 windows 自带的 notepad 打开文本文档，默认缩放下会看不到下划线的，记得放大。
 :::
+
+## 原文配图
+
+![开始分析](../../_assets/images/57606a6309bbab5276f8553fef33119a107d6421dbb68560b43cc4c104fef920.png)
+
+![崩溃类型](../../_assets/images/1724ac4da4d891e956e057b703e1cddb166f793c7ed268295c8025645e50f7f0.png)
+
+![蓝屏](../../_assets/images/c5a85da6fcd1e494b1a903ed3bf32aec8061e972a37f43155e35bb8ad076771c.png)
+
+![alt text](../../_assets/images/c27770600a261109003dc978ccab0854204ef02d6c89a80fb38c4618c8b9a7b2.png)

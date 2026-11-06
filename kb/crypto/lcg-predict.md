@@ -45,7 +45,7 @@ m | (t_{i+1}*t_{i-1} - t_i^2)    对所有 i
 
 取若干这样的值的 `gcd` 即为 `m` 的倍数（常常恰好是 `m`）。
 
-**截断 LCG**：只知 `x_i mod 2^k` 时，用 z3 求解约束或格（Lattice）恢复。
+**先分清输出**：泄漏完整状态时用上面的公式。只泄漏低位或高位时，应按两种不同的观测方式建条件。
 
 ## 三、解题步骤
 
@@ -53,7 +53,7 @@ m | (t_{i+1}*t_{i-1} - t_i^2)    对所有 i
 2. 由 3 项求 `a, b`（或直接用 z3 一键求解）。
 3. 验证：用求出的 `a, b, m` 重新生成序列，与已知项比对。
 4. 递推预测下一项 → 得到 flag 或密钥。
-5. 截断情形转 z3 / 格方法。
+5. 只有低位或高位时，先看模数关系和已知参数，再选下面的做法。
 
 ## 四、可直接运行的脚本
 
@@ -95,43 +95,26 @@ if __name__ == "__main__":
     print("next =", predict(seq[:10], m, 1), "真实:", (real_a * seq[-1] + real_b) % m)
 ```
 
-截断 LCG（只知 `x_i` 的低 `k` 位）用 z3 —— 关键是**把 `% m` 消掉**：令 `x_{n+1} = a*x_n + b - k_n*m`，其中 `k_n ∈ {0,1}`（因为 `x` 始终在 `[0, m)`，`a*x+b < 2m` 时成立）：
+### 只有低位或高位时
+
+- **低 k 位**：只有原模数 `m` 是 `2**k` 的倍数时，才可直接把整个递推化成模 `2**k` 的递推。此时能复算低位；高位不会因此出现。Lunar LCG 用低 8 位生成密钥流，但附件泄漏的是完整状态。
+- **模数不是该倍数**：写成 `x_next = a*x + b - q*m`，其中 `q = (a*x+b)//m`。商可能大于 1；例如 `m=11, a=7, b=1, x=10` 时商是 6。若 `a` 和 `x` 都未知，乘积仍是非线性的。已知参数且状态空间很小，可以枚举初始状态并逐项筛选。
+- **只知高位**：把每个状态写成 `x = high*2**k + low`，未知低位在 `[0, 2**k)`。已知乘数和模数、低位范围足够窄时，可把递推与误差范围一起写成格问题。每个候选至少用若干额外观测回验。
+
+下面的小例子只适合已知参数、候选状态数量少的题：
 
 ```python
-from z3 import Ints, Solver, sat
-
-def solve_truncated_lcg(low_outputs, m, bits):
-    """low_outputs: 只有低位可知的连续输出列表（形如 x & ((1<<bits)-1)）"""
-    N = len(low_outputs)
-    a, b = Ints("a b")
-    xs = Ints(" ".join(f"x{i}" for i in range(N + 1)))
-    ks = Ints(" ".join(f"k{i}" for i in range(N)))
-    s = Solver()
-    for i in range(N):
-        s.add(xs[i] >= 0, xs[i] < m)
-        s.add(xs[i + 1] == a * xs[i] + b - ks[i] * m)   # 线性化掉 % m
-        s.add(ks[i] >= 0)                                # 不限制上界，保持线性
-        s.add(xs[i] % (1 << bits) == low_outputs[i])     # 只观测低 bits
-    s.add(xs[N] >= 0, xs[N] < m)
-    if s.check() != sat:
-        raise ValueError("无解：观测太少或 bits 太小")
-    M = s.model()
-    return M[a].as_long(), M[b].as_long(), [M[x].as_long() for x in xs]
-
-if __name__ == "__main__":
-    m, bits = 2**31 - 1, 8
-    real_a, real_b, seed = 1103515245, 12345, 7
-    x, lows = seed, []
-    for _ in range(8):
-        x = (real_a * x + real_b) % m
-        lows.append(x % (1 << bits))
-    a2, b2, xs = solve_truncated_lcg(lows, m, bits)
-    print("恢复 a,b =", a2, b2)            # 与真实 a,b 同余即成功
-    print("下一项 =", (a2 * xs[-1] + b2) % m)
+def low_candidates(observations, a, b, m, bits):
+    step = 1 << bits
+    for first in range(observations[0], m, step):
+        state = first
+        for expected in observations[1:]:
+            state = (a * state + b) % m
+            if state % step != expected:
+                break
+        else:
+            yield first
 ```
-
-高阶截断（只知高位）转成格问题，这里给出思路即可：`x_i = h_i*2^k + e_i`，`|e_i| < 2^k`，构造
-`[m ... 0]` 与 `[a^i * 2^k ...]` 的格，LLL 后取短向量。SageMath 里可直接用 `Integers(m)` 上的解线性方程组。
 
 ## 五、常见坑 / 变体
 

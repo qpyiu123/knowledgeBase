@@ -49,3 +49,19 @@ updated: 2026-10-23
 如何泄露 libc 呢？当我们申请的堆块足够大，释放后就会进入 `unsorted bin`，在其中会有一个 `libc` 地址，通过这个地址就可以泄露 `libc` 后计算 `system` 和 `__free_hook` 的地址
 
 〔原图省略〕
+
+## 原文配图
+
+![add 函数分析](../../_assets/images/f3b0d969a3eda44d3b3a640d6095eddc0818489d2553906ed8b7e12c6785da40.jpg)
+
+![change 函数分析](../../_assets/images/64e74619c21cf82c73fe94f54e6374fbe85e50d78ef7736e5842b3fb92ecde50.jpg)
+
+![show 函数分析](../../_assets/images/ea6beb3f1b5abb4b568939f14d5b26151fe4b527a96d48a68103032a90adcbf1.jpg)
+
+![release 函数 UAF 漏洞](../../_assets/images/e5df6e96867ff16bd240df91b8f3a46c728cd6ede31ac9473205d2edd3009dca.jpg)
+
+![glibc 版本信息](../../_assets/images/847a4477adad9fe3dd428edcfb1f7976e099f2eb018685608a7037eb2ac3ee74.jpg)
+
+![tcache bin 调试信息](../../_assets/images/8f7101a6ad1114c76e45f6171be39adc0ace32328112f9db4f88f2834a08e9b0.jpg)
+
+![unsorted bin 泄露 libc](../../_assets/images/d256d5c8c81bae73ba645f5d9b0b96aecf52deb8c0c8589afdd51c2d619415c5.png)

@@ -90,3 +90,9 @@ import Container from '@/components/docs/Container.vue'
 可以分析一下操作，`mm` 是密文，其实就是一个 **flag 块**加上 另一个 **flag 的加密块** 的循环，看 `key` 的内容也可以知道这是 xxtea 加密。
 
 可以网上找个 xxtea 算法，把 `delta` 改为题目相同的值就行了。
+
+## 原文配图
+
+![寻找加密逻辑](../../_assets/images/cd998764985d714ecbcf30c90bb0f2fc7b3637433550b7e27b896d10736284f1.png)
+
+![加密函数寻找](../../_assets/images/b0045881b8f3e2391f19cedd4152a491b8602025dfc6dddb5901d4ac53ce2d84.png)

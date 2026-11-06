@@ -90,3 +90,9 @@ import Container from '@/components/docs/Container.vue'
 密文肯定就是，被 base64 编码过。
 
 进入解密网站 [赛博厨子](https://cyberchef.org/)
+
+## 原文配图
+
+![alt text](../../_assets/images/19ef2c131d72c68d8b3510b676a7f33decfb2ae6c75291b0dc7295dc8b549378.png)
+
+![alt text](../../_assets/images/58b0bbc52f43f059650d835f75b68f847355e2c2854e3ac403544239a6b5b6ec.png)

@@ -90,3 +90,21 @@ nc 获得合约部署账号并使用 Metamask 转账
 阅读合约代码可以知道，我们要调用 `unlock` 函数，传入 `re@1lY_eA3y_Bl0ckCh@1n` 并发送 0.0721 个 eth. 因此在「部署 & 发交易」选项卡的以太币数量填入 0.0721 eth，由于无法填入小数，需将其转为 72100000 Gwei，在 unlock 填入 `re@1lY_eA3y_Bl0ckCh@1n`，点击 unlock 进行交易。
 
 交易确认后点击 `isSolved` 可发现已经变为 `true`. 此时再 nc 交互即可得到 flag
+
+## 原文配图
+
+![MetaMask](../../_assets/images/8d0cde5eedeb5e16cceb10d4ae82e9932a0c79730cf1520ebda0371c773f59f3.png)
+
+![faucet](../../_assets/images/08547756035422d9f29682111d67c3754a7284bf27e6c11456e31c3c4fad1d2a.png)
+
+![nc](../../_assets/images/4f7bb9777c9bbb93f03d92da60fba72252b91614f67e550451fa4579e618643a.png)
+
+![Metamask](../../_assets/images/3654eff962cdfee4ec56d67131a7f584882fac7100eb329593148503e3ffbc04.png)
+
+![deploy](../../_assets/images/0ec5bd5dbffbe88dd351505dd7635bbfb555db53e68dbf3618d036130bb9c6ed.png)
+
+![source](../../_assets/images/afceb4f58ed5cb89fdd94c7b7519653c1cc3dfeab367edd6c6ffb24232c47a5a.png)
+
+![unlock](../../_assets/images/af7d7b8a8eae24888ed5b952e9aa094cb386c0b20875b0c36980b859547e2419.png)
+
+![flag](../../_assets/images/06b4373877cd621a37820835084ed504d017956701c2a2e6f3f1eb4c4fdf0c10.png)

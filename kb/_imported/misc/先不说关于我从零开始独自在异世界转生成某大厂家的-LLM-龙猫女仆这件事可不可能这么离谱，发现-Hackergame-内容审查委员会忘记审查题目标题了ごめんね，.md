@@ -83,3 +83,7 @@ In txx xxxnd xxll of Hxxxxxxxxx 2024, wxxxx txx wxlls xxx linxd witx sxxxxns sxo
 - [lv2](files/answer_lv2.txt)
 
 注意和原题目文件保持一致，不要不小心被编辑器添加了结尾换行。
+
+## 原文配图
+
+![OSError File name too long](../../_assets/images/33fb6e3c70288177cfcd072cb1971297c9b6579808cc1e5ab7a15254ca559041.png)

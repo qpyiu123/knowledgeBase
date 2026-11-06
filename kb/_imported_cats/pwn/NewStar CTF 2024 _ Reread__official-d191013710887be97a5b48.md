@@ -94,3 +94,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 具体用法为 `dup2(fd,new_fd)`，可以看作 `new_fd` 是 `fd` 的一个拷贝，同时会 `close(fd)`
 
 所以，EXP 如下
+
+## 原文配图
+
+![查看沙箱](../../_assets/images/8b7d3befbc4ec7cc19bbefb6e893ed6c055623372e337ae557ea740c753452c9.png)

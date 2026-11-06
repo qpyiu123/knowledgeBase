@@ -94,3 +94,13 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 然后就是拿到 `eval` 方法，命令执行就行
 
 方法很多，大家可以自己试试
+
+## 原文配图
+
+![简单的 SSTI](../../_assets/images/64c5608719e4e18ce74037769a1db69deeb043dbaed9bb8f829a12e58f32350a.png)
+
+![获取 object 类](../../_assets/images/d55ffa6762a9904e92a55d3da452bb8a2c0c4ff7f36e30230616df8131207d02.png)
+
+![获取 os._wrap_close](../../_assets/images/c1d29c5bc1de84b003be481a9d3c559e6a58e0e5a48b1a1e96525f0727fe1ca7.png)
+
+![命令执行](../../_assets/images/9b52f9f293982eaae925e782be50e01bd9f96b1a044ab279fb1bbdd80faa1f3e.png)

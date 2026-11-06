@@ -69,3 +69,17 @@ import Container from '@/components/docs/Container.vue'
 程序中没有 `pop rdi; ret` 这个 gadget，但 libc 中通常存在。由于已经泄露 libc 基地址，因此可以在 libc 中查找所需 gadget。注意需要将 `canary` 放回 `rbp - 8` 的位置，否则会触发栈溢出检测。
 
 下面给出 EXP：
+
+## 原文配图
+
+![IDA 查看主函数](../../_assets/images/7b75fa84f896ad9a69be461c918e061bf5eccceea5454d4e8c9257a285e0ffe2.png)
+
+![canary 栈位置](../../_assets/images/81b3f33a37b93c9fef885c909f5f4fb1461e504219828214ea33d08ee6970003.png)
+
+![计算 canary 偏移](../../_assets/images/21465c2960347b9f99ef044b5e4ab860cce183af71cd04c14f8b018d904d97a9.png)
+
+![puts GOT 泄露示例](../../_assets/images/87b80fb04bd18fa3e25051f5db5ee180731566796b4353641851f190cd360390.png)
+
+![泄露 libc 地址](../../_assets/images/6433371aadeba01649576860f37d60272be378a0ec1ef3d307d5267faf8a2102.png)
+
+![vmmap 查看 libc 基地址](../../_assets/images/e57b51fbc36d7beb8925d3200ca9ee9a90f0cf281ff8563e38a5060aebc19b06.png)

@@ -100,3 +100,7 @@ import Container from '@/components/docs/Container.vue'
 4. 最后再使用 base64 编码。
 
 然后在 input 处输入 `system("cat /flag");`，再在 POST body 中传入 `cipher=dW91dGlhKCJrbXQJL2hibWciKTs=` 即可。
+
+## 原文配图
+
+![cyberchef](../../_assets/images/19eb546ff4cf0558d4c4a3c1027a4dc9948160091e4daa183c700ee82539bd63.png)

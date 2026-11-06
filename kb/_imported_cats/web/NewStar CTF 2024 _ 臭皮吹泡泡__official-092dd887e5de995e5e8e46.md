@@ -98,3 +98,9 @@ import Container from '@/components/docs/Container.vue'
 构造脚本如下：
 
 发包后快速访问我们写入的 `code.php`，完成 RCE（或者写一个脚本访问，或者 BurpSuite 爆破）
+
+## 原文配图
+
+![发包](../../_assets/images/83d14e3dc58af635fbafbb9d497b8b8260430b4471cf835909600c5e666df412.png)
+
+![查看 phpinfo](../../_assets/images/910530402bb7eac40d8a9687dc61b845e0a91976b469818a56c3c5690927a594.png)

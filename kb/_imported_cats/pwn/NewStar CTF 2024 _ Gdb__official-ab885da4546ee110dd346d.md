@@ -98,3 +98,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 此时字符串已经完成了加密，我们使用 `tel 0x7fffffffd717` 指令查看字符串的内容
 
 `b'\x5d\x1d\x43\x55\x53\x45\x57\x45'` 便是加密后的内容，使用 Python 脚本发送即可
+
+## 原文配图
+
+![GDB 界面](../../_assets/images/e4b4352dc4a165123ece40ef6b2d7bb074b7add17616a87bfef4d3e49f08ec38.png)
+
+![字符串的内容](../../_assets/images/c1a13f2012cebf759c2b8b9f04341dc95118c422a344600fbf9b6f58fba4210d.png)

@@ -55,3 +55,17 @@ base64标准码表是 `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
 〔原图省略〕
 
 把左边的「From base64」拖到「Recipe」那一栏，然后把「Alphabet」换成上面说的魔改后的码表，「Input」处输入密文，「Output」处就得到 flag 了。当然，编写脚本解码也是可以的。
+
+## 原文配图
+
+![运行界面](../../_assets/images/ce18d1f0964860cf6f4a3bea197bf5445b1646e0f36f8ff73f1cf207c8ef5776.png)
+
+![IDA 界面 1](../../_assets/images/b5142833e53016831b72a473569969c14ce63afae643406c88d441bc8dcaa2da.png)
+
+![IDA 界面 2](../../_assets/images/6fb378cdd1f9feda057b120b66b6f2065876ff0fcb01b781130cbad1f8b9739d.png)
+
+![IDA 界面 3](../../_assets/images/e2f7ea43f25c357e8768a9bdc43f7f1452bbb526029ee60b6d40dcf85a01c921.png)
+
+![IDA 界面 4](../../_assets/images/b2ad9cb3777262e0949ac8c66a38aa2f6dc14fcc8c7442392dc7f04f8d0de135.png)
+
+![CyberChef 界面](../../_assets/images/961f57adaec120852c21d14b83c3cd4ed301ea5976eeedfe0e66b27d7f962e64.png)

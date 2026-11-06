@@ -101,3 +101,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 :::
 
 64 位要爆破 7 个字节，运气不好的话要多等会
+
+## 原文配图
+
+![checksec](../../_assets/images/94f9fdd279ed641f5c02efc309e363acb0dfd458c355f8f4672d953e30bcbb70.png)

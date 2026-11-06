@@ -71,3 +71,9 @@ updated: 2026-10-23
 第二部分的加密方式 Vigenere 赫然眼前。直接应用密钥 `ezcrypto` 得到最终flag：
 
 > flag{WISHYOuaplEasAnTJOURNEywITHerail}
+
+## 原文配图
+
+![image-20241020090337886](../../_assets/images/64cb4b3ea5bbf3e5ed96486cc5391659c5d1bf624ab0850b612b0b8e326b8527.png)
+
+![image-20241020092151472](../../_assets/images/ea6061dd9f5968ce1c5c485580ed36db1472b920d52ddf639dcfae59412d6e24.png)

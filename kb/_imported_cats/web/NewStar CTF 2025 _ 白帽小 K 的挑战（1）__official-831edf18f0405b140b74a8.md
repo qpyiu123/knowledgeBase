@@ -96,3 +96,15 @@ import Container from '@/components/docs/Container.vue'
 成功进行命令执行了。然后就是正常的远程 RCE 执行，我们直接 `cat /flag` 就行了。
 
 事实上，这道题目的后端中，使用了 `include` 来执行 php 代码，并且将执行结果返回。在更远的未来，你会见到很多有关 php 的上传恶意文件后加载恶意文件进行 RCE 的操作。
+
+## 原文配图
+
+![Wappalyzer 识别服务类型](../../_assets/images/69f1308446db080dcbf73aba0adc15500470d0a142cbfc20c1a630305a8eb482.png)
+
+![前端隐藏接口](../../_assets/images/475430f47c7f61583cbeabc58b86a841e036da8d5445af0f5d2c5c19f92f9f3b.png)
+
+![控制台调用 fetchload](../../_assets/images/a8746c1172247c92159bcdf0d0ed3546ca5fb23464600aed1bb537ef19775b5f.png)
+
+![上传一句话木马](../../_assets/images/ee26dc09679506d4445195b7f5f38de1a9c6747d33688b1afe29d8457ec15b89.png)
+
+![onload 接口命令执行](../../_assets/images/b91edae15ef91cfcf68916c2f32e100213661280d79d7ef44929528b4ccf171a.png)

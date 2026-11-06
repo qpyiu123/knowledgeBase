@@ -10,6 +10,7 @@
   GET  /api/health       健康检查（含模型/索引状态）
   POST /api/search       {q, category, top_k} -> 结果 + 图谱关联
   GET  /api/doc?path=    取某篇全文
+  GET  /api/image?path=  读取库内配图
   POST /api/ask          {q, paths} -> SSE 流式模型回答
   POST /api/feedback     {query, path, verdict, note} -> 本地 JSONL
   POST /api/analyze?name= 原始字节 -> 附件只读侦察（隔离目录，不执行）
@@ -1189,6 +1190,19 @@ class Handler(BaseHTTPRequestHandler):
         elif u.path == "/api/doc":
             qs = parse_qs(u.query)
             self._json(api_doc((qs.get("path") or [""])[0]))
+        elif u.path == "/api/image":
+            from kb.config import Config
+            from kb.images import read_image
+
+            qs = parse_qs(u.query)
+            try:
+                data, mime = read_image((CFG or Config.load()).kb_dir, (qs.get("path") or [""])[0])
+            except OSError:
+                self._json({"error": "配图不存在或不可读"}, 404)
+            except ValueError as exc:
+                self._json({"error": str(exc)}, 400)
+            else:
+                self._send(200, data, mime, {"X-Content-Type-Options": "nosniff"})
         elif u.path == "/api/code":
             qs = parse_qs(u.query)
             try:

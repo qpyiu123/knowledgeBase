@@ -80,3 +80,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 `password` 内容为 `NewStar!!!`
 
 所以 nc 连上后输入 `NewStar!!!` 即可
+
+## 原文配图
+
+![password 内容](../../_assets/images/2bdc92ec6a75cbba9eaf2d6b9ba38e27bbc454d2372c0a37a4c59587d917ddb7.png)

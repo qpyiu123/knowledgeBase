@@ -96,3 +96,19 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 可以很容易发现加密函数里面的花指令与主函数的花指令完全一样。因此再操作一遍即可。
 
 加密函数非常简单。
+
+## 原文配图
+
+![花指令](../../_assets/images/b6598461062bce00e3f5f18d9b3ec5899e4c440070a3a47f48534a5ec1fe45ef.png)
+
+![nop](../../_assets/images/1b3fcbe05652056e98f844951d17218b997eee6480703361a9cf52fe2ac26315.png)
+
+![反编译结果](../../_assets/images/5a086dba32c68fabe542fe042ea8c0c7e06bd85d65d55a53579e5ac6a6328d10.png)
+
+![重命名](../../_assets/images/001ae0d7172de990a3df0e2a79f0568648e72933ae6eb681b01b1b954fadb43b.png)
+
+![飘红](../../_assets/images/d514e59bf761ae8f74098770c9df383a6c0cd70c96a316fc36d8fab3c4856b70.png)
+
+![nop](../../_assets/images/b05c5b8ee09ad600a0cf1b8c14ff7d5893156848244695cc470080d44013309d.png)
+
+![反编译结果](../../_assets/images/5ba3c4b5b16f6a0d1d999e2bd83cf39009ed249d22ec155b0035a1756973b4ad.png)

@@ -96,3 +96,11 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 爆破 `secrets` 表的列名
 
 爆破 flag
+
+## 原文配图
+
+![正常查询](../../_assets/images/e127ab71a52b39cf8342847526c291db203ff1734e579b1d4e19f232fbf94684.png)
+
+![存在注入](../../_assets/images/3a30ef9c1451f189fcd276984a8622b1383d01cb6ebda1ffdece5f607e4123ff.png)
+
+![空格被禁用](../../_assets/images/fc1000ea2c1cd170fc679bffa8daf2355d621d1078910dbc01e2c182395c3e5b.png)

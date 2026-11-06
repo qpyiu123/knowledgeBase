@@ -123,3 +123,25 @@ import Container from '@/components/docs/Container.vue'
 `rdi`，`rsi`，`rdx` 指代 `pop rdi/rsi/rdx ; ret` 所在的地址
 
 ## EXP
+
+## 原文配图
+
+![信息收集](../../_assets/images/1c715517e5f818f18d3a5818c9a3f46470c11d0188728ce66143f6ebd30c6018.png)
+
+![逆向分析](../../_assets/images/873853278bd8adac8828411908ee6afc57fe97ef70234cce5ed87de01d863581.png)
+
+![初始化](../../_assets/images/fb3abeea231d9dce5328b2541030c3a1218f6de7308724295ef69b6bae6642e9.png)
+
+![功能点](../../_assets/images/fbc47f44770c2f826be7115812f4286cb2a8f30a42abf6f6b8472efd88f5091f.png)
+
+![check your power](../../_assets/images/cd53f30234b8a2c350a515b379af56e861d0fe2dead794ab4fe6edebf7eef5af.png)
+
+![Get the power of your cat](../../_assets/images/0807583e4d880022bfc203cdcd65978b2ee982ec28e8b7c705192b094169bf10.png)
+
+![Open the door](../../_assets/images/96b689b58c501009429951c081552a8f9a76909d0d6cc29ddaa8c10c21dd2fe1.png)
+
+![Destroy this world](../../_assets/images/e5ffdd8cae574dbfc64157b8920f7b489d0292b178c82aa69cd1bd981ab8439a.png)
+
+![ROPgadget](../../_assets/images/bb29cd321c26cf22691eaf30ab70799958ad013d05011fab6603592a1af9661b.png)
+
+![rop 链](../../_assets/images/60b9a2171acbd2430a77014ac20a4eadc4caabad88a9a452e2a29b599702b314.png)

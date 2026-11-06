@@ -96,3 +96,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 :::tip 热部署
 就是在应用正在运行的时候升级软件，却不需要重新启动应用
 :::
+
+## 原文配图
+
+![Dockerfile](../../_assets/images/a39346b761c074ac3c18b8f5a484fc9e60add555f61b3bb8fcc38c6eb576bfdc.png)

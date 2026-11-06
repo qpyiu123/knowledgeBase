@@ -152,3 +152,17 @@ Payload，即 JWT 存放的数据，指明了当前的 Level 为 `6`，我们需
 ## 第〇关·终章
 
 点击提示中的「从梦中醒来」，过完一个片尾小彩蛋即获得 Flag 内容。
+
+## 原文配图
+
+![第一关界面](../../_assets/images/002fa88ce85cb06cf5fa5bde50b026559d21aa905c2fc9bbdb23b30c98b21993.png)
+
+![第一关开发者工具网络选项卡界面](../../_assets/images/224208369072f791dd2ae71bf9f92db6e3baad1f48529655cbb43143391e394f.png)
+
+![第三关](../../_assets/images/2766c06fb98bb4a8cbab50b661ce0fda0b1dd3cb4f9885753bae2ed1b746f1b8.png)
+
+![第四关](../../_assets/images/e35bb376e2c35466dc4866074883f9c0e609c7940e3e5031720093883b80366e.png)
+
+![JWT.IO 网站 1](../../_assets/images/e38fc23d676dbe18baab18e3b7da7e134c78d1e15e0c8e73eaa6f2284ff0568e.png)
+
+![JWT.IO 网站 2](../../_assets/images/c66bcb3f5f86f8e2c7c009295c0e4cf361a07293d33efb774fab3a5e9d6de13b.png)

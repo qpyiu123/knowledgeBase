@@ -90,3 +90,9 @@ import Container from '@/components/docs/Container.vue'
 所以我们找一个 base 解密脚本即可解密
 
 运行脚本得到 flag：`flag{Wh4t_a_cra2y_8as3!!!}`
+
+## 原文配图
+
+![密文](../../_assets/images/89ecae10b9d94f23b0c316b450e419defdee93645f7ad2ecf42dd1673d9de85f.png)
+
+![编码表](../../_assets/images/1ca3763be3f47ab0f0d49acf429156eee56e9ffede36f71b52b6147cb584d275.png)

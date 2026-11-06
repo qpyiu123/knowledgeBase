@@ -102,3 +102,9 @@ import Container from '@/components/docs/Container.vue'
 可以看到，`intval($value)` 和 `intval($value, 0)` 的区别在于后者会根据输入字符串的格式自动匹配进制，而前者则是默认的十进制
 
 因此本体的绕过方式就非常明朗了，只需要传入一个其它进制的数字 `47` 即可，以下 POST 传参均可
+
+## 原文配图
+
+![level1 示例](../../_assets/images/86cb924f80476876a25db7adbba97f348ba24101cc400d9b57c77828ea8312f5.png)
+
+![php-intval](../../_assets/images/ddd714bc1b4af9cfb163607e1abfbc32017c6631d7aa5f822fa155866c19f1cd.png)

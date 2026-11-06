@@ -94,3 +94,7 @@ import Container from '@/components/docs/Container.vue'
 用栅栏密码解密工具解出来，得到 flag
 
 其实可以肉眼看出来，提瓦特字母一般是反转了 180° 的艺术字<s>（我知道你肯定能用这个做出来，因为——你也玩原神！）</s>
+
+## 原文配图
+
+![特殊字符](../../_assets/images/684782e748d7396db05c1ad1225728ca4080aa19f4739a5d727e3bbd7e2d3397.gif)

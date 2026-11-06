@@ -70,3 +70,9 @@ XSS 的全称是跨站脚本攻击，存在这种攻击方式的原因是，用�
 〔原图省略〕
 
 〔原图省略〕
+
+## 原文配图
+
+![查看 flag_1](../../_assets/images/5d95a9571c0830fe4bfda30119b43e33a6e5145eafb9e4fb8475a807fd47849a.png)
+
+![查看 flag_2](../../_assets/images/a31e56e0bc167c349b91d82ad676c4e250799d2b842735d54a693d991106414c.png)

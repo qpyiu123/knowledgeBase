@@ -145,3 +145,11 @@ updated: 2026-10-31
 2. 现在 `contentScript.bundle.js` 会基于（毫秒精度的）当前时间生成一个 AES 秘钥，然后返回的响应（依然通过 DOM 事件发送）会使用此秘钥加密。换言之，页面上的 JS 依然可以接收这个事件，然后读取当前时间来解密响应内容。
 
 所以这个 ***完全虚构的*** 扩展程序的程序员，看来是真的不会用 `sendResponse`。
+
+## 原文配图
+
+![image-20241020002436093](../../_assets/images/b82062a9641a9a9ae29384aa2d2236ed935bd1db6c5aa943c67e8b7bce1eee12.png)
+
+![image-20241020002707242](../../_assets/images/96fd4f71d04c45071697911c8f24fe0dae06227a1b54e78a3d0c1f81a88bec5f.png)
+
+![image-20241020002900135](../../_assets/images/997523a6bd3b3ac065e7683259e90ac27485f30627ccca04115e329387f7512f.png)

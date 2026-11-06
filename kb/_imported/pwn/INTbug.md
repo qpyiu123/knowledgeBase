@@ -56,3 +56,9 @@ import Container from '@/components/docs/Container.vue'
 当 `v1` 等于最大值 `0x7fff` 时，再加 1 就会变为 `0x8000`，而 `0x8000` 为 `-32768`，发生整数溢出，小于 0，从而拿到 FLAG.
 
 因此只要 `v1` 大于 `0x7fff` 即可，可以利用 Python 的 `pwntools` 库写一个循环。
+
+## 原文配图
+
+![main 函数](../../_assets/images/779ddb4d93c4613ea28a6ce9d3533eb19d72edeeea07d390d9c921a43c443f8b.png)
+
+![func 函数](../../_assets/images/65034c6feb7bde0171558e0a95023a6684439ebefe32dd061fb46442f2e5d4c1.png)

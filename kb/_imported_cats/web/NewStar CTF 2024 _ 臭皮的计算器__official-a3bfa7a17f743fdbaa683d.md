@@ -90,3 +90,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 ::: warning 注意
 发包的时候，加号要做转义处理，否则会被视作空格
 :::
+
+## 原文配图
+
+![源码](../../_assets/images/a128c51b0e8ac178ab657e7d029c03a6b2318766984dbf1b2e278aa79cd6d39b.png)
+
+![calc 源码](../../_assets/images/fbf24cd3327330031cb8b1b77da4712066be6a4388806ee12a073c403bcb1de8.png)

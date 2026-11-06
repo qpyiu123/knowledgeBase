@@ -27,19 +27,19 @@ exec_yaml: ok
 | 层级 | 典型位置 | 表现 | 修复思路 |
 | --- | --- | --- | --- |
 | 签名层 | 文件前 2~8 字节 | `file` 无法识别 | 按规范写回魔数 |
-| 结构层 | chunk 长度 / CRC / 索引偏移 | 能识别但解析报错 | 重算长度和 CRC |
+| 结构层 | chunk 长度 / CRC / 索引偏移 | 能识别但解析报错 | 核对块边界和数据后再重算 CRC |
 | 数据层 | 压缩流被截断/被 XOR | 花屏、缺失 | 重新拼接、尝试容错解码 |
 
-**PNG**：签名固定 8 字节 `89 50 4E 47 0D 0A 1A 0A`；chunk 结构为 `length(4) type(4) data(type=='IHDR'?'13':length) crc(4)`，CRC 是对 `type+data` 计算的标准 CRC-32。所以**任何一处字节被改动，只要把 CRC 重算回去，图像就正常了**——这也是出题最常见的"修复题"。
+**PNG**：签名固定 8 字节 `89 50 4E 47 0D 0A 1A 0A`；chunk 结构为 `length(4) type(4) data(length) crc(4)`，CRC 是对 `type+data` 计算的标准 CRC-32。CRC 只能检查块内容。先核对块边界、图像头、数据的真实编码，确认块内字节正确后再重算 CRC。比如 Miniscule 的 IDAT 使用 Zstandard；只改压缩方法字段和 CRC，标准 PNG 解码器仍读不出图。
 
-**JPEG**：以 `FF D8` 起始、`FF D9` 结束（可用 `FF D9` 补尾）。段结构为 `FFxx len(2) payload`，其中 `xx∈[E0,EF]` 是 APP 段、`C0~C2` 是 SOF。SOF 里承载**宽(2) 高(2) 分量数(1)**，高度/宽度改动会让解码器分配错误的缓冲区，常见表现是"扫描到最后一行就崩"。
+**JPEG**：以 `FF D8` 起始、`FF D9` 结束。常见的 SOF 段在长度后依次写采样精度（1 字节）、高度（2 字节）、宽度（2 字节）、分量数（1 字节）。补结束标记不能补回丢失的压缩数据；改尺寸后也要用解码器检查整张图。
 
 ## 三、操作步骤
 
 1. **先鉴定，不要先改**：`file`、`xxd | head -4`、`binwalk`。若 `binwalk` 在偏移 0 之后还有签名，说明文件前面被加了壳（常见"新增头部"型损坏）。
 2. **比对标准头部**：从同格式的正常文件里 `xxd` 出前 32 字节做 diff，定位被改的字段。
 3. **PNG 逐 chunk 走查**：用脚本按 `length` 遍历 chunk，打印每个 chunk 的类型、长度、CRC 是否匹配；定位第一个出错的 chunk。
-4. **重算 CRC**：`zlib.crc32(type + data)` 写回。若 `length` 本身被改，会连锁导致整条链错位——此时用魔数 `IHDR/IDAT/IEND` 反查真实边界。
+4. **核对数据后重算 CRC**：块名只能用来找候选边界，不能单独确定边界。标准 PNG 的 IDAT 应能按 zlib 解压；对不交错的 8 位 RGB 图，行数据长度应为 `height * (3 * width + 1)`。其他色型、位深或交错图按各自布局核对。最后用独立解码器打开副本。
 5. **JPEG 高度修复**：解析 SOF 段，手动改回高度或宽度（常见变体：高度被改小导致下半部分丢失，改回真实高度后图像下半部分是隐藏内容）。
 6. **截断恢复**：对 PNG，被截断的 IDAT 流仍可能部分解压出来，用 `zlib.decompressobj` 然后忽略 `Incomplete` 异常，缺失行补 0 观察内容。
 7. **最终验证**：`pngcheck -v`、`identify`、`exiftool` 三件套全过。
@@ -61,7 +61,7 @@ jpegtran -copy all -outfile fixed.jpg broken.jpg
 
 ```python
 #!/usr/bin/env python3
-# PNG chunk 走查 + 自动重算 CRC + 坏 length 纠正
+# 按现有边界列出校验；确认块内容正确后才用 -w 重算 CRC
 import sys, zlib, struct
 
 SIG = b'\x89PNG\r\n\x1a\n'
@@ -74,11 +74,14 @@ def walk(path, fix=False):
         print('[!] 签名损坏:', bytes(d[:8]).hex())
     p = 8
     out = bytearray(SIG)
-    while p + 8 <= len(d):
+    typ = None
+    while p + 12 <= len(d):
         ln = struct.unpack('>I', d[p:p+4])[0]
         typ = bytes(d[p+4:p+8])
         data = bytes(d[p+8:p+8+ln])
-        crc = struct.unpack('>I', d[p+8+ln:p+12+ln])[0] if p+12+ln <= len(d) else None
+        if p + 12 + ln > len(d):
+            raise ValueError('块长度超出文件，先核对真实边界')
+        crc = struct.unpack('>I', d[p+8+ln:p+12+ln])[0]
         calc = zlib.crc32(typ + data) & 0xffffffff
         status = 'OK' if crc == calc else 'CRC-BAD(%s!=%s)' % (
             '%08x' % (crc or 0), '%08x' % calc)
@@ -88,7 +91,9 @@ def walk(path, fix=False):
         if typ == b'IEND':
             break
     if fix:
-        open(path.replace('.', '_fixed.', 1), 'wb').write(bytes(out))
+        if typ != b'IEND':
+            raise ValueError('未找到完整的结束块')
+        open(path + '.fixed.png', 'wb').write(bytes(out))
         print('[+] 已写出修复文件')
 
 if __name__ == '__main__':
@@ -129,11 +134,11 @@ if r and len(sys.argv) >= 4:                 # 用法: script.jpg new_h new_w
 ## 五、常见坑 / 变体
 
 - **只补魔数不改 CRC**：PNG 的 IHDR 被改后若不重算 CRC，解码器直接拒绝，看起来"还是坏的"。顺序永远是先修数据再重算 CRC。
-- **length 字段被改**：不要相信 length，用 `type` 的 4 字节 ASCII 去 `grep -abo` 定位下一个 chunk 的真实起点，反推正确长度。
+- **length 字段被改**：块名只能帮助找候选位置。结合前后块边界、CRC 和解码结果，确认正确长度。
 - **PNG 尾部多余数据**：`IEND` 之后的数据删除前先 `binwalk` 一遍，很多题把真实内容附在尾巴上。
 - **jpeg 的 `FF D9` 可能不止一个**：拼接图（两张 jpg 首尾相接）里第一个 `FF D9` 是干扰，第二张才是主体。
 - **"新增头部"型损坏**：文件最前面多出 N 个字节垃圾，`binwalk` 显示真实内容在 offset=N，用 `dd if=in of=out bs=1 skip=N` 切掉即可。
-- **CRC 碰撞陷阱**：`IHDR` 宽高被改且 CRC 被同步重算，此时 CRC 检查全绿但图是错的——改用"像素数据流长度是否与宽高吻合"来反推。
+- **CRC 通过，尺寸仍可能有误**：改过的宽高也能配上正确 CRC。按色型、位深和交错方式核对解压长度，再试解码。
 - **扩展名欺骗**：`.png` 实为 `.jpg` 或 zip，先 `file` 再谈修复。
 
 ## 六、参考来源

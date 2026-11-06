@@ -104,3 +104,27 @@ Lethe 师傅（Misc 拼图题的出题人）在「呀嘿！」同学的 WP 中�
 期待与各位同学们的线下见面以及明年的新生赛~
 
 —— Festu
+
+## 原文配图
+
+![image-20240530165617333](../../_assets/images/32e522beb3ffdd95b6e1337bd212342a2648a628a852f5e4f53629d59c22a616.png)
+
+![image-20240530170044686](../../_assets/images/b95b649b6071f93f59f9ca14493e40036bb2a099d021fb58dbc521adb2d26cb3.png)
+
+![image-20240530170055270](../../_assets/images/72bfa63a642a31dfce79c79f11fe69069d4ecdf8a62c1746c958ff03f525ab2b.png)
+
+![20240530_170927](../../_assets/images/88574b3e7224ec753a9afd4164179b773e48b13aeba5c2b60e9227ba6dbb5f68.gif)
+
+![image-20240530171826542](../../_assets/images/2963f92419b66d9b5a15ebbacdbe10d5e825820390ee4a6773b69d56bdb7c51e.png)
+
+![image-20240530172927471](../../_assets/images/d5ba6d2771ddc72498c4aa453ee21ebc32766134cb66590e4ebaa58473671769.png)
+
+![image-20240530173047540](../../_assets/images/5ab3bc2a3285d585bb94729201652c12b8caea30b342e3d05c638a1fbddf4bdd.png)
+
+![image-20240530172722588](../../_assets/images/e187ea78642f70bdf0e8bc25276134a2d2ac99cf1f74f412e57a931a05b155b7.png)
+
+![image-20240530173330497](../../_assets/images/1f20ee9294dc7e39add01fc6a992420a8cd61eb944712dbdf78192c309193053.png)
+
+![image-20240530173509950](../../_assets/images/8ca5d4c151ecee92a37afacbacf40a369b02f5e6bc2518958bb266a9452cfb15.png)
+
+![image-20240530173620091](../../_assets/images/7a77cabdd920a82bc1e21c6222511f64bcf2eef1fc98e64f381168a218cbaa32.png)

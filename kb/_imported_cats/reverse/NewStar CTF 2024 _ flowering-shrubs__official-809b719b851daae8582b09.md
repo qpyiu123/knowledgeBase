@@ -96,3 +96,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 关键内容就是 `encrypt` 函数。
 
 这里是用了递归，一共 40 个字节，每四个字节为 1 组，一共 10 组，通过 `get_next_rand` 函数得到下一组加密字节。仔细分析一下即可写出脚本。
+
+## 原文配图
+
+![去花指令后反编译](../../_assets/images/a43bc982553c8227967a302cc1ba4b95973981a20f413b10b76011481ebe471b.png)
+
+![encrypt 函数](../../_assets/images/edeaa7aabaada9bf3fe03c0e1e3499d7a4e8606c4e7b5c5f4130e3994d7131c1.png)

@@ -92,3 +92,11 @@ import Container from '@/components/docs/Container.vue'
 查看 `Fl4g` 表所有列名
 
 查看值得到 flag
+
+## 原文配图
+
+![界面 1](../../_assets/images/a9ce4b6f31ceac5ad8a18a2424c9981aea8d482fda7b684f70dfd96883818bf1.png)
+
+![界面 2](../../_assets/images/5f18c39d0e3f0f5ad83c287cf6c1a9f158a8a08e669d8e69d52182814c09b89d.png)
+
+![界面 3](../../_assets/images/f408b21e5d4b9d9d0249867278a1592086baf45cdda55ec3b8da944fd48ff8a5.png)

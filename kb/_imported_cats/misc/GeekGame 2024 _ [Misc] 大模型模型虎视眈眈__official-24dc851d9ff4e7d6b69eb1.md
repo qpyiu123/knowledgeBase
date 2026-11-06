@@ -131,3 +131,7 @@ updated: 2026-10-31
 - 也许好玩/有用的：https://gandalf.lakera.ai/trial-summarization-novice
 
 下图是比赛过程中的每分钟 API 调用数和每分钟 Token 数，供其他打算办比赛的人参考：
+
+## 原文配图
+
+![image-20241020163214472](../../_assets/images/faac75b8476413f895de346e2ba7f170f9bbefc34dcf81bbe7983ea932f7bbf1.png)

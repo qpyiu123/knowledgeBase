@@ -68,3 +68,19 @@ HTTP 协议是建立在 TCP 协议之上的，这里的 `tcp.port == 7070` 是�
 〔原图省略〕
 
 flag 在右下角。
+
+## 原文配图
+
+![快速找主要部分](../../_assets/images/770f4a2503d26a7ca09ac31feefefc0aa532604eface70cfeaaf02cc38cda264.png)
+
+![找到 HTTP 服务器的端口](../../_assets/images/674b850d5563a6378cf7861c554a53785e95b03d221cca2d3a21e8f152186e35.png)
+
+![过滤报文](../../_assets/images/d688729bcfa62e8da9248606a4d226d5375d51ca14ebc36b06c50d6692a980e2.png)
+
+![找到 flag.txt](../../_assets/images/847b9ca4e3a4fad117cc02a0cf37ebe3f9bd754a62f32efb665dffc7b5dfaf81.png)
+
+![只看 flag.txt](../../_assets/images/d5f185db4d54968ab83f8d710838393813de62626b0b703e5a3449223ec7daef.png)
+
+![只有一个FIN](../../_assets/images/d5f185db4d54968ab83f8d710838393813de62626b0b703e5a3449223ec7daef.png)
+
+![HTTP/1.1](../../_assets/images/3516435bd2f5d1d8a7dc00356b0e05ee57b74627c3f5ef83a0a257bb8d81f7d6.png)

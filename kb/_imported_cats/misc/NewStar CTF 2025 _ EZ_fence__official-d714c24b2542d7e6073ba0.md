@@ -100,3 +100,9 @@ import Container from '@/components/docs/Container.vue'
 可以得到压缩包密码 `New5tar_zjuatrojee1mage5eed77yo#`。
 
 输入后可以得到 `flag{y0u_kn0w_ez_fence_tuzh0ng}`。
+
+## 原文配图
+
+![压缩包](../../_assets/images/be08ee0bbe8a2edb25212c5fac8dae371f09f25c465f9a7ad4356d443c48dcf5.png)
+
+![ez-fence_2](../../_assets/images/9409ff4696031d6ea87414e8be404fea5fae93d9f208f30a3fa0cad5485c8bfc.png)

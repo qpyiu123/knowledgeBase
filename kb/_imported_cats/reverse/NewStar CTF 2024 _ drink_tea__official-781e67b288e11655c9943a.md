@@ -82,3 +82,11 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 而这个加密就是大名鼎鼎的 TEA 算法，以后我们几乎会在所有比赛看到这个算法以及它的变形
 
 解密脚本：
+
+## 原文配图
+
+![DIE](../../_assets/images/b47e56e6de73d32e857c8a3b6364eea0da79ff2f355cc3a2a675970e78a0263c.png)
+
+![主函数](../../_assets/images/bffcaf1661bedcf9ccd0a921614095e383191bd4470d23d6c2cd758d96d2df2a.png)
+
+![TEA](../../_assets/images/25cceb9e7db00d639da87cfb8a8aacf1cbe75b6f067c1429f6885a5d273274f5.png)

@@ -62,3 +62,17 @@ import Container from '@/components/docs/Container.vue'
 本题存在多种利用方式，这里给出其中一种调用链。
 
 最后给出 EXP：
+
+## 原文配图
+
+![IDA 查看 stdout 逻辑](../../_assets/images/fe5f0189987499cbf7c47f5b7f6c0253c4d631818ab0ec39e44740ffbb992b18.png)
+
+![vtable 劫持思路](../../_assets/images/5baaf994e75ebeeaa7e1590cfea7b9f6236ba20257b7bfe53cd6c7179e2736d7.png)
+
+![_IO_switch_to_wget_mode 调用点](../../_assets/images/dfd9af9f0edb8a37f693dc039cff245f9e12418d894144452e87610ee7bbe5d0.png)
+
+![_IO_wfile_seekoff 源码](../../_assets/images/6b3fa171819d9c52986093bf8921f7c37906f1b9ccad830fa5ff7a6a97c65754.png)
+
+![_IO_WOVERFLOW 调用链](../../_assets/images/715cc9a8cbbf75acea2fc24595bccf86a26d2eb882c3fc9c32b7033721bf5880.png)
+
+![大小比较逻辑](../../_assets/images/0659e88dba4d64b94f722c9f46bba5714da1a9059822f78d718048aa690ae6a5.png)

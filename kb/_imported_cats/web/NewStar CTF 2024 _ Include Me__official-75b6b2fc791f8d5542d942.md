@@ -97,3 +97,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 - 若密文最后是 `+` 的话，我们在 GET 传参必须将其编码为 `%2B`，不然 `+` 会被视作空格
 
 :::
+
+## 原文配图
+
+![跳转结果](../../_assets/images/5edd261f31b76815ab25fb7521c1105d76416dc444d3d036e8854c50807ee50b.png)
+
+![phpinfo](../../_assets/images/a17536996ac04dc69edc08d1908d384a119580e2ca778254cb746f976fe47ebd.png)

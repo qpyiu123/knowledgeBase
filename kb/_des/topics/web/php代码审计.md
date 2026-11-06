@@ -108,7 +108,7 @@ if ($b>1234){
 }
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1663916772482-0a859568-2fd9-4c46-88e9-682985095366-16691231881951.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1663916772482-0a859568-2fd9-4c46-88e9-682985095366-16691231881951.png)
+[![image.png](../../../_assets/images/0651eeec7d60e1a4cb5a3a78ad623173ef699d7bc7975ac2abcd6700670ffe25.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1663916772482-0a859568-2fd9-4c46-88e9-682985095366-16691231881951.png)
 a为0但是a又恒为true，我们直接传入一个字母即可 //根据转换规则一
 b变量要得到flag必须不是一个数字，但是又要与数字比较，我们传入任意一个比1234大的数字，然后再加上字母即可绕过。 //根据转换规则一
 
@@ -138,7 +138,7 @@ md5()进行比较时，可以两个里面输入数组，这样都是False,等于
 http://127.0.0.1/test.php?a[]=1&b[]=2
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1663919320968-ea0a76f6-3f11-491e-9e2f-53475e0abca5.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1663919320968-ea0a76f6-3f11-491e-9e2f-53475e0abca5.png)
+[![image.png](../../../_assets/images/bf32e702c68a37713333fdde6156c0f7bfcaf06cbcd984c164595482e6c588a2.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1663919320968-ea0a76f6-3f11-491e-9e2f-53475e0abca5.png)
 
 #### md5碰撞
 
@@ -160,10 +160,10 @@ if (!empty($str1)&&!empty($str2)){
 由于强制类型转换，传数组就不可行了，这里就需要MD5碰撞，对于需要两个内容不同但是MD5值相同的文件，使用Fastcoll就可以了
 下载链接:http://www.win.tue.nl/hashclash/fastcoll_v1.0.0.5.exe.zip
 1.在目录下新建立一个文件如下
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664033361111-43dbc858-3a86-4e0e-ba38-6c58f5d42496.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664033361111-43dbc858-3a86-4e0e-ba38-6c58f5d42496.png)
+[![image.png](../../../_assets/images/64b80ceef1882e3eedbcca72af9300654bda0a31af55614fa8a0fd0bba08f820.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664033361111-43dbc858-3a86-4e0e-ba38-6c58f5d42496.png)
 2.将这个文件拖到fastcoll_v1.0.0.5.exe上，等于使用fastcoll打开它。
 3.fastcoll会自动生成两个文件：
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1663925372001-9f7671f0-2ff8-4b8d-9fd5-92f6acbdc23a.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1663925372001-9f7671f0-2ff8-4b8d-9fd5-92f6acbdc23a.png)
+[![image.png](../../../_assets/images/08713bd1e3b527447761bfa55bac8c0431ccf0bace1884fca6946d68817e21c5.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1663925372001-9f7671f0-2ff8-4b8d-9fd5-92f6acbdc23a.png)
 这两个文件内容不同，但是md5值是相同的。
 然后我们写一个php脚本根据生成的文件生成碰撞的字符串：
 
@@ -188,7 +188,7 @@ if(urldecode($a)!=urldecode($b)){
 }
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664033454749-29f51681-e0f7-46fd-a3b7-afbae9586942.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664033454749-29f51681-e0f7-46fd-a3b7-afbae9586942.png)
+[![image.png](../../../_assets/images/217066b96547f21ff87e815de3257cc3a292bb3c4c2e53669f264865c1f1d8bd.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664033454749-29f51681-e0f7-46fd-a3b7-afbae9586942.png)
 
 ```
 a=LOVE%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00t%E4u%3F%FF7%E4%28%D6%EC%1A%C1%93%91%AF%D0j%02%BC%A7%05%98%DFE%29%06%3F%5D%116%C4%A0%06%C6%FC%C1N%89%3F%DAOZI%92%F3%F1%95inQw%B1%EA%C3%7D%B9%1D%89%7D%CB%09%3F%B1%CF%F5%F6%D1F%C0%D7%02%9F%BAS%C5%7D%13%FB%22%1733%84F%7F%D3%F4M%F4%B4%21%D8%CD%E7%CD%FE%FDv%3E%E3g2%F2%28%AA%8D%05%82%88%00%06%9E%D1%D0f%25w%C6%23%F2%CCT%C9%FC%AC%A9%D3%17
@@ -211,7 +211,7 @@ http://127.0.0.1/test.php?str1=LOVE%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00
 ```
 
 成功获得flag
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664033627297-8e5b705a-634b-460a-9375-3634ea0257b1.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664033627297-8e5b705a-634b-460a-9375-3634ea0257b1.png)
+[![image.png](../../../_assets/images/66a3bfcc01ffaf7ba26d180848d9ac6ee6ead1d615cee0025f784956a597ee2f.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664033627297-8e5b705a-634b-460a-9375-3634ea0257b1.png)
 
 #### 0e开头的字符串在参与比较时,会被当做科学计数法,结果转换为0(弱比较==才适用)
 
@@ -286,7 +286,7 @@ if __name__ == '__main__':
         p.join()
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1663922788700-7d0c2c85-a2f9-4d71-af8e-ec0d941ba1e9.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1663922788700-7d0c2c85-a2f9-4d71-af8e-ec0d941ba1e9.png)
+[![image.png](../../../_assets/images/e8fde4c5f9df1cb9648ad2c4dafea7a22d160bdbf6bf04a14c6cebeba21ddf46.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1663922788700-7d0c2c85-a2f9-4d71-af8e-ec0d941ba1e9.png)
 
 #### 绕过md5构造恒为真语句
 
@@ -349,7 +349,7 @@ if ("0x1e240"=="123456"){
 }
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664034227137-6faf04cb-61b1-4d5e-9440-6dae4bb92b20.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664034227137-6faf04cb-61b1-4d5e-9440-6dae4bb92b20.png)
+[![image.png](../../../_assets/images/01e29200039921501408c0022d15848c41930e9802bad69f153235e32d029bcc.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664034227137-6faf04cb-61b1-4d5e-9440-6dae4bb92b20.png)
 php在接受一个带0x的字符串的时候，会自动把这行字符串解析成十进制的再进行比较，0x1e240解析成十进制就是123456，并且与字符串类型的123456和int型的123456都相同。
 ctf题目:
 
@@ -410,7 +410,7 @@ else{
 ```
 
 输 入一个数组进行json解码，如果解码后的message与key值相同，会得到flag，主要思想还是弱类型进行绕过，我们不知道key值是什莫，但是我们知道一件事就是它肯定是字符串(当然，这里的前提条件是key中没有数字)，这样就可以了，上文讲过，两个等号时会转化成同一类型再进行比较，直接构造一个0就可以相等了。最终payload message={“key”:0}。
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664112502794-d8342c7e-bf22-4eee-9c3b-96463cb2bf28.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664112502794-d8342c7e-bf22-4eee-9c3b-96463cb2bf28.png)
+[![image.png](../../../_assets/images/1fb4d342813d9c944627d9908b0d7f14dc8a21e1ff8af81558ea659635c0cd8c.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664112502794-d8342c7e-bf22-4eee-9c3b-96463cb2bf28.png)
 
 ## php内置函数的松散性
 
@@ -454,7 +454,7 @@ switch ($i) {
 ?>
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664113177992-39954b95-885f-4b97-a02a-e5d6f30c7eb8.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664113177992-39954b95-885f-4b97-a02a-e5d6f30c7eb8.png)
+[![image.png](../../../_assets/images/22b8018a05978e94c6f5e0c86de9bdfd0d6d1d407098193aebb8bb162f4482b7.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664113177992-39954b95-885f-4b97-a02a-e5d6f30c7eb8.png)
 
 ### strcmp绕过(这个时候程序输出的是，类型转换的i，结果为3返回flag )
 
@@ -474,7 +474,7 @@ if (strcmp($_POST['password'], $password) == 0) {
 
 在这个题目中我们需要自己输入一个password的值和$password相比较但是我们不知道这个password的值，有可能时字符串有可能时数字，这个时候怎末办呢，依然时相同的绕过姿势，试一试数组绕过假设如果传入一个数组会怎末样呢？我们传入password[]=xxx ，绕过成功。
 原理是因为函数接受到了不符合的类型，将发生错误，函数返回值为0，所以判断相等。
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664115029345-c4396917-332e-43ca-8625-e84c1f5fe398.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664115029345-c4396917-332e-43ca-8625-e84c1f5fe398.png)
+[![image.png](../../../_assets/images/f1b3a40a0b98bfb95e033c67216ca81e5a6a3c354bfbfc9eb94f043af367710a.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664115029345-c4396917-332e-43ca-8625-e84c1f5fe398.png)
 
 ### array_search（）、in_array()绕过
 
@@ -515,7 +515,7 @@ else{
 先判断是不是数组，然后在把数组中的内容一个个进行遍历，所有内容都不能等于admin,类型也必须相同，然后转化成int型，然后再进行比较如果填入值与admin相同，则返回flag,如何绕过呢？
 基本思路还是不变，因为用的是三个等于号，所以说“= =”号这个方法基本不能用，那就用第二条思路，利用函数接入到了不符合的类型返回“0”这个特性，直接绕过检测。这里的重点是intval函数，将数组里的数转换为了int类型，当”admin”这个字符串和数组的数据比较时会变为0，所以payload：test[]=0。 同理，因为intval将数组里的数转换为了int类型，所以我们传入一个字符串还是会变为0，最终效果和直接传入0是一样的。
 payload：test[]=xxxxx
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664122013954-962e04ee-e03f-49b3-afbb-ae3cc4b1b61c.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664122013954-962e04ee-e03f-49b3-afbb-ae3cc4b1b61c.png)
+[![image.png](../../../_assets/images/0c3ef3184bf1cd89a9b4d7d7330d0a79743b446830c77612185b76642a8dadea.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664122013954-962e04ee-e03f-49b3-afbb-ae3cc4b1b61c.png)
 
 #### ==问题
 
@@ -533,8 +533,8 @@ var_dump(in_array('1bc', $array));  //true
 
 ## preg_match绕过
 
-[![1270588-20200115184356475-448487219.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664203268848-481347db-314f-49d6-8d10-90798407e863.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664203268848-481347db-314f-49d6-8d10-90798407e863.png)
-[![1270588-20200115184407398-525177328.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664203281706-4da909d4-bb4a-4c22-a766-b765b4620ef2.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664203281706-4da909d4-bb4a-4c22-a766-b765b4620ef2.png)
+[![1270588-20200115184356475-448487219.png](../../../_assets/images/21b97a49b8fe1e6053336c754a4f2ea437f05661b6b11b8c2bd7aab87206bc72.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664203268848-481347db-314f-49d6-8d10-90798407e863.png)
+[![1270588-20200115184407398-525177328.png](../../../_assets/images/c2b40f9eabed89f9402ff4739f2a9295ecb7b9841a7e00ac349a96a6d59cb3dc.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664203281706-4da909d4-bb4a-4c22-a766-b765b4620ef2.png)
 **绕过方法：**
 
 ### 数组绕过
@@ -554,7 +554,7 @@ if (preg_match("/php/i", $a)) {
 ?>
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664205498275-3b5e7f1d-dbd6-4b3b-962d-2ff47b09c215.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664205498275-3b5e7f1d-dbd6-4b3b-962d-2ff47b09c215.png)
+[![image.png](../../../_assets/images/57e92576b392a015cf6a823debc90359a17112062a3999d1a6cce656aa285ec8.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664205498275-3b5e7f1d-dbd6-4b3b-962d-2ff47b09c215.png)
 此时我们传入的数组中有flag，但是并没有检测到
 
 ### PCRE回溯次数限制
@@ -586,7 +586,7 @@ if (is_php($data)) {
 
 大意是判断一下用户输入的内容有没有PHP代码，如果没有，则写入文件。这种时候，如何绕过is_php()函数来写入webshell呢？
 PHP为了防止正则表达式的拒绝服务攻击（reDOS），给pcre设定了一个回溯次数上限pcre.backtrack_limit，默认为1000000，如果回溯次数超过这个数字，preg_match会返回false
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664206312119-a1275f6a-f3b0-4d55-bd36-d6aa1f4558b5.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664206312119-a1275f6a-f3b0-4d55-bd36-d6aa1f4558b5.png)
+[![image.png](../../../_assets/images/d9850f0ad5be9d3b24f6176b8940f58173809ca263ff0e4107bf08c4c85e8151.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664206312119-a1275f6a-f3b0-4d55-bd36-d6aa1f4558b5.png)
 我们通过发送超长字符串的方式，使正则执行失败，最后绕过目标对PHP语言的限制。
 poc:
 
@@ -640,7 +640,7 @@ res = requests.post(url=url, data=data,allow_redirects=False)
 print(res.text)
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664210591824-00db5293-f384-4d9d-a2d9-615665f42f07.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664210591824-00db5293-f384-4d9d-a2d9-615665f42f07.png)
+[![image.png](../../../_assets/images/9b4891c4d84f0b7969b288c928e3757f0391585cbc141236c708296689612f98.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664210591824-00db5293-f384-4d9d-a2d9-615665f42f07.png)
 ps:以上对php7不生效
 
 ### 换行符
@@ -676,7 +676,7 @@ res = requests.post(url=url, data=data,allow_redirects=False)
 print(res.text)
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664212236037-404ab3ea-6564-4da3-a8a5-2b9bac5238ed.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664212236037-404ab3ea-6564-4da3-a8a5-2b9bac5238ed.png)
+[![image.png](../../../_assets/images/16fa0323785b3fec3531f4746ce11e516567bbf82cfddcf546fbc5a4aaf557c9.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664212236037-404ab3ea-6564-4da3-a8a5-2b9bac5238ed.png)
 ** 而在非多行模式下，$似乎会忽略在句尾的%0a**
 
 ```
@@ -691,7 +691,7 @@ if (preg_match('/^flag$/', $_GET['a']) && $_GET['a'] !== 'flag') {
 
 ### extract变量覆盖
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664372322802-2f037800-d395-497b-936c-9e5f3803a2f7.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664372322802-2f037800-d395-497b-936c-9e5f3803a2f7.png)
+[![image.png](../../../_assets/images/d6e12bad3324def99fd6e7882837f4f030742c20a0fc540d77f5f264dbddc3e6.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664372322802-2f037800-d395-497b-936c-9e5f3803a2f7.png)
 使用例子:
 
 ```
@@ -703,7 +703,7 @@ echo "\$a = $a; \$b = $b; \$c = $c";
 ?>
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664372356449-4949468c-f9f2-4372-af01-87d214424592.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664372356449-4949468c-f9f2-4372-af01-87d214424592.png)
+[![image.png](../../../_assets/images/879a41e02cbecc06f2d512d8988b458aed5e59af5e4286b83dbd634186e8ed66.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664372356449-4949468c-f9f2-4372-af01-87d214424592.png)
 ctf题目:
 
 ```
@@ -729,7 +729,7 @@ http://127.0.0.1/test.php?HY=&flag=  //传入HY和flag空值，
 ```
 
 问题:这里为什么不能给HY和flag分别传入1
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664381662252-e858b918-d47d-4ef3-9619-89d9622fa466.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664381662252-e858b918-d47d-4ef3-9619-89d9622fa466.png)
+[![image.png](../../../_assets/images/a7eca5afc035d2d4ea5dca58bd689e607bc79629f86c1ea5b7d7767a58ca05d5.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664381662252-e858b918-d47d-4ef3-9619-89d9622fa466.png)
 传入两个1后，$HY和$flag都为1，进入if语句，file_get_content(1)，返回为空，但是此时$HY=1，就不相等了，所以同理可以构造多种payload的
 
 ```
@@ -746,7 +746,7 @@ Parse_str('b=2');
 Print_r($b);
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664383931472-7c2603eb-5da6-493d-961a-0cef9d6aed2c.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664383931472-7c2603eb-5da6-493d-961a-0cef9d6aed2c.png)
+[![image.png](../../../_assets/images/2f369435e7217c3c624aa6c8df91a2358b1fde5ac988bda5e3b3ded68c397b46.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664383931472-7c2603eb-5da6-493d-961a-0cef9d6aed2c.png)
 
 ### import_request_variables()
 
@@ -841,7 +841,7 @@ payload:
 404'
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664439276748-c113f1e6-863f-4757-b928-fad0595e01cd.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664439276748-c113f1e6-863f-4757-b928-fad0595e01cd.png)
+[![image.png](../../../_assets/images/be5c3f7631bbb1f4400ca6747d38d9e0cc5cf36bd832fed84af1b928f14d4ae1.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664439276748-c113f1e6-863f-4757-b928-fad0595e01cd.png)
 
 ## 绕过过滤的空白字符
 
@@ -968,7 +968,7 @@ for i in range(256):
 首先分开看 %% 和 %02X 两部分
 %%第一个为转义的意思，所以这两个一起的意思就是 %
 %02x ：%x是把数字输出为16进制的格式，%02x是保证输出至少占两个字符的位置,如果不够两位的话前面补0
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664527433234-991a8002-e11a-4eb8-b6db-ad7f98a1924f.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664527433234-991a8002-e11a-4eb8-b6db-ad7f98a1924f.png)
+[![image.png](../../../_assets/images/d1043f731171a55b2f071d1e9a0f26e47cfb016f6064617748044e138d65996e.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664527433234-991a8002-e11a-4eb8-b6db-ad7f98a1924f.png)
 所以可知最终payload有:
 
 ```
@@ -979,7 +979,7 @@ for i in range(256):
 %0C404%20
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664528429736-e234f081-4e74-4e7f-b76c-2717f2d36a86.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664528429736-e234f081-4e74-4e7f-b76c-2717f2d36a86.png)
+[![image.png](../../../_assets/images/6ab4cdeb062e556a33f8035c39a686f2328c9279629c90555582f9768313a956.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664528429736-e234f081-4e74-4e7f-b76c-2717f2d36a86.png)
 
 ## 多重加密
 
@@ -1004,7 +1004,7 @@ print_r($token);
 ## SQL注入_WITH ROLLUP绕过
 
 当遇到报错:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664545321688-c300c5e7-4b73-4e82-abe0-07cc279954bc.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664545321688-c300c5e7-4b73-4e82-abe0-07cc279954bc.png)
+[![image.png](../../../_assets/images/40801ad644fafae49a32c12085ead41afed1051a83241a2d5ba3c56298644d86.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664545321688-c300c5e7-4b73-4e82-abe0-07cc279954bc.png)
 MySQL 5.7.5以上版本，实现了对功能依赖的检测。如果启用了only_full_group_by SQL模式(默认启用)，那么MySQL就会拒绝执行 select list、HAVING condition或ORDER BY list引用既不在GROUP BY子句中被命名，也不在功能上依赖于GROUP BY列（由GROUP BY列唯一确定）的未聚合列的查询。
 从MySQL5.7.5开始，默认的SQL模式包括only_full_group_by。（在5.7.5之前，MySQL没有检测到功能依赖项，only_full_group_by在默认情况下是不启用的。关于前5.7.5行为的描述，请参阅MySQL 5.6参考手册。)
 解决方法(暂时):
@@ -1101,28 +1101,28 @@ mysql_close($con);
 自己修改配置，连接上数据库.
 关于WITH ROLLUP绕过我们来看一些例子
 数据库基本信息:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664799167791-f73d8cad-de15-4ed1-b759-6e60ac3bdc7c.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664799167791-f73d8cad-de15-4ed1-b759-6e60ac3bdc7c.png)
+[![image.png](../../../_assets/images/65b478c410f22c7ae0ab18c75de550314c9f620b72cac552442c7868e19443ff.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664799167791-f73d8cad-de15-4ed1-b759-6e60ac3bdc7c.png)
 使用with rollup语句( 分组后会在多一行统计 )
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664799401626-0548b90c-ae44-4931-a58c-0e30f530b0c8.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664799401626-0548b90c-ae44-4931-a58c-0e30f530b0c8.png)
+[![image.png](../../../_assets/images/296ea0cf99a4a598a78854898b0356d33c13f3056e9127f2b4d42d2e75775496.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664799401626-0548b90c-ae44-4931-a58c-0e30f530b0c8.png)
 多了一行，id为空，我们搭配limit语句
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664799686573-6baf3c8d-5153-405e-9a3f-8c8e34cd9159.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664799686573-6baf3c8d-5153-405e-9a3f-8c8e34cd9159.png)
+[![image.png](../../../_assets/images/e3f277d6ee277e0d3594f893710d093857d682708620657674c7b82c7cb750cd.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664799686573-6baf3c8d-5153-405e-9a3f-8c8e34cd9159.png)
 那如果我们用password分组呢
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664799734140-1e13868d-1733-49ef-a0dc-2cc6720027e7.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664799734140-1e13868d-1733-49ef-a0dc-2cc6720027e7.png)
+[![image.png](../../../_assets/images/4d81fb8c7eae72e23299414a18b7e8395650d6731ac684a6fc4316b28f3399d5.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664799734140-1e13868d-1733-49ef-a0dc-2cc6720027e7.png)
 现在的password为NULL,查询出的白居易是没密码的
 但是这里的代码中 ,是被过滤的，那么我们可以搭配offset去查询
 关于他们两个的用法:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664800909937-c4f07ca9-ac72-453d-99a1-47596c230bf8.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664800909937-c4f07ca9-ac72-453d-99a1-47596c230bf8.png)
+[![image.png](../../../_assets/images/b9672f01097ce532a01d995d81408629d9f6fb82af9ac0601d5e634279b2ce48.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664800909937-c4f07ca9-ac72-453d-99a1-47596c230bf8.png)
 所以我们就可以构造语句:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664800950046-ac038845-128e-47b6-b80b-2f11f8e05b7a.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664800950046-ac038845-128e-47b6-b80b-2f11f8e05b7a.png)
+[![image.png](../../../_assets/images/aa875b44788073e99c0306c274d5b4cd55d11af590d8555754be1664152c930e.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664800950046-ac038845-128e-47b6-b80b-2f11f8e05b7a.png)
 所以当我们知道用户名的时候，就可以构造sql语句进行绕过，此时password就为NULL
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664804646068-df9eb134-ecf7-4a47-8e40-15d1530d0d45.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664804646068-df9eb134-ecf7-4a47-8e40-15d1530d0d45.png)
+[![image.png](../../../_assets/images/3b330703825d2f57e2478338451a927dfe4bfc6c80a1a95d1e6e051fdb12b8ba.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664804646068-df9eb134-ecf7-4a47-8e40-15d1530d0d45.png)
 构造payload:
 
 ```
 username=白居易' GROUP BY password WITH ROLLUP LIMIT 1 OFFSET 1#&password=
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664805775369-dcc55dfe-2e38-405e-a694-f4dc4ac7eb03.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664805775369-dcc55dfe-2e38-405e-a694-f4dc4ac7eb03.png)
+[![image.png](../../../_assets/images/13aefa208052a70a08a0f5b6baa5a43ba63675f09ebe848e00720a4f9f7e337b.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664805775369-dcc55dfe-2e38-405e-a694-f4dc4ac7eb03.png)
 
 ## ereg正则%00截断
 
@@ -1162,12 +1162,12 @@ if (isset ($_GET['password']))
 ```
 
 ereg函数:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664806850256-c730b620-320c-4e26-8ba7-0bdecd4986a4.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664806850256-c730b620-320c-4e26-8ba7-0bdecd4986a4.png)
+[![image.png](../../../_assets/images/f114fd00cc5e0f9dfe98d40c02c8e370ce50b81755abd18f5e989e164a225226.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664806850256-c730b620-320c-4e26-8ba7-0bdecd4986a4.png)
 如果有找到模式匹配，则返回true，否则返回false
 我们可以使用科学计数法绕过前面
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664807270813-9dd92824-beab-45ce-8c55-12346bc1ab1d.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664807270813-9dd92824-beab-45ce-8c55-12346bc1ab1d.png)
+[![image.png](../../../_assets/images/c367567805f0daf24af53f75fc32b8fbbcd65c3176ff0714f66be3f1b177510f.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664807270813-9dd92824-beab-45ce-8c55-12346bc1ab1d.png)
 但是它又必须要包含”*-*“,而ereg已经限制了只能为数字和字母
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664807305892-33983499-9772-425b-8e27-72a1dcd8b805.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664807305892-33983499-9772-425b-8e27-72a1dcd8b805.png)
+[![image.png](../../../_assets/images/ea2e6c980b66a6644789e90da24853a36c8a427aa94b2a26a8c36497c210afbd.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664807305892-33983499-9772-425b-8e27-72a1dcd8b805.png)
 我们可以绕过ereg的检测:
 **方法一 %00截断：**
 **payload:**
@@ -1176,7 +1176,7 @@ ereg函数:
 ?password=1e9%00*-*
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664807530741-53ab0d03-0526-478a-9349-800daeade8ec.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664807530741-53ab0d03-0526-478a-9349-800daeade8ec.png)
+[![image.png](../../../_assets/images/bc4f093862cfcc70789224a5ac61b292b6d9551613bc656abb0c34a43162deee.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664807530741-53ab0d03-0526-478a-9349-800daeade8ec.png)
 **方法二 把password通过数组的形式去传参:**
 payload:
 
@@ -1184,7 +1184,7 @@ payload:
 ?password[]=1e9&password[]=*-*
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664807600826-04801088-c556-44c1-be20-66816ad150da.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664807600826-04801088-c556-44c1-be20-66816ad150da.png)
+[![image.png](../../../_assets/images/7543a91346165fdb635e8621d55b1dcbe9e5197212d8e89a6e94861c3cd89bbe.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664807600826-04801088-c556-44c1-be20-66816ad150da.png)
 
 ## session绕过
 
@@ -1208,9 +1208,9 @@ mt_srand((microtime() ^ rand(1, 10000)) % rand(1, 10000) + rand(1, 10000));
 ```
 
 访问页面，发现生成了session
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664808328606-a0f73da1-0a50-4a70-97d4-8d71736bb854.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664808328606-a0f73da1-0a50-4a70-97d4-8d71736bb854.png)
+[![image.png](../../../_assets/images/f614e0b9ac079783cf93036578df6aedcc9aec5c61dac338b9bc9b44b87bd2b8.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664808328606-a0f73da1-0a50-4a70-97d4-8d71736bb854.png)
 清除session，然后给password传入空值即可
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664808375010-3ec57ea9-72da-4371-8819-1f5e688a8661.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664808375010-3ec57ea9-72da-4371-8819-1f5e688a8661.png)
+[![image.png](../../../_assets/images/81bc862ad42ca9e2e80b73991529f9174a5128e2006dd077c547e341eea1e815.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664808375010-3ec57ea9-72da-4371-8819-1f5e688a8661.png)
 
 ## 密码md5比较绕过
 
@@ -1252,7 +1252,7 @@ else {
 只要让row[pw]的值与pass经过md5之后的值相等即可 而$pass经过md5之后的值是我们可以通过正常输入控制的
 同时，row[pw]的值是从$sql提取出来的
 目标就一句话：只要我们能够修改$sql的值，此题解决。
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664814374666-ee8ceab2-378c-40af-ac86-de012e0bdba0.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664814374666-ee8ceab2-378c-40af-ac86-de012e0bdba0.png)
+[![image.png](../../../_assets/images/4d01f6ebc1584b236b949b1496225b4c3f88fa9bcbba3a4a34143fb64ec6888b.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664814374666-ee8ceab2-378c-40af-ac86-de012e0bdba0.png)
 此时password的值是由我们控制的
 构造payload:
 
@@ -1261,7 +1261,7 @@ username=白居易' and 0=1 union select "e10adc3949ba59abbe56e057f20f883e"#&pas
 ```
 
 e10adc3949ba59abbe56e057f20f883e是123456的md5值
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664815167929-5280d428-308b-483d-a2bf-c6edde20d437.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664815167929-5280d428-308b-483d-a2bf-c6edde20d437.png)
+[![image.png](../../../_assets/images/966fe8dacdbfa230b4ab095ffcb39e5c6cb3fa2877d137ef08fa83a552d0bedd.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664815167929-5280d428-308b-483d-a2bf-c6edde20d437.png)
 
 ## url二次编码绕过
 
@@ -1287,7 +1287,7 @@ if($_GET[id] == "hackerDJ")
 http://127.0.0.1/test.php?id=%25%36%38%25%36%31%25%36%33%25%36%42%25%36%35%25%37%32%25%34%34%25%34%41
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664815455801-b927b743-9aff-4b31-9f70-0b9ff86d7c2b.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664815455801-b927b743-9aff-4b31-9f70-0b9ff86d7c2b.png)
+[![image.png](../../../_assets/images/ebdaf9c90e30bdb1f08a949a24d0621435cfbd806ea94c10ee5387ce05ebfa50.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664815455801-b927b743-9aff-4b31-9f70-0b9ff86d7c2b.png)
 
 ## sql闭合绕过
 
@@ -1416,7 +1416,7 @@ for($i=0; $i<300; $i++){
 }
 ```
 
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664851197425-c4dff480-15bc-42b3-b967-1517498a0c2c.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664851197425-c4dff480-15bc-42b3-b967-1517498a0c2c.png)
+[![image.png](../../../_assets/images/72392c533d06ab530e9f8cecc8a8f9640de0d06586e5a2d4d67661e00a7cf0ed.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664851197425-c4dff480-15bc-42b3-b967-1517498a0c2c.png)
 
 经过测试， chr(128)到chr(255)都可以截断 ，按理说是截断成1.php，可能环境有点问题吧！
 
@@ -1446,19 +1446,19 @@ include $filename;
 **如果能够包含远程文件**时，可以使用?和%23进行伪截断，**该方法对PHP版本没要求**，**但是要求能够包含远程文件,即**allow_url_include=On
 ?原理是把后面的值看成参数，例如http://172.17.0.3/1.php?.html
 \#原理就是前面说的#被include认为是锚点，例如http://172.17.0.3/1.txt#.html，#后面的被认为是锚点(使用url编码后的#---%3E%23)
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664852581232-32255fa9-6d2d-4002-8c63-d223c952a637.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664852581232-32255fa9-6d2d-4002-8c63-d223c952a637.png)
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664852618885-b65805ad-8a9f-4963-870e-bdd63b34158f.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664852618885-b65805ad-8a9f-4963-870e-bdd63b34158f.png)
+[![image.png](../../../_assets/images/d87bff95a3d288abb5778420bc494e6ec00933cbccaa415e9c55e68e5ee3a3ab.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664852581232-32255fa9-6d2d-4002-8c63-d223c952a637.png)
+[![image.png](../../../_assets/images/7e32babf91d8d60e83ff66c5c63a8de131af1a9ab063f219fc67325f0c2b9571.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664852618885-b65805ad-8a9f-4963-870e-bdd63b34158f.png)
 
 ## strpos数组绕过NULL与ereg正则%00截断
 
 方法一:%00截断
 注意点:需将#编码
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664856729744-a800de1d-40cc-498f-bef1-af960c8429dd.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664856729744-a800de1d-40cc-498f-bef1-af960c8429dd.png)
+[![image.png](../../../_assets/images/c3173e3ef4d0af455b212765d36c505f62a11d11c1f75270e8cc630e5d75e882.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664856729744-a800de1d-40cc-498f-bef1-af960c8429dd.png)
 
 方法二:数组绕过
 直接传入一个数组
 既要是纯数字,又要有’#biubiubiu’，strpos()找的是字符串,那么传一个数组给它,strpos()出错返回null,null!==false,所以符合要求. 所以输入nctf[]= 那为什么ereg()也能符合呢?因为ereg()在出错时返回的也是null,null!==false,所以符合要求.
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664856872643-ee08f73b-d6b9-45d2-bf2b-3123fa02afa1.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664856872643-ee08f73b-d6b9-45d2-bf2b-3123fa02afa1.png)
+[![image.png](../../../_assets/images/9621c3e4365cf2c5ee4b1aedaf83625e4c143ecdf52c81e8ad3eacde51d7595c.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664856872643-ee08f73b-d6b9-45d2-bf2b-3123fa02afa1.png)
 
 ## **十六进制与数字比较**
 
@@ -1494,9 +1494,9 @@ echo noother_says_correct($temp);
 
 这里，它不让输入1到9的数字，但是后面却让比较一串数字
 在php里面，0x开头则表示16进制，将这串数字转换成16进制之后发现，是deadc0de
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664872563600-ed999410-6755-4b2a-be29-7d799a66485a.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664872563600-ed999410-6755-4b2a-be29-7d799a66485a.png)
+[![image.png](../../../_assets/images/39f66032d154359cee671682ce84d6b91b852aceabcdd12e3919afa8aef34d89.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664872563600-ed999410-6755-4b2a-be29-7d799a66485a.png)
 在开头加上0x，代表这个是16进制的数字，然后再和十进制的 3735929054比较，答案当然是相同的，返回true拿到flag
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664872687987-b73ff2a8-2ee9-49e6-92b9-9fa66c50e642.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664872687987-b73ff2a8-2ee9-49e6-92b9-9fa66c50e642.png)
+[![image.png](../../../_assets/images/68dc15a0ba02a3f140c31168b400a484c372c763685b9b321735af459da0bb2e.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664872687987-b73ff2a8-2ee9-49e6-92b9-9fa66c50e642.png)
 
 ## **数字验证正则绕过**
 
@@ -1537,13 +1537,13 @@ if  ("POST" == $_SERVER['REQUEST_METHOD'])
 ```
 
 意为必须是12个字符以上（非空格非TAB之外的内容）
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664878820196-cd2ab7eb-c079-4f8b-8eb4-1a4746b183f2.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664878820196-cd2ab7eb-c079-4f8b-8eb4-1a4746b183f2.png)
+[![image.png](../../../_assets/images/17f4323da018887d04bc908a610c5de356608fddee825dfbdedfa497e2c0c95f.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664878820196-cd2ab7eb-c079-4f8b-8eb4-1a4746b183f2.png)
 意为匹配到的次数要大于6次
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664878914886-87653c10-7d3d-4369-8e09-1779ffeda157.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664878914886-87653c10-7d3d-4369-8e09-1779ffeda157.png)
+[![image.png](../../../_assets/images/179092d157bb2cb02b71e36f3354c52c195132854cb8ffbb44694dd6ecb560d1.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664878914886-87653c10-7d3d-4369-8e09-1779ffeda157.png)
 意为必须要有大小写字母，数字，字符内容三种与三种以上
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664878981551-c67275d3-8869-4f35-9a40-f5f2b855c653.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664878981551-c67275d3-8869-4f35-9a40-f5f2b855c653.png)
+[![image.png](../../../_assets/images/c9e830a187508adc523c3260cb675f9d5ebc7500bde1d3f7204824b2c94f699b.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664878981551-c67275d3-8869-4f35-9a40-f5f2b855c653.png)
 传入值 必须等于42
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664879091286-6802d5a4-2753-4d70-aae0-ea2e9f48e862.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664879091286-6802d5a4-2753-4d70-aae0-ea2e9f48e862.png)
+[![image.png](../../../_assets/images/a80fe635d742635222d4f8228d396432c959593f3a45250385a29df4f5a0a93b.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664879091286-6802d5a4-2753-4d70-aae0-ea2e9f48e862.png)
 可构造payload:
 
 ```
@@ -1555,8 +1555,8 @@ if  ("POST" == $_SERVER['REQUEST_METHOD'])
 ## **switch没有break 字符与0比较绕过**
 
 首先我们来回顾下switch语句:
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664880863864-69ee9b4d-f83f-4999-94de-684c5fa6433f.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664880863864-69ee9b4d-f83f-4999-94de-684c5fa6433f.png)
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664880871606-a49b0ffd-3cd2-4ab2-a99b-1e498624758e.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664880871606-a49b0ffd-3cd2-4ab2-a99b-1e498624758e.png)
+[![image.png](../../../_assets/images/9cb9a0a8ff3075f737a707a4900477210dc564a3945fa125145550459bcc8bec.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664880863864-69ee9b4d-f83f-4999-94de-684c5fa6433f.png)
+[![image.png](../../../_assets/images/676d7307db10a8c148736f7e7836bf0a6afc54eac757d5dffbef2168d0302c7c.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664880871606-a49b0ffd-3cd2-4ab2-a99b-1e498624758e.png)
 匹配到了2，然后2及其2后面的语句都会执行，且不会再进行匹配。
 那我们接下来看这个题目:
 
@@ -1586,7 +1586,7 @@ if (isset($_GET['which']))
 ```
 
 直接传入test
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664881120398-f8cbf511-b917-4d02-a540-dc4640c33082.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664881120398-f8cbf511-b917-4d02-a540-dc4640c33082.png)
+[![image.png](../../../_assets/images/bd6d2654ee28f3cb9efebd88d9ade3b9c5435755c2686c1890aabe50da37c19d.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664881120398-f8cbf511-b917-4d02-a540-dc4640c33082.png)
 因为当一个字符串与数字比较时，会将字符串转换为数字,传入test后就与0匹配，就不会继续进行匹配了。
 
 ## 利用提交数组绕过逻辑
@@ -1644,16 +1644,16 @@ else{
 ```
 
 访问页面
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664882469000-0dd64e6a-ce6b-4b80-8ab9-974ed08e5a16.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664882469000-0dd64e6a-ce6b-4b80-8ab9-974ed08e5a16.png)
+[![image.png](../../../_assets/images/28d0a6a14b786d226cf6f2c88951830b0f5848f1463642fabb01e4d27b04849d.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664882469000-0dd64e6a-ce6b-4b80-8ab9-974ed08e5a16.png)
 首先将cookie的用户修改为admin，并替换
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664882512840-8c8d4853-af5c-4dac-a0bf-8c9a1e0d6076.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664882512840-8c8d4853-af5c-4dac-a0bf-8c9a1e0d6076.png)
+[![image.png](../../../_assets/images/51595a9e62059b5f3301f3f6843a610c36cb33e79b72ac174608e62d24d415e3.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664882512840-8c8d4853-af5c-4dac-a0bf-8c9a1e0d6076.png)
 然后再次访问，获得题目源码
-[![image.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664882543396-6c93429c-9f67-486a-b93c-3eaadd79a6b9.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664882543396-6c93429c-9f67-486a-b93c-3eaadd79a6b9.png)
+[![image.png](../../../_assets/images/0d8fd5a7db7c2729f4014868b21d95745f2f56deef9d4f7fdbbe8f13b9de07f7.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664882543396-6c93429c-9f67-486a-b93c-3eaadd79a6b9.png)
 
-[![30_1.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664882956551-bc37572d-7354-434b-a73c-c6c77ce88bea.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664882956551-bc37572d-7354-434b-a73c-c6c77ce88bea.png)
+[![30_1.png](../../../_assets/images/257bb2c8c54638d21bb2acfe1bb80544b42a7ecf38d4b5d8a0cf6aa491499f50.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664882956551-bc37572d-7354-434b-a73c-c6c77ce88bea.png)
 preg_match只能处理字符串，当传入的subject是数组时会返回false
 想要通过Post请求的形式传入数组可以使用 data[0]=123&data[1]=<> 的形式传入数组，这样的话在执行 implode() 函数的时候就不会使 &s 为空，成功绕过这段逻辑拿到flag。
-[![30_2.png](https://sakurahack-y.github.io/2022/11/22/php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%BB%E7%BB%93/1664882977530-c17d78ee-94a5-482a-b426-04536aece637.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664882977530-c17d78ee-94a5-482a-b426-04536aece637.png)
+[![30_2.png](../../../_assets/images/5c186eaec5fbdf1e218ffb75d21e492cc40937d7348b70a152420f6c0a8d81c1.png)](https://sakurahack-y.github.io/2022/11/22/php代码审计总结/1664882977530-c17d78ee-94a5-482a-b426-04536aece637.png)
 
 ---
 

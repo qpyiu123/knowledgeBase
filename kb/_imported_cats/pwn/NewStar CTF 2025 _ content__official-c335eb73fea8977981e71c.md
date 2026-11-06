@@ -98,3 +98,17 @@ strspn检测了01\n字符集，进行溢出
 这里的内容也是可控的，直接写就可以
 
 最后控制了函数指针，leave ret把栈放到堆上面，然后就是ret2libc就可以了
+
+## 原文配图
+
+![HTTP 路由入口](../../_assets/images/abb7374233500ab8e5e9751fb430d76e2729fcf225222dc96637d4750523e1f1.png)
+
+![路由处理函数](../../_assets/images/f256a88b69841df92da145adb77c68006b0f0159d6572d2bbde70c253431e9ca.png)
+
+![CCB 请求头漏洞点](../../_assets/images/fa386eb5d5efc2c77442375914882ef4b0c91cfa9fe82fbe9cdc34ea590248ee.png)
+
+![堆地址布局调试](../../_assets/images/aa4be2b2cfc1387b99e56af323a4b6b6b28e72b07d4274944a93f216e79439c9.png)
+
+![可控堆内容](../../_assets/images/da8c8011906e09fa95e65c27c1830de3b81c2d97558d37dbd236043f38aa6751.png)
+
+![劫持函数指针](../../_assets/images/c263a194f01368122f213f83a6019f2ba07755c3e5fa755ea769f541001b10a1.png)

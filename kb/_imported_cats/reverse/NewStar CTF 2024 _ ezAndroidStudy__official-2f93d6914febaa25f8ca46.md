@@ -102,3 +102,15 @@ import Container from '@/components/docs/Container.vue'
 IDA64 打开 `lib/x86_64/libezandroidstudy.so`，找到以 Java 开始的函数，按 <kbd>F5</kbd> 即可
 
 **Ans:** `flag{Y0u_@r4_900d_andr01d_r4V4rs4r}`
+
+## 原文配图
+
+![旁白酱可爱捏嘿嘿(～o￣3￣)～](../../_assets/images/941ac315b3cf66b4e4bfcd1866912c39a59064b7c3bb00a082e3e6ec0c3c58ac.png)
+
+![旁白酱可爱捏嘿嘿(～o￣3￣)～](../../_assets/images/dd52c4d14f776a538385ab6a957481b6de28fedd87b65cb703362402569cc417.png)
+
+![旁白酱可爱捏嘿嘿(～o￣3￣)～](../../_assets/images/c09893a98a18b8095241db5a6da4aec1ed185527bcb52943abcb696bd7280785.png)
+
+![旁白酱可爱捏嘿嘿(～o￣3￣)～](../../_assets/images/cb8f05251b0fa089e2a3e1b6dc3433ab8508b1a88ffd9041016e38c00da3d7f0.png)
+
+![旁白酱可爱捏嘿嘿(～o￣3￣)～](../../_assets/images/ba1950039964315f4f837822d1373351c588cf7735cefc670c5dde7c32109204.png)

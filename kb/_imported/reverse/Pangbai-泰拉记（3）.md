@@ -85,3 +85,31 @@ AES:
 〔原图省略〕
 
 **Ans:** `flag{Sw1ft_$0_funny!}`
+
+## 原文配图
+
+![运行程序](../../_assets/images/179e30775f9117f2c10112abcfc17b1df1b1bd474b833fcb3a3f0d2b65515910.png)
+
+![搜字符串](../../_assets/images/b23617a5ea19c183180afae3e753a8fea95a2b1936a678dba8dbedc3954d1f4c.png)
+
+![妙妙字符串](../../_assets/images/4f6bcc011e0acb11cfa828bdd317c058086bacefe1677ca7979ced56dd8f1b40.png)
+
+![猜测加密方式](../../_assets/images/aedf7ed10a4ee4582a1b4d9696db239358da47a23522154d82e3f86413e3578d.png)
+
+![查看绑定](../../_assets/images/c3ba03ed9b2ec84974369f542bfecc61f9183e6b5146c6111fd661dfcbf1da8d.png)
+
+![buttun 上的其他函数](../../_assets/images/42f97871b0fc47686525d7c9491de22e4930713b5bde9fbb5b5500bc089350bf.png)
+
+![找关键函数](../../_assets/images/c49c4c7a66812313bdd743430c56d8432ef61941837c477b3d77ad94fff52dd8.png)
+
+![RC4 初始化](../../_assets/images/ede0afa702cc0e63251609c6379da323bb70c8309a2ca7839b9630922e7abd78.png)
+
+![RC4 加密](../../_assets/images/b9757dc13926d7da4cad6f942267840afa64db0b18f86c0bb122159c90fc4ea2.png)
+
+![AES_1](../../_assets/images/b3014aad466ac81f43b77e7454d1364af677e1d516986010c8ead7582d09dc8a.png)
+
+![AES_2](../../_assets/images/06eaec58e8e3f2be5644a118ce0011be596e263ef247650af0223ba2eb686ae4.png)
+
+![两个字符串](../../_assets/images/3040a5578323a3714e61a361d4933f5078ec1a195067f57bd882df96f048b574.png)
+
+![CyberChef](../../_assets/images/c38b93f7d40523bde0acf9695d319eae924d64146a3393765b8e710736f19541.png)

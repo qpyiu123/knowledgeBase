@@ -88,3 +88,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 我们配完 go 环境，装依赖，再 go bulid，根据 tips，我们生成由 miku 四个字符构成的密码本
 
 爆破得到 miiiku
+
+## 原文配图
+
+![事件日志中的命令执行](../../_assets/images/3241aceb144a2bd8e70d2722b308442fe28ab8d477ac00ec96717f1b88e54db5.png)
+
+![发现恶意程序路径](../../_assets/images/adbfbc48fcb6f70f5214beb76343bcd90ef9af57a19e0510f604d51f8f73bc7c.png)

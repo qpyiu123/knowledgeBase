@@ -86,3 +86,13 @@ IDA 打开发现有 upx 的字符串，猜测是 upx 壳
 一个 xxtea，密钥是 `meow~meow~tea~~~`
 
 写出对应的解密脚本：
+
+## 原文配图
+
+![Jeb](../../_assets/images/601c85a2c6abb15b23d113a35e396bac49bbe08202b90bff4a65da0bb21a6e44.png)
+
+![upx 脱壳](../../_assets/images/84ed7863607b5261fcdcda8f641ad9159f77031518af2ae6e8a7557d3ec50094.png)
+
+![脱壳后](../../_assets/images/a1e843656383b9532bdc2e9d08f593d71537112e6cc99fead25f7160599fb6b3.png)
+
+![xxtea](../../_assets/images/c811b2c4a706247470eceb1a8eedbab8bb4314142a93efaaf01db2a52eff269d.png)

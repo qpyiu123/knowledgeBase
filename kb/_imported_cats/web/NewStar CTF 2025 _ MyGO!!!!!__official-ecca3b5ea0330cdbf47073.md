@@ -84,3 +84,9 @@ dirsearch 扫描目录发现有 `flag.php`，直接访问 403，尝试 SSRF 访�
 得到源码
 
 curl 允许 file 协议，`/index.php?proxy=http://127.0.0.1/flag.php?soyorin=file:///flag` 成功拿到 FLAG。
+
+## 原文配图
+
+![抓包发现 proxy 参数](../../_assets/images/c33373d1da669645e56d28c2debc89a1bc1d6e4fe5bab50b3eee13f6211604e6.png)
+
+![仅允许 HTTP 协议](../../_assets/images/04abd1f7d49d622287d6a3d681fd8c1d78307b1496e661fb2215e08e990b2aa1.png)

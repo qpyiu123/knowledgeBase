@@ -84,3 +84,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 最后将变换之后的输入值与密文 Buffer 数组进行比较。我们点进去 Buffer 数组，然后可以按下 <kbd>⇧ Shift</kbd><kbd>E</kbd> 即可提取数据。
 
 我们接下来就可以写出逆向脚本。
+
+## 原文配图
+
+![IDA 界面](../../_assets/images/81c725a2aa0c8773479e2fc2f9fa951cb6cd19b556df51c9a946affe7c2cd194.png)

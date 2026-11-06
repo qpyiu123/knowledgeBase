@@ -1,6 +1,6 @@
 # CTF 知识库索引
 
-共 **1856** 条，覆盖 **11** 个方向。
+共 **1936** 条，覆盖 **11** 个方向。
 本文件由 `python tools/gen_index.py` 自动生成，请勿手改。
 
 > 用法：`kb search "题面关键词"` 模糊查；`kb ask "题目描述"` 让本地模型给思路。
@@ -9,20 +9,20 @@
 
 | 方向 | 条目数 | 说明 |
 |---|---|---|
-| [杂项 Misc](#misc) | 406 | |
-| [密码学 Crypto](#crypto) | 259 | |
-| [逆向 Reverse](#reverse) | 264 | |
-| [二进制利用 Pwn](#pwn) | 307 | |
-| [Web](#web) | 500 | |
-| [取证 Forensics](#forensics) | 62 | |
-| [移动端 Mobile](#mobile) | 14 | |
-| [区块链 Blockchain](#blockchain) | 6 | |
-| [硬件 Hardware](#hardware) | 14 | |
-| [情报 OSINT](#osint) | 12 | |
-| [AI 安全](#ai) | 12 | |
+| [杂项 Misc](#misc) | 421 | |
+| [密码学 Crypto](#crypto) | 291 | |
+| [逆向 Reverse](#reverse) | 268 | |
+| [二进制利用 Pwn](#pwn) | 310 | |
+| [Web](#web) | 511 | |
+| [取证 Forensics](#forensics) | 69 | |
+| [移动端 Mobile](#mobile) | 15 | |
+| [区块链 Blockchain](#blockchain) | 10 | |
+| [硬件 Hardware](#hardware) | 15 | |
+| [情报 OSINT](#osint) | 13 | |
+| [AI 安全](#ai) | 13 | |
 
 <a id="misc"></a>
-## 杂项 Misc (406)
+## 杂项 Misc (421)
 
 - 🟢 [2021 圣诞拼图活动 Writeup](_des/cards/misc/2021圣诞拼图活动-Writeup.full.md) — _2021 圣诞活动 2021、拼图、A-star、数字华容道_
 - 🟢 [2022 天融信教育杯 CTF 赛事 WP](_des/cards/misc/2022天融信教育杯CTF赛事WP.full.md) — _天融信教育杯 2022 2022、steghide、base64、PHPCMS_
@@ -37,7 +37,12 @@
 - 🟢 [Beginner picoMini 2022 writeup](_des/cards/misc/Beginner_picoMini_2022_writeup.full.md) — _picoCTF 2022、picoCTF Beginner、run_s4n1ty_run、s4n1ty_c4t_
 - 🟢 [CTF 之 Misc - zip 压缩包分析](_des/cards/misc/CTF之Misc-zip压缩包分析.full.md) — _Misc CTF 2022、zip结构、文件头 50 4B 03 04、目录头 50 4B 01 02_
 - 🟢 [DEFCON ガジェット① Aerospace Village Badge](_des/cards/misc/DEFCONガジェット①_Aerospace_Village_Badge.full.md) — _DEFCON 2023、badge、hardware、wifi_
+- 🟢 [EAN-13 条码校验位速查](misc/barcode-check-digit.md) — _只有 13 位数字的条码、EAN-13 末位校验失败、条码数字抄错、GTIN 校验位_
 - 🟢 [Hackvent 2024 – Easy](_des/cards/misc/Hackvent_2024_–_Easy.full.md) — _Hackvent 2024 2024、misc、gifsicle、change-color_
+- 🟢 [Python 3.9 base64：Base64 与 Base32 编解码](_reference/python39/base64.md) — _base64 函数用法、base64 参数与返回值、base64 版本差异、base64 报错排查_
+- 🟢 [Python 3.9 json：JSON 解析](_reference/python39/json.md) — _json 函数用法、json 参数与返回值、json 版本差异、json 报错排查_
+- 🟢 [Python 3.9 re：正则表达式](_reference/python39/re.md) — _re 函数用法、re 参数与返回值、re 版本差异、re 报错排查_
+- 🟢 [Python 解码与正则排错：Base64、JSON、捕获组和替换字符串](_reference/python-decoding-errors.md) — _Incorrect padding、补等号、长度余1、JSONDecodeError位置_
 - 🟢 [SHCTF-2024-Week1 官方WP](_des/cards/misc/SHCTF-2024-Week1_官方WP.full.md) — _SHCTF 2024、shctf2024-week1、rc4-decrypt、rockyou_
 - 🟢 [TUCTF 2024 Writeup](_des/cards/misc/TUCTF_2024_Writeup.full.md) — _TUCTF 2024、rot13、custom-image-format、crc8-checksum_
 - 🟢 [shell 与脚本一行流（awk/sed/grep/perl 提取比赛数据）](misc/shell-oneliner-tricks.md) — _题目给了一个巨大的日志或者 csv 让你统计某个字段、需要从几千行输出里提取符合格式的字符串、题目要求把十六进制 dump 还原成文件、给的是一个超大的文本里藏着按规律排列的 flag 字符_
@@ -55,6 +60,8 @@
 - 🟢 [文件头识别与常见魔数速查](misc/file-signature-identify.md) — _附件没有后缀名、改了后缀打不开、文件提示 corrupted、打开是乱码_
 - 🟢 [文档隐写（PDF 对象流 / docx、pptx 解压 / OLE）](misc/pdf-and-doc.md) — _附件是 pdf 或 docx、文档打开后只有几行字、文件体积偏大、pdf 里有多个 EOF_
 - 🟢 [斟茶王者常规赛 数据研判专项](_des/cards/misc/斟茶王者常规赛-数据研判专项.full.md) — _斟茶王者 2024、grep-access_key_id、admin-log-IP、user-log-login_
+- 🟢 [方法卡 · 多格式压缩套娃逐层解压（gzip/bz2/xz/zip/tar）](_methods/decompress_chain.md) — _文件打不开、魔数 1f8b、BZh9、fd377a585a00_
+- 🟢 [方法卡 · 编码套娃逐层解码（base64/hex/url/转义）](_methods/enc_chain_decode.md) — _一长串 base64、只有 0-9a-f、大量百分号、大量反斜杠转义_
 - 🟢 [杂项通用检查清单（file → strings → binwalk → 分离 → 分析）](misc/misc-checklist.md) — _附件不知道从哪下手、题目类型没写、试了几个工具都没出、时间不够想按套路走_
 - 🟢 [楚慧杯线下流量分析](_des/cards/misc/楚慧杯线下流量分析.full.md) — _楚慧杯 2026、流量取证、冰蝎3、Behinder_
 - 🟢 [流量包入门（pcap 快速定位与数据提取）](misc/misc-network-hands.md) — _附件是 pcap/pcapng、题目说你截到了流量、流量文件很大、需要找上传的文件_
@@ -281,6 +288,9 @@
 - 🟡 [文件隐写](_imported/misc/文件隐写.md) — _文件隐写、Python_
 - 🟡 [斟茶王者第五期复盘 - 简慕(始兴公安)突破15/16题](_des/cards/misc/复盘第五期_-突破15-16题的关键，解题技巧倾囊相授-简慕.full.md) — _斟茶王者(CTF+电子取证/电子数据调查) 2024、电子数据取证、调证、重明查询_
 - 🟡 [新生赛上的零解题](_imported/misc/新生赛上的零解题.md) — _新生赛上的零解题_
+- 🟡 [方法卡 · CyberChef 常用配方的离线复刻](_methods/cyberchef-recipes.md) — _队友发来 CyberChef 配方截图，本地却打不开浏览器、附件跑完 strings 只剩一串可打印字符，长度是 4 的倍数、Magic (Intensive mode) 给出多条候选路径不知选哪条、From Base64 之后接 Raw Inflate 才出现文件头_
+- 🟡 [方法卡 · QR 码与条码结构核查](_methods/qr-barcode.md) — _题目给的是一堆 0/1、#/空格 或黑白像素的方阵、图片里有一个方形码，角上有三个回字形定位框、记录只有 13 位数字且末位像校验位（EAN-13）、一维条码被切断，只剩一段条与一个码值数组_
+- 🟡 [方法卡 · ZIP 密码攻击（纯标准库字典/掩码/已知明文）](_methods/zip_password_attack.md) — _加密 zip、需要密码才能解压、弱口令、已知明文攻击_
 - 🟡 [旅行照片 4.0](_imported/misc/旅行照片-4.0.md) — _旅行照片 4.0_
 - 🟡 [无法获得的秘密](_imported/misc/无法获得的秘密.md) — _无法获得的秘密、Python、Rust_
 - 🟡 [星期四的狂想](_imported/misc/星期四的狂想.md) — _星期四的狂想_
@@ -415,6 +425,7 @@
 - 🔴 [强网杯 2024 初赛 Writeup - S1uM4i](_des/cards/misc/强网杯_2024_初赛_Writeup.full.md) — _强网杯 2024 初赛 2024、Pwn堆溢出、libc泄露、off_by_null_
 - 🔴 [强网杯 WriteUp - ChaMd5 Venom (2022全方向12题)](_des/cards/misc/强网杯-WriteUp.full.md) — _强网杯 2022、admin/123绕、Phar反序列化、SSRF_AdminShow_
 - 🔴 [数学与算法类 misc（大数分解、矩阵、迷宫、自动机）](misc/math-and-algorithm-misc.md) — _题目给了一张地形图要求从左上走到右下、给了一个巨大的整数要求分解或者求因子、给出了矩阵乘法结果要求反推原矩阵、输入里有长度上千的01序列和状态转移表_
+- 🔴 [方法卡 · pyjail 沙箱逃逸 payload 构造](_methods/pyjail.md) — _题目 nc 连接后提示 input >，让你输入 Python 代码、eval/exec 前删掉 os 和 builtins、黑名单过滤 import、open、flag 和下划线、题面说只能输入一行或长度不超过 100 字节_
 - 🔴 [无痕驱动的检测与分析 重映射驱动靶场构造 扫描与特征剥离](_des/cards/misc/“无痕”驱动的检测与分析：重映射驱动靶场构造、扫描与特征剥离，附源码.full.md) — _安全研究 2024、Windows-kernel、driver-remap、reloc-fix_
 - 🔴 [沙箱逃逸之 plaidctf 2020 mojo writeup](_des/cards/misc/沙箱逃逸之plaidctf_2020_mojo_writeup.full.md) — _PlaidCTF 2020、Chrome-sandbox-escape、Mojo-binder、RenderFrameHost_
 - 🔴 [游戏 / 交互型 misc（概率逆推、模拟器输入、AI 对手）](misc/game-and-interactive-misc.md) — _附件是一个自制小游戏需要打到某个分数才能给 flag、服务器端 nc 连上去是一个猜数字或者 21 点游戏、游戏随机数用的是 std::rand 或 mt19937、题目说要连胜 20 局才能拿 flag_
@@ -430,9 +441,13 @@
 - 🔴 [解析2025强网杯谍影重重6.0](_des/cards/misc/解析2025强网杯谍影重重6.0.full.md) — _强网杯 2025 谍影重重6.0 2025、RTP-traffic、G.711-mulaw、audio-1305-streams_
 - 🔴 [阿里云 CTF 2025 Writeup](_des/cards/misc/阿里云CTF2025_Writeup.full.md) — _阿里云CTF 2025、alibaba、BPF、verifier_
 - 🔴 [香港網安奪旗賽HKCERT CTF 2024 Write up（下）](_des/cards/misc/香港網安奪旗賽HKCERT_CTF_2024_Write_up（下）.full.md) — _HKCERT CTF 2024 2024、RSA-LCG、multiprime-rsa、pty-disassembly_
+- ⚪ [Beep Boop Robot：短音、长音和空白各代表什么](_writeups/misc/beep-boop-robot.md) — _8 位单声道、单一鸣声_
+- ⚪ [Miniscule：PNG 的数据用了另一种压缩](_writeups/misc/miniscule.md) — _压缩方法 1、28 B5 2F FD_
+- ⚪ [Nothing to See：压缩包藏在 PNG 结束块之后](_writeups/misc/nothing-to-see.md) — _IEND、tEXt、Title_
+- ⚪ [Wacky Recipe：把菜谱动作写成两未知数的方程](_writeups/misc/wacky-recipe.md) — _Ingredients、Method、搅拌碗_
 
 <a id="crypto"></a>
-## 密码学 Crypto (259)
+## 密码学 Crypto (291)
 
 - 🟢 [0xGame 2025/Crypto WriteUp Week1](_des/cards/crypto/0xGame_2025_Crypto_WriteUp_Week1.full.md) — _0xGame 2025、新人向、factordb、Vigenère 标准_
 - 🟢 [2022 第六届强网杯青少赛 Misc & Crypto WriteUp](_des/cards/crypto/2022第六届强网杯青少赛_Misc&Crypto-WriteUp.full.md) — _强网杯青少赛 2022 2022、base64、奇偶分离、异或32_
@@ -442,8 +457,16 @@
 - 🟢 [RSA Fermat 分解（p、q 相近）](crypto/rsa-fermat-factorization.md) — _p 和 q 很接近、p q 差值很小、两个素数相邻、nextprime_
 - 🟢 [RSA dp 泄露攻击](crypto/rsa-dp-leak.md) — _给了 dp、题目吐出 dp、dq 或 dp、e d p q 部分已知_
 - 🟢 [RSA 小公钥指数攻击（小明文开方 / Coppersmith）](crypto/rsa-small-e-attack.md) — _e=3、e 很小、公钥指数只有 3、密文长度和 n 差不多但 e 是 3_
+- 🟢 [RSA 路径对照：直接开根、有限 k、共模与广播](_reference/rsa-path-check.md) — _精确根检查、有限枚举k、gcd指数大于1、普通字节前缀_
 - 🟢 [古典密码（Atbash / 凯撒 / 维吉尼亚 / 仿射 / 巴利克）](crypto/classical-cipher.md) — _全字母无数字、密文看起来像乱码但只是字母、凯撒移位、维吉尼亚_
 - 🟢 [弱 RSA 共模攻击](crypto/rsa-common-modulus-attack.md) — _两组密文、e 不同、n 相同、gcd(e1_
+- 🟢 [方法卡 · Many-Time-Pad（OTP / 流密码密钥流复用）与 Crib 拖拽](_methods/otp_many_time_pad.md) — _多段密文长度接近且都是 hex/base64、题目说密钥流重复使用或 nonce 固定、密文两两异或后出现大量可打印字符、源码里 key 只生成一次就循环加密多条消息_
+- 🟢 [方法卡 · Playfair 双字母替换（棋盘重建与统计破译）](_methods/classical_playfair.md) — _密文全是字母且长度为偶数、字母表里没有 j 或 j 与 i 混用、双字母组频率异常高于单字母、题目提到 5x5 棋盘或关键词表_
+- 🟢 [方法卡 · RSA Fermat 分解（p、q 相近）](_methods/rsa_fermat_factorization.md) — _p 和 q 很接近、q 等于 nextprime(p)、两个素数相邻、p q 差值很小_
+- 🟢 [方法卡 · RSA 共模攻击（同 n 不同 e）](_methods/rsa_common_modulus_attack.md) — _n 只有一个、两组 e 和 c、同一明文加密两次、gcd(e1_
+- 🟢 [方法卡 · RSA 小公钥指数直接开方（含枚举 k）](_methods/rsa_small_e_attack.md) — _e=3 且没有填充、密文比 n 小很多、iroot 直接开 e 次方、已知明文很短_
+- 🟢 [方法卡 · Vigenère 无密钥自动破解（IoC + 卡方）](_methods/vigenere_autocrack.md) — _字母密文无人可读、密文长度上百、无明显单表偏移、出现 flag 样式但被打乱_
+- 🟢 [方法卡 · 多份 RSA 公钥的共享素数爆破（gcd 分解）](_methods/rsa_shared_prime_attack.md) — _多个 n、同一 p 或 q、rc4/key.pem 多份公钥、gcd 直接分解_
 - 🟢 [第二届职工数字化应用技术技能大赛-数据安全管理员-线上技能大比武WriteUp](_des/cards/crypto/第二届职工数字化应用技术技能大赛-数据安全管理员-线上技能大比武WriteUp.full.md) — _职工数字化应用技术技能大赛 2025、数据安全、Cookie伪造、URL编码_
 - 🟢 [解析LitCTF 2025 – Basic](_des/cards/crypto/解析LitCTF_2025_–_Basic.full.md) — _LitCTF 2025 2025、RSA、prime-modulus、Euler-totient_
 - 🟡 [2022 USTC Hackergame WriteUp 0x02](_des/cards/crypto/2022_USTC_Hackergame_WriteUp_0x02.full.md) — _2022 USTC Hackergame (中科大) 2022、Hackergame、15-puzzle、A-star_
@@ -591,6 +614,15 @@
 - 🟡 [强大的正则表达式](_imported/crypto/强大的正则表达式.md) — _强大的正则表达式_
 - 🟡 [惜字如金 3.0](_imported/crypto/惜字如金-3.0.md) — _惜字如金 3.0、Python_
 - 🟡 [揹包加密](_imported/crypto/揹包加密.md) — _揹包加密_
+- 🟡 [方法卡 · AES-ECB 选择明文攻击（模式判别 / cut-and-paste / 逐字节恢复）](_methods/aes_ecb_oracle.md) — _题目给出 AES 加密服务并允许任意提交明文、源码里出现 mode=ECB 或 AES.MODE_ECB、密文里出现重复的 16 字节分组、明文由固定的 secret 与用户输入拼接后再加密_
+- 🟡 [方法卡 · LCG 参数还原与输出预测](_methods/lcg_parameter_recovery.md) — _题目给出一串整数输出、生成器代码含 a*x+c、输出连续、random 模块自实现_
+- 🟡 [方法卡 · MT19937 状态还原与输出预测](_methods/mt19937_untemper.md) — _624 个 32 位输出、python random、getrandbits 连续调用、预测下一个随机数_
+- 🟡 [方法卡 · RSA dp/dq 泄露（完整 dp 枚举 k、低位提示、Fermat 兜底）](_methods/rsa_dp_leak.md) — _题目给了 dp 或 dq、给了 d mod (p-1)、提示里出现 dp 字样、给了 p 的低若干位_
+- 🟡 [方法卡 · RSA 低指数广播攻击（Håstad，多 n 同小 e）](_methods/rsa_hastad_broadcast.md) — _e=3、至少 3 组密文、多个不同 n、同一明文发多人_
+- 🟡 [方法卡 · RSA 小私钥指数攻击（Wiener 连分数）](_methods/rsa_wiener_continued_fraction.md) — _e 与 n 同量级、e 特别大、d 很小、私钥指数小_
+- 🟡 [方法卡 · RSA 已知私钥指数 d / φ 的倍数（直接分解 n）](_methods/rsa_d_modulus.md) — _题目直接给了 d、题面给了 phi 或 p-1 的倍数、e*d 减 1 是 phi 的倍数、已知私钥指数_
+- 🟡 [方法卡 · xorshift 伪随机数参数/状态恢复（LCG 之外的线性 PRNG）](_methods/xorshift_recovery.md) — _源码里出现 x ^= x << 13 之类移位异或、连续输出可以预测下一项、题目给出随机数序列要求预言下一个、seed 是毫秒时间戳或小整数_
+- 🟡 [方法卡 · 哈希长度扩展伪造（md5/sha1）](_methods/hash_length_extension.md) — _sign = md5(secret + data)、只校验签名不校验长度、参数可控的 mac、无 hmac_
 - 🟡 [春秋杯WP | 2024春秋杯冬季赛第二天题目部分解析](_des/cards/crypto/春秋杯WP_-_2024春秋杯冬季赛第二天题目部分解析.full.md) — _春秋杯2024冬季赛 2024、Python沙箱逃逸、生成器栈帧、字符高尔夫_
 - 🟡 [格格你好棒](_imported/crypto/格格你好棒.md) — _格格你好棒_
 - 🟡 [没 e 也能玩](_imported/crypto/没-e-也能玩.md) — _没 e 也能玩_
@@ -677,6 +709,10 @@
 - 🔴 [工业信息安全技能大赛复赛 - 海南车联网/信创密码题](_des/cards/crypto/工业信息安全技能大赛-复赛.full.md) — _工业信息安全技能大赛复赛(海南) 2024、工业信息安全、车联网、信创_
 - 🔴 [强网杯2025决赛复现 - somebox LCG密码流+shellcode限制](_des/cards/crypto/强网杯2025决赛复现.full.md) — _强网杯2025决赛 2025、LCG、线性同余、求解k和b_
 - 🔴 [强网杯行业领域专项车联网赛道 WriteUp - AES-CPA侧信道+VIN_RC4+CAN数据](_des/cards/crypto/强网杯行业领域专项车联网赛道(Writeup).full.md) — _强网杯行业领域专项车联网赛道 2024、CPA侧信道、AES-128、TRS文件_
+- 🔴 [方法卡 · ECDSA/EdDSA nonce 重用与偏置 nonce 恢复私钥](_methods/ecdsa_nonce_reuse.md) — _两次签名 r 相同、签名是 (r s) 二元组、k 只有低位随机、nonce 偏置_
+- 🔴 [方法卡 · LLL 格基规约与低密度子集和（背包）恢复](_methods/lattice_lll.md) — _格 lattice LLL 算法、背包子集和、求最小向量、方程数不足以解方程_
+- 🔴 [方法卡 · RSA padding oracle（parity/LSB 递推、Manger 倍增、同态绕过）](_methods/rsa_padding_oracle.md) — _服务端对"填充是否合法"返回不同响应、题目给了解密 oracle 只回一位、密文可被任意乘同态改造、响应时间或长度泄露填充信息_
+- 🔴 [方法卡 · RSA 部分比特恢复（小范围枚举与 Coppersmith 参考）](_methods/rsa_coppersmith.md) — _已知 p 的高若干位、已知 flag 的前缀、明文高位已知、低位未知_
 - 🔴 [春秋杯WP｜2023春秋杯春季赛之crypto篇](_des/cards/crypto/春秋杯WP｜2023春秋杯春季赛之crypto篇.full.md) — _春秋杯2023春季赛 2023、Pell方程、连分数、二项式定理_
 - 🔴 [格攻击入门（LLL / Coppersmith 载体构造）](crypto/lattice-lll.md) — _格、lattice、lll 算法、背包_
 - 🔴 [看雪 2022 KCTF 春季赛 第11题 虫洞末世 ydmp 原点磨盘](_des/cards/crypto/看雪2022_KCTF_春季赛_-_第11题设计思路及解析.full.md) — _KCTF春季赛 2022、KCTF、custom-cipher、floating-point-error_
@@ -693,9 +729,20 @@
 - 🔴 [赛题解析之第九届(2024)全国高校密码数学挑战赛赛题三](_des/cards/crypto/赛题解析之第九届(2024)全国高校密码数学挑战赛赛题三.full.md) — _第九届全国高校密码数学挑战赛 2024、side-channel、CPA、DPA_
 - 🔴 [量子安全 quantum ctf Qlotto Hack the box](_des/cards/crypto/量子安全_quantum_ctf_Qlotto_Hack_the_box.full.md) — _Quantum CTF / Hack The Box QLotto 2025、qiskit、quantum-circuit、Aer-simulator_
 - 🔴 [量子密钥分发协议赛题bb84官方WP - 第十六届信安国赛](_des/cards/crypto/官方WP_-_量子密钥分发协议赛题bb84解析.full.md) — _第十六届全国大学生信息安全竞赛(信安国赛)初赛 + 伽玛实验场 2023、量子密钥分发、BB84协议、偏振编码_
+- ⚪ [Algebra：先还原字节密钥，再解三段密文](_writeups/crypto/groebner-composite.md) — _32 个字节、16 条方程、三段模幂_
+- ⚪ [Factorize：两个素数为什么能从平方根附近分开](_writeups/crypto/rsa-shared-prime-prefix.md) — _共享高位、素数接近_
+- ⚪ [Lunar LCG：泄漏的是完整状态，还是低 8 位？](_writeups/crypto/lcg-low-byte.md) — _已知模数、完整状态泄漏_
+- ⚪ [NTRU：只有四个非零项时，先试稀疏枚举](_writeups/crypto/ntru-sparse.md) — _31 个系数、4 个非零项_
+- ⚪ [PolyRSA：用两组素数线性组合分解模数](_writeups/crypto/poly-rsa.md) — _两组不同底数、线性组合_
+- ⚪ [Subgroup Choreographer：把查表运算变成同余方程](_writeups/crypto/subgroup-choreographer.md) — _16×16 查表、奇数主元_
+- ⚪ [ez_raabin：先用已知的第三个因子](_writeups/crypto/rabin-eight.md) — _已知 pq、第三个素因子_
+- ⚪ [highlow：素数两端已知，中间有一段被遮住](_writeups/crypto/rsa-middle-bits.md) — _位段 400–751、未知因子_
+- ⚪ [lwe1：先把误差移到零附近](_writeups/crypto/lwe-error-band.md) — _60 个观测、误差 5900–6000_
+- ⚪ [you_raise_me_up：从模幂结果还原指数](_writeups/crypto/you-raise-me-up.md) — _奇数底数、周期翻倍_
+- ⚪ [消逝的曲线：四个点足够恢复哪些参数](_writeups/crypto/curve-parameters.md) — _四个平面点、160 位素数_
 
 <a id="reverse"></a>
-## 逆向 Reverse (264)
+## 逆向 Reverse (268)
 
 - 🟢 [.NET / C# 逆向（dnSpyEx / ILSpy）与 Unity il2cpp](reverse/dotnet-unity-il2cpp.md) — _文件是 .NET 程序集、有 mscoree.dll 导入或 CLR 头、Unity 游戏里有 GameAssembly.dll 与 global-metadata.dat、反编译能看到完整 C# 源码_
 - 🟢 [2024 极客少年 WP（little re sbox 还原 + BeautifulFlower XOR）](_des/cards/reverse/2024极客少年WP.full.md) — _2024 极客少年 2024、sbox 320 字节查找表、v5 密文 41 字节、sbox.index 逆查+异或 i_
@@ -711,6 +758,8 @@
 - 🟢 [ナゾトキ x CTF? - 虹色の研究 - WriteUp](_des/cards/reverse/ナゾトキ_x_CTF-_-虹色の研究-_WriteUp.full.md) — _ナゾトキ 2023、虹色の研究、MineNumber-7、reversing_
 - 🟢 [一道关于逆向的实战CTF题目分析](_des/cards/reverse/一道关于逆向的实战CTF题目分析.full.md) — _实战逆向 CTF 2024、left函数、xor函数、32轮调度_
 - 🟢 [山石CTF 2024 招新赛/REVERSE&WEB 篇](_des/cards/reverse/2024年第四届山石CTF招新赛WP_REVERSE&WEB篇.full.md) — _山石CTF 2024、C++ 字符变换、循环移位、位交换_
+- 🟢 [方法卡 · pyc 逆向（magic 判版本 / 头部对齐 / 常量挖矿 / 魔改 opcode 还原）](_methods/pyc_decompile.md) — _附件是 .pyc 或 __pycache__ 目录、文件头 magic 是 550d0d0a 或 a70d0d0a、只有编译后的文件没有源码、反编译工具报 Unknown magic number_
+- 🟢 [方法卡 · 逆向补丁与 keygen（跳转反转 / NOP / 自校验绕过）](_methods/binary_patch.md) — _程序要求输入序列号、输入错误弹窗 Invalid license、验证函数里只有一个条件跳转、题面要求给出注册机_
 - 🟢 [比赛中遇到的一些简单的逆向题目](_des/cards/reverse/比赛中遇到的一些简单的逆向题目.full.md) — _比赛逆向合集 2022、6关CrackMe、ELF逆向、长度校验_
 - 🟢 [看雪2022 KCTF 春季赛 | 第二题设计思路及解析（含视频）](_des/cards/reverse/看雪2022_KCTF_春季赛_-_第二题设计思路及解析（含视频）.full.md) — _看雪2022 KCTF春季赛 2022、签到题、CRC32校验、Collatz猜想(3n+1)_
 - 🟢 [看雪2022 KCTF 秋季赛 | 第六题设计思路及解析](_des/cards/reverse/看雪2022_KCTF_秋季赛_-_第六题设计思路及解析.full.md) — _看雪2022 KCTF秋季赛 2022、CrackMe、srand爆破、随机数种子穷举_
@@ -930,6 +979,7 @@
 - 🔴 [强网杯2025 PolyEncryption - Vibe Reing的胜利 (看雪SleepAlone)](_des/cards/reverse/强网杯2025-PolyEncryption之Vibe_Reing的胜利.full.md) — _强网杯2025 2025、PolyEncryption、dotnet、polyencrypt.dll_
 - 🔴 [强网杯2025 Secured Personal Vault 预期解WP - WinDbg内存转储+进程间AES](_des/cards/reverse/强网杯2025_Secured_Personal_Vault_预期解WP.full.md) — _强网杯2025 2025、WinDbg、JS脚本、host.memory.readMemoryValues_
 - 🔴 [强网杯S9初赛逆向 tradere 解题思路 - ptrace父子VM](_des/cards/reverse/强网杯S9初赛逆向-解题思路.full.md) — _强网杯S9初赛 2025、ptrace、父子进程、int_3指令_
+- 🔴 [方法卡 · 自研 VM 逆向（handler 判语义 / 字节码反汇编 / 模拟执行）](_methods/vm_obfuscation.md) — _一个函数 switch 分支超过 30 个、出现 jmp [table + op*8] 跳转表分发、全局数组被 pc 索引后逐条解码、有 bytecode 数组与 pc 变量_
 - 🔴 [看雪2022 KCTF 春季赛 | 第三题设计思路及解析](_des/cards/reverse/看雪2022_KCTF_春季赛_-_第三题设计思路及解析.full.md) — _看雪2022 KCTF春季赛 2022、魔改AES、MD5作为AES key、S盒交换_
 - 🔴 [看雪2022 KCTF 春季赛 | 第五题设计思路及解析](_des/cards/reverse/看雪2022_KCTF_春季赛_-_第五题设计思路及解析.full.md) — _看雪2022 KCTF春季赛 2022、天堂之门、x86/x64混合、代码混淆_
 - 🔴 [看雪2022 KCTF 春季赛 | 第八题设计思路及解析](_des/cards/reverse/看雪2022_KCTF_春季赛_-_第八题设计思路及解析.full.md) — _看雪2022 KCTF春季赛 2022、ArmVMP、ARM指令虚拟化、ELF保护_
@@ -961,9 +1011,10 @@
 - 🔴 [阿里云CTF2025复现-风清](_des/cards/reverse/阿里云CTF2025复现-风清.full.md) — _阿里云CTF 2025、MIPS、手搓syscall、seccomp_
 - 🔴 [香港網安奪旗賽HKCERT CTF 2025 資格賽逆向方向Writeup](_des/cards/reverse/香港網安奪旗賽HKCERT_CTF_2025_資格賽逆向方向Writeup.full.md) — _HKCERT CTF 2025 資格賽 2025、SM4、custom-SBOX、XXTEA_
 - ⚪ [0CTF 2017 - zer0IIvm 题目分析](_des/cards/reverse/0CTF_2017-zer0IIvm题目分析.full.md) — _0CTF 2017 2017、LLVM、obfuscation、OLLVM_
+- ⚪ [jocker：公开题解导读](_writeups/reverse/jocker.md) — _假答案、分段校验_
 
 <a id="pwn"></a>
-## 二进制利用 Pwn (307)
+## 二进制利用 Pwn (310)
 
 - 🟢 [AlpacaHack Round 1 (Pwn) Writeup](_des/cards/pwn/AlpacaHack_Round_1_(Pwn)_Writeup.full.md) — _AlpacaHack 2024、abs(INT_MIN)、整数溢出、scanf %d%*c_
 - 🟢 [Buuctf 刷题记录 - hitcontraining uaf](_des/cards/pwn/Buuctf刷题记录-hitcontraining_uaf.full.md) — _hitcontraining 2018、HackNote 菜单、notelist 指针数组、print_note_content 函数指针_
@@ -1114,6 +1165,9 @@
 - 🟡 [强网拟态 2024 / signin_revenge](_imported_cats/pwn/强网拟态 2024 _ signin_revenge__cn-case-starry-e12a2847-44a4e765.md) — _强网拟态 2024、signin_revenge、pwn_
 - 🟡 [强网杯 S8 初赛 PWN 赛题解析](_des/cards/pwn/强网杯S8初赛_PWN_赛题解析.full.md) — _强网杯 2024、menu-heap、libc-got-overwrite、write-what-where_
 - 🟡 [数据安全大赛 2024 数信杯 东部赛区](_des/cards/pwn/第二届数据安全大赛暨首届“数信杯”东部赛区writeup.full.md) — _数据安全大赛 2024、非栈上格式化字符串、RBP 多级指针改返回地址、%hn 写 short_
+- 🟡 [方法卡 · pwn ret2libc（GOT 泄露 → libc 基址 → system("/bin/sh")）](_methods/pwn_ret2libc.md) — _附件同时给了 pwn 和 libc.so.6、程序只有 puts/write 没有 system、NX 开启且二进制里没有 win 函数、有 canary 但没开 PIE_
+- 🟡 [方法卡 · seccomp 沙箱 ORW / ret2syscall shellcode 生成](_methods/pwn_shellcode.md) — _题目附件里有 seccomp 规则或 seccomp-tools 可用、拿到 shell 后 cat 没权限、execve 被拒绝返回-EPERM、题目提示 only read/write/open_
+- 🟡 [方法卡 · 格式化字符串（偏移定位 / %hhn 分字节任意写 / 多目标改写）](_methods/pwn_format_string.md) — _printf(用户输入) 没有格式串、输入 %p 回显一串十六进制地址、回显里出现 0x4141414141414141、需要把 printf@got 改成 system_
 - 🟡 [春秋杯WP｜2023春秋杯春季赛之pwn、web、misc篇](_des/cards/pwn/春秋杯WP｜2023春秋杯春季赛之pwn、web、misc篇.full.md) — _春秋杯2023春季赛 2023、栈溢出、partial write绕PIE、格式化字符串泄露elfbase_
 - 🟡 [柏鹭杯2023 WP -Polaris战队](_des/cards/pwn/柏鹭杯2023_WP_-Polaris战队.full.md) — _柏鹭杯2023 2023、PWN eval/heap、Java反序列化、Redis SSH公钥注入_
 - 🟡 [栈漏洞利用](_imported/pwn/栈漏洞利用.md) — _栈漏洞利用_
@@ -1274,7 +1328,7 @@
 - ⚪ [看雪2023 KCTF年度赛 | 第四题设计思路及解析](_des/cards/pwn/看雪2023_KCTF年度赛_-_第四题设计思路及解析.full.md) — _看雪2023 KCTF年度赛 2023、LLVM PASS PWN、VecPass.so自定义模块、runOnFunction虚函数_
 
 <a id="web"></a>
-## Web (500)
+## Web (511)
 
 - 🟢 [2022 IS 河南工业控制安全部分 Web 题解](_des/cards/web/2022IS河南工业控制安全部分web题解.full.md) — _IS河南工控安全 2022、SQL注入、XXE、JSON弱类型_
 - 🟢 [2022 年春秋杯冬季赛部分 WriteUp (天权信安)](_des/cards/web/2022年春秋杯冬季赛部分WriteUp.full.md) — _2022 春秋杯冬季赛 2022、春秋杯、天权信安、PHP-下划线绕过_
@@ -1544,6 +1598,7 @@
 - 🟡 [代码审计](_des/wp_summary/web/代码审计.md) — _代码审计、SSRF、Flask、PHP_
 - 🟡 [任意文件读取](_imported/web/任意文件读取.md) — _任意文件读取_
 - 🟡 [几个Web+JS相关CTF题目小记 - Node原型链污染](_des/cards/web/幾個與_Web_跟_JS_相關的_CTF_題目小記.full.md) — _多个CTF题目精选(JS+Web) 2022、Node.js、原型链污染、prototype_pollution_
+- 🟡 [前言](_des/topics/web/文件上传漏洞.md) — _前言、PHP、Nginx、文件上传漏洞_
 - 🟡 [前言](_des/wp_summary/web/ssti入门知识点.md) — _前言、SSTI、PHP、Smarty_
 - 🟡 [加密对抗靶场enctypt-labs通关](_des/cards/web/加密对抗靶场enctypt-labs通关.full.md) — _encrypt-labs / 加密对抗靶场 2024、encrypt-labs、AES、DES_
 - 🟡 [华为杯第一届中国研究生网络安全创新大赛初赛WriteUp](_des/cards/web/“华为杯”第一届中国研究生网络安全创新大赛初赛WriteUp.full.md) — _华为杯 2022、JWT-HS256-forge、URL-object-bypass、nodemon-restart_
@@ -1573,6 +1628,13 @@
 - 🟡 [文件上传](_imported/web/文件上传.md) — _文件上传、PHP、Python_
 - 🟡 [文件上传绕过（含 .htaccess / 条件竞争）](web/file-upload-bypass.md) — _上传头像、upload.php、只允许 jpg png、检查 content-type_
 - 🟡 [文件包含 LFI/RFI（php://filter / 日志包含）](web/lfi-rfi-and-log-poisoning.md) — _include 参数、file 参数、page 参数、path 参数_
+- 🟡 [方法卡 · EJS 模板注入与原型污染 RCE（无脚本，payload 速查）](_methods/ejs_prototype_pollution_rce.md) — _app.js 用 res.render、req.query 传入 render、ejs 模板、express 应用_
+- 🟡 [方法卡 · JWT 伪造（none / 弱密钥 / 算法混淆 / kid·jku）](_methods/jwt_forge.md) — _cookie 或 Authorization 是三段 base64url、解码后 header 含 alg 与 typ、题目要求成为 admin 但没给私钥、报错含 Signature verification failed_
+- 🟡 [方法卡 · Python pickle 反序列化与 pyjail 逃逸](_methods/python_pickle.md) — _代码里出现 pickle.loads、反序列化、不能使用下划线、只允许输入字符_
+- 🟡 [方法卡 · SQL 注入 WAF 绕过（等价改写 / 探测矩阵 / tamper 组合）](_methods/sql_waf_bypass.md) — _正常 payload 返回 403 或 406 或被拦截页、union 换成 union/**/ 就能过、空格被过滤但 /**/ 可用、select 与和 or 出现在黑名单里_
+- 🟡 [方法卡 · SSRF 内网穿透（IP 变形 / gopher 打 Redis / 云元数据）](_methods/ssrf_internal.md) — _url 或 image 参数由服务端抓取、回显里能看到目标 URL 的响应、webhook 与在线预览类功能、只允许 http 协议而 file 被拦_
+- 🟡 [方法卡 · SSTI 识别与 Jinja2 沙箱逃逸（含无回显盲注通道）](_methods/ssti_generic.md) — _提交 7*7 回显 49、用户名欢迎语被渲染、模板引擎报错、输入 {{1/0}} 返回 500_
+- 🟡 [方法卡 · 文件上传绕过（后缀变体 / 图片马 / .htaccess / 条件竞争）](_methods/file_upload_bypass.md) — _存在上传功能且提示只允许图片、上传后返回可访问的文件路径、前端 accept 校验但后端只管后缀、上传成功却被随机重命名_
 - 🟡 [春秋云镜——Brute4Road Writeup](_des/cards/web/春秋云镜——Brute4Road_Writeup.full.md) — _春秋云镜靶场 2022、Redis主从复制、SUID提权、base64_
 - 🟡 [春秋杯 2022/sql_debug](_des/cards/web/2022春秋杯联赛_传说殿堂赛道_sql_debug题目解析.full.md) — _春秋杯 2022、Nette、PHP、PDO_
 - 🟡 [春秋杯WP | 2024春秋杯冬季赛第三天题目部分解析](_des/cards/web/春秋杯WP_-_2024春秋杯冬季赛第三天题目部分解析.full.md) — _春秋杯2024冬季赛 2024、AES-ECB、pickle反序列化、WAF绕过_
@@ -1757,6 +1819,9 @@
 - 🔴 [强网杯S9线下赛 RealWorld TrustSQL + AWDU Pwn 题解](_des/cards/web/强网杯S9_线下赛_RealWorld_TrustSQL_&_AWDU_Pwn_题解.full.md) — _强网杯S9线下赛(Real World) 2025、SQLite3、EDITOR环境变量、system命令注入_
 - 🔴 [操纵预言机(ApplePool WP) - DeFi UniswapV2预言机价格操纵](_des/cards/web/操纵预言机(ApplePool_WP).full.md) — _区块链DeFi 2023、DeFi、UniswapV2、预言机_
 - 🔴 [文件上传：条件竞争与二次渲染、图片马绕过内容检测](web/upload-race-and-image-polyglot.md) — _上传后文件被立刻删除或改名、上传目录可访问 GET /uploads/xxx.php、提示「上传成功但文件已删除」、图片上传后返回缩略图 URL_
+- 🔴 [方法卡 · HTTP 请求走私（CL.TE / TE.CL / TE.TE / H2 降级）](_methods/http_smuggling.md) — _Server 是 nginx 但报错栈是 Tomcat 或 Gunicorn、响应出现 Via 或 X-Cache 说明有反代、非法 chunked 请求后下一个请求才 400、题面出现 反代 或 前后端不一致 或 smuggling_
+- 🔴 [方法卡 · Java 反序列化（魔数判链 / ysoserial 命令拼装 / JNDI 变体生成）](_methods/java_deser.md) — _请求体 base64 解码后以 rO0AB 开头、错误栈里出现 ObjectInputStream.readObject、依赖有 commons-collections/beanutils、题目给了 jar 或 pom.xml 能看版本_
+- 🔴 [方法卡 · PHP 过滤器链（php://filter 读源码 / convert.iconv 造码）](_methods/php_filter_chain.md) — _参数形如 file=index.php 且能读回 PHP 源码、请求里出现 php://filter/convert.base64-encode、include 接收 GET 参数且无固定前缀、读 /flag 时只回显 base64 或空白页_
 - 🔴 [春秋云境MagicRelay WP](_des/cards/web/春秋云境MagicRelay_WP.full.md) — _春秋云境靶场 2022、Redis DLL劫持、向日葵RCE、SweetPotato提权_
 - 🔴 [春秋云镜——Unauthorized WriteUp](_des/cards/web/春秋云镜——Unauthorized_WriteUp.full.md) — _春秋云镜靶场 2022、Docker未授权、SSH公钥注入、MySQL未授权_
 - 🔴 [春节领红包 9 Web 中级题 wasm 逆向](_des/cards/web/春节解题领红包之九_{Web_中级题}_题解_–_wasm逆向.full.md) — _春节领红包 2026、WASM、HMAC-SHA1、custom-Base64_
@@ -1778,7 +1843,7 @@
 - ⚪ [沙箱逃逸之google ctf 2019 Monochromatic writeup](_des/cards/web/沙箱逃逸之google_ctf_2019_Monochromatic_writeup.full.md) — _Google CTF 2019 2019、Chromium Mojo IPC、Person/Dog/Cat Interface、BeingCreatorInterface_
 
 <a id="forensics"></a>
-## 取证 Forensics (62)
+## 取证 Forensics (69)
 
 - 🟢 [Linux 日志取证（syslog / SSH / undo 文件）](forensics/linux-log-forensics.md) — _附件是 var log 目录、题目问谁 ssh 登录了、需要还原 vim 编辑内容、需要看 cron 任务_
 - 🟢 [UCTC CTF 2024 高校新生网安赛 部分 WriteUp](_des/cards/forensics/UCTC_CTF_2024高校新生网安赛_部分WriteUp.full.md) — _UCTC CTF 2024 高校新生网安赛 2024、UCTC、新生赛、zip-reverse_
@@ -1790,6 +1855,7 @@
 - 🟢 [元数据取证（EXIF / XMP / 文档属性溯源）](forensics/exif-metadata.md) — _需要知道照片拍摄地点、需要判断照片是否被编辑、需要找设备型号、元数据里有 GPS_
 - 🟢 [内存取证命令速查](_des/tools/forensics/内存取证秒杀所有命令.md) — _内存取证命令速查、sqlite、Volatility 2 Windows 插件速查表、Volatility 2 Windows 常用操作流程_
 - 🟢 [文件雕刻与恢复（foremost / binwalk / photorec）](forensics/file-carving.md) — _磁盘镜像里有已删除文件、内存 dump 里有 zip 片段、需要按文件类型批量恢复、分区表损坏_
+- 🟢 [方法卡 · EXIF/文档元数据取证](_methods/exif-metadata.md) — _题面问照片在哪拍的、什么时候拍的、需要判断图片是否被编辑过（Software 字段）、附件是 docx/pdf，要问作者是谁、用什么软件做的、题面提示 metadata、look at the details_
 - 🟢 [暗魂CTF平台-工控-协议分析-writeup](_des/cards/forensics/暗魂CTF平台-工控-协议分析-writeup.full.md) — _暗魂CTF 2024、工控CTF、Modbus协议、S7comm协议_
 - 🟢 [流量分析之常见协议解题技巧](_des/cards/forensics/流量分析之常见协议解题技巧.full.md) — _流量分析专题 2022、Wireshark、USB HID、tshark_
 - 🟢 [流量分析基础（Wireshark 追踪流 / 导出对象 / TCP 重组）](forensics/pcap-basics.md) — _附件是 pcap、需要还原上传的文件、需要找管理员密码、流量包很大_
@@ -1819,6 +1885,9 @@
 - 🟡 [加密流量解密（SSLKEYLOGFILE / HTTPS 分析）](forensics/encrypted-pcap.md) — _流量全是 tls 加密、题目说分析 https 流量、wireshark 显示 cannot decrypt、给了 keys.log_
 - 🟡 [基于volatility2构建新版本内核profile指南](_des/cards/forensics/如何基于volatility2构建“新”版本内核的profile.full.md) — _内存取证通用指南 2022、volatility2、内存取证、Linux_profile_
 - 🟡 [数据库取证（SQLite freelist/WAL 恢复删除记录）](forensics/sqlite-forensics.md) — _附件是一个 sqlite3 文件或者没有扩展名的数据库、打开发现表里数据明显变少、同目录下还有 -wal 或 -journal 后缀的文件、题目问被删除的记录内容是什么_
+- 🟡 [方法卡 · PNG/BMP 隐写与 LSB 分析](_methods/steg-png-bmp.md) — _图片能正常打开，但 binwalk 显示 IEND 之后还有数据、grep -abo 'IEND' img.png 的偏移小于文件大小、strings 出 tEXt/zTXt 自定义关键字或一段可疑 base64、文件头是 BM 而题目提示是 PNG，或反之_
+- 🟡 [方法卡 · 流量包协议还原（HTTP/DNS/自定义）](_methods/traffic-pcap.md) — _附件是 .pcap/.pcapng，题面问访问了哪个地址、传了什么、文件头为 D4 C3 B2 A1 或 0A 0D 0D 0A、正常流量的 follow stream 末尾有异常字符串、DNS 查询名长得很像 base64 或十六进制_
+- 🟡 [方法卡 · 磁盘镜像文件雕刻与恢复](_methods/file-carving.md) — _题目给磁盘镜像或内存 dump，说有一个文件被删了、fls 列不出目标文件，但 strings 能看到 PK、%PDF、文件系统损坏 mount 失败，只能按字节处理、binwalk -e 只分离出一部分，需要按签名扫全盘_
 - 🟡 [日志时间线重建（plaso / timesketch / 多源时间归一）](forensics/timeline-reconstruction.md) — _题目要求还原某个时间点到底发生了什么、给了多个来源的日志需要合并成一份时间线、日志时间戳有 utc 和本地时间混用、附件里有 evtx 和 json 和 csv 多种格式_
 - 🟡 [浏览器取证（Chrome/Edge History、Cookies、下载与扩展）](forensics/browser-artifacts.md) — _给了用户的 Chrome 或 Edge 用户配置目录、附件里有 History Web Data Cookies 这些没有扩展名的文件、题目问用户最后访问的网站或者下载了什么、要求还原被删除的浏览记录_
 - 🟡 [磁盘镜像取证（sleuthkit / autopsy / 分区恢复）](forensics/disk-forensics.md) — _附件是 img 或 dd 镜像、存在多个分区、镜像里有被删除文件、需要从镜像里提取 flag_
@@ -1842,9 +1911,12 @@
 - 🔴 [流量中的隐写（ICMP/DNS 隧道与隐蔽信道）](forensics/steganography-in-pcap.md) — _大量 icmp 包 payload 很长、dns 查询域名特别长、一个域名下大量子域、定时定量的心跳包_
 - 🔴 [软件系统安全赛-traffic_hunt](_des/cards/forensics/软件系统安全赛-traffic_hunt.full.md) — _软件系统安全赛 2026、Behinder-webshell、AES-ECB-MD5、pcap-analysis_
 - 🔴 [高级协议分析（HTTP/2 与 QUIC 解密）](forensics/http2-and-quic.md) — _流量里有 h2 或 h3 协议、wireshark 显示 encrypted alert、需要解密 TLS1.3、给了 sslkeylog 文件_
+- ⚪ [Bad Policies：从组策略首选项里找到正确字段](_writeups/forensics/bad-policies.md) — _Groups.xml、cpassword_
+- ⚪ [FireFox Forensics：两份文件怎样配对](_writeups/forensics/firefox-forensics.md) — _key4.db、logins.json、password-check_
+- ⚪ [USB Hacker：先认抓包头，再还原键盘输入](_writeups/forensics/usb-hacker.md) — _链路类型 220、usbmon、端点 0x81_
 
 <a id="mobile"></a>
-## 移动端 Mobile (14)
+## 移动端 Mobile (15)
 
 - 🟢 [APK 静态分析（apktool / jadx 全流程）](mobile/apk-static-analysis.md) — _附件是 .apk、需要看清 AndroidManifest 与权限、需要读 Java/Kotlin 逻辑、smali 里有核心判断_
 - 🟢 [移动端 CTF 检查清单（Android / iOS 通用流程）](mobile/mobile-ctf-checklist.md) — _拿到一个 apk/ipa 不知从哪下手、时间紧需要固定套路、静态分析卡住、需要判断要不要脱壳/抓包/动态调试_
@@ -1860,19 +1932,24 @@
 - 🔴 [Android 加固脱壳（FART / frida-dexdump / FRIDA-DEXDump 全量导出）](mobile/android-unpacking-fart.md) — _apk 里 classes.dex 只有几百 KB 但程序功能很多、用 jadx 打开只能看到壳代码和一堆 Application 子类、题目说 APK 经过某加固厂商处理、运行时会释放真正的 dex_
 - 🔴 [Android 反调试高级（ptrace、/proc 检测、反 Frida）](mobile/android-antidebug-advanced.md) — _附加调试器后应用直接退出或者黑屏、程序在启动时读取 /proc/self/status、so 里有 ptrace 调用和 PTRACE_TRACEME、检测到了 frida 的线程名或者 27042 端口_
 - 🔴 [iOS 进阶（Mach-O、dyld 注入、LLDB 调试与砸壳）](mobile/ios-macho-dyld-lldb.md) — _附件是一个 Mach-O 二进制或者 IPA、题目说这是砸壳后的 ipa 可以直接反编译、需要注入 dylib 绕过某个校验、应用是 Swift 写的符号表被 strip 了_
+- 🔴 [方法卡 · APK 静态排查与加固识别](_methods/android-apk.md) — _APK 内有 classes.dex 和 AndroidManifest.xml、反编译只看到几行代码，逻辑明显不在 dex 里、lib 目录下有 libjiagu、libshella 之类的 so、manifest 的 debuggable 或 exported 为 true_
 
 <a id="blockchain"></a>
-## 区块链 Blockchain (6)
+## 区块链 Blockchain (10)
 
 - 🟢 [Solidity 整数溢出 / 下溢（SWC-101）](blockchain/solidity-integer-overflow.md) — _solidity 0.7 及以下、SafeMath、uint256 减法、余额减到负数_
 - 🟡 [EVM 存储槽位读取（private 变量 / 任意写）](blockchain/evm-storage-slot.md) — _private 变量、存储在 slot、isSolved 读 storage、数组和 mapping_
 - 🟡 [Solana CTF 常见点（signer 校验缺失 / PDA / owner 校验）](blockchain/solana-ctf.md) — _solana、anchor、sbf、账户没有 is_signer_
 - 🟡 [Solidity 权限与初始化漏洞（SWC-105/106/108/118）](blockchain/solidity-access-control.md) — _构造函数没有权限、onlyOwner 未加、初始化函数 initializer、initialize 可重复调用_
 - 🟡 [Solidity 重入攻击（Reentrancy / SWC-107）](blockchain/solidity-reentrancy.md) — _合约有 withdraw、先转账后扣余额、call.value、fallback 函数_
+- 🟡 [方法卡 · 链上数据解码（合约 storage/calldata 里的 base64）](_methods/onchain_base64_decode.md) — _链上合约、storage 槽位是长 hex、交易 calldata 很长、地址里带数据_
 - 🟡 [智能合约常见 CVE 与 SWC 缺陷汇总](blockchain/solidity-cve-collection.md) — _swc 编号、漏洞分类、审计题、需要判断漏洞类型_
+- 🔴 [方法卡 · EVM storage 槽位读取与还原](_methods/evm-storage-slot.md) — _题目说 flag 藏在合约的 private 变量里、isSolved() 直接比较某个 storage 变量、read_slot 或 assembly sstore 可任意写、变量顺序和打包影响 slot 编号，需要手算布局_
+- 🔴 [方法卡 · Solana 程序账户校验体检](_methods/solana-ctf.md) — _Solana 入口接收 AccountInfo 数组、只比较 admin.key，未查 is_signer、Anchor 使用 UncheckedAccount 或 CHECK 注释、transfer/assign 前没查账户 owner_
+- 🔴 [方法卡 · Solidity 重入与整数溢出](_methods/solidity-reentrancy.md) — _withdraw 外部 call 在扣余额之前、题面说合约里有 10 ETH、你只有 1 ETH，要掏空、判定目标为合约余额清零或玩家余额激增、合约用 call 而不是 transfer/send 转账_
 
 <a id="hardware"></a>
-## 硬件 Hardware (14)
+## 硬件 Hardware (15)
 
 - 🟡 [CAN 总线攻击（车载/工控报文分析）](hardware/can-bus.md) — _附件是 can 报文日志、题目提到车载或工控总线、需要还原 can 帧里的数据、有大量 id 相同的帧_
 - 🟡 [SPI Flash / EEPROM 读写与固件提取（CH341A + flashrom）](hardware/spi-flash-eeprom.md) — _板子上有一颗 8 脚的小芯片型号是 W25Q 或者 MX25L、题目说固件在 flash 里需要读出来、附件是 .bin 但是开头是 ff ff ff 或者一大片 00、要求提取路由器或摄像头的固件镜像_
@@ -1885,12 +1962,13 @@
 - 🔴 [RFID / NFC / 蓝牙 BLE 抓包与攻击](hardware/rf-iot.md) — _题目给出门禁卡数据、需要解密 mifare classic、需要嗅探 ble 通信、附件是 nfc dump 文件_
 - 🔴 [侧信道分析（时序 / 功耗 / 缓存）](hardware/side-channel.md) — _题目提供多次运行的时间、需要比较密码比较耗时、需要从功耗曲线猜密钥、题面提到 side channel_
 - 🔴 [故障注入（电压毛刺 glitch、时钟毛刺与绕过比对）](hardware/fault-injection-glitch.md) — _题目要求通过让芯片在特定时刻出错来跳过校验、板子上有一颗 LGT8F 或 STM32 且需要解出密钥、提示提到 glitch 或 fault 或 crowbar、附件是 chipwhisperer 的 notebook_
+- 🔴 [方法卡 · UART/JTAG 波形与引脚排查](_methods/hardware-uart.md) — _板子上有 4 个并排的过孔/排针，疑似 VCC GND TX RX、逻辑分析仪抓到一条空闲为高的单线波形、有 .sr 或 .sal 采集文件需要还原串口输出、题目要求从 MCU 里 dump 固件或读出 flag 变量_
 - 🔴 [无线电进阶（SDR、ASK/FSK 解码、sigidwiki 识别）](hardware/sdr-signal-decoding.md) — _附件是一个 iq 采样文件或者 wav 里录了射频声音、题目给的频率是 433.92MHz 或者 315MHz、需要在频谱图里找出一段周期性突发信号、提示说这是 ask 或者 ook 调制_
 - 🔴 [硬件 CTF 综合题解思路（从板子到 flag 的全链路）](hardware/hardware-ctf-methodology.md) — _题目给了一块板子的照片或者实物、附件是一个固件或者一串串口日志、题目没有任何提示只有一句请拿到 flag、需要从板上找出测试点然后接到串口_
 - 🔴 [芯片安全（安全启动链、TrustZone 攻击面与密钥提取）](hardware/secure-boot-trustzone.md) — _题目说设备有安全启动需要绕过、芯片是 ARM TrustZone 架构分正常世界和安全世界、要求从 TEE 里提取密钥或者通信凭证、固件带签名校验且签名被硬编码在 rom 里_
 
 <a id="osint"></a>
-## 情报 OSINT (12)
+## 情报 OSINT (13)
 
 - 🟢 [OSINT 完整检查清单（从零到证据链）](osint/osint-checklist.md) — _题目只给一个目标名、不知道从哪开始查、需要写调查报告、已经查到一些信息需要补全_
 - 🟢 [OSINT 工具集与语法（Google Dork）](osint/osint-toolsets.md) — _题目只给一个关键词、需要找特定文件、需要找某个站点的备份文件、需要搜特定格式的文档_
@@ -1903,10 +1981,11 @@
 - 🟡 [泄漏数据检索（合法 CTF 语境下的数据聚合与验证）](osint/leaked-data-search.md) — _题目要求判断某个邮箱是否出现在公开泄漏事件里、附件里有一份包含用户名和邮箱的 csv 转储、题目问某个密码是否曾泄漏过、给了哈希值要求反查对应的明文_
 - 🟡 [社媒溯源（账号关联 / 用户名枚举 / 图片反查）](osint/osint-social-media.md) — _题目给了一个用户名、需要找到同一个人的其他账号、需要找作者主页、需要还原发布历史_
 - 🔴 [图像地理定位进阶（卫星图比对、街景与超分辨率线索）](osint/geolocation-advanced.md) — _给了一张航拍图或者卫星截图要求定位、图片来自某个地图软件的截图有明显缩放按钮、需要根据阴影方向推断太阳方位和时间、图里有铁路道口或者特殊路牌_
+- 🔴 [方法卡 · OSINT 图片溯源与泄露数据检索](_methods/osint-github.md) — _题目给一张照片且要求找出拍摄地/账号/原始出处、图片被裁剪、镜像或加过滤，肉眼比对失效、附件里出现 32/40 位十六进制串，怀疑是口令哈希、用户名/邮箱/域名需要在公开仓库与泄露库中交叉定位_
 - 🔴 [时间线交叉验证（多源信息配置与矛盾检测）](osint/timeline-crosscheck.md) — _题目给出了多张照片和几段对话要求判断先后、需要还原某个人在某个时间段的行踪、信息之间有时间冲突需要判断哪条是伪造的、题目给了时区不同地区的截图_
 
 <a id="ai"></a>
-## AI 安全 (12)
+## AI 安全 (13)
 
 - 🟢 [AI CTF 检查清单（大模型题型通用流程）](ai/ai-ctf-checklist.md) — _题目属于 ai 类别不知道从哪下手、给了一个模型或聊天接口、需要构造 prompt 而不是代码、时间不够要按套路走_
 - 🟡 [AI 编码题打法（模型辅助逆向与找 bug 的实战流程）](ai/ai-coding-reverse.md) — _题目给了大量混淆后的代码要求快速读懂、题目要求在有限时间内找到二进制里的漏洞点、附件是一个巨大的二进制或者源码树、提示说可以用 AI 辅助分析_
@@ -1919,6 +1998,7 @@
 - 🔴 [后门攻击与投毒（Backdoor / Trojan / 触发词）](ai/backdoor-and-poisoning.md) — _题目给了一个已经训练好的模型需要找出隐藏后门、模型在正常输入上表现正常但特定输入会输出错误标签、训练数据里有一小部分被污染需要找出来、需要构造一个触发词让模型输出指定结果_
 - 🔴 [多模态攻击（图片/语音提示注入与跨模态越狱）](ai/multimodal-injection.md) — _题目要求把提示词隐藏进图片里、给了一个视觉语言模型要求让它说出指定内容、图片里用白字白底或者极低对比度藏了文字、题目提供了语音文件要求让语音助手执行指令_
 - 🔴 [对抗样本基础（FGSM / PGD / 迁移攻击）](ai/adversarial-example.md) — _题目给了一个图像分类模型、需要让模型判错、需要加不可见扰动、需要提取特征或权重_
+- 🔴 [方法卡 · 模型抽取与成员推断实验](_methods/ai-ml-extraction.md) — _题目给了一个只能返回概率或标签的黑盒模型、要求判断某条样本是否在训练集里、需要还原决策边界或恢复模型参数、输入里夹带"忽略之前指令"这类话术_
 - 🔴 [模型窃取与成员推理（Model Extraction / Membership Inference）](ai/model-extraction-membership.md) — _题目给了一个只返回预测结果的模型接口、要求还原模型的参数或者结构、问某个样本是否在训练集里、给了预测接口和一批候选样本要求判断训练集成员_
 
 ## 识别信号速查
@@ -2062,6 +2142,7 @@
 - **one_gadget** → ImaginaryCTF 2025 Pwn by Mini-Venom、SECCON 2022 Writeup、【WP】第一届"长城杯"网络安全大赛线上赛、使用docker调试和部署pwn题
 - **race-condition** → DataCon24漏洞赛道冠军分享：vuln_wp——大模型赋能的漏洞自动化分析全解析、RCTF 2024 Writeup - Polaris 战队、RCTF 2025 WP - XMCVE-Polaris 战队第 16 名、Race Condition, OAuth without state and redirection into XSS & RCE via HTML2PDF - PhantomFeed HTB University 2023
 - **seccomp** → 2024 KCTF 大赛 - 第八题《星门》设计思路及解析、2025 黄鹤杯 PWN Virtual_Vehicle（VM 逆向+VM PWN+seccomp）、PWN - 西湖论剑 2022 中国杭州网络安全技能大赛初赛官方 Write Up、PWN 赛题解析
+- **反序列化** → PHP unserialize：恢复值与对象行为（reference）、Python pickle 反序列化 & pyjail 逃逸、Python pickle 反序列化浅析、从TCTF的3rm1学习java动态代理
 - **看雪2022 KCTF秋季赛 2022** → 看雪2022 KCTF 秋季赛 | 第七题设计思路及解析、看雪2022 KCTF 秋季赛 | 第九题设计思路及解析、看雪2022 KCTF 秋季赛 | 第二题设计思路及解析、看雪2022 KCTF 秋季赛 | 第五题设计思路及解析
 - **网鼎杯 2024** → 2024 网鼎杯 半决赛 & 决赛、2024 网鼎杯 朱雀 & 玄武、web选手入门pwn(20) 网鼎杯PWN01、web选手入门pwn(22) 网鼎杯PWN02 vfork
 - **ACTF** → 2023 ACTF writeup by Arr3stY0u、ACTF 2025 writeup by Mini-Venom、ACTF 2026 WriteUp By F1ux、ACTF WriteUp
@@ -2082,7 +2163,6 @@
 - **eval** → 2022 强国杯东部初赛 CTF WriteUp、ASIS CTF Quals 2022 WP (狼组版)、ISCTF 2025 部分 Web 题、L3akCTF 2024 Writeup (Puppeteer bot + PHP eval + JWT kid + SQL 注入)
 - **glibc-2.35** → DEFCON Quals 2023 Writeup と CTF のリハビリ、STACK the Flags CTF 2022 - cursed_grimoires、ciscn 国赛华东南分区赛 PWN 方向 WriteUp 分享、justCTF 2023 Writeup by VP-Union
 - **rsa** → CTF连分数实战详解、Coppersmith's Attack、Firebird Internal CTF 2023 Writeup、GDG Algiers CTF两道矩阵题wp
-- **反序列化** → PHP unserialize：恢复值与对象行为（reference）、Python pickle 反序列化 & pyjail 逃逸、Python pickle 反序列化浅析、从TCTF的3rm1学习java动态代理
 - **强网拟态 2024** → 2024 强网拟态 CFB_chall、2024 强网拟态 Nepnep WP、强网拟态 2024 / Find way to read video、强网拟态 2024 / OnlineRunner
 - **强网杯 2025** → 2025 强网杯 ezran - MT19937 状态恢复攻击、2025 强网杯 write up By Ginkgo、强网杯 2025 / Blurred、强网杯 2025 / SecretVault
 - **看雪2023 KCTF年度赛 2023** → 看雪2023 KCTF年度赛 | 第7题·智能联盟计划-设计思路及解析、看雪2023 KCTF年度赛 | 第8题·AI核心地带-设计思路及解析、看雪2023 KCTF年度赛 | 第9题·突破防线-设计思路及解析、看雪2023 KCTF年度赛 | 第三题设计思路及解析
@@ -2124,4 +2204,4 @@
 - **ECDSA** → 2023 N1CTF、N1CTF 2023 Writeup by Never Stop Exploiting (HHD ECDSA lattice + messages 块矩阵 LLL)、PARADIGM CTF 2022 题目分析 (3) - Lockbox2 (5 stage calls + ECDSA)、PARADIGM CTF 2022 题目分析 (5) - Vanity (ECDSA 签名 + 16 字节 0x00)
 - **Frida hook** → CTF 自毁程序密码 Android 逆向、N1CTF 2024 ezapk 解题思路 (Android + JNI Frida hook)、吾爱破解 2026 春节所有题 WP、看雪2022 KCTF 春季赛 | 第八题设计思路及解析
 - **LSB** → 2026 数字中国创新大赛初赛 wp 之图片隐写一（LSB 多通道爆破）、Y 老师的密码学 · 第一篇 (狼组)、【WP】第七届"湖湘杯" leaker 设计思路与解析、图片隐写
-- **Quals** → ASIS CTF Quals 2022、ASIS CTF Quals 2022 WP (狼组版)、DEFCON Quals 2023 Writeup と CTF のリハビリ、DEFCON33-Quals nfuncs angr、unicorn 快速自动化逆向
+- **Nginx** → PHP 代码审计、PHP 代碼審計、Payload 速查表、Writeup

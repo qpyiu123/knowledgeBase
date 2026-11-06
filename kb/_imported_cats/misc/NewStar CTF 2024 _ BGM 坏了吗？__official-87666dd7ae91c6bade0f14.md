@@ -84,3 +84,15 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 按键音（即DTMF）解密网站：[DTMF Decoder](https://dtmf.netlify.app/)
 
 包上 `flag{}` 即可
+
+## 原文配图
+
+![audacity 1](../../_assets/images/f769a396054763aa54b89a9cbbee471adafaf2952e95bb0710bd9dd0ee803c66.png)
+
+![audacity 2](../../_assets/images/7d26b62e5b84ea2cec14c81f3891fca071025817f8ad7c392433c82dda332575.png)
+
+![audacity 3](../../_assets/images/4e61c10b18ab4876c9c4125d4a90131ebc616423fe320a6bb02409deecaa7971.png)
+
+![audacity 4](../../_assets/images/06aca5ae2cc3a1f7cf895dda9340275bbfa113430808c3665cdbb4943b15720e.png)
+
+![dtmf](../../_assets/images/9723c2e2d690e31a655a0be1e7fcf3d26bc9177a30a8dfa6bb63163896639afb.png)

@@ -84,3 +84,7 @@ win_server ./ret2dll.exe 8080
 exp如下
 
 效果如下
+
+## 原文配图
+
+![ret2dll-1.png](../../_assets/images/530e354703fe6b5e309d387ca503d84bddaa771909afd830cb89ecfab53566fb.png)

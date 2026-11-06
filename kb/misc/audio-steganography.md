@@ -37,7 +37,7 @@ updated: 2026-10-22
 ## 三、操作步骤
 
 1. **先看频谱**：Audacity → 切 `频谱图` 视图，`Window size` 设 4096，`Gain` 提高，扫一遍全频段（特别注意 0~100 Hz 和 15 kHz 以上）。
-2. **听波形**：找等距脉冲 → 摩斯；找两个持续音交替 → DTMF。
+2. **看声音特征**：一种鸣声按长短和停顿分档，先查摩斯；一组低频和一组高频同时出现，查 DTMF（电话按键双音）。两个单音交替则先看是否用频率切换表示比特。
 3. **声道分离**：左/右单独导出，再按"相加成单声道就没声"的线索做相减。
 4. **LSB 提取**：`stegolsb wavsteg -r`，注意跳过 WAV 头。
 5. **检查文件头**：`ffprobe` 的时长与文件大小是否匹配（48kHz 16bit 单声道 2 秒约 192KB）。
@@ -83,36 +83,9 @@ sox target.wav -n stat 2>&1 | grep -i 'maximum amplitude'
 minimodem --rx 1200 -f target.wav            # 若是 1200bps 调制解调
 ```
 
-```python
-#!/usr/bin/env python3
-# morse_decode.py —— 按能量阈值把 WAV 转成 0/1，再按停顿时长切分到 . - /
-import numpy as np
-from scipy.io import wavfile
-sr, x = wavfile.read('target.wav')
-x = x.astype(float)
-if x.ndim > 1:
-    x = x[:, 0]
-env = np.abs(x)
-thr = env.max() * 0.2
-on = env > thr
-runs, cur, val = [], 1, bool(on[0])
-for b in on[1:]:
-    b = bool(b)
-    if b == val:
-        cur += 1
-    else:
-        runs.append((val, cur)); val, cur = b, 1
-runs.append((val, cur))
-unit = min(c for v, c in runs if v) if any(v for v, c in runs) else 1
-out = []
-for v, c in runs:
-    n = max(1, round(c / unit))
-    if v:
-        out.append('.' if n == 1 else '-' if n >= 3 else '.')
-    else:
-        out.append('' if n == 1 else '/' if n >= 3 else ' ')
-print(''.join(out)[:2000])
-```
+8 位 WAV 是无符号采样，先减 128；其他常见的有符号 PCM 以 0 为中心。取短窗口的均方根能量来分有声和无声，不要把每个采样的过零点当成停顿。Beep Boop Robot 可用 5 毫秒窗口；再从有声和停顿的实际时长分布区分点、划、字符间隔和词间隔。
+
+复做示例：`kb/_code/r66/misc_samples.py`（子命令 `beep-boop-robot 原音频.wav`）。换音频时先看分布，再定阈值。
 
 ### WAV LSB 与双声道
 

@@ -90,3 +90,9 @@ IV 来自 `ptr` 和 `v12` 变量：
 在加密过程中，IV 被写入文件开头。
 
 知道 `key` 和 IV 后，编写脚本运行即可还原 FLAG。
+
+## 原文配图
+
+![恶意程序与加密文件](../../_assets/images/18bd232d08b2edf65e2e7d32d0b7fed6fdb115b52e37439afc696c3a78907a3b.png)
+
+![mikumikud 反编译分析](../../_assets/images/a06a7340b0eca46b957b738bc453079943365c3b27d6909e190c8c1aaefafe4e.png)

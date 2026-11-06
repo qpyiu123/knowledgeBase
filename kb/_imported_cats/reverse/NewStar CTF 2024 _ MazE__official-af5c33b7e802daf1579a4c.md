@@ -108,3 +108,13 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 :::
 
 最终随便找一个在线网站或者使用 Python 都可以得到 MD5 了，最后的flag：`flag{4ed5a17ee7aeb95fcf12a3b96a9d4e6f}`.
+
+## 原文配图
+
+![main](../../_assets/images/0a9ebe89a297afb2a8864606f2d78361628580296f9ba2571bbd49633a3c19ee.png)
+
+![get_location](../../_assets/images/9a3282be661aa83e63b57ddb5af733b3694c5f29573270700986c7e473de93d5.png)
+
+![tobinary](../../_assets/images/5d768125916a59b0a24a1bfb506b40737e8294c21ee20e94a77107d4a0684382.png)
+
+![decrypt](../../_assets/images/f0e3d80a02df882eb0f91ab997111543141393a493d8253e5e71cbcb6d582547.png)

@@ -80,3 +80,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 点击 `secret.png` 这个数据包。
 
 左下角找到 File Data 这个字段，右键，点击导出分组字节流，然后文件保存为 PNG，就可以打开图片了。
+
+## 原文配图
+
+![导出图片](../../_assets/images/b5a89483db1b38898d48504f43933eb6df0e24bb48cfaccbf90462d5d5c5c768.png)
+
+![flag](../../_assets/images/fc3d8054780dc0930ae85e585d79535ff7ea239362805d02dbc7dec055606efa.png)

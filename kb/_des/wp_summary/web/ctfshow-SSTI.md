@@ -127,7 +127,7 @@ payload：`?name={{(lipsum|attr(request.cookies.x1)).os.popen(request.cookies.x2
 
 
 
-![image-20210926173008139](https://raw.githubusercontent.com/yq1ng/blog/master/CTFShow/20210926173008.png)
+![image-20210926173008139](../../../_assets/images/329cfee6ecd39bafdb808934bf2533451fe79e706e8eb52fe0ac6485bba7ec15.png)
 
 **image-20210926173008139**
 
@@ -137,7 +137,7 @@ payload：`?name={{(lipsum|attr(request.cookies.x1)).os.popen(request.cookies.x2
 
 # web368
 
-这次将 `{{}}` 过滤了，问题不大 ![image-20210926174200822](https://raw.githubusercontent.com/yq1ng/blog/master/CTFShow/20210926174200.png) 使用 `{%%}` 绕过，jinjia2 分隔符： - `{% ... %}` 表示声明 - `{{ ... }}` 表达式打印到模版输出
+这次将 `{{}}` 过滤了，问题不大 ![image-20210926174200822](../../../_assets/images/c463f7b359f89a5e07dc1f8c31ba53a56cca0d141111bf1ea3adcd65de65ed1a.png) 使用 `{%%}` 绕过，jinjia2 分隔符： - `{% ... %}` 表示声明 - `{{ ... }}` 表达式打印到模版输出
 
 - `{# ... #}` 对于未包含在模板输出中的注释
 - `# ... ##` 行语句

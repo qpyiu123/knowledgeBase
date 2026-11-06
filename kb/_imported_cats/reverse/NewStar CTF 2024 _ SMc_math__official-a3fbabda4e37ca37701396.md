@@ -86,3 +86,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 之后在函数头处按下 <kbd>U</kbd> 和 <kbd>P</kbd> 键，再按下 <kbd>F5</kbd> 即可得到正确的加密函数。
 
 可以看到是七元一次方程组，当然可以使用在线网站解方程，但是这里更推荐使用 z3 来进行解决。
+
+## 原文配图
+
+![动调下断点](../../_assets/images/aa03cce5e53514f9454a9a8180e0355eeca68de6c5855c79cdb01f5e089728fa.png)
+
+![加密函数](../../_assets/images/64e86fc23632a017d29f98b776cb54d03baa4dae88a7dd7458edabe1e3a9c801.png)

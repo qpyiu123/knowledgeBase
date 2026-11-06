@@ -102,3 +102,11 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 最后用p指令修改got表的rand函数为system，参数就是当前的指令位置写入sh
 
 getshell
+
+## 原文配图
+
+![Go 程序主逻辑](../../_assets/images/850ab9597b2f8dd076e6264a4c8785086d4250a0ad39bb12d428398d2dab848b.png)
+
+![Go 结构体字段分析](../../_assets/images/f7a1f322f6063445a8eb6b41fff01461daf9f887232aa2653959e7e6416bc10e.png)
+
+![调试得到关键数据](../../_assets/images/cffb4a27155ab0fa74449523c2d4d72d2f827eebf5968d8f67571aa9cedca720.png)

@@ -191,3 +191,17 @@ NTLM Hash 在 Hashcat 中对应的 mode 为 `1000`。
 - <Link icon="external" theme="underline hover" href="https://github.com/Tokeii0/LovelyMem">LovelyMem</Link>
 
 该作者的其他工具也可以按需探索。`LovelyMem` 的开源版本已经足够完成本题分析。
+
+## 原文配图
+
+![imageinfo 识别系统版本](../../_assets/images/0142ebf657a881063846a3a3614d41b383a0ea55f84c30029245c6228b60fd5e.png)
+
+![pslist 查看进程](../../_assets/images/b9f4f759d3bb5498471aea0a1d47ea7cd44b73d6e4275866055a0056be266367.png)
+
+![netscan 查看外联](../../_assets/images/beffd556fe61cee7529b2d241de8e1afde1e72b5eaf70d898b49cd6cc889f05f.png)
+
+![dumpfiles 提取文件](../../_assets/images/2989eb6cbdb06b74fc58b449cb94c6829accc9e4f0907d36b0a4437101ed79c4.png)
+
+![查询 Windows Hash 类型](../../_assets/images/88462c2ef25c21af4009cbfb9be73bd268efbd48a7ea931bfc440445b2fd1f8c.png)
+
+![Hashcat 破解 NTLM Hash](../../_assets/images/232c0f57cce8e4d4b6440ee82fce21dc4a32d654c3eb67b542086e2826b55cd0.png)

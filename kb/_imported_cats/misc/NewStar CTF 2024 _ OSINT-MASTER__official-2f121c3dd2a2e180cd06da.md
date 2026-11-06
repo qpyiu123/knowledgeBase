@@ -102,3 +102,17 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 经过搜索，邹城市属于济宁市，济宁市是地级市
 
 所以答案是 `flag{MU5156_济宁市}`
+
+## 原文配图
+
+![flightaware 搜索结果](../../_assets/images/fa639d0fe1f1fa2057a0b53a33350116c8219282b5d4d1076898ccf8acd36499.png)
+
+![历史航班](../../_assets/images/45781f39468d93509d6583e45564e3a79516d1f691b8e297987df14e03648a98.png)
+
+![航班号](../../_assets/images/fb349641cfd1a29e87918b8e5749d35d52887da738051e3b07e5585fd3d85573.png)
+
+![航班轨迹](../../_assets/images/e5888c4a6c25c219e431182ee8bd1a03f2c789702b00fdbbddc8e3793fd45645.png)
+
+![邹城市](../../_assets/images/cc9eb430c2851b578779d2291d439556911e29073f5127b378282567d48758f6.png)
+
+![济宁市](../../_assets/images/9709e62b0825a18af125c08f38d66de4fdae6b24382347a3339b994a1cade081.png)

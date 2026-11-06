@@ -108,3 +108,23 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 得到 Hash NTLM 后，使用 hashcat 进行爆破
 
 `Ns2025`
+
+## 原文配图
+
+![VMware 扫描虚拟机](../../_assets/images/9c42e8240ab3dede205d4c2c15373c97d3d301a3d68f78bb8548e1ffdb1a1e31.png)
+
+![启动复制的虚拟机](../../_assets/images/b7d45111e6dc1325b042cd3d2914a355c953905fc8f08fdd41cad229573ef9a9.png)
+
+![phpstudy 网站根目录](../../_assets/images/c26caec65a99b80787861bde61385b72f82a4313920348eb10c27ae5205dcd6e.png)
+
+![隐藏的 PHP 木马文件](../../_assets/images/513e85d7b15bf6ce5cad62baf90defcc3d4db858b93d79c7245c911732fc06b8.png)
+
+![冰蝎木马密钥校验](../../_assets/images/ccba0fa0f89f1ff6aea863a79fe1929eea1976f1e150c6cd965778b7a64c1d79.png)
+
+![创建账号工具文件](../../_assets/images/8f9fae3e6a88777ac87a46d7149832e88fb8cc5fcf976f56ddb8d2c97331aa6e.png)
+
+![GitHub Release 发布时间](../../_assets/images/27138001882fe7723d16267d958812138950815df4f862dc37bafc01af588b57.png)
+
+![Mimikatz 导出 SAM Hash](../../_assets/images/4b72868b9ac40a6ec11595a52c183bae57c2162ec9bd72a83c91627c5b2f64fb.png)
+
+![Hashcat 破解 NTLM Hash](../../_assets/images/bd5ccc67545efca0a8f29bc21b0ee3c3bd0fe32f7ba03e134d8fb1c6681ff85d.png)

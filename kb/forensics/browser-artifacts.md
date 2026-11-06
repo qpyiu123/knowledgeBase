@@ -37,6 +37,10 @@ exec_yaml: ok
 - **加密**：`v10` 表示 AES-256-GCM，密钥来自 `Local State` 的 `encrypted_key`（base64 后去掉 `DPAPI` 5 字节前缀，Windows 上再用 DPAPI 解包）；`v20` 是 Chrome 127+ 的 App-Bound 加密，密钥在浏览器进程内，离线几乎解不开。
 - **删除恢复**：SQLite 删除只是把页标记为自由页，`History` 的 freelist 里仍留有旧的 URL 文本；WAL 文件（`History-wal`）也常保留最近一次提交前的旧数据。
 
+### Firefox：登录记录和密钥是两份文件
+
+先在赛题配置目录配对 `logins.json` 和 `key4.db`。用数据库 `metaData` 里的 `password` 行验证主密码；成功后，解读登录字段 Base64 包装中的密钥编号，再匹配 `nssPrivate.a102`。读取字段各自声明的加密方式，不要把数据库的派生密钥直接拿来解登录字段。FireFox Forensics 的库内题解按这个顺序走了一遍。
+
 ## 三、操作步骤
 
 1. **清点用户配置**：列出 `User Data/*/`（Default、Profile 1…）与 `Snapshots`、`Extension State`。

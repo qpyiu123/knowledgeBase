@@ -96,3 +96,7 @@ import Container from '@/components/docs/Container.vue'
 也就是说，我们将会被删除的元素输入两次，即可绕过检测
 
 对于沙箱，洒洒水啦：openat + mmap + writev
+
+## 原文配图
+
+![运行程序](../../_assets/images/4716e8d0387a3055533bfceaa739ba74ba046d9eacf9ac2d13c5f6576417a15c.png)

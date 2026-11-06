@@ -66,3 +66,21 @@ updated: 2026-10-23
 〔原图省略〕
 
 flag 在根目录下的 `/flllllag` 文件，用通配符读取即可<span data-desc>（如 `/fl*`）</span>
+
+## 原文配图
+
+![首页源码](../../_assets/images/522eafae797635c25ea1306f9592c8d44220fec0c2e324dff73628e201046aed.png)
+
+![管理员账号密码](../../_assets/images/b20b93a3516b1caaf317bef06f63659b0230ed8703dd8a6ba4f40c99fe812d78.png)
+
+![admin.php](../../_assets/images/64b472eb2adb37e7ef3d713950812eba812750fa5a7f06501dcb9c2903d283f7.png)
+
+![插件列表](../../_assets/images/4cbc7f3eb18b93d806500273d855b4d2faa642457e8b169314ba7d57a3440f9a.png)
+
+![上传压缩包](../../_assets/images/e4eb54523dcafaf2b3a9e31c197e34f0bfe0d027fbe89a3614104ad09bd4fe3d.png)
+
+![发包](../../_assets/images/d59b725b3d20d07b2d87dbd3d2c53c977d2dd8ad61a3c4cf9f6d4a738f4b1ec9.png)
+
+![解压](../../_assets/images/e919b837a838c96fc7db7b866594dd061810a6836c5ce9d6eeba07ae227f38d7.png)
+
+![shell](../../_assets/images/5c3eab2cd64daf5b2a065fb6ffd65331a952468b75b326d3c4fe130b35b3da74.png)

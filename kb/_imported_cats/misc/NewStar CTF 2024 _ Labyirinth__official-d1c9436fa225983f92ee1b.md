@@ -90,3 +90,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 其中提到了 LSB，即**最低有效位隐写**
 
 使用 StegSolve 工具，查看 RGB 任一 0 通道得到二维码，扫描得到 flag
+
+## 原文配图
+
+![StegSolve 得到二维码](../../_assets/images/d90adad9811175c0f9afea637aae6be85dd6007cdd20d394c3b8673157f13d4c.png)

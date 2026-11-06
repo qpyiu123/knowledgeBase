@@ -113,3 +113,11 @@ updated: 2026-10-31
 成为牢师后，当然是要给牢生们上上强度啦。上传的Lab里会包含一个 `labname.rb` 文件，使用Ruby可以反弹Shell然后找找flag在哪里。当然，也可以重载一些函数来控制Lab的UI，从而不出网也可以带回Flag，例如：
 
 感谢诸位选手对开源安全工作的贡献。
+
+## 原文配图
+
+![image-20241020175008537](../../_assets/images/817f59114676ac7a8a90387adc0987852a6f2f35fd0f12480936d6a1f4a8f110.png)
+
+![image-20241020175111922](../../_assets/images/ff093476bf0da8c3ed0a12eb55b468c64a713e3704d621415e5f107e2324518d.png)
+
+![alt text](../../_assets/images/06ecc0c2796abc859c405a4b0d39552456c2d7e4349d5356f91cf5e0ef623792.png)

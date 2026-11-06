@@ -86,3 +86,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 我们在 `addPsoints` 中输入大于 1000 的数，`addPoints` 执行后再进行 `usePoints` 大于 1000 的数即可
 
 点击 `getFlag`，即可得到 FLAG
+
+## 原文配图
+
+![整数溢出调用链](../../_assets/images/bedc9812589dc54692d63a54b80319e7be30227d52fd7c7f08a5855bf569a039.png)

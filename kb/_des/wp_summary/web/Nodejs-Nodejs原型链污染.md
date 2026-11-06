@@ -144,13 +144,13 @@ undefined
 > a.__proto__.__proto__.__proto__
 ```
 
-![img](Nodejs原型链污染/Veur1v6GwiNs3bQ.png)
+![img](../../../_assets/images/d6a996a65346128c0531e11fded82d7399f0f20c55c15da1d21014df6cba2de3.png)
 
 由于对象之间存在继承关系，所以当我们要使用或者输出一个变量就会通过原型链向上搜索，当上层没有就会再向上上层搜索，直到指向 null，若此时还未找到就会返回 undefined
 
 图中的原型链是 `cat->Cat.protype->Object.prototype->null`
 
-![img](Nodejs原型链污染/SL3NypUdR5MlDAo.png)
+![img](../../../_assets/images/56c16620c3e9661f52fb9cf666fa4e82716a1583f5c69348cc9e69fc32c5e4e9.png)
 
 # NodeJs原型链污染
 
@@ -325,7 +325,7 @@ app.listen(80, '0.0.0.0', () => {
 
 可以使用正则可视化：
 
-![image-20220301191754136](Nodejs原型链污染/image-20220301191754136.png)
+![image-20220301191754136](../../../_assets/images/d7953968e9a7c057675939e2bbf03ea26623be327bd483cf5cee956fa4a296b5.png)
 
 允许Math.xxx或者一堆字符，或者科学计数法。
 

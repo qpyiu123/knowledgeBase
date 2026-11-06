@@ -367,7 +367,7 @@ a=%af%13%76%70%82%a0%a6%58%cb%3e%23%38%c4%c6%db%8b%60%2c%bb%90%68%a0%2d%e9%47%aa
 
 post可以得到flag
 
-![img](https://howahh.github.io/images/image-20210517155128728.png)
+![img](../../../_assets/images/08c418062261ae4793d53d6847038514acbda38c015e07e744832d17557a745b.png)
 
 看了一下hint，可以通过数组绕过，如果传入md5函数的参数为数组类型，则返回null，`null===null`，因此可以通过数组可以绕过 `===` md5判断
 
@@ -474,13 +474,13 @@ post:aaa=phpinfo();
 
 可以看到phpinfo界面，说明成功，接下来执行命令即可：
 
-![img](https://howahh.github.io/images/image-20210525161202774.png)
+![img](../../../_assets/images/e354e48a7770402aa19fdc499a757efb9c516c04d7f9d35a7a47310f4b1d361a.png)
 
 可以看到flag在flag36d.php中
 
-![image-20210525161305619](https://howahh.github.io/images/image-20210525161305619.png)
+![image-20210525161305619](../../../_assets/images/4cd352bb146397396c68287343704afcaccbfb2685bfffbf063f5cc2b9e34a29.png)
 
-![image-20210525161313634](https://howahh.github.io/images/image-20210525161313634.png)
+![image-20210525161313634](../../../_assets/images/9812469606d6ecabfc34a545ee0f872a62317d764276ac62a85c201e6adb0089.png)
 
 ### web100
 
@@ -610,7 +610,7 @@ else{
 
 和之前相似但不相同，v2是要写入的webshell，想通过将一句话木马转为16进制，再通过函数hex2bin转换回来写入文件上传，最后getshell，因为is_numeric可以识别16进制，但失败了，
 
-![img](https://howahh.github.io/images/image-20210525185107887.png)
+![img](../../../_assets/images/78b9b0c8c81d880ea569021835d56da99784a3b0a2ce6a7b4c83de71fae78140.png)
 
 应该是因为php7中的is_numeric不支持16进制的识别了，只能换别的方法
 
@@ -630,7 +630,7 @@ $c=bin2hex($b);      //这里直接用去掉=的base64
 
 最后访问1.php即可
 
-![img](https://howahh.github.io/images/image-20210525192643703.png)
+![img](../../../_assets/images/95b23eba8daf22730cbddcf5f2f7401a13e1be272fe3ed5724abe1588ba29942.png)
 
 ### web103
 
@@ -705,7 +705,7 @@ if(isset($_POST['v1']) && isset($_GET['v2'])){
 
 不是很懂想干啥，直接传v1和v2相同的值就输出了flag
 
-![img](https://howahh.github.io/images/image-20210525193901100.png)
+![img](../../../_assets/images/9e207400f258a3cc831114d529503629a11c11874677831baaf75f6d6914f198.png)
 
 ### web105
 
@@ -809,7 +809,7 @@ url/?v2[]=1
 post:v1[]=2
 ```
 
-![img](https://howahh.github.io/images/image-20210526220841213.png)
+![img](../../../_assets/images/7ce4d1c9b0e5d171abf830e15934ba407b82c7103b675117e5557543424cd772.png)
 
 ### web107
 
@@ -864,7 +864,7 @@ url/?v3[]=1
 post:v1=flag
 ```
 
-![img](https://howahh.github.io/images/image-20210526223058700.png)
+![img](../../../_assets/images/2b54062af165fcf1d8884eea62e05da3e2df382e240f9a833f140dc877eb536b.png)
 
 最开始是想的给v3随便传一个数比如1，v1传入其md5的值即v3=flag=a0b923820dcc509a也可以得到flag
 
@@ -950,9 +950,9 @@ Exception 处理用于在指定的错误发生时改变脚本的正常流程，�
 ReflectionClass 或者 ReflectionMethod 都为常用的反射类，可以理解为一个类的映射
 ```
 
-![img](https://howahh.github.io/images/image-20210527194742184.png)
+![img](../../../_assets/images/23bd6da6dd9806d80a6993a27d87ff5c669968338ca4decbb741899fbafa0dd7.png)
 
-![img](https://howahh.github.io/images/image-20210527194836031.png)
+![img](../../../_assets/images/17402dbd20d7e06113a05e92fc0737ee1299d017e83fe1ec1a074c9c9bc985f0.png)
 
 最后payload:
 
@@ -1013,7 +1013,7 @@ FilesystemIterator(getcwd())
 
 这样就可以看到当前目录下有什么文件
 
-![img](https://howahh.github.io/images/image-20210527201042842.png)
+![img](../../../_assets/images/879c49b3f70d5f51d43baab9c0d6c043cefad2d11d2ec5a911045c9a82c18505.png)
 
 再直接访问即可
 
@@ -1091,7 +1091,7 @@ payload:
 /?v1=ctfshow&v2=GLOBALS
 ```
 
-![img](https://howahh.github.io/images/image-20210527203916163.png)
+![img](../../../_assets/images/c75c8e788628cd6decb2bee0dad0c7fe078928a41b5bd1c06b0a77370fbd75e6.png)
 
 ### web112
 
@@ -1126,7 +1126,7 @@ if(! is_file($file)){
 
 看到过滤的想到文件包含，没有过滤filter，那就用这个，过滤了base64，那就不要base64就行了
 
-![img](https://howahh.github.io/images/image-20210114181853207.png)
+![img](../../../_assets/images/e85bd8502cfe4360f0ab5ee0c8245e3b70a0f5a2cfef620d4a3d986bb8773eb5.png)
 
 ```none
 //?file=php://filter/read/resource=flag.php
@@ -1137,7 +1137,7 @@ php://filter/read=convert.quoted-printable-encode/resource=flag.php
 compress.zlib://flag.php
 ```
 
-![img](https://howahh.github.io/images/image-20210527204609650.png)
+![img](../../../_assets/images/cb30fe0fb9696642d9eb5ae6b12e4d4e5fcbf49dbc459fa9fa1a8f7611c1cbbd.png)
 
 ### web113
 
@@ -1389,7 +1389,7 @@ $_SERVER['argc'] //传递给程序的命令行参数的个数。
 
 [博客](https://www.wlhhlc.top/posts/14827/#web115)wp中有做测试：
 
-![img](https://howahh.github.io/images/image-20210530183345448.png)
+![img](../../../_assets/images/e8dd6bc9986f9f51f7bc4ce60339665cc05e21e57384eb65d14f5a7bcc9313d8.png)
 
 可以看到$_SERVER[‘argv’]储存了get到的参数，所以通过这一点构造payload
 
@@ -1450,7 +1450,7 @@ if($ctf_show==='ilove36d'){
 
 这里的extract 函数从数组中将变量导入到当前的符号表。
 
-![img](https://howahh.github.io/images/image-20210530204342545.png)
+![img](../../../_assets/images/851997aa6b5fe8070f7483ba6e7b0fb7e531cc34888175c5b631d775b948e913.png)
 
 所以这里
 
@@ -1697,7 +1697,7 @@ resp=requests.post(url=url,data=data)
 print(resp.text)
 ```
 
-![img](https://howahh.github.io/images/image-20210531131705457.png)
+![img](../../../_assets/images/fb8b9b6fe20172a1182507ce9e8c0acf27a43fc67182c997dfaebde9374a87c9.png)
 
 得到flag
 
@@ -1705,9 +1705,9 @@ print(resp.text)
 
 点开后发现是个界面，要访问robots.txt
 
-![img](https://howahh.github.io/images/image-20210531133551148.png)
+![img](../../../_assets/images/961443617dca176ff651ec1840b32aad0d8bd6271bdf35d36a69785d21f7a055.png)
 
-![img](https://howahh.github.io/images/image-20210531133606470.png)
+![img](../../../_assets/images/4d06744683e1c1e774068f3de6f46bf988dccf655c35a0376bd76628fd099e6e.png)
 
 访问url/admin/ 就可以得到源码，`这里发现访问url/admin`，就不行，端口会没了，也不知道是为什么，访问后得到源码界面
 
@@ -1803,7 +1803,7 @@ curl 是常用的命令行工具，用来请求 Web 服务器，-F参数用来�
 
 简单来说就是通过curl让目标服务器向burp给出的服务器发送我们想要的东西，用burp来截获信息
 
-![img](https://howahh.github.io/images/image-20210531154407133.png)
+![img](../../../_assets/images/77b738b9329c022238c12ede7a7bf7b68c097e13cd3aeddd16f3c7396a7e1aae.png)
 
 ### web134
 
@@ -1922,7 +1922,7 @@ ls|tee 1.txt //命令输出到1.txt文件中
 
 将ls输入到a中，访问url/a，会让下载文件，下载，后得到
 
-![img](https://howahh.github.io/images/image-20210531173017907.png)
+![img](../../../_assets/images/d3b4478989eefb293f30a0c6112d15c8180202f27d50ec38178acf946bf837a3.png)
 
 再用同样的方法cat访问f149_15_h3r3即可
 
@@ -1932,7 +1932,7 @@ url/?c=cat /f149_15_h3r3| tee b
 
 访问b，下载打开即得到flag
 
-![img](https://howahh.github.io/images/image-20210531173356069.png)
+![img](../../../_assets/images/d79b6ad987143412d015aa07639578951665afe8d2376e863dc714ca7c75b02d.png)
 
 ### web137
 
@@ -2094,7 +2094,7 @@ cut命令 cut是分割的命令，-c 是以字符为单位 进行分割
 这里的意思是对ls出来的每一行字符串的每一个字符进行if判断，该字符盲注成功的话就会sleep两秒，这样就会触发except，re就是我们想得到的值
 ```
 
-![img](https://howahh.github.io/images/image-20210531215201372.png)
+![img](../../../_assets/images/7002b94ec4be95dc80fa0f3d657a35975702e8cc4ec74ed5f727c24511a0015b.png)
 
 该脚本得到上图，我们可以得到一个f149_15_h3r3文件，存放这外卖想要的flag，接下来只用改一下上面的脚本来跑flag就行了
 
@@ -2118,7 +2118,7 @@ for j in range(1,50):
         
 ```
 
-![img](https://howahh.github.io/images/image-20210531220631659.png)这里字符数少了点，重新跑没截图，因为过滤所以没有{}最后加上{}即可
+![img](../../../_assets/images/a53d4aa6967ad98e77d07e20ea0b3994d63632d3a184975b309521d6999166f7.png)这里字符数少了点，重新跑没截图，因为过滤所以没有{}最后加上{}即可
 
 这样直接来有的时候网不好容易出错，在payload前加一个time.sleep(0.1)有帮助
 
@@ -2152,9 +2152,9 @@ if(isset($_POST['f1']) && isset($_POST['f2'])){
 }
 ```
 
-![img](https://howahh.github.io/images/image-20210531225804454.png)
+![img](../../../_assets/images/4830166a61c4186017687fa3c88e4df762c28761c713eed9b6c6c978697dc34f.png)
 
-![img](https://howahh.github.io/images/image-20210531225817212.png)
+![img](../../../_assets/images/6854ef4519495e7bc22fbf1c2a7bf26af6b0c9c69672aaaab20d1d4596f894b0.png)
 
 用到了松散比较==的特性
 
@@ -2245,7 +2245,7 @@ main()
 
 这个脚本可以保存下来，基本是通用的。输入想要的指令即可
 
-![img](https://howahh.github.io/images/image-20210607181216096.png)
+![img](../../../_assets/images/6e9993b1e6ab28d86a571d0cc2e326c8f08bcd95fa197de24ce84413a1a403b0.png)
 
 本题中v1，v2填随意数字，v3就result即可，但注意的是这里有个return干扰，所以我们要在v3的payload前边和后面加上一些字符就可以执行命令，例如`\+ - *` 等等
 
@@ -2312,7 +2312,7 @@ if(isset($_GET['v1']) && isset($_GET['v2']) && isset($_GET['v3'])){
 
 和141类似，只是多ban掉了一些特殊字符，但没有ban^，也即取异或，所以直接用141的脚本，稍微改一下正则限制即可
 
-![image-20210607183743506](https://howahh.github.io/images/image-20210607183743506.png)
+![image-20210607183743506](../../../_assets/images/b97601a231d5738166317014342bc6440ca6052c2d308a057bb0cdd80f56bd54.png)
 
 注意过滤了分号，所以最后的payload形式：
 

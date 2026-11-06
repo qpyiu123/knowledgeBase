@@ -51,3 +51,9 @@ updated: 2026-10-23
 :::
 
 这里我们需要利用 `scanf` 多次输入的特性，通过输入字符 `+` 来跳过对 Canary 的修改，进而直接修改返回地址为后门地址。
+
+## 原文配图
+
+![查看保护](../../_assets/images/a49972c2542baff94dbabea8e4163215c0e9cf3fad6267968bee5dfc02464191.png)
+
+![查看汇编](../../_assets/images/3db278414743d7c1230669bdc111adf17fd10914a6c6c978aed63381e7bc895f.png)

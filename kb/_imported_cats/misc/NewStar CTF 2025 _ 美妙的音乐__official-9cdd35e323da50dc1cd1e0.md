@@ -82,3 +82,7 @@ import Container from '@/components/docs/Container.vue'
 midi 音频隐写，听声音没听出来什么异常，那么有可能是不发声的音符隐写，用 [miditrail](https://www.yknk.org/miditrail/en/download/)<span data-desc>（也可以是其他工具，只要能查看 midi 的音符就行）</span>打开，可以观察到：
 
 于是最后的 flag 就是 `flag{thi5_1S_m1Di_5tEG0}`。
+
+## 原文配图
+
+![miditrail 界面](../../_assets/images/8acbbd1e36e0f176869873f36ebfc97ac1cdd1b17a313eb42c6005e556d393f3.png)

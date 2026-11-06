@@ -88,3 +88,11 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 > 这一步中你可能需要的插件：[P4nda0s/LazyIDA: Make your IDA Lazy!](https://github.com/P4nda0s/LazyIDA)
 
 之后运行到 `call memcmp` 处，查看原输入位置，即可得到 FLAG。
+
+## 原文配图
+
+![IDA 粘贴密文数据](../../_assets/images/2b15de15d4a26f4222d2cf02be610c7183ef8ff55fbbddd122a5e353aa161eaf.png)
+
+![应用密文 Patch](../../_assets/images/c632806b62e17fd5afc609e17fd2de51ea7e58dcc7a06e3ea01726eb71a9281d.png)
+
+![调试得到 FLAG 明文](../../_assets/images/bd6d11316f7e7aba8cf2403efc03b02afbad94e876ebded0fdddb4ffeeff5f32.png)

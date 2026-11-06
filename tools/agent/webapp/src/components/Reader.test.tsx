@@ -57,4 +57,28 @@ describe('Reader 只读代码', () => {
     expect(screen.getByText('print("read only")')).toBeTruthy();
     expect(api.doc).not.toHaveBeenCalled();
   });
+
+  it("loads an archived illustration relative to the article", async () => {
+    const name = `${"a".repeat(64)}.png`;
+    vi.mocked(api.doc).mockResolvedValueOnce({
+      path: "_writeups/misc/image.md",
+      body: `![压缩结构](../../_assets/images/${name})\n\n![原图](https://example.com/a.jpg)`,
+    });
+    render(
+      <MantineProvider>
+        <Reader
+          target={{ path: "_writeups/misc/image.md" }}
+          onClose={() => {}}
+        />
+      </MantineProvider>,
+    );
+    expect(
+      (await screen.findByRole("img", { name: "压缩结构" })).getAttribute(
+        "src",
+      ),
+    ).toBe(`/api/image?path=${encodeURIComponent(`_assets/images/${name}`)}`);
+    expect(screen.getByRole("img", { name: "原图" }).getAttribute("src")).toBe(
+      "https://example.com/a.jpg",
+    );
+  });
 });

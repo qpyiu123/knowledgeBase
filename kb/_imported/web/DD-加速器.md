@@ -75,3 +75,11 @@ import Container from '@/components/docs/Container.vue'
 然后执行这个命令。
 
 所以我们只需要 `cat .<首字母>*/flag` 就能读取到 flag 了。
+
+## 原文配图
+
+![dd-accelerator_1](../../_assets/images/c2af351ae8d01be3cbc76a4bc5322d95c6ce197db2af18cf758ea6484949c07a.png)
+
+![dd-accelerator_2](../../_assets/images/e44d96de19d29afdd65d3342a9cde5366fa256be9eacc825108b18d21ba02cbe.png)
+
+![dd-accelerator_3](../../_assets/images/30d7379e3334d2d3e820f4162b4bf5725e31a28b762de9d6a66a19416b757482.png)

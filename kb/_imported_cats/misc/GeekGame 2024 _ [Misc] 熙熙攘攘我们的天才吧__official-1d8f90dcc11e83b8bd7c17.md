@@ -149,3 +149,33 @@ Flag 3 需要解码 sunshine 的音频数据。类似可得，音频数据是在
 如果你的生活经验比较丰富（<del>年龄比较大</del>），或者看过柯南，或者在比赛期间调戏过客服小祥，或者问过 ChatGPT，再结合题面说的 Flag 格式是纯数字，都不难意识到这是一段 DTMF 编码的拨号音。还原一下即可得到 Flag 3。转换成 MP3 之后的音频详见 [sol/data/decoded.mp3](sol/data/decoded.mp3)。
 
 有的选手解出来音频的频率不对，建议对拍一下看看你的 API 是不是用法有问题，或者最后不小心按单声道打开了之类的。
+
+## 原文配图
+
+![image-20241019154239319](../../_assets/images/e1198cf23429f2b1bf9693b2c172d1ab37536eeb1553550c00b5b1b379898cb2.png)
+
+![image-20241019192300442](../../_assets/images/601949be64b609a9750ddfc17d6a86f99d11c9196afad3f5d6049c602ad62d16.png)
+
+![image-20241019160044253](../../_assets/images/9b1644bef318abe99a7b816b059901cea3038ef9ee689b520fbea38d643533a8.png)
+
+![image-20241019155847681](../../_assets/images/a54e662b1fd7c6ae0e5e1f70ebbbc3a4fb7bd42cf0813ccbd0f5a604c602917f.png)
+
+![image-20241019155946887](../../_assets/images/3b5f9a5a2fc1a84c3cefcd729968d3cb3e3d8bffbdb1e102e5d34b379e9aaa61.png)
+
+![image-20241019160144890](../../_assets/images/eda6a05ae6c749fd52a68f162b6461576f447d61b0fefe1afb402263166ef03d.png)
+
+![image-20241019160159014](../../_assets/images/966c035c7d9a33f79757439baed81117a48e057aae5f0ffa38e3278ad17fb27e.png)
+
+![image-20241019160235801](../../_assets/images/7d1fb2c66169147c5604482365a090bd538efd0cd2a5550c57b2ce9c561855e1.png)
+
+![image-20241019161133714](../../_assets/images/8e495c02cb5b0bb7819ed55ce9b974324fc58445d4d51b75ad0d4c80882f934a.png)
+
+![image-20241020160821896](../../_assets/images/a105aef61688a9a6c36b95a9eb4de9848980cddf11028c5d8bd5fac8c86daf3e.png)
+
+![image-20241019192901527](../../_assets/images/57e96efa7091570030660a6bd80c42ab371feb7ab6b5d3d42d3935cc5731f5e0.png)
+
+![image-20241019193951314](../../_assets/images/291f5de2bc97a482abf79f925fb86f4114d3539fe13b724796b1fb2c9f012e1f.png)
+
+![image-20241019195619695](../../_assets/images/aad1735e2115c2febbf97bb73e0c60fc498a3312043d9fbd20a7d88b49d8c1be.png)
+
+![image-20241019195703377](../../_assets/images/3265a61464fdbf35aa6575935914671b0fe1d3dcd98497d8d34dfb55a2aa7115.png)

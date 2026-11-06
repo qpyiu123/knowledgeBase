@@ -98,3 +98,17 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 也就是 `loverust` 是逆序与输入进行异或
 
 写解密脚本
+
+## 原文配图
+
+![主逻辑](../../_assets/images/453b6fba62419d7cd57c9e7f0d430b16dafc7a2b166348a6bb823daccaf341df.png)
+
+![进行基本分析](../../_assets/images/ed5a57484cc3af79980dbe20fe8de927baf736ac65491d9fedee8d55f27b8fc1.png)
+
+![动调](../../_assets/images/1ae3981e3f9e4b61bff4ea9786ebe1eef94b983ded4d1978221f38c2c36957ac.png)
+
+![加密循环](../../_assets/images/2b414508e661fcf3edc5705ac551daecbfa1edf581e710140df01d47652d60d9.png)
+
+![回到加密处](../../_assets/images/8783e6fb820943c5b365f74fe64af36fdb37bd096385dc161c2af3fe042639c9.png)
+
+![加密逻辑](../../_assets/images/790b99ee49527c02dbebe1b6a09adc58e17194cad4e206bafee1d32add651c39.png)

@@ -98,3 +98,9 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 由于我们⽹站执⾏的是 redis 命令
 
 于是去掉外⾯的 eval 即可
+
+## 原文配图
+
+![redis 语法示例](../../_assets/images/e02682f9efed05b151b194a905fb25814fb1c69a8f6d5e0a0c00e892736a568c.png)
+
+![获取到 flag](../../_assets/images/332b2b395b254afb2a1a3e0229dc57c416289073eb9ff1f07628b4f44afae125.png)

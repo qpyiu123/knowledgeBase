@@ -94,3 +94,13 @@ updated: 2026-10-31
 内层也是同样的分析方法，`EXCEPTION_INT_OVERFLOW`导致将0x9E3779B1赋给sum
 
 解题函数如下：
+
+## 原文配图
+
+![image-20240521145636623](../../_assets/images/99dc97e91dc9f78260f7ef6afb3fad64a4e206f618c8b37d97b5b31d069fac2a.png)
+
+![image-20240521150336314](../../_assets/images/33f2e1ba51a231513c0481d25cac17bd0f722f2db9d4fb3659bd8bcc82703699.png)
+
+![image-20240521150520982](../../_assets/images/9676b5da00aa6508856c3e199191664153625ca2095c573fb8d2bd0acb3484fe.png)
+
+![image-20240521150549873](../../_assets/images/26bcf8a444d3f7d9ab76706598a0150bd79a5a560ee51570a5c193f65380b3b0.png)

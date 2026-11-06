@@ -81,3 +81,7 @@ updated: 2026-10-31
 $(a_i,a_{i+1},...,a_{i+n-1}) \rightarrow (a_{i+1},...,a_{i+n-1},a_{i+n})$
 .
 對於一個序列來說，我們一般定義其生成函數爲其序列對應的冪級數的和。
+
+## 原文配图
+
+![n-fsr.png](../../_assets/images/ef619c6bb4d822c8d817865a2723d582d98bddafabea8e6ec4afdf5333f70299.png)

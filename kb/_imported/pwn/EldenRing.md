@@ -161,3 +161,33 @@ $$
 最后任意分配一个卢恩 chunk 触发漏洞，取得 shell😘
 
 ## 完整 EXP
+
+## 原文配图
+
+![打开题目](../../_assets/images/0f23f4508c52aaaf05a545876c537378ea28646912b3cff0d3414aea585a4e9e.png)
+
+![hash 比较](../../_assets/images/f36970304286ca3ab780eb764d902b1dfcf3daf083b9171c17e327970ce8e86d.png)
+
+![绕过检测](../../_assets/images/997110dbe33e01997c5dfa3985ad4500bcb702fbea8dd933314a5d6918230df2.png)
+
+![找到哈希](../../_assets/images/c28b7411c9470c71717a23177e8c31497bd128c61ade474d4de3f3b21a913a03.png)
+
+![Tew_Fingers 函数](../../_assets/images/a27904a6e48ab13abdb94e77491816209d1d522b4e92b815ab9577967c9f1c39.png)
+
+![堆块的准备工作](../../_assets/images/0899cda579b278484d1ee3d6f74ecd2e9d6045f8a7f1f64b962ba960654f2a73.png)
+
+![覆盖 chunk2](../../_assets/images/154453bba7f90a434eab6fb13751457ebd151c6c9a1332d901b04983f471fca3.png)
+
+![覆盖 chunk3](../../_assets/images/457874fc94a44fc5313f86cf64944e2d52b57a5372cc419bc8620af7829cd094.png)
+
+![地址分配](../../_assets/images/16b0126852a16837167d7f897f2e3161d4f7e6f3f9ca0703145897dfc9ee13dd.png)
+
+![控制堆](../../_assets/images/58ecd9b23b0affca1b490f75379f5f4b58eceeaea27fcddf1acb6f4c91a4775d.png)
+
+![控制堆](../../_assets/images/a2c66995a358c711a55e6d7c624a151998082f3c4d70e7ce8e86ca7906faa5e6.png)
+
+![find fake fast](../../_assets/images/027bf37da31d0fc79af0e944b94519b5ed5764f8ac07e6e31e38242da2f01342.png)
+
+![trick](../../_assets/images/ba8ad94d246e75aeab4698fa2f709c2f7509661d625f1bc6913960c700966927.png)
+
+![效果](../../_assets/images/7c5030c22375e006732cd91b43470cccd6131d4269a8fe85477ea3eedc23f7d5.png)

@@ -26,6 +26,10 @@ TCP 是**有重叠、乱序、可能丢包**的字节流。Wireshark 的分析�
 
 **导出对象** 的底层逻辑：对每个 HTTP response，若 `Content-Type` 或 `Content-Disposition` 表明是文件，就把 body 落盘，文件名取自 URL 末段或 `Content-Disposition`。
 
+### USB 抓包：先确认接口类型
+
+先分 PCAP 和 PCAPNG 两种文件容器，再读链路类型。经典 PCAP 的类型在文件头；PCAPNG 可有多个接口，要用每个数据包的接口编号找对应的接口描述块。类型 220 对应 Linux 的 64 字节 usbmon 头；类型 249 对应 Windows USBPcap。两种包头的字段位置不同。认对头后再按方向、端点和传输类型筛选键盘等设备的数据。
+
 ## 三、操作步骤
 
 1. **宏观**：`capinfos` + `io,phs`（协议分层）→ 判断主要协议。

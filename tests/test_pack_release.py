@@ -27,6 +27,7 @@ def project(tmp_path):
         "docs/guide/离线包使用说明.md",
         "kb/misc/example.md",
         "kb/_methods/scripts/example.py",
+        "kb/_assets/images/example.png",
         "work/workspaces/private.json",
         "logs/web.log",
         ".git/config",
@@ -104,6 +105,8 @@ def test_pack_profiles(project, tmp_path, profile, models):
     assert (target / "tools/console-job.ps1").is_file()
     assert (target / "开箱说明.md").is_file()
     assert (target / "licenses/frontend/example/LICENSE").is_file()
+    assert (target / "kb/_assets/images/example.png").is_file()
+    assert (target / "docs/data/r66-curation.json").is_file()
     for name in (".git", ".venv", "logs", "work", f"{release.WEB}/node_modules"):
         assert not (target / name).exists()
     assert not list(target.rglob("*.pyc"))

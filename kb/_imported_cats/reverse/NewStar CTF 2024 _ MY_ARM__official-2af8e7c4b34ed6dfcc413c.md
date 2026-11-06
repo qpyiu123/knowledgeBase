@@ -90,3 +90,7 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 这个函数是真正运行的，其他几个函数都是用来迷惑的。
 
 写出解密代码
+
+## 原文配图
+
+![main 函数前执行的函数](../../_assets/images/bee85e88dc89b14527ac5ad2cf2f11407dd75e7e64a104c6e1974c25ab5d720f.png)

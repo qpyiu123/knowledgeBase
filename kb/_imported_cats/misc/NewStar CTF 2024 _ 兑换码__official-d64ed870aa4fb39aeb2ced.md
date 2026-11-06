@@ -85,3 +85,9 @@ PNG 文件头具体可以参考下面介绍：
 - <code><span style='color: #00af4e'>00 00 0C DE</span></code> 代表高度为 CDE（3294）像素
 
 注：PNG 规范规定 IHDR 的高度可以任意修改，但宽度不能随意修改。
+
+## 原文配图
+
+![010 Editor 界面](../../_assets/images/d1ec8a88b8f9c423b92c68c4c4fb4cddce32a078f84cbff7a3d772da56a60d4a.png)
+
+![PNG 二进制示例](../../_assets/images/4973082e92b672d44dec72f68402090c692dd6998fc4ea578219631b8dff9e31.png)

@@ -94,3 +94,7 @@ import Container from '@/components/docs/Container.vue'
 第二个漏洞先使用 `cin` 输入了字符串，再将它 memcpy 到 `dest` 字符串中，而 `dest` 是存放在栈上的，因此存在栈溢出
 
 因为程序是使用 `g++` 编译的，相对可用的 gadget 会相当少，所以靠第一次泄露的地址，用 libc 的 gadget 来实现 ROP
+
+## 原文配图
+
+![运行程序](../../_assets/images/ba797c551678b73e8e15d587e360360e7727b2e9544583546b296aaff0f0e635.png)

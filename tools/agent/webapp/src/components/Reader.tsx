@@ -172,7 +172,7 @@ export default function Reader({
                           onClick={() => setActive(source)}>{source.path.split('/').pop()}</Button>)}
                       </Group>
                     ) : null}
-                    <Md text={body} />
+                    <Md text={body} documentPath={activePath} />
                   </>
                 )}
               </Stack>

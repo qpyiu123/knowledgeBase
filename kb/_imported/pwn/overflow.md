@@ -155,3 +155,13 @@ pop 操作：
 于是我们要先将 `buffer` 的 256 字节填满，再填 8 字节覆盖 `rbp`，最后填上 `0x401201` 即可。
 
 附解题脚本：
+
+## 原文配图
+
+![main 函数](../../_assets/images/4fe77e6620a8afdfb4d03775ce205e10602ef1570774fd40e54cb04e29127a98.png)
+
+![try 函数](../../_assets/images/1d052688b6a2039dbb1aa7db08ee5b8feac3ea47f7214d4688ffce44a23a82ee.png)
+
+![backd00r 函数](../../_assets/images/83c5bc1c624d93a820e8f48532cb5e8e72910aed5a645943878e7a210cdf773d.png)
+
+![汇编视图](../../_assets/images/8784d40f938d37186baa44879ec0cdaf4ba0f11ceedf0323d88ea07941ea32f3.png)

@@ -97,3 +97,9 @@ import Container from '@/components/docs/Container.vue'
 下载 `.DS_Store` 文件后，尝试利用 [ds_store_exp](https://github.com/lijiejie/ds_store_exp) 工具还原信息。
 
 得到 FLAG 地址，访问后获得最终 FLAG。
+
+## 原文配图
+
+![git reflog 删除分支记录](../../_assets/images/ec7c3507f56a369b5a18672bc0fe8926b2d201069632d9ef7dc9b94f10c2c0f4.png)
+
+![DS_Store 文件解析结果](../../_assets/images/60312467f435e97a8a864060c1894c95d4d3220707258dd1fc42b76922a3a896.png)

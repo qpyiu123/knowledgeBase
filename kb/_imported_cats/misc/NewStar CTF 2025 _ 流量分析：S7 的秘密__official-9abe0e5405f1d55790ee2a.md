@@ -86,3 +86,15 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 而在流量里面，对应结构可以观察到 `s7comm.resp.data` 字段是写入的值，`s7comm.param.item.address.byte` 字段影响值的顺序位置。
 
 我们按照顺序排列 `s7comm.resp.data` 字段后解码即可得到 FLAG
+
+## 原文配图
+
+![S7Comm 协议报文结构](../../_assets/images/d3063761defae39d288f44408c547d4b9008ec7782147215d64ea2e95f028e2b.png)
+
+![Transport size 常见值](../../_assets/images/2c7d8aa2a2a481603e2d47b257f9b332be12dd2c76a4c8aeec8a5898c215f6ca.png)
+
+![Transport size 枚举说明](../../_assets/images/8c86e5bbca71c6fcef31c19af33bfb271639bc3cef6123b519bb234c08657071.png)
+
+![Area 常见值](../../_assets/images/d85cc633a7c415b351c4203551d5c4a936541a7786d30b7f23dfa7f648532a6a.png)
+
+![Return code 枚举值](../../_assets/images/51d064bd3b52bad6e197a1a3a352e5353631117980d4096c34975d26b27a48a1.png)

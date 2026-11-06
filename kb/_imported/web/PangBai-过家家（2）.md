@@ -102,3 +102,21 @@ GitHacker 工具可快速使用 pip 安装：
 但如果直接传参 `NewStar_CTF.2024=Welcome%0A` 会发现并没有用。这是由 `NewStar_CTF.2024` 中的特殊字符 `.` 引起的，PHP 默认会将其解析为 `NewStar_CTF_2024`. 在 PHP 7 中，可以使用 `[` 字符的非正确替换漏洞。当传入的参数名中出现 `[` 且之后没有 `]` 时，PHP 会将 `[` 替换为 `_`，但此之后就不会继续替换后面的特殊字符了因此，GET 传参 `NewStar[CTF.2024=Welcome%0a` 即可，随后传入 `call_user_func` 的参数即可。
 
 〔原图省略〕
+
+## 原文配图
+
+![任务一](../../_assets/images/78078f662477c5ece5eed0ba3891595c893b25a1b3cb74b9f600954635423de4.png)
+
+![使用 GitHacker](../../_assets/images/9026f2b6aabc36aab0516143e2cdfb0f48ef9e56638a5e3deeebd55692dd5339.png)
+
+![查看恢复的源码](../../_assets/images/4576ffb6c0baba9de06b4c7eb54e98dd171f7990061261a5fc3142644d2a5ad7.png)
+
+![查看提交历史](../../_assets/images/3977c639b21b1e2e7d44a782110cd205cdcee8134fe4c281235d5eb10165e825.png)
+
+![git stash 输出信息](../../_assets/images/357f07fffa817dd7776eb79582d6e03db842c07a54ba85a026672b279811ddb7.png)
+
+![恢复文件](../../_assets/images/d9f465f5b209f3c515d313e7ee2ed5f2d77c820b1f221193d0d9af5c3f2472b0.png)
+
+![访问后门文件对应的网址](../../_assets/images/a8b181e32e051608ec5d33352bcb759092a55de502e6e7d062abf9e80d74fcb5.png)
+
+![获取到 flag](../../_assets/images/c93c7dcb16b1b093d30b16ad86f4deecf306ca0043c77f1b12cc08a13fb911c8.png)

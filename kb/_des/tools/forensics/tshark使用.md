@@ -155,17 +155,17 @@ tshark相当于是命令行版的wireshark，不需要额外安装，在安装wi
 1.  tshark的位置：请使用Everything等工具直接搜索出来。
 2.  使用`tshark.exe -D`命令查看电脑上有哪些网卡。
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/2a31c06fabf241438aaa8c30740c0b5a.png#pic_center)
+![在这里插入图片描述](../../../_assets/images/01e635feed2a19696bb805bd0588b0c875f57429f13223675a40f7de85efc0dc.png)
 
 3.  `\Device\NPF_{FA29BC17-7BFC-4CE8-BB48-71174A6BDA54}`，这串东西是接口名称，通过wireshark可以看到，如下图，点击一下“管理接口”即可看到。
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/e5502558e5bf7e68f0e8d1f9b9842de9.png#pic_center)
+![在这里插入图片描述](../../../_assets/images/7c1e96bf07f77571084f35871185e97b57d68fe7722fe045bca1edbfe162d87f.png)
 
 **获取官方使用手册**  
 方法1：`tshark.exe -h`  
 方法2：访问在线地址：[tshark(1) Manual Page](https://www.wireshark.org/docs/man-pages/tshark.html)  
 方法3：帮助-说明文档-TShark（此处的说明文档与方法2的文档内容一致）  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/ae0f91496d8fdf2712d75e98221b767d.png)
+![在这里插入图片描述](../../../_assets/images/b283979dffda00853995bfe0b58910410b98daf9590c65010ac1547548e95a0f.png)
 
 ## 参数
 
@@ -217,7 +217,7 @@ tshark相当于是命令行版的wireshark，不需要额外安装，在安装wi
 
 ## tshark与wireshark对比
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/393e7b69f8021a80fe6b3431966b9022.png)
+![在这里插入图片描述](../../../_assets/images/95b25ffd78c86683b42eb9a575c350c9caa5dc5cfe430812c1e95ee42848f9f0.png)
 
 1.  上图红框1中的**接口**，对应tshark中的`-i`参数，表示需要捕获数据的网卡名称。
 2.  上图红框1中的**链路层头类型**对应tshark中的`-y`参数，可以自行在GUI中设置。
@@ -238,8 +238,8 @@ tshark.exe -r 源文件.pcap -V		# 获取更详细的内容,输出的内容很�
 tshark.exe -r 源文件.pcap -c5	# 获取指定数量的内容
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/4b4d30b9743295bc70f4f6290500078a.png)  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/8219995aa5c511e986fef4116c2894f9.png)
+![在这里插入图片描述](../../../_assets/images/ef0ea7d1fabc2b2c5b36767952821c90a662e8b05636369a781debbb7c8ea9f7.png)
+![在这里插入图片描述](../../../_assets/images/e42f60eb5bfa5be6f553407eec1a635a30008dd15ebef2545e1074c0b2d56f51.png)
 
 ### 显示时间格式
 
@@ -247,9 +247,9 @@ tshark.exe -r 源文件.pcap -c5	# 获取指定数量的内容
 tshark.exe -r 源文件.pcap -t ad
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/13cb43dd9241bbcca09d881f36db86de.png)
+![在这里插入图片描述](../../../_assets/images/a5da72189dc1744a2394d89fcfaba303e7223466bc345f11107e289bbea1d48f.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/a30acc7f0ecee339e3240f28d3fcc3f1.png)
+![在这里插入图片描述](../../../_assets/images/c9f022a918d571245c4ff169dbdd80ae76cc442ebcf2c9f0f44eaa5c5a47a3c6.png)
 
 ### 捕获过滤器
 
@@ -266,9 +266,9 @@ tshark.exe -i 10 -f "host 192.168.40.1 and host 192.168.40.134"
 ```
 
 如下图所示，使用了捕获过滤器之后，捕获到的数据包只有192.168.40.1和192.168.40.134。  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/53c0825a143bcab0b27a3bd0102d5910.png)
+![在这里插入图片描述](../../../_assets/images/6e73562774bb7ca16bba0966677fd59803b9de50717239da3be9e1c4e27a4415.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/aef97c0ed3c02fcba36e05768f662dad.png)
+![在这里插入图片描述](../../../_assets/images/6a112729795f61d39299afa82c3057c67c502decd5ddbdf63ccc4d113cfa0ad0.png)
 
 ### 捕获并保存数据包
 
@@ -278,7 +278,7 @@ tshark.exe -i 10 -f "host 192.168.40.1 and host 192.168.40.134"
 tshark.exe -i 10 -f "host 192.168.40.1 and host 192.168.40.134" -a filesize:3 -w C:\Users\asuka\Desktop捕获.pcap
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/0a7905c16c3d67ba880a5e76a637b670.png)
+![在这里插入图片描述](../../../_assets/images/194ef9ca984e35f7d567d8a78a1a6294ec45fdac6d9855693cc917c0ff5fc6d1.png)
 
 设置捕获数据包5秒时停止抓包，并把结果保存下来。但是有点懵，因为数据包中显示，只捕获了4秒左右。
 
@@ -286,7 +286,7 @@ tshark.exe -i 10 -f "host 192.168.40.1 and host 192.168.40.134" -a filesize:3 -w
 tshark.exe -i 10 -f "host 192.168.40.1 and host 192.168.40.134" -a duration:5 -w C:\Users\asuka\Desktop\捕获time.pcap
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/71693a66dafac0ceaeb5b41d203011b8.png)
+![在这里插入图片描述](../../../_assets/images/ea447fb1c3dbba58e421b24dbc62e5d012a9ba53e67562c13179b8f1bcd2cf5b.png)
 
 ### 显示过滤器
 
@@ -301,15 +301,15 @@ tshark.exe -r C:\Users\asuka\Desktop\test.pcap -Y "ip.addr==192.168.40.1 && ip.a
 tshark.exe -r C:\Users\asuka\Desktop\test.pcap -2 -R "ip.addr==192.168.40.1 && ip.addr==192.168.40.129"
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/1e2160191ea06c0ee14be9ba3295e3a3.png)
+![在这里插入图片描述](../../../_assets/images/ef3cccfdf2b544fcac05d2739afc4711c9e48718fb83c7cebecdcc4c487f0430.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/012915788e412af101dfb3950273f1d7.png)
+![在这里插入图片描述](../../../_assets/images/4e2ad81c663911e14a901083f8c6f1f24832c213f7d3811d6cc122ae83f0e9ed.png)
 
 如果非要较真的话，使用[文件对比工具](https://tool.chinaz.com/tools/diff/)，会发现在显示效果上还是略有不同的  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/ce0dc6313de062e0f87051d40fc10d38.png)
+![在这里插入图片描述](../../../_assets/images/1b6415bcba81f682905f70f032e8c12685cc6a70af4229d30283b14412a78756.png)
 
 那么，还有一个小小的疑问，如果我分别使用这两种方法读取数据包并把结果保存到新的数据包中，新的数据包会一样吗？经过测试，导出的文件是一致的。  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/88daff20ce9e3345db3e663069c2399c.png)
+![在这里插入图片描述](../../../_assets/images/19b2cd93986ac8a0a862560e00a4cfbcd0a201a3bca6925bf5ac91aa137e4703.png)
 
 #### 一些好用的显示过滤器
 
@@ -381,7 +381,7 @@ tshark.exe -r C:\Users\25348\Desktop\test.pcap -Y 'http.host and http.request.ur
 
 1.  使用过滤器，过滤出http请求的流量：`-Y 'http.host and http.request.uri'`
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/01c6945a9de43351dfc1496f5902c058.png)
+![在这里插入图片描述](../../../_assets/images/6478d00474fd7ce015a425ca83fc68a6d0cab4af947fecbfa9a3270070efac49.png)
 
 2.  使用`-T fields`查看解码数据包数据时输出的格式，把输出格式设置为`fields`，这样就可以借助`-e`参数实现更细腻的显示效果
 3.  使用命令：-e frame.time -e http.request.method -e http.host -e http.request.uri -e ip.src -e ip.dst
@@ -390,7 +390,7 @@ tshark.exe -r C:\Users\25348\Desktop\test.pcap -Y 'http.host and http.request.ur
 
 4.  应用效果如下：
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/19d1d2e031e37794de394a1cdb1709d1.png)
+![在这里插入图片描述](../../../_assets/images/3a48fbd03b13594c768fd557a1e1995808761a2fecc7aac760f837b271b43c27.png)
 
 #### mysql中的应用案例
 
@@ -414,7 +414,7 @@ tshark -i lo -d tcp.port==3306,mysql -T fields -e mysql.query 'port 3306' -R 'my
 tshark.exe -r C:\Users\25348\Desktop\存储型XSS.pcap -z expert
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/0265a97322e79bcb00a5488dc135621c.png)
+![在这里插入图片描述](../../../_assets/images/9690710222ae195cb9aa48671d140befbd206b9db32283accf294be6b5d8c418.png)
 
 #### 追踪流：**\-z follow**
 
@@ -428,7 +428,7 @@ tshark.exe -r C:\Users\25348\Desktop\test.pcap -z http_req,tree -q
 tshark.exe -r C:\Users\25348\Desktop\test.pcap -z http_srv,tree -q
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/7bb66fceed96eb291e49f76f94d5109d.png)
+![在这里插入图片描述](../../../_assets/images/df3d50c2dd220a7a51d642da2be9da1cb4c92155df4951c9778447d91ac58c5d.png)
 
 #### 统计数据包信息
 
@@ -437,7 +437,7 @@ tshark.exe -r C:\Users\25348\Desktop\test.pcap -z ptype,tree -q
 tshark.exe -r C:\Users\25348\Desktop\test.pcap -z plen,tree -q
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/71ecf35a8af3a04460fb9cc18d392650.png)
+![在这里插入图片描述](../../../_assets/images/f2e4c3609b683f609045b7862cf4cb125a236fdaefb5342207643025d8ffda06.png)
 
 #### 统计会话
 
@@ -448,7 +448,7 @@ tshark.exe -r C:\Users\25348\Desktop\test.pcap -z plen,tree -q
 tshark.exe -r C:\Users\25348\Desktop\test.pcap -z conv,ip -q
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/669af295fe742208eba7684b6ad27a5f.png)
+![在这里插入图片描述](../../../_assets/images/7f1424bf95b42a575b326da452eb6bea5adb3b0877a9d1e1d93286857f3c2fea.png)
 
 #### 统计出所有IP
 
@@ -458,9 +458,9 @@ tshark.exe -r C:\Users\25348\Desktop\test.pcap -z conv,ip -q
 tshark.exe -r C:\Users\asuka\Desktop\testnew.pcap -z endpoints,ip -q
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/1fcdaf89275b5c062d0bb9262caf9ecd.png)
+![在这里插入图片描述](../../../_assets/images/717d4811a5a3f47a3826d262c377be04fb4951f57ae88695e84f61087b305256.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/4b7760ba49a269946dd919c0a9f65e0d.png)
+![在这里插入图片描述](../../../_assets/images/4e79c88ed9e4753be44a565310d2d746bdd644797572520f409f5da913e638d4.png)
 
 ### 显示每个协议树的具体信息
 
@@ -471,15 +471,15 @@ tshark.exe -r C:\Users\25348\Desktop\存储型XSS.pcap -O tcp
 ```
 
 数据包视图：  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/7bd21f95576aa316dc11a483d776d4ce.png)
+![在这里插入图片描述](../../../_assets/images/788c72f6be20e33c2567bc1a31ffdfa89214fa59a9136a3da21260ce1c3f160b.png)
 
 命令行视图：  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/2ec77089ea7bf936fb78df9d84762f2d.png)
+![在这里插入图片描述](../../../_assets/images/6568f3246ccc71eda247c19489a0e2792f05ada72b802b9817709419e236573b.png)
 
 ### 导出对象
 
 有的时候想要还原数据包中传输的文件，如下图是wireshark UI的操作：  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/2af258784710f32052f22598c2bf90aa.png)
+![在这里插入图片描述](../../../_assets/images/6042aa727cd3e42603eb047d29b41e8dd27791288172f017bfe6feac184aa6c1.png)
 
 可以将HTTP协议请求中的文件存成指定的格式，该条操作对应的命令如下：
 
@@ -488,7 +488,7 @@ tshark.exe -r .\test.pcap --export-objects http,test -q
 ```
 
 这样就会在tshark工作的目录中生成test文件夹，文件夹中会生成对应传输的数据，文件名为传输中指定的文件名。有的时候想要批量的提取数据包中的文件，可用这种方法进行操作。  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/a876e20dd641e6b222c8a5f991fdb9ea.png)
+![在这里插入图片描述](../../../_assets/images/ed30c893f11842b0f0eb74bc3c9bd55d792456d2f421f8cc8d858715dab358d5.png)
 
 ## 追踪流
 
@@ -498,14 +498,14 @@ tshark.exe -r .\test.pcap --export-objects http,test -q
 
 1.  二者使用的过滤语法一致：`tcp.stream eq 0`
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/fffaa9c1d3373176805116190bb0ebad.png)
+![在这里插入图片描述](../../../_assets/images/0eb91c351bda6dcf0a63fd36dd0c9b23cb9fa2f933afbb658d07964a273443b2.png)
 
 2.  极少数的情况下，会出现tcp追踪流与http追踪流看到的内容不一样！遇到过，两种追踪流看到了两种可阅读的ascii码内容；两种追踪流，一种看到的是乱码，一种是可阅读的ascii码内容
 
 #### 追踪流数量
 
 从下图中得知，此数据包共6个tcp追踪流(从0开始计算的)  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/03bc335a85deef08a98d836e2a3fecd3.png)
+![在这里插入图片描述](../../../_assets/images/28e5d7c96c16ae445623e227cc38dafe4bb4c6bae4b37810bcb436e24bf42620.png)
 
 使用命令获知文件有多少个追踪流。运行命令后，终端会打印很多行，正序排序后，最后一位数字就是追踪流的数量（需要手工加1，因为追踪流是从0开始算的）
 
@@ -523,11 +523,11 @@ tshark -r 源文件.pcap -qz follow,tcp,raw,tcp流的编号
 
 > 图中tcp表示的是协议，还可以是udp以及ssl等协议。tshark提供了按照hex,raw,ascii,ebcdic 等格式进行显示，可以根据需要进行使用，上图是按照raw格式进行显示，可以和UI中的功能操作对应起来的。其中的0表示流的编号，wireshark内部对于流的编号进行了处理，可以直接使用流编号进行过滤。该参数选项可以按照指定的格式进行输出。-x参数具有和hex选项同样的功能，只是-x参数会将应用层以下的所有信息都会输出。
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/b35bd5d6d2d5cef6d2c6aa14107272a0.png)
+![在这里插入图片描述](../../../_assets/images/47f45a3036cf9fbfa729b7615383adb2ccee91ce9579b4ad5abb654f2158450c.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/7dce7ff1c2ca9a9c07b61260a1e105de.png)
+![在这里插入图片描述](../../../_assets/images/13846d79a232ee9504140f1ae5ba194ca0a42d8c51828072c80b689c4a5db9df.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/4e9781161d16e027ac199c7ab1918d31.png)
+![在这里插入图片描述](../../../_assets/images/09f2f68dc8155723b3b43956c5a1c7597c710be8ed90c8c87f85c6fdc25ccadb.png)
 
 或者使用如下的python代码：
 
@@ -560,7 +560,7 @@ while True:
         pass
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/181cbb786341a5f8c4596dec52afd612.png)
+![在这里插入图片描述](../../../_assets/images/5d28754803008fc0fdbd85770f353132ada3ae89fea91ee468ecf169dec88906.png)
 
 #### 读取TCP流-16进制
 
@@ -569,7 +569,7 @@ tshark -r 源文件.pcap -qz follow,tcp,hex,tcp流的编号
 ```
 
 可以说是经典还原了。  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/50ec2f29058a5fba8b7772f9dcae5c27.png)
+![在这里插入图片描述](../../../_assets/images/e98a5d4a0683de369d1bd7d9d92dcb648198b0108d703037ca5820168314774a.png)
 
 #### 读取TCP流-ascii
 
@@ -577,7 +577,7 @@ tshark -r 源文件.pcap -qz follow,tcp,hex,tcp流的编号
 tshark.exe -r C:\Users\25348\Desktop\存储型XSS.pcap -qz "follow,tcp,ascii,0"
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/75b96f7a7373b08dff1317dff10c42c7.png)
+![在这里插入图片描述](../../../_assets/images/79242ee3db9efc609c7859b60371edb19e69738318c96d4471e27ce4182ebd9a.png)
 
 #### 获取TCP流，并保存为pcap文件
 
@@ -589,7 +589,7 @@ tshark -2 -R "tcp.stream eq 0" -r 源文件.pcap -w 目标文件名.pcap
 ```
 
 注意：`-R`前面需要添加`-2`，否则会报错。`-R`后面跟的过滤规则其实就是wireshark里面写的过滤规则，这里`tcp.stream eq 0`表示第一个追踪流。  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/f3f95d563369c6e62db8a090229d033a.png)
+![在这里插入图片描述](../../../_assets/images/67db6d26dabdcfac26e44e96bbaa22e45b637132a9f4b14bb4c365af2160706f.png)
 
 想一想，略加改动不就能拆分数据包了吗？使用如下命令，就实现了数据包拆分，新数据包只有一组会话！
 
@@ -597,7 +597,7 @@ tshark -2 -R "tcp.stream eq 0" -r 源文件.pcap -w 目标文件名.pcap
 tshark.exe -r C:\Users\25348\Desktop\test.pcap -2 -R "ip.addr==192.168.40.1 && ip.addr==192.168.40.129" -w C:\Users\25348\Desktop\win7.pcap
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/b3f822adc322583343b10e37e29ff303.png)
+![在这里插入图片描述](../../../_assets/images/1777ec4230183bcf0021bf4bc489281765ae80a7a78633a18277130e070a9128.png)
 
 ### 追踪udp流
 
@@ -627,7 +627,7 @@ for timestamp, buf in pcap:
     print('[+] Src：' + src + ' ——> Dst：' + dst)
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/7cdbbeda5f97fe05f97e43ce28a79d14.png)
+![在这里插入图片描述](../../../_assets/images/71cb825657783f74a02fcfd06b9a6ef4dd444acd896fb9630972a2045cfbc38d.png)
 
 方法2：使用tshark
 
@@ -656,7 +656,7 @@ for i in re_match:
     print(display_filter)
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/43a7952d3a5cfda19575341362ce4dfa.png)
+![在这里插入图片描述](../../../_assets/images/609dcce08824d3df2e6935d19b98d91c573bc1f549402d4b35299372fede5542.png)
 
 ### 2：获取数据包中的所有IP
 
@@ -684,7 +684,7 @@ for i in re_match:
     print(i)
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/94e8a26aa8d392856288c174ff96a066.png)
+![在这里插入图片描述](../../../_assets/images/51d5f984963dce843d981a3e45253de2174781f87ba5af886a4e9f5ac11b0c41.png)
 
 **威力加强版：获取指定文件夹下的所有数据包，并从中提取出所有去重后的IP**
 
@@ -728,12 +728,12 @@ for i in all_ip:
 # os.system('pause')  # 在脚本中运行时可以删除此行
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/7950d25eb9a174bf05f1d231ed0ef012.png)
+![在这里插入图片描述](../../../_assets/images/ea461f3eebe9f677a2f533c4270c351fc96470a3005bab136b4de3422a364ec6.png)
 
 ### 3：拆分数据包
 
 目的：把一个数据包，根据一组IP拆分出一个数据包，如下图，根据24个ip组拆分出24个数据包  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/afab1998f95f640e5720d2cb06f29cd6.png)
+![在这里插入图片描述](../../../_assets/images/fcfd5775c3e97fe239676d6209017fcab97e669c3ff33424c76aeabe1af05f1d.png)
 
 ```shell
 import re
@@ -795,7 +795,7 @@ if warning_pcap > 0:
     print('[+] 警告，发现{}条异常拆包信息'.format(str(warning_pcap)))
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/9cf8371e38e315baa94544f87568109d.png)
+![在这里插入图片描述](../../../_assets/images/7d80dcb710084f97bbe8d35d466e65d1feadd5f3331da82f3335fb32591cb3f4.png)
 
 ### 4：批量开发IPS规则
 
@@ -803,7 +803,7 @@ if warning_pcap > 0:
 假设拿到的数据包如下图，开发规则的话显然就是根据16进制编写，自动化的思路就是读取数据包的16进制内容，然后转换为规则。由于这种工作量分到一个人手里也就百十条数据包，而一个数据包一般都是2kb左右的，因此脚本怎么写都行，不用在意性能、效率的问题。样本有限，只开发了针对tcp的脚本。
 
 开发的脚本针对的是如下图这种流量，用到的命令其实就是使用上文提到的“读取TCP流-纯16进制”，只不过这里借助python实现了一个自动化的效果，这种脚本的常见应用场景是固网等项目支撑，可以根据实际情况调整脚本内容。  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/6e8b0be19ac2c4d020ccc501b99d1fd0.png)
+![在这里插入图片描述](../../../_assets/images/d9879a0185b5b41f68fbfe9209e671bcb356df3cbf0b0de7dbb5eff1e3720290.png)
 
 ```python
 import re
@@ -863,10 +863,10 @@ if __name__ == '__main__':
     print('规则开发完成，请查收导出的结果文件')
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/3a3c2f64f787221cee42e4c64b375c8d.png)
+![在这里插入图片描述](../../../_assets/images/0b2821a2a847c1779a3700900aae2fe127485a0ceb852b299d2f3fc8bb63bbe7.png)
 
 批量测试一下，snort全部告警！  
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/518a4bb4a53bb82b0030c20fad0f6030.png)
+![在这里插入图片描述](../../../_assets/images/b0c5fc29f07056a75b2f84aabe875cc62a6d2205689268bbcab7c0dc761a66a7.png)
 
 > 
 

@@ -98,3 +98,13 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2025"
 〔原文图片：见来源快照及资源状态〕
 从命名可以看出来 这里主要想考查梯度泄露攻击，共有12个客户端 我们一个个处理即可
 网上有不少相关exp 我们稍作修改即可
+
+## 原文配图
+
+![上传提示词文件](../../_assets/images/8759fd9b773900ce384958eeb70ad18aa8e271cace941d7c1f837d946a9088e6.png)
+
+![模型返回分析结果](../../_assets/images/3362a98c2453bb81d19a27f62187c3fd3bb6a529d9decd1225900bb282e255c9.png)
+
+![提示词注入结果](../../_assets/images/55f3fd50f5b10f9155ff6b19e38d757da4873f94e68e1ace581f6406ca435236.png)
+
+![获得 AI 题 FLAG](../../_assets/images/84bbaff3793ebf292496e58af32f558458d733e3698be595f6c7d51bdb2866ce.png)

@@ -110,3 +110,19 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 我选择将 exit 处代码改为 shellcode，来 GetShell
 
 这题既能改 ELF，也能改 libc，应该会有很多不一样的解法吧（
+
+## 原文配图
+
+![读入](../../_assets/images/d9b32bf29d59b57bd575edfe9839d3e1da6cceff86afd62856a8cfd87b499a09.png)
+
+![限制输入范围](../../_assets/images/75dc41f7ea0f456a2595a7ad7a07004d98578601627062f4b6bcc7fe5441c41e.png)
+
+![全局变量初始化](../../_assets/images/1b9d83c2a5cb5c940eab3c1a4a92145fe569981f436c49af89d35c9e09e3c6e9.png)
+
+![程序的退出点](../../_assets/images/1514c7775e4ab26d9071cf350817190a4c6868157c83cf6d29ce6d7f29eb96c6.png)
+
+![修改跳转条件](../../_assets/images/54ec6641b59e403fab5d7c79a251392247d01cf7dc21f774c3808cd7682ea123.png)
+
+![修改 v5](../../_assets/images/a1b22b1c65378a877826c2e317af6e2edbd73ec29207c8871aa3a9db7011f275.png)
+
+![修改 v5](../../_assets/images/63ba3b8f0041421d2baf8f5d9113a14ea48bca952c541e0ea0d15c1db9e8bf19.png)

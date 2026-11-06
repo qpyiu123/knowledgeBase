@@ -49,3 +49,11 @@ import Container from '@/components/docs/Container.vue'
 
 
 关于手写 shellcode，具体可以阅读[这篇文章](https://www.cnblogs.com/ZIKH26/articles/15845766.html)。
+
+## 原文配图
+
+![main 函数内容](../../_assets/images/57e9616f171867db946fee71330fafd22b336d163114752dbbc6b44918fafcc7.png)
+
+![逻辑分析](../../_assets/images/0f9f937ec8ef94008683b3542aa11c29c5a3ce102fe53876c9b34e662cc8d20b.jpg)
+
+![报错信息](../../_assets/images/3b5d753a22826342f80225f8f44e53f83d4a2a2ed868ca81651cf8488bafd056.png)

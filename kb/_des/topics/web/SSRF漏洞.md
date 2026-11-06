@@ -115,7 +115,7 @@ URL结构如下
 URI = schema:[//authority]path[?query][#fragment]
 ```
 
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/1.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/1.png)
+[![img](../../../_assets/images/f60e0da9a959d9c87109ebcdb604d9910fa6c6bc0d87da06f679887cba38cdff.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/1.png)
 
 - `userinfo` 通常用于**身份**验证，`root:passwd`，以`@`结尾
 - `host`就是经常说的主机名，如`baidu.com`
@@ -181,8 +181,8 @@ print("DONE")
 
 有一种网站地址是当访问任意子域名时，都会重定向到这个子域名
 比如当访问`http://127.0.0.1.xip.io/test.php`最后会跳转到`http://127.0.0.1/test.php`
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/2.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/2.png)
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/3.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/3.png)
+[![img](../../../_assets/images/78dca04ef319e890c775cb2af618c0dfbc9a791eadf7db351a12f2070e27cd19.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/2.png)
+[![img](../../../_assets/images/40c8d138854d2be4d7b444a13d767d4f8ba2a916c6c5e644e5cc4ab79ed9d93f.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/3.png)
 实现跳转
 可用网站：
 
@@ -193,7 +193,7 @@ print("DONE")
 这种方法适用于后端用`parse_url`判断host参数是否等于`127.0.0.1`或者`localhost`，但是如果检查是否存在关键字`127.0.0.1`，这种方法就不行，需要使用短地址绕过
 可用网站：
 `4m.cn`
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/4.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/4.png)
+[![img](../../../_assets/images/04e5268253bed924aee311d1b0d730a884aeacc9eeeefdef4aaecf00a8efcf2d.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/4.png)
 
 - 进制转换绕过过滤
 
@@ -265,9 +265,9 @@ echo dechex($r);
 
 `file_get_contents()`函数会将不认识的伪协议头当做文件夹，造成跨目录读取文件的漏洞
 php_error.logs内容
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/5.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/5.png)
+[![img](../../../_assets/images/a84e915f84dae90a5d536debaa3aae1fdd557f258c87a5bd37d4923fbab01eb5.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/5.png)
 构造payload读取php_error.logs
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/6.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/6.png)
+[![img](../../../_assets/images/96469706f137b3f350b576714495e971fcb2836eb25a58d235f714598859d1cf.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/6.png)
 可利用的payload
 
 1. httpsssss://../../../../../../etc/passwd
@@ -276,10 +276,10 @@ php_error.logs内容
 - URL解析问题
 
 parse_url和readfile的区别
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/7.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/7.png)
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/8.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/8.png)
+[![img](../../../_assets/images/08de075ddc26b2a281eb9761abbf55c2fd9826c2c0008989b4b25d55ac486030.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/7.png)
+[![img](../../../_assets/images/8d030d98a7474e43a58a6b0e54e9e5567ef017b6054cabe13c753fb78328ed6f.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/8.png)
 curl和parse_url解析的差异
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/9.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/9.png)
+[![img](../../../_assets/images/8becea79abe701f8918e5a2132d3c95416e691893a80e956ca97d3d8311e531d.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/9.png)
 更多参考blackhathttps://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf
 
 # SSRF进阶用法
@@ -290,12 +290,12 @@ curl和parse_url解析的差异
 
 - 对redis的攻击
 
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/10.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/10.png)
+[![img](../../../_assets/images/a6f7b820681c5f04e792f8a17a0754bf784c775811083c2c61e277af634294ab.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/10.png)
 **Tips**：如果是在url中输入payload的话还要讲payload再url编码一次
 
 - 对Mysql的攻击
 
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/11.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/11.png)
+[![img](../../../_assets/images/b727d2063b5a596dc7c26124f0c7264fc65e0d080596e22ed00064859f360d8c.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/11.png)
 题目：ISITDTU 2018 Friss
 复现过程：https://xz.aliyun.com/t/2500
 
@@ -312,11 +312,11 @@ TCP模式下在本机监听一个端口（默认为9000），Nginx把客户端�
 利用过程：
 
 1. 监听本地1234端口(可以任意指定)并写入ssrf.txt
-   [![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/12.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/12.png)
+   [![img](../../../_assets/images/a7cb7e0769051c7b821fd2c2af96ca002abfebede11529b7e7aa127d4780b852.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/12.png)
 
 2. 使用p牛的脚本生成payload
    https://gist.github.com/phith0n/9615e2420f31048f7e30f3937356cf75
-   [![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/13.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/13.png)
+   [![img](../../../_assets/images/472f92253124c46857f55b506a0b9fd4e072973265af5ff788bcb3d95e8eff24.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/13.png)
    这里的php是随便一个php都可以，攻击网站服务的话最好是使用`/var/www/html/`下的php文件
    可以使用`find / -name *.php`来找php文件
 
@@ -333,7 +333,7 @@ TCP模式下在本机监听一个端口（默认为9000），Nginx把客户端�
    print("gopher://127.0.0.1:1234/_"+s)
    ```
 
-   ![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/14.png)
+   ![img](../../../_assets/images/a796d8967ec1bcf66b50af03bf446928983c31f74e184139473f8932d2e854cc.png)
 
 最终payload：
 
@@ -343,7 +343,7 @@ gopher://127.0.0.1:9000/_%2501%2501u%2589%2500%2508%2500%2500%2500%2501%2500%250
 
 按照需求更改ip地址和端口使用`PHP-FPM`进行攻击
 
-[![image-20210901113833100](https://blog-pho.oss-cn-shanghai.aliyuncs.com/blog/image-20210901113833100.png)](https://blog-pho.oss-cn-shanghai.aliyuncs.com/blog/image-20210901113833100.png)
+[![image-20210901113833100](../../../_assets/images/5ecc776476b105a260b9802621ac303a7edd528fac0e8745b081549ddc028c62.png)](https://blog-pho.oss-cn-shanghai.aliyuncs.com/blog/image-20210901113833100.png)
 
 ## Gopher发送请求
 
@@ -364,7 +364,7 @@ echo "Hello".$_POST['a'];
 ```
 
 然后浏览器请求192.168.78.129/1.php,并且post数据上去,要加上`Content-Type`和`Content-Length`
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/15.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/15.png)
+[![img](../../../_assets/images/5654b1bfc656de5c9486d870184b2e6e189b52bcb526faca9769b1a2667209c3.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/15.png)
 然后用脚本对空格和特殊字符进行url编码，换行的地方换成%0D%0A
 
 ```
@@ -391,7 +391,7 @@ gopher://192.168.78.129:80/_POST%20/1.php%20HTTP/1.1%0D%0AHost%3A%20192.168.78.1
 ```
 
 在Linux的Shell下面请求，Windows不成功
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/16.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/16.png)
+[![img](../../../_assets/images/a508a0a874580bcda3c4cf3a57cb74c96c48ed06b36eee3c0a876ee11ca10426.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/16.png)
 这算是我们直接请求1.php,SSRF的情况是我们只能通过一台对目标网站有访问权限的机器对资源进行请求，我们本身没有权限
 
 下面在Ubuntu内写入ssrf.php
@@ -416,7 +416,7 @@ curl($url);
 
 需要提前安装好php和php7.0-curl
 直接将我们上面的payload通过url传进去是没有回显的，得再次url编码,如果是post的话就不用
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/17.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/17.png)
+[![img](../../../_assets/images/951515d64db05028b19a309b1652177b9c5f461443413c27e0cb714273b5b450.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/17.png)
 
 **发送get请求的方法一样**
 
@@ -434,7 +434,7 @@ DNS-rebinding就是利用第一次请求的时候解析的是合法的地址，�
 
 没有域名就去http://ceye.io/
 
-[![img](https://hackerqwq.github.io/2020/11/16/%E6%B5%85%E6%9E%90SSRF%E6%BC%8F%E6%B4%9E/18.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/18.png)
+[![img](../../../_assets/images/a78b0833d8c1151172a7e5eeb55f5b111e551f79ae86486dc03fa35adf5ca805.png)](https://hackerqwq.github.io/2020/11/16/浅析SSRF漏洞/18.png)
 
 ## 0x00 SSRF简介
 

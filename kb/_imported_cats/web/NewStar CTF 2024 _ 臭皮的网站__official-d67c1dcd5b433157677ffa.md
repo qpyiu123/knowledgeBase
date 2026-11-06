@@ -104,3 +104,17 @@ titleTemplate: ":title | WriteUp - NewStar CTF 2024"
 这样访问 `list` 就会触发这个恶意的 `ls`.
 
 得到 flag 名字，直接读取或者继续污染一次 `ls` 即可。
+
+## 原文配图
+
+![网页源代码给出提示](../../_assets/images/5f9c1d7697c127e3b6754774538f8b955f10e4a3aa858ed821b935e899f71f2b.png)
+
+![任意文件读取读取源代码](../../_assets/images/f0d4bae87c6065244ce24d1c520d1ccb50f24266e70e2bd07ef5edcda473dc9e.png)
+
+![文件读取获得种子](../../_assets/images/230a55d14f9251c6aff5ee2975aecf4b9892eb82b0095d2fa29aae9db2bcc869.png)
+
+![文件上传](../../_assets/images/af226582873d8cae8fc689884a35cf1c2bc2d4dc8f5d8374a7dd29563fa017c7.png)
+
+![ls 文件内容](../../_assets/images/9c5290682b39743b1a2302b950bf99e786811f1d53cc655612eb23fe9475e95e.png)
+
+![触发恶意的 ls](../../_assets/images/a4cfd029589489049a41f82c06e3466e1aabe7394c2fdbb60d672319c1e126ed.png)
