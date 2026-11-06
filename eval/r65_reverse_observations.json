@@ -1,0 +1,76 @@
+{
+  "cases": [
+    {
+      "id": "2020-utctf-basic-re",
+      "title": "basic-re",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=16a16a0a-0b31-42c2-878f-a02a4fdb44ab",
+      "sha256": "72a30e49df1ed5ee34ff3af32197680b2041a5677e01dc6929f7059532a9bc8f",
+      "kind_contains": "ELF",
+      "file": "r52/真题测试集/reverse/2020-utctf-basic-re/attachment",
+      "queries": [
+        {
+          "stage": "bare",
+          "q": "输入校验从哪里开始看，静态怎样定位？"
+        },
+        {
+          "stage": "category",
+          "q": "输入校验从哪里开始看，静态怎样定位？",
+          "category": "reverse"
+        },
+        {
+          "stage": "evidence",
+          "q": "x86-64 ELF，有 main、scanf 和 printf。从输入读取到比较指令，怎么沿交叉引用定位校验函数？",
+          "category": "reverse"
+        }
+      ]
+    },
+    {
+      "id": "das-ezvm",
+      "title": "ezVM",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=b1f5bd54-4762-4159-a326-9d95c6111894",
+      "sha256": "b37e15d68ae173cd4507d14555a80f0d0055a88f94bc8b857f0ca0ed6ffd96c8",
+      "kind_contains": "ZIP",
+      "file": "r65-round2/真题测试集/reverse/das-ezvm/atta_2.zip",
+      "queries": [
+        {
+          "stage": "bare",
+          "q": "这道逆向题应该从哪里开始看，如何确认校验逻辑？"
+        },
+        {
+          "stage": "category",
+          "q": "这道逆向题应该从哪里开始看，如何确认校验逻辑？",
+          "category": "reverse"
+        },
+        {
+          "stage": "evidence",
+          "q": "Windows x64 PE 和 check.dll、data 一起提供，DLL 导出 calc_run、check。怎样核对文件读取、字节码取指和 dispatcher 分派，验证是不是自定义 VM？",
+          "category": "reverse"
+        }
+      ]
+    },
+    {
+      "id": "2020-wangding-jocker",
+      "title": "jocker",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=b6e2e2f1-9c55-4cbb-ab8e-19972c394f57",
+      "sha256": "c034a15cc7ef7f9ea4fc96660dc9ecfe82d5e8bde4dcfc5c5aa4af31d59d411a",
+      "kind_contains": "ZIP",
+      "file": "r65-round2/真题测试集/reverse/2020-wangding-jocker/attachment.zip",
+      "queries": [
+        {
+          "stage": "bare",
+          "q": "这道逆向题应该从哪里开始看，如何确认校验逻辑？"
+        },
+        {
+          "stage": "category",
+          "q": "这道逆向题应该从哪里开始看，如何确认校验逻辑？",
+          "category": "reverse"
+        },
+        {
+          "stage": "evidence",
+          "q": "32 位 PE 导入 VirtualProtect，怀疑自修改代码。怎样查调用参数、目标段和后续写入以验证这个假设？",
+          "category": "reverse"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,491 @@
+{
+  "cases": [
+    {
+      "id": "zfs-recovery",
+      "title": "ZFS 文件恢复",
+      "event": "Hackergame 2024",
+      "family": "磁盘与文件系统",
+      "source": "https://github.com/USTC-Hackergame/hackergame2024-writeups/blob/deb6fa3f906e2d0e905f5de5b12757d89f54f812/official/ZFS%20%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D/files/zfs.zip",
+      "file": "zfs-recovery/zfs.zip",
+      "sha256": "8da3d4371b34aa7a67617554634040e8361546415f906eb7c19f9fd948e2c9e5",
+      "kind_contains": "ZIP",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 里只有一个 64 MiB 的磁盘镜像，如何只读判断是什么文件系统？"
+        },
+        {
+          "stage": "observed",
+          "q": "压缩包的 zfs.img 是 ZFS 磁盘镜像，不能直接挂载时，怎样辨认标签、池和数据块，再决定如何恢复删除文件？",
+          "category": "forensics"
+        },
+        {
+          "stage": "alt-category",
+          "q": "压缩包的 zfs.img 是 ZFS 磁盘镜像，不能直接挂载时，怎样辨认标签、池和数据块，再决定如何恢复删除文件？",
+          "category": "misc"
+        }
+      ],
+      "review": "提供 ZFS 标签或池的辨认、只读恢复方法；区别 NTFS/ext4。"
+    },
+    {
+      "id": "flagbox",
+      "title": "打不开的盒",
+      "event": "Hackergame 2024",
+      "family": "三维模型",
+      "source": "https://github.com/USTC-Hackergame/hackergame2024-writeups/blob/deb6fa3f906e2d0e905f5de5b12757d89f54f812/official/%E6%89%93%E4%B8%8D%E5%BC%80%E7%9A%84%E7%9B%92/files/flagbox.stl",
+      "file": "flagbox/flagbox.stl",
+      "sha256": "e3db3bec58231d229c5033d4fbe3f06306c94fb5d7982ad9223f827159c88bba",
+      "kind_contains": "未知",
+      "companions": [
+        {
+          "source": "https://github.com/USTC-Hackergame/hackergame2024-writeups/blob/deb6fa3f906e2d0e905f5de5b12757d89f54f812/official/%E6%89%93%E4%B8%8D%E5%BC%80%E7%9A%84%E7%9B%92/files/flagbox.jpg",
+          "path": "flagbox/flagbox.jpg",
+          "sha256": "5a87e59f3f1dd2b97f865c6742daa08e7653303e0216d66e74ed62ed98427683"
+        }
+      ],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "附件扩展名 STL，另有一张 JPG，怎样只读确认 STL 是 ASCII 还是二进制？"
+        },
+        {
+          "stage": "observed",
+          "q": "STL 二进制的 80 字节头、三角面数量和记录长度如何核对？封闭盒内还有网格时，怎样做切片看内部？",
+          "category": "misc"
+        }
+      ],
+      "review": "能确认格式与只读切片的步骤。"
+    },
+    {
+      "id": "geekgame-mario",
+      "title": "TAS概论大作业",
+      "event": "GeekGame 2024",
+      "family": "游戏数据",
+      "source": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-mario/attachment/misc-mario.zip",
+      "file": "geekgame-mario/misc-mario.zip",
+      "sha256": "e34761a0cd6b03eb321ba042c5d777202a6780071addd2fbb8a5e490dd0db8c2",
+      "kind_contains": "ZIP",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 里有 NES ROM、示例二进制和 Python 脚本，怎么在不运行时区分资源和输入格式？"
+        },
+        {
+          "stage": "observed",
+          "q": "FCEUX 的 FM2 按键电影由二进制输入转出，如何检查帧、按键位和模拟器判定条件？",
+          "category": "misc"
+        }
+      ],
+      "review": "有具体格式或逐帧检查方法，不要求运行 ROM。"
+    },
+    {
+      "id": "geekgame-sunshine",
+      "title": "熙熙攘攘我们的天才吧",
+      "event": "GeekGame 2024",
+      "family": "网络与流量",
+      "source": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-sunshine/attachment/misc-sunshine.zip",
+      "file": "geekgame-sunshine/misc-sunshine.zip",
+      "sha256": "d877588d7347149a0464f15f710885102ce2760c48be6cb11cd49ee7fb54daa1",
+      "kind_contains": "ZIP",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 含一份日志和一个 WLAN.pcap，先如何关联时间与数据？"
+        },
+        {
+          "stage": "observed",
+          "q": "串流附件有 WLAN.pcap 和 Sunshine 日志。如何核对串流会话并按数据端口区分键盘、音频、视频？",
+          "category": "forensics"
+        }
+      ],
+      "review": "说明会话、传输方向、键鼠与音视频分流。"
+    },
+    {
+      "id": "geekgame-erail",
+      "title": "新穷铁道",
+      "event": "GeekGame 2024",
+      "family": "图片与元数据",
+      "source": "https://github.com/PKU-GeekGame/geekgame-4th/blob/a21d7f7387512ec7ef77720e998d60efa16f2353/official_writeup/misc-erail/attachment/misc-erail.jpg",
+      "file": "geekgame-erail/misc-erail.jpg",
+      "sha256": "37042822374507f189e81f1351ad4f8d25851c4d7abf0f1e74f27eb8e0a2e967",
+      "kind_contains": "JPEG",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "只给一张 JPEG，怎么确认是否还有拍摄时间和设备等元数据？"
+        },
+        {
+          "stage": "observed",
+          "q": "铁路场景 JPG 怎样离线提取 EXIF、区分缩略图，并找画面中可复核的车次或站点线索？",
+          "category": "forensics"
+        }
+      ],
+      "review": "提供元数据读取或原图人工观察路线；不联网识图。"
+    },
+    {
+      "id": "badpolicies",
+      "title": "Bad Policies",
+      "event": "DownUnderCTF 2024",
+      "family": "Windows 取证",
+      "source": "https://github.com/DownUnderCTF/Challenges_2024_Public/blob/f2797a33d8f5851508f37e854afceedf85eee8a3/forensics/badpolicies/publish/badpolicies.zip",
+      "file": "badpolicies/badpolicies.zip",
+      "sha256": "2e745e85cc8fbb427e77f0eb1da2e53b1cb45bb5ec45bb7df3ff47926b3fa844",
+      "kind_contains": "ZIP",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "附件 ZIP 解开是 Policies 目录，怎么辨认策略配置文件？"
+        },
+        {
+          "stage": "observed",
+          "q": "Windows 域策略备份有 GPT.INI、Registry.pol 和 Groups.xml。怎样逐条检查 GPO，优先查找首选项中的本地账号和密码字段？",
+          "category": "forensics"
+        }
+      ],
+      "review": "需要 SYSVOL/GPP、Groups.xml、cpassword 的对应关系。"
+    },
+    {
+      "id": "emuc2",
+      "title": "emuc2",
+      "event": "DownUnderCTF 2024",
+      "family": "网络与流量",
+      "source": "https://github.com/DownUnderCTF/Challenges_2024_Public/blob/f2797a33d8f5851508f37e854afceedf85eee8a3/forensics/emuc2/publish/challenge.pcap",
+      "file": "emuc2/challenge.pcap",
+      "sha256": "bbfd398daad10e4f54c08047679e368508fa4209f4bf835755f98fcf1baa2fed",
+      "kind_contains": "未知",
+      "companions": [
+        {
+          "source": "https://github.com/DownUnderCTF/Challenges_2024_Public/blob/f2797a33d8f5851508f37e854afceedf85eee8a3/forensics/emuc2/publish/sslkeylogfile.txt",
+          "path": "emuc2/sslkeylogfile.txt",
+          "sha256": "66ee1b83994af42e64aa91213cf1f9a462fcaa9c1e9ebf63ab2191a2f3ab564d"
+        }
+      ],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "一个 pcap 和一个 sslkeylogfile.txt，如何确认抓包格式和配套文件的作用？"
+        },
+        {
+          "stage": "observed",
+          "q": "经典 pcap 随附 TLS Key Log，含流量密钥标签。怎样在 Wireshark 按会话加载 key log 并定位解密后的应用流？",
+          "category": "forensics"
+        }
+      ],
+      "review": "说明 TLS 会话密钥日志区别于服务端私钥，给复查步骤。"
+    },
+    {
+      "id": "macromagic",
+      "title": "Macro Magic",
+      "event": "DownUnderCTF 2024",
+      "family": "文档与宏",
+      "source": "https://github.com/DownUnderCTF/Challenges_2024_Public/blob/f2797a33d8f5851508f37e854afceedf85eee8a3/forensics/macromagic/publish/macromagic.zip",
+      "file": "macromagic/macromagic.zip",
+      "sha256": "36d144f92b2e1e57ad5e5892e1b347394e84e74c2588c3eaa01ba16810093a88",
+      "kind_contains": "ZIP",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "压缩包里有 xlsm 表格和 pcapng，怎样只读拆开检查？"
+        },
+        {
+          "stage": "observed",
+          "q": "Excel xlsm 的 ZIP 成员有 xl/vbaProject.bin，如何离线提取 VBA 宏文本，和 pcapng 的连接线索对应？",
+          "category": "forensics"
+        },
+        {
+          "stage": "alt-category",
+          "q": "Excel xlsm 的 ZIP 成员有 xl/vbaProject.bin，如何离线提取 VBA 宏文本，和 pcapng 的连接线索对应？",
+          "category": "misc"
+        }
+      ],
+      "review": "能给不启用宏的提取路线，并指出宏与流量分开看。"
+    },
+    {
+      "id": "samiam",
+      "title": "Sam I Am",
+      "event": "DownUnderCTF 2024",
+      "family": "Windows 取证",
+      "source": "https://github.com/DownUnderCTF/Challenges_2024_Public/blob/f2797a33d8f5851508f37e854afceedf85eee8a3/forensics/samiam/publish/samiam.zip",
+      "file": "samiam/samiam.zip",
+      "sha256": "d49da316cd1ef2f3c1472742f34c5b40623b851c57e12c3d0bbd50461e00566c",
+      "kind_contains": "ZIP",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "两个 .bak 文件位于一个 ZIP，怎样确认它们是注册表 hive？"
+        },
+        {
+          "stage": "observed",
+          "q": "离线 SAM 和 SYSTEM 都有 regf 文件头。为什么要配对读取，如何提取测试账号的哈希，避免读错系统？",
+          "category": "forensics"
+        }
+      ],
+      "review": "需 SAM/SYSTEM 与 BootKey 的关系、离线读取方法。"
+    },
+    {
+      "id": "wackyrecipe",
+      "title": "Wacky Recipe",
+      "event": "DownUnderCTF 2024",
+      "family": "特殊语言与编码",
+      "source": "https://github.com/DownUnderCTF/Challenges_2024_Public/blob/f2797a33d8f5851508f37e854afceedf85eee8a3/misc/wackyrecipe/publish/recipe.txt",
+      "file": "wackyrecipe/recipe.txt",
+      "sha256": "3da17c5abfe840749732ea429ec7cf1b07af423f2469ccd0e97b54f73f24a517",
+      "kind_contains": "UTF-8 文本",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "文本长得像菜谱，Ingredients、Method 段能否判断是特殊编程语言？"
+        },
+        {
+          "stage": "observed",
+          "q": "Chef 菜谱语言有两个未知食材数量，Method 使用 mixing bowl 和 Pour。怎么把动作翻译成栈和运算，再回验输出？",
+          "category": "misc"
+        }
+      ],
+      "review": "需要 Chef 语义；普通编码清单不能直接帮忙。"
+    },
+    {
+      "id": "dnadecay",
+      "title": "DNA Decay",
+      "event": "DownUnderCTF 2024",
+      "family": "特殊语言与编码",
+      "source": "https://github.com/DownUnderCTF/Challenges_2024_Public/blob/f2797a33d8f5851508f37e854afceedf85eee8a3/misc/dnadecay/publish/dna.rb",
+      "file": "dnadecay/dna.rb",
+      "sha256": "8bb77f604357b4d749f557f25ba8f9387717a7644c4196e5e167be9fd26cf429",
+      "kind_contains": "UTF-8 文本",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "Ruby 扩展名，开头 require doublehelix，正文是 DNA 字母和缺口，怎么确定要按哪种格式读？"
+        },
+        {
+          "stage": "observed",
+          "q": "Double Helix 语言源码出现 A/T/C/G 互补碱基和缺口。先按碱基配对补行，如何区分源码缺失和可解码的 DNA 数据？",
+          "category": "misc"
+        }
+      ],
+      "review": "区分互补检查和解释器语义；不误套二进制碱基映射。"
+    },
+    {
+      "id": "doxme",
+      "title": "doxme",
+      "event": "DownUnderCTF 2022",
+      "family": "文档与元数据",
+      "source": "https://github.com/DownUnderCTF/Challenges_2022_Public/blob/2213706f1a93120bd58b3e47076611d80341c76c/dfir/doxme/publish/doxme",
+      "file": "doxme/doxme",
+      "sha256": "7687a5e69dbece9778beca8b49173e7a02495844b1339442b46977ebc135daa4",
+      "kind_contains": "ZIP",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "无扩展名 ZIP 里有 word/document.xml 和 docProps，怎样确认是 Word 文件？"
+        },
+        {
+          "stage": "observed",
+          "q": "OOXML Word 附件怎样不打开 Word 就从 docProps/core.xml 检查作者、描述，并提取 word/media 的原图？",
+          "category": "misc"
+        }
+      ],
+      "review": "能定位核心属性和内嵌媒体。"
+    },
+    {
+      "id": "rage",
+      "title": "Rage!",
+      "event": "DownUnderCTF 2022",
+      "family": "音频",
+      "source": "https://github.com/DownUnderCTF/Challenges_2022_Public/blob/2213706f1a93120bd58b3e47076611d80341c76c/misc/rage/publish/rage.wav",
+      "file": "rage/rage.wav",
+      "sha256": "bad04937d4eb66e72eebc4886e33533b2f13b29c0ac7c292922db94428274e1d",
+      "kind_contains": "RIFF",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "RIFF/WAVE 是 48 kHz 双声道，隐藏信息先看频谱还是分声道？"
+        },
+        {
+          "stage": "observed",
+          "q": "48 kHz 双声道 WAV，左右声道怎样分别画频谱、做相减并检查异常段？",
+          "category": "misc"
+        }
+      ],
+      "review": "按同一时间轴分析各声道，避免只看合成波形。"
+    },
+    {
+      "id": "land-down-under",
+      "title": "Land Down Under",
+      "event": "DownUnderCTF 2022",
+      "family": "特殊语言与编码",
+      "source": "https://github.com/DownUnderCTF/Challenges_2022_Public/blob/2213706f1a93120bd58b3e47076611d80341c76c/misc/land_down_under/publish/mate.aussie",
+      "file": "land-down-under/mate.aussie",
+      "sha256": "e98c6c015297a410d74abccdbea292d39a773196d1efae26a64fc0ab1b5de56e",
+      "kind_contains": "UTF-8 文本",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "无常见扩展名的文本包含倒置英文字母，怎样确认是否能逆序转换？"
+        },
+        {
+          "stage": "observed",
+          "q": "全文出现 ɐ、ǝ、┴ 和反向标点。怎么做 Unicode 倒置映射并逐行逆序，确认还原的是英语或程序？",
+          "category": "misc"
+        }
+      ],
+      "review": "提供字符映射和可验证的还原步骤。"
+    },
+    {
+      "id": "tornado-warning",
+      "title": "Tornado Warning",
+      "event": "UIUCTF 2023",
+      "family": "音频",
+      "source": "https://github.com/sigpwny/UIUCTF-2023-Public/blob/1e12c23ee6d2ba462f89e0894cc350aef004e65f/challenges/misc/tornado_warning/warning.wav",
+      "file": "tornado-warning/warning.wav",
+      "sha256": "dd70b814faad463ee7d54125df6091a04952c77db69a0e6b42215a9dad52e39d",
+      "kind_contains": "RIFF",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "44.1 kHz 单声道 WAV，如何先定位成组短音而不是直接猜摩斯？"
+        },
+        {
+          "stage": "observed",
+          "q": "长录音里出现一组重复的预警数据音，怎样用频谱判定双频 FSK、估计符号速率并还原字节？",
+          "category": "misc"
+        }
+      ],
+      "review": "给音频 FSK 的取频和定时，而非只介绍画频谱。"
+    },
+    {
+      "id": "beep-boop-robot",
+      "title": "Beep Boop Robot",
+      "event": "TJCTF 2023",
+      "family": "音频",
+      "source": "https://github.com/TJCSec/tjctf-2023-challenges/blob/44a0fdb7a14be03bf90bd35a42b05660ef64a781/forensics/beep-boop-robot/robot.wav",
+      "file": "beep-boop-robot/robot.wav",
+      "sha256": "dc92777abc2bef4ebf4171d42bd77687fd6c53af74ccc04ee571dbb02a253a9b",
+      "kind_contains": "RIFF",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "8 位单声道 WAV 里有短鸣声，先怎么分辨单音频率还是双音？"
+        },
+        {
+          "stage": "observed",
+          "q": "低采样率 WAV 有连续短音。怎么做短时 FFT、列每段峰值和频率切换时间，区分摩斯、双音和 FSK？",
+          "category": "misc"
+        }
+      ],
+      "review": "需有可执行的频率分段方案。"
+    },
+    {
+      "id": "miniscule",
+      "title": "Miniscule",
+      "event": "TJCTF 2023",
+      "family": "图片结构",
+      "source": "https://github.com/TJCSec/tjctf-2023-challenges/blob/44a0fdb7a14be03bf90bd35a42b05660ef64a781/forensics/miniscule/miniscule.png",
+      "file": "miniscule/miniscule.png",
+      "sha256": "6681819985f7d2eeaa7ca8daad1fb842d80e411b5dcf24c5e5cafa5a7a2189d1",
+      "kind_contains": "PNG",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "PNG 只见 IHDR、IDAT、IEND，普通查看器打不开，先核对哪些字段？"
+        },
+        {
+          "stage": "observed",
+          "q": "PNG IHDR 的压缩方法写成 1，尺寸 800×800。如何检查 IDAT 的真实编码，修复头并用 CRC、解压长度回验？",
+          "category": "misc"
+        }
+      ],
+      "review": "不能只重算 CRC；先验证压缩算法和图像数据长度。"
+    },
+    {
+      "id": "nothing-to-see",
+      "title": "Nothing to See",
+      "event": "TJCTF 2023",
+      "family": "图片附加文件",
+      "source": "https://github.com/TJCSec/tjctf-2023-challenges/blob/44a0fdb7a14be03bf90bd35a42b05660ef64a781/forensics/nothing-to-see/nothing.png",
+      "file": "nothing-to-see/nothing.png",
+      "sha256": "765d3a5ba2b9a320cf76a4fd3b9a8322e0319b5dda6e65fe73d4ce9bc80a37dd",
+      "kind_contains": "PNG",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "PNG 末尾在 IEND 后还有数据，怎样确定是否嵌了完整文件？"
+        },
+        {
+          "stage": "observed",
+          "q": "IEND 后命中 PK 头，内嵌 ZIP 有加密标志。怎样按偏移提取并核对 ZIP 目录，区分外层图片和内层加密？",
+          "category": "misc"
+        }
+      ],
+      "review": "能定位偏移、分离 ZIP、验证成员目录和加密标志。"
+    },
+    {
+      "id": "usb-hacker",
+      "title": "USB Hacker",
+      "event": "W4terCTF 2023",
+      "family": "USB 取证",
+      "source": "https://github.com/W4terDr0p/W4terCTF-2023/blob/710eecddbfe847a8d7a3375c74a8c5c4947a4cb3/challenges/forensics/usb-hacker/attachments/usb-hacker.pcapng",
+      "file": "usb-hacker/usb-hacker.pcapng",
+      "sha256": "d996446d07e7db1f25f8287f36dfbe51fc79b7261518db7a5f00b31c6a66d9d9",
+      "kind_contains": "未知",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "无普通 PCAP 头的抓包以 0A 0D 0D 0A 开头，怎样核对链路类型？"
+        },
+        {
+          "stage": "observed",
+          "q": "PCAPNG 接口类型 220，Linux usbmon 有 64 字节头。如何区分控制传输和 HID 中断输入，按端点提取键盘报告？",
+          "category": "forensics"
+        },
+        {
+          "stage": "alt-category",
+          "q": "PCAPNG 接口类型 220，Linux usbmon 有 64 字节头。如何区分控制传输和 HID 中断输入，按端点提取键盘报告？",
+          "category": "misc"
+        }
+      ],
+      "review": "需要 USB/HID 具体字段、端点和数据长度，不套普通 TCP。"
+    },
+    {
+      "id": "spam-2023",
+      "title": "Spam 2023",
+      "event": "W4terCTF 2023",
+      "family": "邮件与编码",
+      "source": "https://github.com/W4terDr0p/W4terCTF-2023/blob/710eecddbfe847a8d7a3375c74a8c5c4947a4cb3/challenges/misc/spam-2023/attachments/mbox",
+      "file": "spam-2023/mbox",
+      "sha256": "74d980bd8a4e33b5d48b759c1fad44d38d917b46d884113b861fbac21e59a5bb",
+      "kind_contains": "UTF-8 文本",
+      "companions": [],
+      "queries": [
+        {
+          "stage": "report",
+          "q": "无扩展名文本首行是 From 邮箱加时间，怎样确认 mbox 边界和邮件数？"
+        },
+        {
+          "stage": "observed",
+          "q": "mbox 邮件归档怎样离线拆分、检查 MIME 编码和头字段，再判断正文有没有编码线索？",
+          "category": "forensics"
+        }
+      ],
+      "review": "能定位邮件边界与 MIME 层，不做在线邮件操作。"
+    }
+  ]
+}
