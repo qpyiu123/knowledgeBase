@@ -1,0 +1,414 @@
+{
+  "cases": [
+    {
+      "id": "poly-rsa",
+      "category": "crypto",
+      "title": "PolyRSA",
+      "source": "E:/re/1835674017801965568/PolyRSA.zip",
+      "event": null,
+      "year": null,
+      "file": "crypto/poly-rsa/PolyRSA.zip",
+      "sha256": "fa38b8257294279c99572a32a6eb536900936cafef6fb98e5a30c1d6634db086",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 里只有一个 Python 文件，怎么只读查看源码和定位公开输出？"
+        },
+        {
+          "stage": "observed",
+          "category": "crypto",
+          "q": "同一个 RSA 模数 n=pq，额外给出 2p+3q 和 5p+7q 的不同指数模幂。如何利用这两条关系分解 n？"
+        },
+        {
+          "stage": "followup",
+          "q": "RSA 分解 n=pq：两组关于 p、q 的线性组合分别做模幂，交叉升幂后消去其中一个素因子，再用 gcd 怎么做？",
+          "category": "crypto"
+        }
+      ],
+      "review": "交叉幂消元和 GCD；不同于同明文共模。"
+    },
+    {
+      "id": "rsa-middle-bits",
+      "category": "crypto",
+      "title": "highlow",
+      "source": "E:/re/1860679780337192960/highlow.zip",
+      "event": null,
+      "year": null,
+      "file": "crypto/rsa-middle-bits/highlow.zip",
+      "sha256": "4e4d23a036dd9bd6995ab05c787ddba954233e47a77279c023f563f827c2f302",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 里只有一个 Python 文件，怎么只读查看源码和定位公开输出？"
+        },
+        {
+          "stage": "observed",
+          "category": "crypto",
+          "q": "RSA 的 p 与左移 400 位的 44 字节消息异或后给出，p 两端保持不变，如何用已知高低位恢复中间未知部分？"
+        }
+      ],
+      "review": "把连续未知位写成小根，检查可用位数。"
+    },
+    {
+      "id": "curve-parameters",
+      "category": "crypto",
+      "title": "消逝的曲线_ff662792ce13f9b7b280d7e9ea6339e2",
+      "source": "E:/re/1864202105028349952/消逝的曲线_ff662792ce13f9b7b280d7e9ea6339e2.zip",
+      "event": null,
+      "year": null,
+      "file": "crypto/curve-parameters/消逝的曲线_ff662792ce13f9b7b280d7e9ea6339e2.zip",
+      "sha256": "91d101b0e954fa60c330e82065185482abc26611192907b3fe95b712912da7b4",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 中有 Python 文件和 __MACOSX，怎么辨认源码和无关元数据？"
+        },
+        {
+          "stage": "observed",
+          "category": "crypto",
+          "q": "只有同一条椭圆曲线上四个仿射点坐标，有限域素数 p 和曲线 a、b 都未知，能否先恢复曲线参数？"
+        }
+      ],
+      "review": "曲线方程做差、消元，对整数取 GCD；不先做离散对数。"
+    },
+    {
+      "id": "groebner-composite",
+      "category": "crypto",
+      "title": "Algebra",
+      "source": "E:/re/1835688569939693568/Algebra.zip",
+      "event": null,
+      "year": null,
+      "file": "crypto/groebner-composite/Algebra.zip",
+      "sha256": "b1f3578adf3a2187fecc8a56138c37a0884da6a9250eace5c7421154e2d63fc6",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 有 Sage 文件和两个 .chall 输出，怎样静态对应输入、参数和输出？"
+        },
+        {
+          "stage": "observed",
+          "category": "crypto",
+          "q": "Sage 题把分块异或后的未知量写成有限域多项式方程，同时公开另一组密钥相关数据。如何检查多项式理想并消元？"
+        },
+        {
+          "stage": "followup",
+          "q": "Sage 有限域多变量方程组，怎么用 Gröbner 基、字典序和 ideal().groebner_basis() 逐个消元？",
+          "category": "crypto"
+        }
+      ],
+      "review": "有限域、多项式理想、消元顺序；两组输出各自的约束。"
+    },
+    {
+      "id": "rsa-shared-prime-prefix",
+      "category": "crypto",
+      "title": "0x41414141_2021_factorize",
+      "source": "E:/re/1868508176920350720/0x41414141_2021_factorize.zip",
+      "event": "0x41414141 CTF（附件文件名）",
+      "year": 2021,
+      "file": "crypto/rsa-shared-prime-prefix/0x41414141_2021_factorize.zip",
+      "sha256": "a25585cf5bad04276f6a7f44e12a13cd539a692e1497533c3b51fbb2545e28b0",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 有 README 和一个 Python 程序，怎么静态确认是否带实际公开参数？"
+        },
+        {
+          "stage": "observed",
+          "category": "crypto",
+          "q": "RSA 两个 1024 位素数共用高 512 位，各自随机生成低位。只有 n 和 c，怎么估计 Fermat 分解是否可行？"
+        }
+      ],
+      "review": "估算步数并验证分解。"
+    },
+    {
+      "id": "rabin-eight",
+      "category": "crypto",
+      "title": "ez_raabin",
+      "source": "E:/re/1996418696045662208/ez_raabin.zip",
+      "event": null,
+      "year": null,
+      "file": "crypto/rabin-eight/ez_raabin.zip",
+      "sha256": "fcba537b09681581016a59ac59cb6cd04762c76863d72a1feb7d8f8a8686c1c9",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 里只有一个 Python 文件，怎么只读查看源码和定位公开输出？"
+        },
+        {
+          "stage": "observed",
+          "category": "crypto",
+          "q": "模数是三个 3 mod 4 的素数乘积，指数是 8，泄漏 p*q 且 q 接近 p+2^400。怎样先分解再做模根和 CRT？"
+        }
+      ],
+      "review": "逐层开根、CRT 组合与回代，不对指数 8 直接求逆。"
+    },
+    {
+      "id": "lwe-error-band",
+      "category": "crypto",
+      "title": "lwe1",
+      "source": "E:/re/1996419447975317504/lwe1.py",
+      "event": null,
+      "year": null,
+      "file": "crypto/lwe-error-band/lwe1.py",
+      "sha256": "8b94274762ffb834303be611d6a2091b76cf643c0d267321dbc45cf517da7843",
+      "kind_contains": "UTF-8 文本",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "附件识别为 UTF-8 文本，像 Sage 的 Python 源码，怎样只读查看生成式和末尾公开数据？"
+        },
+        {
+          "stage": "observed",
+          "category": "crypto",
+          "q": "模素数的 A*s+e 有 60 个方程、48 个未知量，误差每项在 5900 到 6000。怎么把误差居中再做格嵌入？"
+        }
+      ],
+      "review": "误差居中、整数格维度、候选回验。"
+    },
+    {
+      "id": "subgroup-choreographer",
+      "category": "crypto",
+      "title": "Subgroup_Choreographer",
+      "source": "E:/re/2019277633992265728/Subgroup_Choreographer.py",
+      "event": null,
+      "year": null,
+      "file": "crypto/subgroup-choreographer/Subgroup_Choreographer.py",
+      "sha256": "2a5b3bb4b370a7baad466ca1ba6c5be44e8bc9c5c1f18dd2d7ffed0e3404befa",
+      "kind_contains": "UTF-8 文本",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "UTF-8 源码同时有查表、签名和 AES-CTR，如何把公开输出对应回生成过程？"
+        },
+        {
+          "stage": "observed",
+          "category": "crypto",
+          "q": "自定义群用 Cayley 表查表，公开签名和循环移位的乘积轨迹，私钥经 SHA-256 后作 AES 密钥。先检查哪些群和子群性质？"
+        }
+      ],
+      "review": "从运算表检查单位元、阶、逆元和不变量。"
+    },
+    {
+      "id": "ntru-sparse",
+      "category": "crypto",
+      "title": "NTRU",
+      "source": "E:/re/2019277796714483712/NTRU.zip",
+      "event": null,
+      "year": null,
+      "file": "crypto/ntru-sparse/NTRU.zip",
+      "sha256": "a02af920c7501cda9fb762b51a5b49d2ba6f02d1c9b9e3562402db467a28578d",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 里只有一个 Python 文件，怎么只读查看源码和定位公开输出？"
+        },
+        {
+          "stage": "observed",
+          "category": "crypto",
+          "q": "在模 12289、x^31-1 下给出 h 和 c=r*h+m，r 只有 4 个正负一系数。怎么用循环移位与稀疏条件限制 r？"
+        }
+      ],
+      "review": "稀疏枚举、折半或通用格攻击的条件，回验候选。"
+    },
+    {
+      "id": "lcg-low-byte",
+      "category": "crypto",
+      "title": "lunar_lcg",
+      "source": "E:/re/2059190650498191360/lunar_lcg.zip",
+      "event": null,
+      "year": null,
+      "file": "crypto/lcg-low-byte/lunar_lcg.zip",
+      "sha256": "3dbe071242c3d47ba22a5891d920cff48a9f7157c87f36f439b0a8ab256da0e7",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 里有 README、输出和 encrypt.py，如何定位密文格式和生成式？"
+        },
+        {
+          "stage": "observed",
+          "category": "crypto",
+          "q": "线性同余发生器每次只取状态低 8 位，与文件异或。已知少量明文字节，什么时候可以只在模 256 下恢复递推？"
+        },
+        {
+          "stage": "followup",
+          "q": "LCG 模数 m 已知，附件泄漏加密前连续 6 个完整状态，密钥流才截成低 8 位，怎么先从状态恢复 a 和增量再预测？",
+          "category": "crypto"
+        }
+      ],
+      "review": "原模数需是 256 的倍数；区分低位与高位截断。"
+    },
+    {
+      "id": "pcap-caidao",
+      "category": "misc",
+      "title": "菜刀流量",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=1283c8da-2d50-404e-8c28-ab38ed84a971",
+      "event": null,
+      "year": null,
+      "platform_difficulty": "中等",
+      "platform_md5": "a19af6b38679b26650b270779dd037ab",
+      "file": "misc/pcap-caidao/pcapng",
+      "sha256": "28bebe972dd1a6f758f926e4508e4c3dcaea59ed6c50857f09747660f22d6959",
+      "kind_contains": "未知",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "无扩展名附件类型未知，文件头是 0a0d0d0a。怎么识别这是哪类取证文件？"
+        },
+        {
+          "stage": "observed",
+          "category": "forensics",
+          "q": "PCAPNG 里要从多条 HTTP 请求中挑出可疑表单传输，怎么用 Wireshark 按会话跟踪和导出请求体？"
+        }
+      ],
+      "review": "识别 PCAPNG，区分按包搜索与按流重组。"
+    },
+    {
+      "id": "das-ezvm",
+      "category": "reverse",
+      "title": "ezVM",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=b1f5bd54-4762-4159-a326-9d95c6111894",
+      "event": null,
+      "year": null,
+      "platform_difficulty": "困难",
+      "platform_md5": "a21f158d7b940f5785285eee7d52419b",
+      "file": "reverse/das-ezvm/atta_2.zip",
+      "sha256": "b37e15d68ae173cd4507d14555a80f0d0055a88f94bc8b857f0ca0ed6ffd96c8",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 同时有 exe、dll 和无扩展名 data，不运行它，静态检查先看什么？"
+        },
+        {
+          "stage": "observed",
+          "category": "reverse",
+          "q": "Windows 逆向，附件有 PE 主程序、check.dll 和单独的 data。怀疑解释器读入自定义字节码，怎么从 DLL 调用到循环分派定位 opcode？"
+        }
+      ],
+      "review": "PE 导入导出、数据读取、分派循环和指令边界。"
+    },
+    {
+      "id": "2020-wangding-jocker",
+      "category": "reverse",
+      "title": "jocker",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=b6e2e2f1-9c55-4cbb-ab8e-19972c394f57",
+      "event": "网鼎杯青龙组",
+      "year": 2020,
+      "platform_difficulty": "简单",
+      "platform_md5": "5695ffa6c4561eb27cd1ee976a66aece",
+      "file": "reverse/2020-wangding-jocker/attachment.zip",
+      "sha256": "c034a15cc7ef7f9ea4fc96660dc9ecfe82d5e8bde4dcfc5c5aa4af31d59d411a",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 只有一个 Windows exe，怎么确认架构和入口，静态找程序从哪里读输入？"
+        },
+        {
+          "stage": "observed",
+          "category": "reverse",
+          "q": "逆向 Windows PE 时发现程序可能在校验前改写自己的代码，静态分析怎样核对可写代码段和还原修改过程？"
+        },
+        {
+          "stage": "followup",
+          "q": "32 位 PE 导入 VirtualProtect，自修改代码 SMC 怎样找调用者并在不执行程序的情况下确认被改写区间？",
+          "category": "reverse"
+        }
+      ],
+      "review": "验证自修改代码证据，区分静态补丁与运行程序。"
+    },
+    {
+      "id": "2020-wangding-tesla",
+      "category": "misc",
+      "title": "Teslaaaaa",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=b3c0bb28-8fb3-48fc-8345-cf7c17a6ee6f",
+      "event": "网鼎杯青龙组",
+      "year": 2020,
+      "platform_difficulty": "简单",
+      "platform_md5": "fe26e545638bc48152ef8acb942cf84f",
+      "file": "misc/2020-wangding-tesla/attachment.zip",
+      "sha256": "f97a83de3df155b30e3517ff56085f0eccbae0a9863670efdf246762584b6ce4",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 有 PNG 和另一个 ZIP，怎么分别检查两个成员的结构？"
+        },
+        {
+          "stage": "observed",
+          "category": "misc",
+          "q": "PNG 和内层 ZIP 同时给出，如何排查 PNG 尾部或像素通道，以及判断 ZIP 是真加密还是标志位伪加密？"
+        },
+        {
+          "stage": "followup",
+          "q": "内层 ZIP 可以直接解出 ecu_can_log.asc，含 Rx 和 Tx，怎样按 CAN arbitration ID 分组并核对车载报文？",
+          "category": "forensics"
+        }
+      ],
+      "review": "检查内层 ZIP 标志和 PNG 结构，不直接猜密码。"
+    },
+    {
+      "id": "2021-gkctf-firefox",
+      "category": "misc",
+      "title": "FireFox Forensics",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=3ba70c01-db39-4043-b9ff-91fc7c6407a6",
+      "event": "GKCTF",
+      "year": 2021,
+      "platform_difficulty": "简单",
+      "platform_md5": "0e22872f67735262d61115311084f799",
+      "file": "misc/2021-gkctf-firefox/FireFox_Forensics.zip",
+      "sha256": "9bbba3e6003258a5edda30241a6332089287370d6b1b17c8a8dd52654518e87c",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "ZIP 列出 key4.db 和 logins.json，这两个文件是什么？怎样只读辨认？"
+        },
+        {
+          "stage": "observed",
+          "category": "forensics",
+          "q": "离线 Firefox 取证，key4.db 是 SQLite，logins.json 有 encryptedUsername 和 encryptedPassword。怎么确认 NSS 密钥库和登录条目的对应关系？"
+        },
+        {
+          "stage": "followup",
+          "q": "Firefox NSS key4.db 有 metaData 和 nssPrivate 两张表，配套 logins.json。离线取证时怎样判断主密码和解密所需的字段？",
+          "category": "forensics"
+        }
+      ],
+      "review": "检查 NSS 文件配对和主密码，不套 Chromium Login Data。"
+    },
+    {
+      "id": "2021-dasctf-nuclear",
+      "category": "misc",
+      "title": "Nuclear wastewater",
+      "source": "https://ctf2.dasctf.com/dashboard/practice/b9bbb32f-f186-458f-b90b-12440c0f6aea?tab=challenges&challenge=946b95c3-52a5-488e-81e3-c9b5c2f56442",
+      "event": "DASCTF July X CBCTF 4th",
+      "year": 2021,
+      "platform_difficulty": "简单",
+      "platform_md5": "6d1f109a1e175318aa28f73741a75457",
+      "file": "misc/2021-dasctf-nuclear/Nuclear_wastewater.zip",
+      "sha256": "01d1f27fe855718350c95ac88aad1c75a98e1abb59c7d875b873e373ef35a2dc",
+      "kind_contains": "ZIP",
+      "queries": [
+        {
+          "stage": "report",
+          "q": "题面说污染的二维码，外层 ZIP 里有 PNG 和内层 ZIP，先怎么分别检查？"
+        },
+        {
+          "stage": "observed",
+          "category": "misc",
+          "q": "二维码 PNG 扫不出来，另有一个确实加密的内层 ZIP，如何检查定位图案、模块与纠错，再验证解出的文本？"
+        }
+      ],
+      "review": "二维码结构处理、内层 ZIP 加密标志。"
+    }
+  ]
+}
