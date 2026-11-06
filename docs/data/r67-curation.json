@@ -1,0 +1,1687 @@
+[
+  {
+    "id": "r67-lcg-affine-jump",
+    "source_id": "ctfplus-2056307878381228032",
+    "title": "LCG：步数已知就倍增，步数未知先看固定点",
+    "path": "_writeups/crypto/lcg-affine-jump.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "LCG",
+      "仿射迭代",
+      "固定点"
+    ],
+    "quotes": {
+      "q1": "大量迭代用仿射变换的平方倍增组合，不执行指数级循环。",
+      "q2": "若后续用状态字节 XOR 或经哈希派生 AES key，字节宽度、字节序、预热次数、Python PRNG 版本行为都必须与源码一致。",
+      "q3": "对于 f(x)=a*x+b mod p，a≠1 时固定点 t=b/(1-a) mod p，有 `f^k(x)-t=a^k*(x-t)`。",
+      "q4": "题目给出的 A、B 相等，并把 A 再自迭代 k 次。",
+      "q5": "必须处理 a=1 或分母为零的退化情况，且 a/A、b/B 严格区分大小写。"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "ctfplus-2056307878381228032",
+        "path": "题目/ctfplus-2056307878381228032/WP.md"
+      },
+      "q2": {
+        "source_id": "ctfplus-2056307878381228032",
+        "path": "题目/ctfplus-2056307878381228032/WP.md"
+      },
+      "q3": {
+        "source_id": "zhejiang-DlcgH_r",
+        "path": "题目/zhejiang-DlcgH_r/WP.md"
+      },
+      "q4": {
+        "source_id": "zhejiang-DlcgH_r",
+        "path": "题目/zhejiang-DlcgH_r/WP.md"
+      },
+      "q5": {
+        "source_id": "zhejiang-DlcgH_r",
+        "path": "题目/zhejiang-DlcgH_r/WP.md"
+      }
+    },
+    "summary": {
+      "text": "参数已知时，先问缺的是步数还是状态。步数已知就合并多轮递推；步数未知但看到了第一次的终点，可借固定点算第二次的终点。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "同一个递推在相同模数下重复；固定点做法需要相应逆元。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "只泄漏状态低位时，不能直接拿它代替完整终点。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "合并两轮递推",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "由第一次终点求相对于固定点的倍率",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "用状态或素因子整除回验",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "ctfplus-2056307878381228032",
+        "title": "LCG",
+        "path": "题目/ctfplus-2056307878381228032/WP.md",
+        "url": "https://www.ctfplus.cn/problem-detail/2056307878381228032/description",
+        "source_status": "关系验证已复现"
+      },
+      {
+        "id": "zhejiang-DlcgH_r",
+        "title": "DlcgH_r",
+        "path": "题目/zhejiang-DlcgH_r/WP.md",
+        "url": null,
+        "source_status": "关系验证已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/case_relations.py"
+    ],
+    "images": [],
+    "verification": "本机用附件公开数据回验",
+    "checks": {
+      "ctfplus-2056307878381228032": {
+        "steps": 10,
+        "state_matches": true
+      },
+      "zhejiang-DlcgH_r": {
+        "prime_regenerated": true,
+        "cipher_roots": 4
+      }
+    }
+  },
+  {
+    "id": "r67-lcg-concat-hensel",
+    "source_id": "ctfplus-1996419211106193408",
+    "title": "Hensel：RSA 素数由随机状态拼接，先看乘积的低位",
+    "path": "_writeups/crypto/lcg-concat-hensel.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "Hensel 提升",
+      "乘法 LCG",
+      "RSA 素因子拼接"
+    ],
+    "quotes": {
+      "q1": "LCG 满足 `x_(i+1)=a*x_i+b mod modulus`。",
+      "q2": "大量迭代用仿射变换的平方倍增组合，不执行指数级循环。",
+      "q3": "self.seed = (self.a * self.seed ) % self.m",
+      "q4": "for i in range(4):",
+      "q5": "p <<= 256"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "ctfplus-1996419211106193408",
+        "path": "题目/ctfplus-1996419211106193408/WP.md"
+      },
+      "q2": {
+        "source_id": "ctfplus-1996419211106193408",
+        "path": "题目/ctfplus-1996419211106193408/WP.md"
+      },
+      "q3": {
+        "source_id": "ctfplus-1996419211106193408",
+        "path": "题目/ctfplus-1996419211106193408/request.json:01-task.py"
+      },
+      "q4": {
+        "source_id": "ctfplus-1996419211106193408",
+        "path": "题目/ctfplus-1996419211106193408/request.json:01-task.py"
+      },
+      "q5": {
+        "source_id": "ctfplus-1996419211106193408",
+        "path": "题目/ctfplus-1996419211106193408/request.json:01-task.py"
+      }
+    },
+    "summary": {
+      "text": "RSA 模数的低 256 位只由四个因子的最后一段决定。这些末段来自同一条乘法递推，可把它们的乘积写成一个四次幂。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "乘法递推没有加数，模数是 2 的幂，乘数为奇数；各候选素数都由 4 个连续状态拼接。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "素数间的距离仍要搜索，没在窗口内找到就扩大范围或重查模型。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "逐位提升四次幂根",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "从候选末段倒推其他三段",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "找到一个因子后沿邻近四步位置查找",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "ctfplus-1996419211106193408",
+        "title": "Hensel",
+        "path": "题目/ctfplus-1996419211106193408/WP.md",
+        "url": "https://www.ctfplus.cn/problem-detail/1996419211106193408/description",
+        "source_status": "关系验证已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/lcg_concat.py"
+    ],
+    "images": [],
+    "verification": "本机用附件公开数据回验",
+    "checks": {
+      "ctfplus-1996419211106193408": {
+        "index_distance": 1551,
+        "neighbor_radius": 1234,
+        "cipher_verified": true
+      }
+    }
+  },
+  {
+    "id": "r67-finite-field-elimination",
+    "source_id": "ctfplus-2056307377690382336",
+    "title": "Equation 与 myez_encode：先消去一个变量，再验有限域的根",
+    "path": "_writeups/crypto/finite-field-elimination.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "有限域",
+      "四次多项式",
+      "消元"
+    ],
+    "quotes": {
+      "q1": "把加密后的两段消息记为 x、y，原关系为 `f=13*y²+x*y+5*x`、`g=7*y+x²`（mod p）。",
+      "q2": "由第二式 `y=(g-x²)/7`，代回第一式并清分母得到 x 的四次多项式。",
+      "q3": "之后逆向原来的 e 次幂并保留全部合法分段根，按源码声明的 56 字节总长、每段固定宽度拼回，不能使用最短字节序列导致前导零丢失。",
+      "q4": "源码给出 `q ≡ p³+a*p+b (mod P)`，且 `n=p*q`。",
+      "q5": "在素数域 GF(P) 求这个四次多项式的全部根，再以整除关系 `n % p == 0` 筛选；之后核对 q 的原始曲线关系、位宽和素性。",
+      "q6": "对非互素小指数，在素数域逐层求全部根并 CRT 合并。"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "ctfplus-2056307377690382336",
+        "path": "题目/ctfplus-2056307377690382336/WP.md"
+      },
+      "q2": {
+        "source_id": "ctfplus-2056307377690382336",
+        "path": "题目/ctfplus-2056307377690382336/WP.md"
+      },
+      "q3": {
+        "source_id": "ctfplus-2056307377690382336",
+        "path": "题目/ctfplus-2056307377690382336/WP.md"
+      },
+      "q4": {
+        "source_id": "zhejiang-myez_encode",
+        "path": "题目/zhejiang-myez_encode/WP.md"
+      },
+      "q5": {
+        "source_id": "zhejiang-myez_encode",
+        "path": "题目/zhejiang-myez_encode/WP.md"
+      },
+      "q6": {
+        "source_id": "zhejiang-myez_encode",
+        "path": "题目/zhejiang-myez_encode/WP.md"
+      }
+    },
+    "summary": {
+      "text": "有一条式子能直接解出变量，就先用它消元。有限域求根给出候选，再用原式、整除或字节宽度来筛。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "域模数是素数；Equation 的 7 可逆，myez_encode 的原因子要在给出的域范围内。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5",
+          "q6"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "加密指数不可逆时，分别在素数域开根并核对每个候选。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5",
+          "q6"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "从易解的一式消去变量",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5",
+          "q6"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "求有限域的所有根",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5",
+          "q6"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "代回原式并按原指数检查",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5",
+          "q6"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "ctfplus-2056307377690382336",
+        "title": "Equation",
+        "path": "题目/ctfplus-2056307377690382336/WP.md",
+        "url": "https://www.ctfplus.cn/problem-detail/2056307377690382336/description",
+        "source_status": "关系验证已复现"
+      },
+      {
+        "id": "zhejiang-myez_encode",
+        "title": "myez_encode",
+        "path": "题目/zhejiang-myez_encode/WP.md",
+        "url": null,
+        "source_status": "关系验证已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/case_relations.py"
+    ],
+    "images": [],
+    "verification": "本机用附件公开数据回验",
+    "checks": {
+      "ctfplus-2056307377690382336": {
+        "equation_pairs": 2,
+        "fixed_width_messages": 1
+      },
+      "zhejiang-myez_encode": {
+        "factor_pairs": 1,
+        "ninth_roots_verified": 3
+      }
+    }
+  },
+  {
+    "id": "r67-poly-rsa-quotient",
+    "source_id": "ctfplus-1978124430441713664",
+    "title": "PolyRSA（商环版）：明文是八项系数，先找各分量的幂周期",
+    "path": "_writeups/crypto/poly-rsa-quotient.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "多项式商环",
+      "循环卷积",
+      "PolyRSA"
+    ],
+    "quotes": {
+      "q1": "消息实际是商环中的多项式，不是把整串字节直接作一次整数 RSA。",
+      "q2": "在分量中逆向指数运算，再按多项式 CRT / 原表示重组系数。",
+      "q3": "按源码的固定 8 字节分块还原字节；尾部零系数和原始总长度未明确时不能据此宣布唯一长度。"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "ctfplus-1978124430441713664",
+        "path": "题目/ctfplus-1978124430441713664/WP.md"
+      },
+      "q2": {
+        "source_id": "ctfplus-1978124430441713664",
+        "path": "题目/ctfplus-1978124430441713664/WP.md"
+      },
+      "q3": {
+        "source_id": "ctfplus-1978124430441713664",
+        "path": "题目/ctfplus-1978124430441713664/WP.md"
+      }
+    },
+    "summary": {
+      "text": "密文是一条多项式时，先确认系数和幂次怎样取余。本题按 x^8=1 折回高次项，逆指数来自各有限域分量的幂周期。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "p、q 已知且不同；模多项式在两个素数域都没有重因子；e 与共同周期互素。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "末块最短字节表示可能丢掉前导零，缺原长度时保留长度歧义。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "按两个素数分别分解模多项式",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "取各幂周期的最小公倍数",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "在原环逐系数重加密",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "ctfplus-1978124430441713664",
+        "title": "PolyRSA",
+        "path": "题目/ctfplus-1978124430441713664/WP.md",
+        "url": "https://www.ctfplus.cn/problem-detail/1978124430441713664/description",
+        "source_status": "关系验证已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/case_relations.py"
+    ],
+    "images": [],
+    "verification": "本机用附件公开数据回验",
+    "checks": {
+      "ctfplus-1978124430441713664": {
+        "checked_coefficients": 8,
+        "block_width": 8
+      }
+    },
+    "unknowns": [
+      "原始消息的精确字节长度"
+    ]
+  },
+  {
+    "id": "r67-rsa-and-xor-projection",
+    "source_id": "ctfplus-1996418936001794048",
+    "title": "ez_xor：用 AND、XOR 和乘积恢复一对 RSA 因子",
+    "path": "_writeups/crypto/rsa-and-xor-projection.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "按位与",
+      "按位异或",
+      "二次方程",
+      "RSA 子模数"
+    ],
+    "quotes": {
+      "q1": "这类题未必需要也未必已经分解整个大模数。",
+      "q2": "在恢复的素因子模数下求消息根，检查所有原始辅助关系。"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "ctfplus-1996418936001794048",
+        "path": "题目/ctfplus-1996418936001794048/WP.md"
+      },
+      "q2": {
+        "source_id": "ctfplus-1996418936001794048",
+        "path": "题目/ctfplus-1996418936001794048/WP.md"
+      }
+    },
+    "summary": {
+      "text": "已知同一对整数的按位与、异或及乘积，就能先求它们的和，再用二次方程拆出两数。",
+      "evidence": [
+        "q1",
+        "q2"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "提示对应同一对非负整数；读取子模数代表元前，检查原文长度范围。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "重加密能核对这个候选，剩下的模数因子仍是未知量。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "用 XOR 加两倍 AND 求和",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "按和与积解整数根",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "在子模数解密并核对",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "ctfplus-1996418936001794048",
+        "title": "ez_xor",
+        "path": "题目/ctfplus-1996418936001794048/WP.md",
+        "url": "https://www.ctfplus.cn/problem-detail/1996418936001794048/description",
+        "source_status": "关系验证已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/case_relations.py"
+    ],
+    "images": [],
+    "verification": "本机用附件公开数据回验",
+    "checks": {
+      "ctfplus-1996418936001794048": {
+        "hints_checked": true,
+        "original_cipher_matches": true,
+        "full_factorization": false
+      }
+    }
+  },
+  {
+    "id": "r67-ecc-cusp-additive",
+    "source_id": "ctfplus-2045446312698056704",
+    "title": "ECC 尖点：把点的倍乘换成一次模除法",
+    "path": "_writeups/crypto/ecc-cusp-additive.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "奇异曲线",
+      "尖点",
+      "三重根",
+      "离散对数"
+    ],
+    "quotes": {
+      "q1": "特殊奇异曲线可能通过参数映射化为加法群，异常椭圆曲线可能用 p-adic lift；这些方法各有前提，不能直接对任意 ECC 套用。",
+      "q2": "恢复标量后回代原群等式；如果还要解 AES，严格照原 KDF 和 IV 规则处理。"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "ctfplus-2045446312698056704",
+        "path": "题目/ctfplus-2045446312698056704/WP.md"
+      },
+      "q2": {
+        "source_id": "ctfplus-2045446312698056704",
+        "path": "题目/ctfplus-2045446312698056704/WP.md"
+      }
+    },
+    "summary": {
+      "text": "题目自己实现点加法时，先从公式核对曲线模型。配方后的三次式若恰好有一个三重根，可把曲线点换成加法群坐标。",
+      "evidence": [
+        "q1",
+        "q2"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "p 是大于 3 的素数，配方后确实有三重根；点在曲线上且不是奇点。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "双重根需要另一套处理；恢复的标量以 p 为周期。",
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "补平方并确认三重根",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "换成加法坐标",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "用求出的标量重建目标点",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "ctfplus-2045446312698056704",
+        "title": "ECC",
+        "path": "题目/ctfplus-2045446312698056704/WP.md",
+        "url": "https://www.ctfplus.cn/problem-detail/2045446312698056704/description",
+        "source_status": "关系验证已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/case_relations.py"
+    ],
+    "images": [],
+    "verification": "本机用附件公开数据回验",
+    "checks": {
+      "ctfplus-2045446312698056704": {
+        "point_reconstructed": true
+      }
+    }
+  },
+  {
+    "id": "r67-ecdsa-public-nonce",
+    "source_id": "upload-ecdsa",
+    "title": "ECDSA：每条签名的临时数都不同，但可以公开算出",
+    "path": "_writeups/crypto/ecdsa-public-nonce.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "ECDSA",
+      "已知 nonce",
+      "P-521",
+      "签名编码"
+    ],
+    "quotes": {
+      "q1": "题目源码给出确定性 nonce 规则：由公开前缀与消息编号计算 SHA-512，再对 P-521 群阶取模。",
+      "q2": "于是每条签名都可独立用 `d=(s*k-h)*r^(-1) mod order` 求私钥，不需要套重复 r 攻击或盲目跑 LLL。",
+      "q3": "按原始消息字节计算签名哈希，按群阶位数做正确截断；原签名为固定长度 r||s，不能误当 DER。",
+      "q4": "逐条核验同一个 d、`dG=Q`、`(kG).x mod order=r` 和签名等式。",
+      "q5": "题面只说“私钥的 MD5”未指定序列化：十进制字符串、HEX、带 0x 的 HEX、固定 66 字节和最短字节会产生不同摘要。"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "upload-ecdsa",
+        "path": "题目/upload-ecdsa/WP.md"
+      },
+      "q2": {
+        "source_id": "upload-ecdsa",
+        "path": "题目/upload-ecdsa/WP.md"
+      },
+      "q3": {
+        "source_id": "upload-ecdsa",
+        "path": "题目/upload-ecdsa/WP.md"
+      },
+      "q4": {
+        "source_id": "upload-ecdsa",
+        "path": "题目/upload-ecdsa/WP.md"
+      },
+      "q5": {
+        "source_id": "upload-ecdsa",
+        "path": "题目/upload-ecdsa/WP.md"
+      }
+    },
+    "summary": {
+      "text": "只用公开数据就能重算签名临时数 k 时，一条签名就可求私钥，不必等 r 重复。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "知道该签名实际用的 k、消息哈希、群阶和编码；r 在群阶下可逆。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "恢复私钥后，仍要确认题目对私钥字节或文本的表示，才能选定 MD5。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "按固定宽度读签名并算 k",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "从签名方程求私钥",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "用公钥和所有签名核对",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "upload-ecdsa",
+        "title": "ECDSA：公开确定性 nonce 与私钥 MD5",
+        "path": "题目/upload-ecdsa/WP.md",
+        "url": null,
+        "source_status": "候选已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/case_relations.py"
+    ],
+    "images": [],
+    "verification": "公钥和 60 条签名核对通过；答案表示待确认",
+    "checks": {
+      "upload-ecdsa": {
+        "signatures_verified": 60,
+        "same_key": true,
+        "answer_serialization_known": false
+      }
+    },
+    "unknowns": [
+      "私钥用哪种表示做 MD5"
+    ]
+  },
+  {
+    "id": "r67-nibble-spn-partial-key",
+    "source_id": "zhejiang-MyCode",
+    "title": "MyCode：只剩 20 位密钥，用已知首块筛选",
+    "path": "_writeups/crypto/nibble-spn-partial-key.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "半字节替换",
+      "位切片",
+      "部分密钥"
+    ],
+    "quotes": {
+      "q1": "本题是自定义半字节 SPN，不是把 AES-128 密钥穷举一遍。",
+      "q2": "已知前缀只用于筛选，命中的候选必须完整重加密原始字节。",
+      "q3": "尾部零字节是否属于填充是另一层假设，原始消息和去零候选分别保留；没有长度声明时不声称原文唯一。",
+      "q4": "state = substitute(state, sub_box)",
+      "q5": "state = [s ^ ((round_keys[round] >> (i * 8)) & 0xFF) for i, s in enumerate(state)]"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "zhejiang-MyCode",
+        "path": "题目/zhejiang-MyCode/WP.md"
+      },
+      "q2": {
+        "source_id": "zhejiang-MyCode",
+        "path": "题目/zhejiang-MyCode/WP.md"
+      },
+      "q3": {
+        "source_id": "zhejiang-MyCode",
+        "path": "题目/zhejiang-MyCode/WP.md"
+      },
+      "q4": {
+        "source_id": "zhejiang-MyCode",
+        "path": "题目/zhejiang-MyCode/request.json:MyCode.py"
+      },
+      "q5": {
+        "source_id": "zhejiang-MyCode",
+        "path": "题目/zhejiang-MyCode/request.json:MyCode.py"
+      }
+    },
+    "summary": {
+      "text": "32 位密钥已经给出 12 位，只需试 2^20 个候选。先用已知的四个明文字节筛首块，再核对整段。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "知道固定高位、首块的明文及密文，并按题目顺序复现轮密钥和替换表。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "末尾补零时，缺原长度就无法区分哪些零属于原文。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "按源码复现轮运算",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "并行核对候选的首块",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "重算全部密文",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "zhejiang-MyCode",
+        "title": "MyCode",
+        "path": "题目/zhejiang-MyCode/WP.md",
+        "url": null,
+        "source_status": "关系验证已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/nibble_spn.py"
+    ],
+    "images": [],
+    "verification": "本机用附件公开数据回验",
+    "checks": {
+      "zhejiang-MyCode": {
+        "searched": 1048576,
+        "first_block_matches": 1,
+        "keys_verified": 1,
+        "all_reencrypted": true,
+        "source_executed": false,
+        "zero_padding_ambiguous": true
+      }
+    },
+    "unknowns": [
+      "尾部零字节中的原文长度"
+    ]
+  },
+  {
+    "id": "r67-snow-state-leak",
+    "source_id": "zhejiang-SNOW",
+    "title": "SNOW：用泄漏状态和已知前缀逐个补齐初始状态",
+    "path": "_writeups/crypto/snow-state-leak.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "SNOW",
+      "LFSR",
+      "FSM",
+      "32 位状态字"
+    ],
+    "quotes": {
+      "q1": "已知前缀 gift 与对应密文字异或，得到若干确定的密钥流字。",
+      "q2": "把每个状态字视为节点：S-box 的正反映射、GF(2) 线性变换及其逆矩阵、模 2^32 加减和 XOR，都是可双向传播的约束。",
+      "q3": "当一条方程只剩一个未知节点时恢复该节点，重复传播，直到得到初始 16 个 LFSR 字和 3 个 FSM 字。",
+      "q4": "S-box 的线性层先按 GF(2) 求逆，不能把整个混合变换错当成逐字节查表。",
+      "q5": "恢复后从初态完整正向生成，核对全部 10 个泄漏、已知前缀和所有原始密文字；明文字必须落在单字节范围。"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "zhejiang-SNOW",
+        "path": "题目/zhejiang-SNOW/WP.md"
+      },
+      "q2": {
+        "source_id": "zhejiang-SNOW",
+        "path": "题目/zhejiang-SNOW/WP.md"
+      },
+      "q3": {
+        "source_id": "zhejiang-SNOW",
+        "path": "题目/zhejiang-SNOW/WP.md"
+      },
+      "q4": {
+        "source_id": "zhejiang-SNOW",
+        "path": "题目/zhejiang-SNOW/WP.md"
+      },
+      "q5": {
+        "source_id": "zhejiang-SNOW",
+        "path": "题目/zhejiang-SNOW/WP.md"
+      }
+    },
+    "summary": {
+      "text": "用已知前缀和密文异或，得到确定的密钥流字。再和泄漏一起代入递推，哪条方程只缺一个字，就先补那个字。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "要知道泄漏字的位置和时刻，并使用附件自己的状态方程与时钟顺序。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "恢复的是某个时刻的状态；不同泄漏位置要重新列方程。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "从前缀求密钥流",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "用只缺一项的状态方程补齐",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "正向重放并对照原始泄漏",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "zhejiang-SNOW",
+        "title": "SNOW",
+        "path": "题目/zhejiang-SNOW/WP.md",
+        "url": null,
+        "source_status": "关系验证已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/snow_state.py"
+    ],
+    "images": [],
+    "verification": "本机用附件公开数据回验",
+    "checks": {
+      "zhejiang-SNOW": {
+        "recovered_state_words": 371,
+        "propagation_passes": 6,
+        "known_prefix_verified": true,
+        "all_state_relations_verified": true,
+        "original_ciphertext_verified": true,
+        "leaks_verified": 10,
+        "key_recovered": false,
+        "source_executed": false
+      }
+    }
+  },
+  {
+    "id": "r67-cbc-block-evidence",
+    "source_id": "ctfplus-1862864615294111744",
+    "title": "CBC：用公开的分组解密值或离线填充反馈恢复明文",
+    "path": "_writeups/crypto/cbc-block-evidence.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "CBC",
+      "ECB 分组解密",
+      "离线填充反馈",
+      "PCAP"
+    ],
+    "quotes": {
+      "q1": "CBC 逆向依赖 `P_i=D(C_i) XOR C_(i-1)`：已知末块、IV 或解密泄漏时，按原方程反推缺失中间量。",
+      "q2": "去填充需要严格校验长度和值，最后完整重加密核对。",
+      "q3": "原 WP 的 DH 描述与实际附件不符，应以抓包字节为准。",
+      "q4": "按 TCP 序号去重并检查单会话连续性，从原始服务端密文及逐次 Base64 请求中配对 True/False 类反馈。",
+      "q5": "对每个块恢复 `I_i=D(C_i)`，用 `P_i=I_i XOR C_(i-1)` 得到明文。",
+      "q6": "恢复后不仅检查 48 个成功反馈，还要重放全部 5849 次反馈是否与中间值相符，并严格校验 PKCS#7。"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "ctfplus-1862864615294111744",
+        "path": "题目/ctfplus-1862864615294111744/WP.md"
+      },
+      "q2": {
+        "source_id": "ctfplus-1862864615294111744",
+        "path": "题目/ctfplus-1862864615294111744/WP.md"
+      },
+      "q3": {
+        "source_id": "zhejiang-APT",
+        "path": "题目/zhejiang-APT/WP.md"
+      },
+      "q4": {
+        "source_id": "zhejiang-APT",
+        "path": "题目/zhejiang-APT/WP.md"
+      },
+      "q5": {
+        "source_id": "zhejiang-APT",
+        "path": "题目/zhejiang-APT/WP.md"
+      },
+      "q6": {
+        "source_id": "zhejiang-APT",
+        "path": "题目/zhejiang-APT/WP.md"
+      }
+    },
+    "summary": {
+      "text": "CBC 的明文块是单块解密值与前一块的异或。附件若已给单块解密输出，就直接按块对齐；只有填充反馈时，先从记录恢复中间值。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "直接对照的两份数据来自同一密钥和密文；抓包还需有完整、能配对的请求和反馈。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5",
+          "q6"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "APT 的每块成功响应按填充长度 1 到 16 排列。换抓包先查缺包、乱序和假阳性。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5",
+          "q6"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "对齐 IV 和密文块",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5",
+          "q6"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "由输出或记录求中间值",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5",
+          "q6"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "核对所有反馈和填充",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4",
+          "q5",
+          "q6"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "ctfplus-1862864615294111744",
+        "title": "不用谢喵",
+        "path": "题目/ctfplus-1862864615294111744/WP.md",
+        "url": "https://www.ctfplus.cn/problem-detail/1862864615294111744/description",
+        "source_status": "关系验证已复现"
+      },
+      {
+        "id": "zhejiang-APT",
+        "title": "APT：离线填充反馈抓包",
+        "path": "题目/zhejiang-APT/WP.md",
+        "url": null,
+        "source_status": "关系验证已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/case_relations.py",
+      "_code/r67/apt_capture.py",
+      "_code/r67/padding_transcript.py"
+    ],
+    "images": [],
+    "verification": "本机用附件公开数据回验",
+    "checks": {
+      "ctfplus-1862864615294111744": {
+        "blocks": 2,
+        "same_cbc_plaintext": true
+      },
+      "zhejiang-APT": {
+        "blocks": 3,
+        "queries_verified": 5849,
+        "successes_verified": 48,
+        "all_feedback_verified": true,
+        "padding_verified": true,
+        "key_recovered": false,
+        "authentication_claimed": false
+      }
+    }
+  },
+  {
+    "id": "r67-rsa-nested-smooth",
+    "source_id": "upload-rsa_nestingdoll",
+    "title": "RSA_NestingDoll：外层素数减一里藏着内层素因子",
+    "path": "_writeups/crypto/rsa-nested-smooth.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "嵌套 RSA",
+      "Pollard p−1",
+      "光滑阶"
+    ],
+    "quotes": {
+      "q1": "内层与外层素因子通过减一关系相连。先利用小因子/光滑乘子构造 p-1 型指数，把内层可用的信息转为外层模数上的 GCD 分解。",
+      "q2": "本题有四组 inner/outer 对：每组不仅要验证素性，还要验证原始减一连接关系，且所有因子乘积等于各自模数。",
+      "q3": "p*=max_prime",
+      "q4": "print(f\"[+] Ciphertext = {pow(flag,e,n1)}\")"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "upload-rsa_nestingdoll",
+        "path": "题目/upload-rsa_nestingdoll/WP.md"
+      },
+      "q2": {
+        "source_id": "upload-rsa_nestingdoll",
+        "path": "题目/upload-rsa_nestingdoll/WP.md"
+      },
+      "q3": {
+        "source_id": "upload-rsa_nestingdoll",
+        "path": "题目/upload-rsa_nestingdoll/原始材料/00-original.zip:src.py"
+      },
+      "q4": {
+        "source_id": "upload-rsa_nestingdoll",
+        "path": "题目/upload-rsa_nestingdoll/原始材料/00-original.zip:src.py"
+      }
+    },
+    "summary": {
+      "text": "密文实际对内层模数加密。外层每个素数减一含一个内素数；先分外层，再从最大公约数取回内层因子。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "剩下的小素数幂要被试探指数覆盖，而且中途检查点要能分出因子。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "底数或平滑界不合适时，最大公约数可能一直是 1，或一下变成整个模数。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "把内层模数乘入试探指数",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "分离外层因子",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "取回内因子再核对原密文",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "upload-rsa_nestingdoll",
+        "title": "RSA_NestingDoll：内外层欧拉函数",
+        "path": "题目/upload-rsa_nestingdoll/WP.md",
+        "url": null,
+        "source_status": "关系验证已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/nested_pm1.py"
+    ],
+    "images": [],
+    "verification": "本机用附件公开数据回验",
+    "checks": {
+      "upload-rsa_nestingdoll": {
+        "pairs": 4,
+        "steps": 81280,
+        "inner_cipher_verified": true
+      }
+    }
+  },
+  {
+    "id": "r67-hilbert-pixel-order",
+    "source_id": "upload-hilbert",
+    "title": "Hilbert 像素还原：一列颜色如何走遍方格",
+    "path": "_writeups/misc/hilbert-pixel-order.md",
+    "role": "case_decision",
+    "mechanisms": [
+      "Hilbert 曲线",
+      "像素重排",
+      "空间填充曲线"
+    ],
+    "quotes": {
+      "q1": "hint 的折线体现 Hilbert 空间填充曲线。",
+      "q2": "不是任意 reshape：Hilbert 索引相邻点在网格上的曼哈顿距离为 1；必须验证坐标不重复且覆盖全部像素。",
+      "q3": "逆向按同一坐标顺序读回 RGB 字节，与记录的原始像素 SHA-256 比较。",
+      "q4": "原始 PNG 已离开旧下载路径，本汇编从此前还原图逆向重建输入，像素哈希匹配；没有声称 PNG 文件字节完全相同。"
+    },
+    "quote_sources": {
+      "q1": {
+        "source_id": "upload-hilbert",
+        "path": "题目/upload-hilbert/WP.md"
+      },
+      "q2": {
+        "source_id": "upload-hilbert",
+        "path": "题目/upload-hilbert/WP.md"
+      },
+      "q3": {
+        "source_id": "upload-hilbert",
+        "path": "题目/upload-hilbert/WP.md"
+      },
+      "q4": {
+        "source_id": "upload-hilbert",
+        "path": "题目/upload-hilbert/WP.md"
+      }
+    },
+    "summary": {
+      "text": "一列像素的总数刚好是方阵面积时，留意折线路径。Hilbert 路径的下一点总在相邻一格，和逐行排图区别明显。",
+      "evidence": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ]
+    },
+    "conditions": [
+      {
+        "text": "像素数等于 2 的幂边长的平方，并有线索指向 Hilbert 路径；起点与朝向用样本确认。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "source_and_code"
+      }
+    ],
+    "limits": [
+      {
+        "text": "单凭像素数无法确认路径。汇编的单列 PNG 从旧图逆向重建，核对的是像素流。",
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "basis": "editorial_boundary"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "action": "用像素数定边长",
+        "depends_on": [],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s2",
+        "action": "由 Hilbert 序号找二维坐标",
+        "depends_on": [
+          "s1"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      },
+      {
+        "id": "s3",
+        "action": "检查覆盖、邻接和反向读取",
+        "depends_on": [
+          "s2"
+        ],
+        "evidence": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+        ],
+        "result_basis": "editorial_organization"
+      }
+    ],
+    "sources": [
+      {
+        "id": "upload-hilbert",
+        "title": "Hilbert 曲线像素流还原",
+        "path": "题目/upload-hilbert/WP.md",
+        "url": null,
+        "source_status": "图像还原已复现"
+      }
+    ],
+    "code": [
+      "_code/r67/hilbert_pixels.py"
+    ],
+    "images": [
+      "_assets/images/35d5e4947fdc218935e0cbc182dce716d71427c56af5085280fc47d1f48f7a38.png"
+    ],
+    "verification": "像素顺序与随附还原图核对通过",
+    "checks": {
+      "upload-hilbert": {
+        "pixel_count": 65536,
+        "original_pixel_hash_matches": true
+      }
+    }
+  }
+]

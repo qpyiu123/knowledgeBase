@@ -13534,5 +13534,13 @@
     "source": "https://api.github.com/repos/ctf-wiki/ctf-wiki/contents/docs/zh-tw/docs/reverse/obfuscate/images/before-flattening.png?ref=e225ddfcd420a7f54a5940f47336ebdf8c29b875",
     "method": "原链接取回",
     "bytes": 8879
+  },
+  {
+    "article": "_writeups/misc/hilbert-pixel-order.md",
+    "image": "35d5e4947fdc218935e0cbc182dce716d71427c56af5085280fc47d1f48f7a38.png",
+    "original": "Hilbert 4×4 路径；不含赛题像素",
+    "source": "密码学题解汇编/题目/upload-hilbert/WP.md",
+    "method": "按路径算法绘制",
+    "bytes": 26091
   }
 ]

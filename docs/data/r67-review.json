@@ -1,0 +1,2817 @@
+{
+  "source": "密码学题解汇编",
+  "records": 295,
+  "decisions": {
+    "未完成": 183,
+    "方法已覆盖": 22,
+    "留待细审": 36,
+    "候选暂缓": 29,
+    "同题": 10,
+    "入库": 15
+  },
+  "items": [
+    {
+      "id": "ctfplus-2116014046674161664",
+      "title": "双指数封存",
+      "path": "题目/ctfplus-2116014046674161664/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2115639134952361984",
+      "title": "旧网关的交接记录",
+      "path": "题目/ctfplus-2115639134952361984/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2114970354228137984",
+      "title": "夜班交接牌",
+      "path": "题目/ctfplus-2114970354228137984/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2114955041700843520",
+      "title": "只读票据",
+      "path": "题目/ctfplus-2114955041700843520/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2114295091588763648",
+      "title": "交接票据",
+      "path": "题目/ctfplus-2114295091588763648/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2114289080828170240",
+      "title": "旧档案票据",
+      "path": "题目/ctfplus-2114289080828170240/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2113522142036365312",
+      "title": "两份封存记录",
+      "path": "题目/ctfplus-2113522142036365312/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2113516629986906112",
+      "title": "档案回执",
+      "path": "题目/ctfplus-2113516629986906112/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2112939733121241088",
+      "title": "归档终端",
+      "path": "题目/ctfplus-2112939733121241088/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2112931660570824704",
+      "title": "旧仓库的交接记录",
+      "path": "题目/ctfplus-2112931660570824704/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2112368257016008704",
+      "title": "归档室的交接便笺",
+      "path": "题目/ctfplus-2112368257016008704/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2110662867723227136",
+      "title": "新手入门·13 有限年份",
+      "path": "题目/ctfplus-2110662867723227136/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2110659918200573952",
+      "title": "新手入门·14 四拍回声",
+      "path": "题目/ctfplus-2110659918200573952/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2110206455603793920",
+      "title": "新手入门·02 八进制纸带",
+      "path": "题目/ctfplus-2110206455603793920/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2073789889060540416",
+      "title": "Leaky Prime",
+      "path": "题目/ctfplus-2073789889060540416/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_coppersmith.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2073789840519860224",
+      "title": "Twice",
+      "path": "题目/ctfplus-2073789840519860224/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/ecdsa_nonce_reuse.md"
+      ],
+      "reason": "签名重用临时数是已有方法，原稿的 AES 后续作为原题参数保留。"
+    },
+    {
+      "id": "ctfplus-2073789837122473984",
+      "title": "Predictable",
+      "path": "题目/ctfplus-2073789837122473984/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-2073789811361058816",
+      "title": "Reused Keystream",
+      "path": "题目/ctfplus-2073789811361058816/WP.md",
+      "source_status": "候选已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/otp_many_time_pad.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2073789807661682688",
+      "title": "BabyRSA",
+      "path": "题目/ctfplus-2073789807661682688/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_small_e_attack.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2072518430451306496",
+      "title": "ez_lattice",
+      "path": "题目/ctfplus-2072518430451306496/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2072518388109807616",
+      "title": "ezRedstoneParkour",
+      "path": "题目/ctfplus-2072518388109807616/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2072518385010216960",
+      "title": "The Nether Code",
+      "path": "题目/ctfplus-2072518385010216960/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2072518375052939264",
+      "title": "咩咩咩",
+      "path": "题目/ctfplus-2072518375052939264/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2072518372129509376",
+      "title": "ezlog",
+      "path": "题目/ctfplus-2072518372129509376/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2070034348282744832",
+      "title": "SCTF 2026 Cipher Chain",
+      "path": "题目/ctfplus-2070034348282744832/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-2069671571445780480",
+      "title": "SCTF 2026 invincible",
+      "path": "题目/ctfplus-2069671571445780480/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2068896834398457856",
+      "title": "ge",
+      "path": "题目/ctfplus-2068896834398457856/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2068896827448496128",
+      "title": "ezAES",
+      "path": "题目/ctfplus-2068896827448496128/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2068896820813107200",
+      "title": "easy_RSA",
+      "path": "题目/ctfplus-2068896820813107200/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2068896816669134848",
+      "title": "听说你们学密码的都有sympy",
+      "path": "题目/ctfplus-2068896816669134848/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-2068896813284331520",
+      "title": "ezsage",
+      "path": "题目/ctfplus-2068896813284331520/WP.md",
+      "source_status": "候选已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_writeups/crypto/you-raise-me-up.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2068896805877190656",
+      "title": "fangzhinimimabao0",
+      "path": "题目/ctfplus-2068896805877190656/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2068896782342950912",
+      "title": "random",
+      "path": "题目/ctfplus-2068896782342950912/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2066460660501319680",
+      "title": "AES",
+      "path": "题目/ctfplus-2066460660501319680/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。",
+      "title_candidates": [
+        "_imported/crypto/AES.md"
+      ]
+    },
+    {
+      "id": "ctfplus-2066460656227323904",
+      "title": "easy_rsa",
+      "path": "题目/ctfplus-2066460656227323904/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2066460652397924352",
+      "title": "套娃3.0",
+      "path": "题目/ctfplus-2066460652397924352/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2066460645980639232",
+      "title": "RSA_plus",
+      "path": "题目/ctfplus-2066460645980639232/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-2060270819472314368",
+      "title": "LCG-RSA的强强联手",
+      "path": "题目/ctfplus-2060270819472314368/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-2060270812258111488",
+      "title": "打破时间胶囊",
+      "path": "题目/ctfplus-2060270812258111488/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-2060270809292738560",
+      "title": "简单的RSA",
+      "path": "题目/ctfplus-2060270809292738560/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_shared_prime_attack.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2060270806407057408",
+      "title": "Night Watch",
+      "path": "题目/ctfplus-2060270806407057408/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2060270802988699648",
+      "title": "Morph Encoder",
+      "path": "题目/ctfplus-2060270802988699648/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-2059496828088356864",
+      "title": "LitCTF2026 - xor_two_story",
+      "path": "题目/ctfplus-2059496828088356864/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2059496823898247168",
+      "title": "LitCTF2026 - tiny_key_aes",
+      "path": "题目/ctfplus-2059496823898247168/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2059496819997544448",
+      "title": "LitCTF2026 - rsa_neighbor",
+      "path": "题目/ctfplus-2059496819997544448/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_fermat_factorization.md"
+      ],
+      "reason": "邻近素数走平方差，库内已有方法与 Factorize 实例。"
+    },
+    {
+      "id": "ctfplus-2059496816725987328",
+      "title": "LitCTF2026 - elgamal_handshake",
+      "path": "题目/ctfplus-2059496816725987328/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-2059190653488730112",
+      "title": "Phobos Padding",
+      "path": "题目/ctfplus-2059190653488730112/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_hastad_broadcast.md"
+      ],
+      "reason": "同一明文、e=3、三组互素模数，与已有广播法前提相同。"
+    },
+    {
+      "id": "ctfplus-2059190650498191360",
+      "title": "Lunar LCG",
+      "path": "题目/ctfplus-2059190650498191360/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "同题",
+      "refs": [
+        "_writeups/crypto/lcg-low-byte.md"
+      ],
+      "reason": "题号和旧附件来源一致。公开输入还匹配多项长数值。"
+    },
+    {
+      "id": "ctfplus-2059190647759310848",
+      "title": "Twin Orbit",
+      "path": "题目/ctfplus-2059190647759310848/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_common_modulus_attack.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2057411966024028160",
+      "title": "ArrAnge in Asceding",
+      "path": "题目/ctfplus-2057411966024028160/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2057411961791975424",
+      "title": "Pand√ra",
+      "path": "题目/ctfplus-2057411961791975424/WP.md",
+      "source_status": "未解／历史误报已剔除",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2057411958352646144",
+      "title": "OhMyCaptcha",
+      "path": "题目/ctfplus-2057411958352646144/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2057411955391467520",
+      "title": "inverse pow",
+      "path": "题目/ctfplus-2057411955391467520/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2056307364411215872",
+      "title": "ez_rabin",
+      "path": "题目/ctfplus-2056307364411215872/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "crypto/elgamal-paillier-rabin-homomorphic.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2056307878381228032",
+      "title": "LCG",
+      "path": "题目/ctfplus-2056307878381228032/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/lcg-affine-jump.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "ctfplus-2056307382010515456",
+      "title": "log!!",
+      "path": "题目/ctfplus-2056307382010515456/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_writeups/crypto/you-raise-me-up.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2056307379858837504",
+      "title": "PELL",
+      "path": "题目/ctfplus-2056307379858837504/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-2056307377690382336",
+      "title": "Equation",
+      "path": "题目/ctfplus-2056307377690382336/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/finite-field-elimination.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "ctfplus-2056307375572258816",
+      "title": "共模攻击",
+      "path": "题目/ctfplus-2056307375572258816/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2056307373437358080",
+      "title": "superrsa",
+      "path": "题目/ctfplus-2056307373437358080/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_common_modulus_attack.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2056307371428286464",
+      "title": "partial—dec",
+      "path": "题目/ctfplus-2056307371428286464/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-2056307369477935104",
+      "title": "midrsa",
+      "path": "题目/ctfplus-2056307369477935104/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_coppersmith.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2056307366588059648",
+      "title": "Medium_RSA",
+      "path": "题目/ctfplus-2056307366588059648/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_shared_prime_attack.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-2045446319106953216",
+      "title": "ocean",
+      "path": "题目/ctfplus-2045446319106953216/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2045446316858806272",
+      "title": "sda",
+      "path": "题目/ctfplus-2045446316858806272/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2045446314711322624",
+      "title": "Whisper Line",
+      "path": "题目/ctfplus-2045446314711322624/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2045446312698056704",
+      "title": "ECC",
+      "path": "题目/ctfplus-2045446312698056704/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/ecc-cusp-additive.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "ctfplus-2045446304703713280",
+      "title": "ez_random",
+      "path": "题目/ctfplus-2045446304703713280/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2045446302744973312",
+      "title": "RSA_LCG",
+      "path": "题目/ctfplus-2045446302744973312/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2045446300631044096",
+      "title": "神秘学",
+      "path": "题目/ctfplus-2045446300631044096/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2045446298554863616",
+      "title": "ez_login",
+      "path": "题目/ctfplus-2045446298554863616/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2045446296411574272",
+      "title": "truck",
+      "path": "题目/ctfplus-2045446296411574272/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2041783224438362112",
+      "title": "baseaes",
+      "path": "题目/ctfplus-2041783224438362112/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-2041783189881491456",
+      "title": "玉兰花",
+      "path": "题目/ctfplus-2041783189881491456/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2041783183300628480",
+      "title": "ezCrypto",
+      "path": "题目/ctfplus-2041783183300628480/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2041783226338381824",
+      "title": "听说你们学密码的都会lcg",
+      "path": "题目/ctfplus-2041783226338381824/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-2041783228460699648",
+      "title": "Rabin是坏蛋_revenge",
+      "path": "题目/ctfplus-2041783228460699648/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1835674013196619776",
+      "title": "极客大挑战2023-Crypto-easy_classic",
+      "path": "题目/ctfplus-1835674013196619776/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-2019277633992265728",
+      "title": "Subgroup-Choreographer",
+      "path": "题目/ctfplus-2019277633992265728/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "同题",
+      "refs": [
+        "_writeups/crypto/subgroup-choreographer.md"
+      ],
+      "reason": "题号和旧附件来源一致。"
+    },
+    {
+      "id": "ctfplus-2019277823092461568",
+      "title": "调查问卷",
+      "path": "题目/ctfplus-2019277823092461568/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277636978610176",
+      "title": "Subgroup-Gorilla",
+      "path": "题目/ctfplus-2019277636978610176/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277640011091968",
+      "title": "Subgroup-Spirit",
+      "path": "题目/ctfplus-2019277640011091968/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277796714483712",
+      "title": "NTRU",
+      "path": "题目/ctfplus-2019277796714483712/WP.md",
+      "source_status": "候选已复现",
+      "decision": "同题",
+      "refs": [
+        "_writeups/crypto/ntru-sparse.md"
+      ],
+      "reason": "题号和旧附件来源一致。"
+    },
+    {
+      "id": "ctfplus-2019277742909952000",
+      "title": "c_polynomial",
+      "path": "题目/ctfplus-2019277742909952000/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277670574985216",
+      "title": " Silent Resolver",
+      "path": "题目/ctfplus-2019277670574985216/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277698345472000",
+      "title": "subgroup_dlp",
+      "path": "题目/ctfplus-2019277698345472000/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277733544071168",
+      "title": "Sign in",
+      "path": "题目/ctfplus-2019277733544071168/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277805275058176",
+      "title": "subgroup_lattice",
+      "path": "题目/ctfplus-2019277805275058176/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277790750183424",
+      "title": "r_png",
+      "path": "题目/ctfplus-2019277790750183424/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277755018907648",
+      "title": "subgroup_MT19937",
+      "path": "题目/ctfplus-2019277755018907648/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277630896869376",
+      "title": "Subgroup-Scribe",
+      "path": "题目/ctfplus-2019277630896869376/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277627637895168",
+      "title": "Subgroup-Inquisitor",
+      "path": "题目/ctfplus-2019277627637895168/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277624559276032",
+      "title": "Subgroup-Weaver",
+      "path": "题目/ctfplus-2019277624559276032/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-2019277621564542976",
+      "title": "Subgroup-Architect",
+      "path": "题目/ctfplus-2019277621564542976/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996419492149727232",
+      "title": "ezLLL",
+      "path": "题目/ctfplus-1996419492149727232/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996419462290477056",
+      "title": "The Two Witnesses",
+      "path": "题目/ctfplus-1996419462290477056/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996419447975317504",
+      "title": "ez_lwe",
+      "path": "题目/ctfplus-1996419447975317504/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "同题",
+      "refs": [
+        "_writeups/crypto/lwe-error-band.md"
+      ],
+      "reason": "题号和旧附件来源一致。"
+    },
+    {
+      "id": "ctfplus-1996419385509548032",
+      "title": "dp_spill",
+      "path": "题目/ctfplus-1996419385509548032/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996419378781884416",
+      "title": "simple-DH",
+      "path": "题目/ctfplus-1996419378781884416/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996419211106193408",
+      "title": "Hensel",
+      "path": "题目/ctfplus-1996419211106193408/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/lcg-concat-hensel.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "ctfplus-1996418983535841280",
+      "title": "eazy_RSA?",
+      "path": "题目/ctfplus-1996418983535841280/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1996418972894892032",
+      "title": "SBOX-revenge",
+      "path": "题目/ctfplus-1996418972894892032/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996418936001794048",
+      "title": "ez_xor",
+      "path": "题目/ctfplus-1996418936001794048/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/rsa-and-xor-projection.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "ctfplus-1996418899859476480",
+      "title": "虎皮青椒",
+      "path": "题目/ctfplus-1996418899859476480/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996418696045662208",
+      "title": "baby_rabin",
+      "path": "题目/ctfplus-1996418696045662208/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "同题",
+      "refs": [
+        "_writeups/crypto/rabin-eight.md"
+      ],
+      "reason": "题号和旧附件来源一致。公开输入还匹配多项长数值。"
+    },
+    {
+      "id": "ctfplus-1996418028115333120",
+      "title": "S_box",
+      "path": "题目/ctfplus-1996418028115333120/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996418021333143552",
+      "title": "伪造签名",
+      "path": "题目/ctfplus-1996418021333143552/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996417984909807616",
+      "title": "o_mybag",
+      "path": "题目/ctfplus-1996417984909807616/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996417959295193088",
+      "title": "xor_revenge",
+      "path": "题目/ctfplus-1996417959295193088/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996417955675508736",
+      "title": "Caesar Slot Machine",
+      "path": "题目/ctfplus-1996417955675508736/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996417885639020544",
+      "title": "pem",
+      "path": "题目/ctfplus-1996417885639020544/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1996417863287574528",
+      "title": "ez_ecc",
+      "path": "题目/ctfplus-1996417863287574528/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1992805158957879296",
+      "title": "Lattice",
+      "path": "题目/ctfplus-1992805158957879296/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1992805155430469632",
+      "title": "pow",
+      "path": "题目/ctfplus-1992805155430469632/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1992805151974363136",
+      "title": "babyRSA",
+      "path": "题目/ctfplus-1992805151974363136/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_common_modulus_attack.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-1992805137839558656",
+      "title": "important_e",
+      "path": "题目/ctfplus-1992805137839558656/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1992805134341509120",
+      "title": "EZRSA",
+      "path": "题目/ctfplus-1992805134341509120/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1992805130696658944",
+      "title": "sign",
+      "path": "题目/ctfplus-1992805130696658944/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1992805118822584320",
+      "title": "有趣的emoji",
+      "path": "题目/ctfplus-1992805118822584320/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983793925592190976",
+      "title": "PPAP",
+      "path": "题目/ctfplus-1983793925592190976/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983793957108191232",
+      "title": "Fermat's little theorem",
+      "path": "题目/ctfplus-1983793957108191232/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983793978775965696",
+      "title": "加了一半",
+      "path": "题目/ctfplus-1983793978775965696/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983793969384919040",
+      "title": "四色定理",
+      "path": "题目/ctfplus-1983793969384919040/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983793962179104768",
+      "title": "垃圾邮件",
+      "path": "题目/ctfplus-1983793962179104768/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983793901739184128",
+      "title": "小e攻击",
+      "path": "题目/ctfplus-1983793901739184128/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1983793899524591616",
+      "title": "共模攻击",
+      "path": "题目/ctfplus-1983793899524591616/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_common_modulus_attack.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-1983793897096089600",
+      "title": "秘密信函",
+      "path": "题目/ctfplus-1983793897096089600/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983793894759862272",
+      "title": "MD5",
+      "path": "题目/ctfplus-1983793894759862272/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983793892587212800",
+      "title": "ILOVEDES",
+      "path": "题目/ctfplus-1983793892587212800/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983793890250985472",
+      "title": "签签签到",
+      "path": "题目/ctfplus-1983793890250985472/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1983793887931535360",
+      "title": "Ez_Caesar",
+      "path": "题目/ctfplus-1983793887931535360/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1983793885624668160",
+      "title": "Enigma的遗产",
+      "path": "题目/ctfplus-1983793885624668160/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983791026128556032",
+      "title": "Quaternion",
+      "path": "题目/ctfplus-1983791026128556032/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983791023213514752",
+      "title": "MT19937",
+      "path": "题目/ctfplus-1983791023213514752/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983790396626440192",
+      "title": "逐望",
+      "path": "题目/ctfplus-1983790396626440192/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983790389563232256",
+      "title": "蓉凤",
+      "path": "题目/ctfplus-1983790389563232256/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1983790385352151040",
+      "title": "AES square",
+      "path": "题目/ctfplus-1983790385352151040/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1980644081017032704",
+      "title": "Where is my public Key",
+      "path": "题目/ctfplus-1980644081017032704/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1980644082157883392",
+      "title": "Copper!!!",
+      "path": "题目/ctfplus-1980644082157883392/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1980644083302928384",
+      "title": "Ez_LLL",
+      "path": "题目/ctfplus-1980644083302928384/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/lattice_lll.md"
+      ],
+      "reason": "以短向量候选和回代为核心，二维实例不重复建方法。"
+    },
+    {
+      "id": "ctfplus-1980644088776495104",
+      "title": "Mid_LLL",
+      "path": "题目/ctfplus-1980644088776495104/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1980644022108033024",
+      "title": "映雪",
+      "path": "题目/ctfplus-1980644022108033024/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1978124427426009088",
+      "title": "炽羽",
+      "path": "题目/ctfplus-1978124427426009088/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1978124436406013952",
+      "title": "LFSR",
+      "path": "题目/ctfplus-1978124436406013952/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1978124455041306624",
+      "title": "寒芒",
+      "path": "题目/ctfplus-1978124455041306624/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1978124435349049344",
+      "title": "RC4",
+      "path": "题目/ctfplus-1978124435349049344/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。",
+      "title_candidates": [
+        "_imported_cats/crypto/RC4__ctf-wiki-dcd4eafdf46b81.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1978124434208198656",
+      "title": "Ez_ECC",
+      "path": "题目/ctfplus-1978124434208198656/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1978124433021210624",
+      "title": "Ez_LCG",
+      "path": "题目/ctfplus-1978124433021210624/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1978124431758725120",
+      "title": "CCB",
+      "path": "题目/ctfplus-1978124431758725120/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1978124430441713664",
+      "title": "PolyRSA",
+      "path": "题目/ctfplus-1978124430441713664/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/poly-rsa-quotient.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。",
+      "title_candidates": [
+        "_writeups/crypto/poly-rsa.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1978124403635916800",
+      "title": "你好，爪洼脚本",
+      "path": "题目/ctfplus-1978124403635916800/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1975492202058485760",
+      "title": "笙莲",
+      "path": "题目/ctfplus-1975492202058485760/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1975492169263222784",
+      "title": "Sign_in",
+      "path": "题目/ctfplus-1975492169263222784/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1975492208236695552",
+      "title": "Vigenere Advanced",
+      "path": "题目/ctfplus-1975492208236695552/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1975492207200702464",
+      "title": "Diffie-Hellman",
+      "path": "题目/ctfplus-1975492207200702464/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1975492206248595456",
+      "title": "Vigenere",
+      "path": "题目/ctfplus-1975492206248595456/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1975492204013031424",
+      "title": "Ez_RSA",
+      "path": "题目/ctfplus-1975492204013031424/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1975492203073507328",
+      "title": "2FA",
+      "path": "题目/ctfplus-1975492203073507328/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1975492173138759680",
+      "title": "芸翎",
+      "path": "题目/ctfplus-1975492173138759680/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1969664215966814208",
+      "title": "签到-错误的MD5",
+      "path": "题目/ctfplus-1969664215966814208/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1927220893348532224",
+      "title": "AAAAAA真签到",
+      "path": "题目/ctfplus-1927220893348532224/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1927220884414664704",
+      "title": "ez_web",
+      "path": "题目/ctfplus-1927220884414664704/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1927220877326290944",
+      "title": "RSA终极之战",
+      "path": "题目/ctfplus-1927220877326290944/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1927220875484991488",
+      "title": "脑域（RC4)密钥·三重加密之战",
+      "path": "题目/ctfplus-1927220875484991488/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1927220870070145024",
+      "title": "凯撒密卷与航海图的双重密码",
+      "path": "题目/ctfplus-1927220870070145024/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1927220868262400000",
+      "title": "Ez_RSA",
+      "path": "题目/ctfplus-1927220868262400000/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1912816220655063040",
+      "title": "easy_crypto",
+      "path": "题目/ctfplus-1912816220655063040/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1912816102975475712",
+      "title": "simpleSignin",
+      "path": "题目/ctfplus-1912816102975475712/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1912811954393583616",
+      "title": "easy_lwe",
+      "path": "题目/ctfplus-1912811954393583616/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1912811651984265216",
+      "title": "NumberTheory",
+      "path": "题目/ctfplus-1912811651984265216/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_d_modulus.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-1868522626805141504",
+      "title": "delegate wallet",
+      "path": "题目/ctfplus-1868522626805141504/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1868510311632343040",
+      "title": "Staple AES",
+      "path": "题目/ctfplus-1868510311632343040/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1868509703043026944",
+      "title": "eazy RSA",
+      "path": "题目/ctfplus-1868509703043026944/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_writeups/crypto/rabin-eight.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-1868508176920350720",
+      "title": "factorize",
+      "path": "题目/ctfplus-1868508176920350720/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "同题",
+      "refs": [
+        "_writeups/crypto/rsa-shared-prime-prefix.md"
+      ],
+      "reason": "题号和旧附件来源一致。公开输入还匹配多项长数值。"
+    },
+    {
+      "id": "ctfplus-1868130193298690048",
+      "title": "Zer0FS",
+      "path": "题目/ctfplus-1868130193298690048/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866731473596321792",
+      "title": "base??",
+      "path": "题目/ctfplus-1866731473596321792/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。",
+      "title_candidates": [
+        "_imported/crypto/Base.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1866729031668338688",
+      "title": "warmup",
+      "path": "题目/ctfplus-1866729031668338688/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866728535440232448",
+      "title": "rsarsa",
+      "path": "题目/ctfplus-1866728535440232448/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866727432212451328",
+      "title": "RSAROLL",
+      "path": "题目/ctfplus-1866727432212451328/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866726252027580416",
+      "title": "RSA",
+      "path": "题目/ctfplus-1866726252027580416/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。",
+      "title_candidates": [
+        "_imported/crypto/RSA.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1866724376129310720",
+      "title": "我喜欢培根",
+      "path": "题目/ctfplus-1866724376129310720/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866722986350874624",
+      "title": "数码管",
+      "path": "题目/ctfplus-1866722986350874624/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866722411257270272",
+      "title": "try_them_all",
+      "path": "题目/ctfplus-1866722411257270272/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866721954615005184",
+      "title": "The Flash-14",
+      "path": "题目/ctfplus-1866721954615005184/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866721222285332480",
+      "title": "RSA实践",
+      "path": "题目/ctfplus-1866721222285332480/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866720814343131136",
+      "title": "robomunication",
+      "path": "题目/ctfplus-1866720814343131136/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866720265514258432",
+      "title": "crypto50",
+      "path": "题目/ctfplus-1866720265514258432/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866719512712187904",
+      "title": "Fair-Play",
+      "path": "题目/ctfplus-1866719512712187904/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866717607785140224",
+      "title": "围在栅栏中的爱",
+      "path": "题目/ctfplus-1866717607785140224/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866716750419070976",
+      "title": "神秘字母",
+      "path": "题目/ctfplus-1866716750419070976/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866715522956005376",
+      "title": "奇怪的短信",
+      "path": "题目/ctfplus-1866715522956005376/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866714594488094720",
+      "title": "困在栅栏里的凯撒",
+      "path": "题目/ctfplus-1866714594488094720/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1866714241621299200",
+      "title": "变异凯撒",
+      "path": "题目/ctfplus-1866714241621299200/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1866713956811280384",
+      "title": "凯撒和某某加密",
+      "path": "题目/ctfplus-1866713956811280384/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866713384813072384",
+      "title": "古典密码的安全性不高，但仍然十分美妙，请破译下面的密文",
+      "path": "题目/ctfplus-1866713384813072384/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866712723589435392",
+      "title": "传统知识+古典密码",
+      "path": "题目/ctfplus-1866712723589435392/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866712399659143168",
+      "title": "杯酒人生",
+      "path": "题目/ctfplus-1866712399659143168/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866710502265065472",
+      "title": "Mailbox",
+      "path": "题目/ctfplus-1866710502265065472/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866699676401537024",
+      "title": "可信度量",
+      "path": "题目/ctfplus-1866699676401537024/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866703087616397312",
+      "title": "MailBox 2",
+      "path": "题目/ctfplus-1866703087616397312/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866702758338367488",
+      "title": "Classical",
+      "path": "题目/ctfplus-1866702758338367488/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866701669119561728",
+      "title": "传感器2",
+      "path": "题目/ctfplus-1866701669119561728/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866700698909937664",
+      "title": "小心猪圈",
+      "path": "题目/ctfplus-1866700698909937664/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866698667356852224",
+      "title": "对称密码1",
+      "path": "题目/ctfplus-1866698667356852224/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866696479482056704",
+      "title": "rsa256",
+      "path": "题目/ctfplus-1866696479482056704/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866695604684460032",
+      "title": "致敬经典",
+      "path": "题目/ctfplus-1866695604684460032/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866684374997536768",
+      "title": "传感器1",
+      "path": "题目/ctfplus-1866684374997536768/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866294357439549440",
+      "title": "RSA2",
+      "path": "题目/ctfplus-1866294357439549440/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1866294963726192640",
+      "title": "RSA3",
+      "path": "题目/ctfplus-1866294963726192640/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866293984356208640",
+      "title": "RSA",
+      "path": "题目/ctfplus-1866293984356208640/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。",
+      "title_candidates": [
+        "_imported/crypto/RSA.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1866293273077747712",
+      "title": "回旋13踢",
+      "path": "题目/ctfplus-1866293273077747712/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1866292969514995712",
+      "title": "RSA?",
+      "path": "题目/ctfplus-1866292969514995712/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。",
+      "title_candidates": [
+        "_imported/crypto/RSA.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1866292520124682240",
+      "title": "Substituted",
+      "path": "题目/ctfplus-1866292520124682240/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1866292237457952768",
+      "title": "Rotated!",
+      "path": "题目/ctfplus-1866292237457952768/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866291799610363904",
+      "title": "Creative Cheating",
+      "path": "题目/ctfplus-1866291799610363904/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866278618880020480",
+      "title": "理查德",
+      "path": "题目/ctfplus-1866278618880020480/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866025317072637952",
+      "title": "CryMisc",
+      "path": "题目/ctfplus-1866025317072637952/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866019334921392128",
+      "title": "永不消逝的电波",
+      "path": "题目/ctfplus-1866019334921392128/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866008311371927552",
+      "title": "Bubble",
+      "path": "题目/ctfplus-1866008311371927552/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1866006821076996096",
+      "title": "All your Base are belong to us",
+      "path": "题目/ctfplus-1866006821076996096/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1866005528031793152",
+      "title": "misc2-对错",
+      "path": "题目/ctfplus-1866005528031793152/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1866003633141714944",
+      "title": "我要变成一只程序猿",
+      "path": "题目/ctfplus-1866003633141714944/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1865379410446651392",
+      "title": "Cry3",
+      "path": "题目/ctfplus-1865379410446651392/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1865378791895863296",
+      "title": "Cry1",
+      "path": "题目/ctfplus-1865378791895863296/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1865379144171261952",
+      "title": "Cry2",
+      "path": "题目/ctfplus-1865379144171261952/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1865341379312357376",
+      "title": "air encryption",
+      "path": "题目/ctfplus-1865341379312357376/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1865340856211345408",
+      "title": "strange",
+      "path": "题目/ctfplus-1865340856211345408/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1865340635066667008",
+      "title": "ez_equation",
+      "path": "题目/ctfplus-1865340635066667008/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1865337374817390592",
+      "title": "little_trick",
+      "path": "题目/ctfplus-1865337374817390592/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1865330825478803456",
+      "title": "easyaes",
+      "path": "题目/ctfplus-1865330825478803456/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1865328618125660160",
+      "title": "JustBase",
+      "path": "题目/ctfplus-1865328618125660160/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1865327643717537792",
+      "title": "This_is_not_a_standard_AES256",
+      "path": "题目/ctfplus-1865327643717537792/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1865327198706077696",
+      "title": "funny_php",
+      "path": "题目/ctfplus-1865327198706077696/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1864506930492346368",
+      "title": "noise",
+      "path": "题目/ctfplus-1864506930492346368/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1864505707781427200",
+      "title": "equations",
+      "path": "题目/ctfplus-1864505707781427200/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1862860569669799936",
+      "title": "Since you konw something",
+      "path": "题目/ctfplus-1862860569669799936/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。",
+      "title_candidates": [
+        "_imported_cats/crypto/NewStar CTF 2024 _ Since you konw something__official-3094d3f1923e86ce57a4be.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1862861482962718720",
+      "title": "茶里茶气",
+      "path": "题目/ctfplus-1862861482962718720/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。",
+      "title_candidates": [
+        "_imported_cats/crypto/NewStar CTF 2024 _ 茶里茶气__official-51fa897f05c08570e4e183.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1862864615294111744",
+      "title": "不用谢喵",
+      "path": "题目/ctfplus-1862864615294111744/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/cbc-block-evidence.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。",
+      "title_candidates": [
+        "_imported_cats/crypto/NewStar CTF 2024 _ 不用谢喵__official-8c43c1139499c279fde5da.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1862867480024715264",
+      "title": "俱以我之名",
+      "path": "题目/ctfplus-1862867480024715264/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。",
+      "title_candidates": [
+        "_imported_cats/crypto/NewStar CTF 2024 _ 俱以我之名__official-985fce985d0f6e39e36797.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1862867787534307328",
+      "title": "RSA? cmd5!",
+      "path": "题目/ctfplus-1862867787534307328/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。",
+      "title_candidates": [
+        "_imported_cats/crypto/NewStar CTF 2024 _ RSA_ cmd5!__official-d5145c5535ecefd91e094b.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1862869371668402176",
+      "title": "没 e 也能玩",
+      "path": "题目/ctfplus-1862869371668402176/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。",
+      "title_candidates": [
+        "_imported/crypto/没-e-也能玩.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1862869824359632896",
+      "title": "学以致用",
+      "path": "题目/ctfplus-1862869824359632896/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。",
+      "title_candidates": [
+        "_imported/crypto/学以致用.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1862857706784690176",
+      "title": "Base",
+      "path": "题目/ctfplus-1862857706784690176/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。",
+      "title_candidates": [
+        "_imported/crypto/Base.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1862856452146728960",
+      "title": "xor",
+      "path": "题目/ctfplus-1862856452146728960/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。",
+      "title_candidates": [
+        "_imported/crypto/xor.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1862864884325158912",
+      "title": "没 e 这能玩？",
+      "path": "题目/ctfplus-1862864884325158912/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。",
+      "title_candidates": [
+        "_imported_cats/crypto/NewStar CTF 2024 _ 没 e 这能玩？__official-1624e7f70730a9e5378da5.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1863055077330128896",
+      "title": "你也玩原神吗",
+      "path": "题目/ctfplus-1863055077330128896/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863055863585968128",
+      "title": "Herta's Study",
+      "path": "题目/ctfplus-1863055863585968128/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863111007644160000",
+      "title": "EasyRSA",
+      "path": "题目/ctfplus-1863111007644160000/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863111466069004288",
+      "title": "apbq",
+      "path": "题目/ctfplus-1863111466069004288/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863111909641818112",
+      "title": "21_steps",
+      "path": "题目/ctfplus-1863111909641818112/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863149226708439040",
+      "title": "签到题",
+      "path": "题目/ctfplus-1863149226708439040/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1863414421594836992",
+      "title": "Crypto - 01",
+      "path": "题目/ctfplus-1863414421594836992/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863414819827224576",
+      "title": "Crypto - 02",
+      "path": "题目/ctfplus-1863414819827224576/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1863416942686113792",
+      "title": "Crypto - 02",
+      "path": "题目/ctfplus-1863416942686113792/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863417598243246080",
+      "title": "Crypto - 03",
+      "path": "题目/ctfplus-1863417598243246080/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863496821221888000",
+      "title": "backdoorplus",
+      "path": "题目/ctfplus-1863496821221888000/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863738399991533568",
+      "title": "Crypto1",
+      "path": "题目/ctfplus-1863738399991533568/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1863738789302636544",
+      "title": "Crypto2",
+      "path": "题目/ctfplus-1863738789302636544/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1863739318720270336",
+      "title": "Crypto4",
+      "path": "题目/ctfplus-1863739318720270336/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863740301877710848",
+      "title": "Crypto7",
+      "path": "题目/ctfplus-1863740301877710848/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863740706535772160",
+      "title": "这是什么",
+      "path": "题目/ctfplus-1863740706535772160/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863922010996871168",
+      "title": "LockByLock",
+      "path": "题目/ctfplus-1863922010996871168/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863924076020502528",
+      "title": "MyErrorLearn",
+      "path": "题目/ctfplus-1863924076020502528/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863924447971381248",
+      "title": "MyErrorLearnTwice",
+      "path": "题目/ctfplus-1863924447971381248/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863925090853326848",
+      "title": "MyOracleTwice",
+      "path": "题目/ctfplus-1863925090853326848/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1863923370509209600",
+      "title": "MyCurveErrorLearn",
+      "path": "题目/ctfplus-1863923370509209600/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1864201399743549440",
+      "title": "好小的公钥",
+      "path": "题目/ctfplus-1864201399743549440/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1864201828191703040",
+      "title": "Prime Conundrum",
+      "path": "题目/ctfplus-1864201828191703040/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1864202105028349952",
+      "title": "消逝的曲线",
+      "path": "题目/ctfplus-1864202105028349952/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "同题",
+      "refs": [
+        "_writeups/crypto/curve-parameters.md"
+      ],
+      "reason": "题号和旧附件来源一致。公开输入还匹配多项长数值。"
+    },
+    {
+      "id": "ctfplus-1860679780337192960",
+      "title": "极客大挑战2024-highlow",
+      "path": "题目/ctfplus-1860679780337192960/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "同题",
+      "refs": [
+        "_writeups/crypto/rsa-middle-bits.md"
+      ],
+      "reason": "题号和旧附件来源一致。公开输入还匹配多项长数值。"
+    },
+    {
+      "id": "ctfplus-1860679682228228096",
+      "title": "极客大挑战2024-共模攻击",
+      "path": "题目/ctfplus-1860679682228228096/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_common_modulus_attack.md"
+      ],
+      "reason": "本条已标注的核心方法在库内有对应条目，原题细节留在汇编。"
+    },
+    {
+      "id": "ctfplus-1860679679355129856",
+      "title": "极客大挑战2024-dp",
+      "path": "题目/ctfplus-1860679679355129856/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_dp_leak.md"
+      ],
+      "reason": "单个 CRT 指数泄漏已有方法。"
+    },
+    {
+      "id": "ctfplus-1860679676960182272",
+      "title": "极客大挑战2024-RSA",
+      "path": "题目/ctfplus-1860679676960182272/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。",
+      "title_candidates": [
+        "_imported/crypto/RSA.md"
+      ]
+    },
+    {
+      "id": "ctfplus-1860679669590790144",
+      "title": "极客大挑战2024-凯撒加密",
+      "path": "题目/ctfplus-1860679669590790144/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "ctfplus-1835688569939693568",
+      "title": "极客大挑战2023-Crypto-Algebra",
+      "path": "题目/ctfplus-1835688569939693568/WP.md",
+      "source_status": "候选已复现",
+      "decision": "同题",
+      "refs": [
+        "_writeups/crypto/groebner-composite.md"
+      ],
+      "reason": "题号和旧附件来源一致。公开输入还匹配多项长数值。"
+    },
+    {
+      "id": "ctfplus-1835688303559446528",
+      "title": "极客大挑战2023-Crypto-Diligent_Liszt",
+      "path": "题目/ctfplus-1835688303559446528/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1835674023049039872",
+      "title": "极客大挑战2023-Crypto-JPGDiff",
+      "path": "题目/ctfplus-1835674023049039872/WP.md",
+      "source_status": "未解／仅中间结果",
+      "decision": "未完成",
+      "refs": [],
+      "reason": "汇编未给出可回验的完整方法，或已剔除历史误报。"
+    },
+    {
+      "id": "ctfplus-1835674017801965568",
+      "title": "极客大挑战2023-Crypto-PolyRSA",
+      "path": "题目/ctfplus-1835674017801965568/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "同题",
+      "refs": [
+        "_writeups/crypto/poly-rsa.md"
+      ],
+      "reason": "题号和旧附件来源一致。公开输入还匹配多项长数值。"
+    },
+    {
+      "id": "ctfplus-1835673596995833856",
+      "title": "极客大挑战2023-Crypto-OldAlgorithm",
+      "path": "题目/ctfplus-1835673596995833856/WP.md",
+      "source_status": "候选已复现",
+      "decision": "方法已覆盖",
+      "refs": [
+        "_methods/rsa_hastad_broadcast.md"
+      ],
+      "reason": "余数合并是已有内容；原稿仍是候选，未据此确认原文。"
+    },
+    {
+      "id": "ctfplus-1835673592403070976",
+      "title": "极客大挑战2023-Crypto-OTPTwice",
+      "path": "题目/ctfplus-1835673592403070976/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1835673587755782144",
+      "title": "极客大挑战2023-Crypto-SimpleRSA",
+      "path": "题目/ctfplus-1835673587755782144/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "ctfplus-1835673583142047744",
+      "title": "极客大挑战2023-Crypto-SignIn",
+      "path": "题目/ctfplus-1835673583142047744/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "upload-ecdsa",
+      "title": "ECDSA：公开确定性 nonce 与私钥 MD5",
+      "path": "题目/upload-ecdsa/WP.md",
+      "source_status": "候选已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/ecdsa-public-nonce.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "upload-ezflag",
+      "title": "EzFlag：静态 64 位整数变换",
+      "path": "题目/upload-ezflag/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "upload-rsa_nestingdoll",
+      "title": "RSA_NestingDoll：内外层欧拉函数",
+      "path": "题目/upload-rsa_nestingdoll/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/rsa-nested-smooth.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "zhejiang-DlcgH_r",
+      "title": "DlcgH_r",
+      "path": "题目/zhejiang-DlcgH_r/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/lcg-affine-jump.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "zhejiang-MyCode",
+      "title": "MyCode",
+      "path": "题目/zhejiang-MyCode/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/nibble-spn-partial-key.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "zhejiang-myez_encode",
+      "title": "myez_encode",
+      "path": "题目/zhejiang-myez_encode/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/finite-field-elimination.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "zhejiang-SNOW",
+      "title": "SNOW",
+      "path": "题目/zhejiang-SNOW/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/snow-state-leak.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "zhejiang-叠叠乐",
+      "title": "叠叠乐",
+      "path": "题目/zhejiang-叠叠乐/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "zhejiang-APT",
+      "title": "APT：离线填充反馈抓包",
+      "path": "题目/zhejiang-APT/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/crypto/cbc-block-evidence.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    },
+    {
+      "id": "upload-multibase",
+      "title": "多层 Base 编码与 Markdown 转义修复",
+      "path": "题目/upload-multibase/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "upload-aes-rot",
+      "title": "OpenSSL Salted__：AES 解密后 ROT",
+      "path": "题目/upload-aes-rot/WP.md",
+      "source_status": "候选已复现",
+      "decision": "候选暂缓",
+      "refs": [],
+      "reason": "可读性、格式、密钥或题面假设还要独立核对，未当作已完成题解。"
+    },
+    {
+      "id": "upload-masked-md5",
+      "title": "十进制字符、凯撒与缺失后缀 MD5",
+      "path": "题目/upload-masked-md5/WP.md",
+      "source_status": "关系验证已复现",
+      "decision": "留待细审",
+      "refs": [],
+      "reason": "现有记录有回验结果；本轮未确认独立的新知识点，保留原文供后续比较。"
+    },
+    {
+      "id": "upload-hilbert",
+      "title": "Hilbert 曲线像素流还原",
+      "path": "题目/upload-hilbert/WP.md",
+      "source_status": "图像还原已复现",
+      "decision": "入库",
+      "refs": [
+        "_writeups/misc/hilbert-pixel-order.md"
+      ],
+      "reason": "保留了可单独复用的新条件、推导或核验方式。"
+    }
+  ]
+}

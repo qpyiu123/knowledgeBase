@@ -1,6 +1,6 @@
 # CTF 知识库索引
 
-共 **1936** 条，覆盖 **11** 个方向。
+共 **1948** 条，覆盖 **11** 个方向。
 本文件由 `python tools/gen_index.py` 自动生成，请勿手改。
 
 > 用法：`kb search "题面关键词"` 模糊查；`kb ask "题目描述"` 让本地模型给思路。
@@ -9,8 +9,8 @@
 
 | 方向 | 条目数 | 说明 |
 |---|---|---|
-| [杂项 Misc](#misc) | 421 | |
-| [密码学 Crypto](#crypto) | 291 | |
+| [杂项 Misc](#misc) | 422 | |
+| [密码学 Crypto](#crypto) | 302 | |
 | [逆向 Reverse](#reverse) | 268 | |
 | [二进制利用 Pwn](#pwn) | 310 | |
 | [Web](#web) | 511 | |
@@ -22,7 +22,7 @@
 | [AI 安全](#ai) | 13 | |
 
 <a id="misc"></a>
-## 杂项 Misc (421)
+## 杂项 Misc (422)
 
 - 🟢 [2021 圣诞拼图活动 Writeup](_des/cards/misc/2021圣诞拼图活动-Writeup.full.md) — _2021 圣诞活动 2021、拼图、A-star、数字华容道_
 - 🟢 [2022 天融信教育杯 CTF 赛事 WP](_des/cards/misc/2022天融信教育杯CTF赛事WP.full.md) — _天融信教育杯 2022 2022、steghide、base64、PHPCMS_
@@ -442,12 +442,13 @@
 - 🔴 [阿里云 CTF 2025 Writeup](_des/cards/misc/阿里云CTF2025_Writeup.full.md) — _阿里云CTF 2025、alibaba、BPF、verifier_
 - 🔴 [香港網安奪旗賽HKCERT CTF 2024 Write up（下）](_des/cards/misc/香港網安奪旗賽HKCERT_CTF_2024_Write_up（下）.full.md) — _HKCERT CTF 2024 2024、RSA-LCG、multiprime-rsa、pty-disassembly_
 - ⚪ [Beep Boop Robot：短音、长音和空白各代表什么](_writeups/misc/beep-boop-robot.md) — _8 位单声道、单一鸣声_
+- ⚪ [Hilbert 像素还原：一列颜色如何走遍方格](_writeups/misc/hilbert-pixel-order.md) — _1×65536 像素、折线路径提示、相邻像素格_
 - ⚪ [Miniscule：PNG 的数据用了另一种压缩](_writeups/misc/miniscule.md) — _压缩方法 1、28 B5 2F FD_
 - ⚪ [Nothing to See：压缩包藏在 PNG 结束块之后](_writeups/misc/nothing-to-see.md) — _IEND、tEXt、Title_
 - ⚪ [Wacky Recipe：把菜谱动作写成两未知数的方程](_writeups/misc/wacky-recipe.md) — _Ingredients、Method、搅拌碗_
 
 <a id="crypto"></a>
-## 密码学 Crypto (291)
+## 密码学 Crypto (302)
 
 - 🟢 [0xGame 2025/Crypto WriteUp Week1](_des/cards/crypto/0xGame_2025_Crypto_WriteUp_Week1.full.md) — _0xGame 2025、新人向、factordb、Vigenère 标准_
 - 🟢 [2022 第六届强网杯青少赛 Misc & Crypto WriteUp](_des/cards/crypto/2022第六届强网杯青少赛_Misc&Crypto-WriteUp.full.md) — _强网杯青少赛 2022 2022、base64、奇偶分离、异或32_
@@ -730,12 +731,23 @@
 - 🔴 [量子安全 quantum ctf Qlotto Hack the box](_des/cards/crypto/量子安全_quantum_ctf_Qlotto_Hack_the_box.full.md) — _Quantum CTF / Hack The Box QLotto 2025、qiskit、quantum-circuit、Aer-simulator_
 - 🔴 [量子密钥分发协议赛题bb84官方WP - 第十六届信安国赛](_des/cards/crypto/官方WP_-_量子密钥分发协议赛题bb84解析.full.md) — _第十六届全国大学生信息安全竞赛(信安国赛)初赛 + 伽玛实验场 2023、量子密钥分发、BB84协议、偏振编码_
 - ⚪ [Algebra：先还原字节密钥，再解三段密文](_writeups/crypto/groebner-composite.md) — _32 个字节、16 条方程、三段模幂_
+- ⚪ [CBC：用公开的分组解密值或离线填充反馈恢复明文](_writeups/crypto/cbc-block-evidence.md) — _IV 拼在密文前、Data update、PKCS#7_
+- ⚪ [ECC 尖点：把点的倍乘换成一次模除法](_writeups/crypto/ecc-cusp-additive.md) — _配方后 y²=(x−r)^3、判别式为零、广义曲线有 y 项_
+- ⚪ [ECDSA：每条签名的临时数都不同，但可以公开算出](_writeups/crypto/ecdsa-public-nonce.md) — _公开前缀生成 k、r 不重复、固定宽度 r 与 s_
+- ⚪ [Equation 与 myez_encode：先消去一个变量，再验有限域的根](_writeups/crypto/finite-field-elimination.md) — _f=13*y²+x*y+5*x、g=7*y+x²、因子位于曲线上_
 - ⚪ [Factorize：两个素数为什么能从平方根附近分开](_writeups/crypto/rsa-shared-prime-prefix.md) — _共享高位、素数接近_
+- ⚪ [Hensel：RSA 素数由随机状态拼接，先看乘积的低位](_writeups/crypto/lcg-concat-hensel.md) — _四个 256 位状态、模 2 的幂、四次幂根_
+- ⚪ [LCG：步数已知就倍增，步数未知先看固定点](_writeups/crypto/lcg-affine-jump.md) — _重复执行 a*x+b、同样步数再走一次、next_prime_
 - ⚪ [Lunar LCG：泄漏的是完整状态，还是低 8 位？](_writeups/crypto/lcg-low-byte.md) — _已知模数、完整状态泄漏_
+- ⚪ [MyCode：只剩 20 位密钥，用已知首块筛选](_writeups/crypto/nibble-spn-partial-key.md) — _32 位密钥给高位、4 字节分组、16 项 S-box_
 - ⚪ [NTRU：只有四个非零项时，先试稀疏枚举](_writeups/crypto/ntru-sparse.md) — _31 个系数、4 个非零项_
+- ⚪ [PolyRSA（商环版）：明文是八项系数，先找各分量的幂周期](_writeups/crypto/poly-rsa-quotient.md) — _Zmod(p*q)、x^8−1、每 8 字节一个系数_
 - ⚪ [PolyRSA：用两组素数线性组合分解模数](_writeups/crypto/poly-rsa.md) — _两组不同底数、线性组合_
+- ⚪ [RSA_NestingDoll：外层素数减一里藏着内层素因子](_writeups/crypto/rsa-nested-smooth.md) — _inner RSA modulus、outer RSA modulus、get_smooth_prime_
+- ⚪ [SNOW：用泄漏状态和已知前缀逐个补齐初始状态](_writeups/crypto/snow-state-leak.md) — _同时泄漏 S 和 R 的字、已知明文前缀、模 2^32 加法_
 - ⚪ [Subgroup Choreographer：把查表运算变成同余方程](_writeups/crypto/subgroup-choreographer.md) — _16×16 查表、奇数主元_
 - ⚪ [ez_raabin：先用已知的第三个因子](_writeups/crypto/rabin-eight.md) — _已知 pq、第三个素因子_
+- ⚪ [ez_xor：用 AND、XOR 和乘积恢复一对 RSA 因子](_writeups/crypto/rsa-and-xor-projection.md) — _N/n 已知、s&r、s^r_
 - ⚪ [highlow：素数两端已知，中间有一段被遮住](_writeups/crypto/rsa-middle-bits.md) — _位段 400–751、未知因子_
 - ⚪ [lwe1：先把误差移到零附近](_writeups/crypto/lwe-error-band.md) — _60 个观测、误差 5900–6000_
 - ⚪ [you_raise_me_up：从模幂结果还原指数](_writeups/crypto/you-raise-me-up.md) — _奇数底数、周期翻倍_
